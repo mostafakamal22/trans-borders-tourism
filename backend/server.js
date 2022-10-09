@@ -31,6 +31,10 @@ app.get("/", (req, res) => {
   res.send("hellow world");
 });
 
+//admins Router
+const adminsRoute = require("./routes/adminRoutes");
+app.use("/api/admins", adminsRoute);
+
 //serve Frontend
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
