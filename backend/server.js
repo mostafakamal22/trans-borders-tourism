@@ -26,14 +26,13 @@ app.use(cors(corsDevOptions));
 // } = require("./middlewares/rateLimitMiddleware/rateLimitMiddleware");
 // app.use("/api", apiLimiter);
 
-//Bills Router
-app.get("/", (req, res) => {
-  res.send("hellow world");
-});
-
 //admins Router
 const adminsRoute = require("./routes/adminRoutes");
 app.use("/api/admins", adminsRoute);
+
+//invoices Router
+const invoicesRoute = require("./routes/invoiceRoutes");
+app.use("/api/invoices", invoicesRoute);
 
 //serve Frontend
 if (process.env.NODE_ENV === "production") {
