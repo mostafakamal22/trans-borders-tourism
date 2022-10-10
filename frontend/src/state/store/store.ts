@@ -4,6 +4,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import { encryptTransform } from "redux-persist-transform-encrypt";
 import thunk from "redux-thunk";
 import adminAuthReducer from "../features/admin/auth/adminAuthSlice";
+import invoiceReducer from "../features/invoice/invoiceSlice";
 
 const persistConfig = {
   key: "root",
@@ -22,10 +23,11 @@ const persistConfig = {
 
 const appReducer = combineReducers({
   adminAuth: adminAuthReducer,
+  invoiceData: invoiceReducer,
 });
 
 //All Logout actions
-const logoutActions = ["auth/admin/logout"];
+const logoutActions = ["auth/admin/logout", "admins/logout"];
 
 //remove All Stored state in local storage when logging out
 const rootReducer = (state: any, action: any) => {
