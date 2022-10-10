@@ -127,8 +127,8 @@ export const invoiceSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.message = "User's Status Updated Successfully!";
-        state.invoiceList = { ...state.invoiceList, ...action.payload };
+        state.message = "Invioce Has Been Created Successfully!";
+        state.invoiceList = [...state.invoiceList, action.payload];
       })
       .addCase(createInvoice.rejected, (state, action) => {
         state.isLoading = false;

@@ -9,6 +9,7 @@ import {
 import AdminLogin from "./components/forms/AdminLogin";
 import NotFoundPage from "./components/shared/NotFoundPage";
 import AdminProfile from "./components/profile/AdminProfile";
+import { Home } from "./components/home/Home";
 
 const App: FC = () => {
   //Detect admin
@@ -30,14 +31,14 @@ const App: FC = () => {
       {/* Admin Routes */}
       {admin && (
         <Routes>
-          <Route index element={<AdminProfile />} />
+          <Route index element={<Home />} />
           <Route path="/register" element={<Navigate to={"/"} />} />
           <Route path="/login" element={<Navigate to={"/"} />} />
           <Route path="/admins/login" element={<Navigate to={"/"} />} />
-          <Route path="/admins/profile/:id" element={<AdminProfile />} />
+          <Route path="/profile" element={<AdminProfile />} />
           {/* <Route
             
-            path="/admins/profile/:id/update"
+            path="/profile/update"
             element={<UpdateAdminProfile />}
           /> */}
           <Route path="*" element={<NotFoundPage />} />
