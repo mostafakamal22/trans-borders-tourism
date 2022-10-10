@@ -34,7 +34,7 @@ export const getAllInvoices = createAsyncThunk(
 //Create invoice
 export const createInvoice = createAsyncThunk(
   "admin/createInvoice",
-  async (invoiceData, thunkAPI) => {
+  async (invoiceData: any, thunkAPI) => {
     try {
       return await invoiceServices.createInvoice(invoiceData);
     } catch (error: any) {
