@@ -55,8 +55,21 @@ const createInvoice = async (req, res) => {
   }
 };
 
+//@desc   >>>> Delete one Invoice
+//@route  >>>> DELETE /api/invoice/:id
+//@Access >>>> public(For Admins)
+const deleteInvoice = async (req, res) => {
+  try {
+    const deletedInvoice = await Invoice.findByIdAndDelete(req.params.id);
+    res.status(200).json({ id: deletedInvoice.id });
+  } catch (error) {
+    res.status(500).send("Ooops!! Something Went Wrong, Try again...");
+  }
+};
+
 module.exports = {
   getInvoices,
   getOneInvoice,
   createInvoice,
+  deleteInvoice,
 };

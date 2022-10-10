@@ -3,17 +3,16 @@ import { BounceLoader } from "react-spinners";
 
 const override: CSSProperties = {
   display: "block",
-  margin: "0 auto",
-  borderColor: "red",
+  margin: "55px auto",
 };
 
-function SmallSpinner({ isLoading }: { isLoading: boolean }) {
+function SmallSpinner({ isLoading }: { isLoading?: boolean }) {
   return (
     <BounceLoader
-      color={"#ffffff"}
+      color={"#ff1717"}
       loading={isLoading}
       cssOverride={override}
-      size={8}
+      size={70}
     />
   );
 }

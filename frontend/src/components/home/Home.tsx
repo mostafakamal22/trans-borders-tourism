@@ -14,7 +14,7 @@ export const Home = () => {
       <div className="flex justify-center  items-center  gap-16 p-3 font-semibold">
         <Link
           className="flex justify-center items-center flex-col px-3 py-6 gap-4 rounded shadow-md shadow-black/30"
-          to={"/inoives"}
+          to={"/invoices"}
         >
           <span>Show Invoices</span>
           <FcBookmark size={40} />
@@ -22,7 +22,7 @@ export const Home = () => {
 
         <Link
           className="flex justify-center items-center flex-col px-3 py-6 gap-4 rounded shadow-md shadow-black/30"
-          to={"/inoives/create"}
+          to={"/invoices/create"}
         >
           <span>Add Invoice</span>
           <FcFile size={40} />

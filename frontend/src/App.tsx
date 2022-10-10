@@ -10,6 +10,7 @@ import AdminLogin from "./components/forms/AdminLogin";
 import NotFoundPage from "./components/shared/NotFoundPage";
 import AdminProfile from "./components/profile/AdminProfile";
 import { Home } from "./components/home/Home";
+import { InvoiceListControl } from "./components/invoice/Invoices";
 
 const App: FC = () => {
   //Detect admin
@@ -36,6 +37,7 @@ const App: FC = () => {
           <Route path="/login" element={<Navigate to={"/"} />} />
           <Route path="/admins/login" element={<Navigate to={"/"} />} />
           <Route path="/profile" element={<AdminProfile />} />
+          <Route path="/invoices" element={<InvoiceListControl />} />
           {/* <Route
             
             path="/profile/update"

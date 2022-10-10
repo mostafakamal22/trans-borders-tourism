@@ -31,7 +31,7 @@ const createInvoice = async (invoiceDate: any) => {
 };
 
 //Delete Invoice
-const deleteInvoice = async (payload: any) => {
+const deleteInvoice = async (payload: { id: string; token: string }) => {
   const res = await axios.delete(API_URL + payload.id, {
     headers: {
       authorization: `Bearer ${payload.token}`,

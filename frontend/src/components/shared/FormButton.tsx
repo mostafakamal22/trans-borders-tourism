@@ -2,8 +2,8 @@ import SmallSpinner from "./SmallSpinner";
 
 type FormButtonProps = {
   icon: any;
-  text: { loading: string; default: string };
-  isLoading: boolean;
+  text: { loading?: string; default?: string };
+  isLoading?: boolean;
   bgColor?: string[];
 };
 export default function FormButton({

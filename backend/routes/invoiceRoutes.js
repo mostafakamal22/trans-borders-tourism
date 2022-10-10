@@ -10,6 +10,7 @@ const {
   getInvoices,
   getOneInvoice,
   createInvoice,
+  deleteInvoice,
 } = require("../controllers/invoiceControllers");
 
 router
@@ -17,6 +18,9 @@ router
   .post(authAdminProtect, createInvoice)
   .get(authAdminProtect, getInvoices);
 
-router.route("/:id").get(authAdminProtect, getOneInvoice);
+router
+  .route("/:id")
+  .get(authAdminProtect, getOneInvoice)
+  .delete(authAdminProtect, deleteInvoice);
 
 module.exports = router;

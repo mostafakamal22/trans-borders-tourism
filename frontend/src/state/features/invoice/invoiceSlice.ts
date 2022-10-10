@@ -48,7 +48,7 @@ export const createInvoice = createAsyncThunk(
 //Delete invoice
 export const deleteInvoice = createAsyncThunk(
   "admin/deleteInvoice",
-  async (payload, thunkAPI) => {
+  async (payload: { id: string; token: string }, thunkAPI) => {
     try {
       return await invoiceServices.deleteInvoice(payload);
     } catch (error: any) {
