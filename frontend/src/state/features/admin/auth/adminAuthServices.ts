@@ -9,7 +9,7 @@ const API_URL =
 const adminLogin = async (adminData: any) => {
   const res = await axios.post(API_URL + "login", adminData, {
     headers: {
-      "content-type": "application/json",
+      "Content-Type": "application/json",
     },
   });
   const data = res.data;
