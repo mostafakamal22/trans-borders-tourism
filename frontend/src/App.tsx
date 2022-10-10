@@ -1,9 +1,9 @@
 import { FC } from "react";
-import "./assets/styles/App.css";
 
 const App: FC = (): JSX.Element => {
   return (
     <div className="App">
+      <img className="m-auto" src="src/assets/imgs/trans-logo.png" alt="logo" />
       <h1 className="text-3xl font-bold underline">Hello world!</h1>
       <h1 className="text-3xl font-bold">محمود حمدى</h1>
       <h1 className="text-xl font-bold">محمود حمدى</h1>
