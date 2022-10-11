@@ -2,8 +2,38 @@ import { FcHome } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { FcFile, FcBookmark } from "react-icons/fc";
 import logo from "../../assets/imgs/trans-logo.png";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../state/features/hooks/StateHooks";
+import { getAllInvoices } from "../../state/features/invoice/invoiceSlice";
+
+import { useEffect } from "react";
+import { MainSpinner } from "../shared/MainSpinner";
 
 export const Home = () => {
+  const { info } = useAppSelector((state) => state.adminAuth);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getAllInvoices({ token: info.token }));
+  }, []);
+
+  const { isLoading } = useAppSelector((state) => state.invoiceData);
+
+  //Loading Spinner After Login Waiting Until Invoice data is Fetched.
+  if (isLoading)
+    return (
+      <div className="mx-5 h-min-screen">
+        <div className="max-w-5xl w-full h-full flex justify-center items-center mx-auto my-10 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
+          <div className="flex justify-center items-center">
+            <MainSpinner isLoading={isLoading} />
+          </div>
+        </div>
+      </div>
+    );
+
   return (
     <div className="max-w-5xl w-full min-h-[75vh] mx-auto my-10 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <h2 className="flex justify-center items-center text-gray-800 mb-4 text-2xl font-bold px-2 py-4 my-4 rounded shadow bg-red-200 border-b-4 border-red-800">

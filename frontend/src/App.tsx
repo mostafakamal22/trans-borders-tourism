@@ -35,19 +35,21 @@ const App: FC = () => {
     <Router>
       {/* Guest Routes */}
       {!admin && (
-        <Routes>
-          <Route index element={<AdminLogin />} />
-          <Route path="/admins/login" element={<AdminLogin />} />
-          <Route path="/login" element={<AdminLogin />} />
-          {paths.map((stringPath) => (
-            <Route
-              key={"Home"}
-              path={stringPath}
-              element={<Navigate to={"/"} />}
-            />
-          ))}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+        <div className="min-h-screen flex">
+          <Routes>
+            <Route index element={<AdminLogin />} />
+            <Route path="/admins/login" element={<AdminLogin />} />
+            <Route path="/login" element={<AdminLogin />} />
+            {paths.map((stringPath) => (
+              <Route
+                key={"Home"}
+                path={stringPath}
+                element={<Navigate to={"/"} />}
+              />
+            ))}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </div>
       )}
 
       {/* Admin Routes */}

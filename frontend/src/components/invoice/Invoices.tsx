@@ -9,11 +9,16 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../state/features/hooks/StateHooks";
-import { deleteInvoice } from "../../state/features/invoice/invoiceSlice";
+import {
+  deleteInvoice,
+  resetInvoicesStatus,
+} from "../../state/features/invoice/invoiceSlice";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import { MainSpinner } from "../shared/MainSpinner";
 import logo from "../../assets/imgs/trans-logo.png";
+import { UseResetStatus } from "../../hooks/UseResetStatus";
+import { resetAdminAuthStatus } from "../../state/features/admin/auth/adminAuthSlice";
 
 const tableHeaderTitles = [
   "Invoice #",
@@ -181,6 +186,19 @@ export const InvoiceListControl = () => {
       </tr>
     );
   };
+
+  //clean up status (when mount and unmount)
+  UseResetStatus(() => {
+    dispatch(resetAdminAuthStatus());
+    dispatch(resetInvoicesStatus());
+  });
+
+  UseResetStatus(() => {
+    return () => {
+      dispatch(resetAdminAuthStatus());
+      dispatch(resetInvoicesStatus());
+    };
+  });
 
   return (
     <div className="max-w-6xl min-h-[75vh] w-full mx-auto my-10 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">

@@ -1,21 +1,11 @@
 import { FcVip } from "react-icons/fc";
 import { RiArrowRightLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../state/features/hooks/StateHooks";
-import { useEffect } from "react";
-import { getAllInvoices } from "../../state/features/invoice/invoiceSlice";
+import { useAppSelector } from "../../state/features/hooks/StateHooks";
 import logo from "../../assets/imgs/trans-logo.png";
 
 export default function AdminProfile() {
   const { info } = useAppSelector((state) => state.adminAuth);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(getAllInvoices({ token: info.token }));
-  }, []);
 
   return (
     <div className="max-w-5xl w-full min-h-[75vh] mx-auto my-10 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">

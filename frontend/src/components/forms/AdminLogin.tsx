@@ -2,13 +2,18 @@ import { useState, useEffect } from "react";
 import { FcPrivacy } from "react-icons/fc";
 import { RiLoginCircleFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
-import { adminLogin } from "../../state/features/admin/auth/adminAuthSlice";
+import { UseResetStatus } from "../../hooks/UseResetStatus";
+import {
+  adminLogin,
+  resetAdminAuthStatus,
+} from "../../state/features/admin/auth/adminAuthSlice";
 import {
   useAppDispatch,
   useAppSelector,
 } from "../../state/features/hooks/StateHooks";
 import FormButton from "../shared/FormButton";
 import MessagesContainer from "../shared/MessagesContainer";
+import logo from "../../assets/imgs/trans-logo.png";
 
 export default function AdminLogin() {
   const [formInputs, setFormInputs] = useState({
@@ -50,25 +55,39 @@ export default function AdminLogin() {
     dispatch(adminLogin(adminData));
   };
 
+  //clean up status (when mount and unmount)
+  UseResetStatus(() => {
+    dispatch(resetAdminAuthStatus());
+  });
+
+  UseResetStatus(() => {
+    return () => {
+      dispatch(resetAdminAuthStatus());
+    };
+  });
+
   return (
-    <div className="block p-6 rounded shadow-lg shadow-black/20 bg-slate-50 max-w-md w-full mx-auto">
+    <div className="block p-6 rounded shadow-lg shadow-black/20 bg-slate-50 max-w-md w-full m-auto">
       {/* <Logo /> */}
-      <h3 className="flex justify-center items-center text-2xl text-blue-800 font-bold text-center p-2 my-4 rounded shadow bg-blue-200 border-x-4 border-blue-800 select-none">
+      <h3 className="flex justify-center items-center text-2xl text-red-800 font-bold text-center p-2 my-4 rounded shadow bg-red-200 border-x-4 border-red-800 select-none">
         <FcPrivacy size={45} />
         <span>Admins Login</span>
       </h3>
+
+      <img className="mx-auto" src={logo} alt="logo" />
+
       <form className="mt-10" onSubmit={handleSubmit}>
         <div className="mb-6">
           <label
             htmlFor="email"
-            className="w-full inline-block font-semibold mb-4 p-2 text-gray-800 border-b-4 border-blue-800 rounded shadow bg-blue-200"
+            className="w-full inline-block font-semibold mb-4 p-2 text-white rounded shadow bg-red-800"
           >
             Email address
           </label>
           <input
             type="email"
             name="email"
-            className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-800 focus:outline-none"
+            className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
             defaultValue={email}
             onChange={(e) =>
               setFormInputs({ ...formInputs, email: e.target.value })
@@ -80,14 +99,14 @@ export default function AdminLogin() {
         <div className="mb-6">
           <label
             htmlFor="password"
-            className="w-full inline-block font-semibold mb-4 p-2 text-gray-800 border-b-4 border-blue-800 rounded shadow bg-blue-200"
+            className="w-full inline-block font-semibold mb-4 p-2 text-white rounded shadow bg-red-800"
           >
             Password
           </label>
           <input
             type="password"
             name="password"
-            className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-800 focus:outline-none"
+            className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
             defaultValue={password}
             onChange={(e) =>
               setFormInputs({ ...formInputs, password: e.target.value })

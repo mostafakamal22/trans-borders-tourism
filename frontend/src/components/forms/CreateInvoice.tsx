@@ -6,10 +6,15 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../state/features/hooks/StateHooks";
-import { createInvoice } from "../../state/features/invoice/invoiceSlice";
+import {
+  createInvoice,
+  resetInvoicesStatus,
+} from "../../state/features/invoice/invoiceSlice";
 import FormButton from "../shared/FormButton";
 import MessagesContainer from "../shared/MessagesContainer";
 import logo from "../../assets/imgs/trans-logo.png";
+import { resetAdminAuthStatus } from "../../state/features/admin/auth/adminAuthSlice";
+import { UseResetStatus } from "../../hooks/UseResetStatus";
 
 export const CreateInvoice = () => {
   //state for Customer Details
@@ -106,6 +111,19 @@ export const CreateInvoice = () => {
 
     dispatch(createInvoice(invoiceData));
   };
+
+  //clean up status (when mount and unmount)
+  UseResetStatus(() => {
+    dispatch(resetAdminAuthStatus());
+    dispatch(resetInvoicesStatus());
+  });
+
+  UseResetStatus(() => {
+    return () => {
+      dispatch(resetAdminAuthStatus());
+      dispatch(resetInvoicesStatus());
+    };
+  });
 
   return (
     <div className="max-w-6xl w-full mx-auto my-10 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">

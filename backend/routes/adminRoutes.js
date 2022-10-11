@@ -18,6 +18,9 @@ const {
 const {
   checkPassword,
 } = require("../middlewares/adminMiddlewares/checkPassword");
+const {
+  comparePassword,
+} = require("../middlewares/adminMiddlewares/comparePasswords");
 
 router.route("/").post(validatePassword, createAdmin);
 
@@ -26,6 +29,12 @@ router.route("/login").post(adminLogin);
 router
   .route("/:id")
   .get(authAdminProtect, getOneAdmin)
-  .put(authAdminProtect, validatePassword, checkPassword, updateAdmin);
+  .put(
+    authAdminProtect,
+    comparePassword,
+    validatePassword,
+    checkPassword,
+    updateAdmin
+  );
 
 module.exports = router;

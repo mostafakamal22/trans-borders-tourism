@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { AiFillSlackCircle } from "react-icons/ai";
 import { FcDoughnutChart, FcInfo } from "react-icons/fc";
-import { updateAdmin } from "../../state/features/admin/auth/adminAuthSlice";
+import {
+  resetAdminAuthStatus,
+  updateAdmin,
+} from "../../state/features/admin/auth/adminAuthSlice";
 import {
   useAppDispatch,
   useAppSelector,
@@ -10,6 +13,8 @@ import {
 import FormButton from "../shared/FormButton";
 import MessagesContainer from "../shared/MessagesContainer";
 import logo from "../../assets/imgs/trans-logo.png";
+import { UseResetStatus } from "../../hooks/UseResetStatus";
+import { resetInvoicesStatus } from "../../state/features/invoice/invoiceSlice";
 
 export default function UpdateAdmin() {
   const dispatch = useAppDispatch();
@@ -44,22 +49,30 @@ export default function UpdateAdmin() {
     e.preventDefault();
     //set msg to none first
     setFormInputs({ ...formInputs, msg: "" });
-    //check for password match >>> if not matched then show error msg
-    if (password !== repeatedPassword) {
-      setFormInputs({ ...formInputs, msg: "password does not match" });
-      return;
-    }
 
     const adminData = {
       email: email.trim(),
       token: info.token,
       id: info.id,
       password,
+      repeatedPassword,
       oldPassword,
     };
     dispatch(updateAdmin(adminData));
   };
 
+  //clean up status (when mount and unmount)
+  UseResetStatus(() => {
+    dispatch(resetAdminAuthStatus());
+    dispatch(resetInvoicesStatus());
+  });
+
+  UseResetStatus(() => {
+    return () => {
+      dispatch(resetAdminAuthStatus());
+      dispatch(resetInvoicesStatus());
+    };
+  });
   return (
     <div className="max-w-5xl w-full mx-auto my-10 p-6 bg-slate-50 rounded shadow-lg shadow-black/30 ">
       <h3 className="flex justify-center items-center text-2xl italic font-bold text-center px-2 py-4 mb-10 rounded shadow bg-red-200 border-b-4 border-red-800">
@@ -73,7 +86,7 @@ export default function UpdateAdmin() {
         <div className="mb-6">
           <label
             htmlFor="email"
-            className="w-full inline-block font-semibold mb-4 p-2 text-gray-800 border-b-4 border-red-800 rounded shadow bg-red-200"
+            className="w-full inline-block font-semibold mb-4 p-2 text-white rounded shadow bg-red-800"
           >
             Email address
           </label>
@@ -93,7 +106,7 @@ export default function UpdateAdmin() {
         <div className="mb-6">
           <label
             htmlFor="oldPassword"
-            className="w-full inline-block font-semibold mb-4 p-2 text-gray-800 border-b-4 border-red-800 rounded shadow bg-red-200"
+            className="w-full inline-block font-semibold mb-4 p-2 text-white rounded shadow bg-red-800"
           >
             Old Password
           </label>
@@ -120,7 +133,7 @@ export default function UpdateAdmin() {
         <div className="mb-6">
           <label
             htmlFor="password"
-            className="w-full inline-block font-semibold mb-4 p-2 text-gray-800 border-b-4 border-red-800 rounded shadow bg-red-200"
+            className="w-full inline-block font-semibold mb-4 p-2 text-white rounded shadow bg-red-800"
           >
             New Password
           </label>
@@ -140,7 +153,7 @@ export default function UpdateAdmin() {
         <div className="mb-6">
           <label
             htmlFor="repeatedPassword"
-            className="w-full inline-block font-semibold mb-4 p-2 text-gray-800 border-b-4 border-red-800 rounded shadow bg-red-200"
+            className="w-full inline-block font-semibold mb-4 p-2 text-white rounded shadow bg-red-800"
           >
             Repeat New Password
           </label>
