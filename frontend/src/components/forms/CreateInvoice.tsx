@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 import { FcElectroDevices } from "react-icons/fc";
 import { RiSendPlaneFill } from "react-icons/ri";
 import {
@@ -63,6 +64,8 @@ export const CreateInvoice = () => {
   }, [isError, isSuccess, message, info, msg]);
 
   const handleItemCount = async (num: number) => {
+    if (num < 0 && itemsCount === 1) return;
+
     setItemsCount(itemsCount + num);
 
     const newItems =
@@ -104,7 +107,7 @@ export const CreateInvoice = () => {
   };
 
   return (
-    <div className="max-w-5xl w-full p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
+    <div className="max-w-6xl w-full p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <h3 className="flex justify-center items-center text-xl text-center font-bold px-2 py-4 mb-10 bg-red-200 border-b-4 border-red-800 rounded shadow ">
         <FcElectroDevices className="mr-1" size={50} />
         <span>Add New Invoice</span>
@@ -171,7 +174,7 @@ export const CreateInvoice = () => {
         {itemsDetails.map((item, index) => (
           <div
             key={index}
-            className="flex  items-center font-semibold  gap-4 px-5 py-5"
+            className="flex flex-wrap md:flex-nowrap items-center font-semibold  gap-4 px-5 py-5"
           >
             <label
               className="text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
@@ -237,13 +240,27 @@ export const CreateInvoice = () => {
           </div>
         ))}
 
-        <button onClick={() => handleItemCount(1)} type="button">
-          Add Item
-        </button>
+        <div className="flex justify-around">
+          <button
+            className="inline-flex font-bold text-xs sm:text-sm bg-blue-800 text-white hover:bg-white my-5 px-2 sm:px-3 py-2 hover:text-blue-800 border hover:border-blue-800 items-center rounded
+         shadow transition-all ease-in-out duration-300"
+            onClick={() => handleItemCount(1)}
+            type="button"
+          >
+            Add Item
+            <AiFillPlusCircle className="ml-1" size={20} />
+          </button>
 
-        <button onClick={() => handleItemCount(-1)} type="button">
-          Remove Item
-        </button>
+          <button
+            className="inline-flex font-bold text-xs sm:text-sm bg-red-800 text-white hover:bg-white my-5 px-2 sm:px-3 py-2 hover:text-red-800 border hover:border-red-800 items-center rounded
+         shadow transition-all ease-in-out duration-300"
+            onClick={() => handleItemCount(-1)}
+            type="button"
+          >
+            Remove Item
+            <AiFillMinusCircle className="ml-1" size={20} />
+          </button>
+        </div>
 
         <p className="flex font-bold px-2 py-4 text-lg">Invoice Details:-</p>
         <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">
