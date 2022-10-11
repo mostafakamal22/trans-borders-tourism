@@ -2,21 +2,9 @@ const Admin = require("../models/adminModel");
 const bcrypt = require("bcryptjs");
 const { generateAdminsToken } = require("../helpers/generateAdminsToken");
 
-//@desc   >>>> Get All Admins
-//@route  >>>> GET /api/admins
-//@Access >>>> private(Owner Only)
-// const getAdmins = async (req, res) => {
-//   try {
-//     const admins = await Admin.find().select("_id email role admin_name");
-//     res.status(200).json(admins);
-//   } catch (error) {
-//     res.status(500).send("Ooops!! Something Went Wrong, Try again...");
-//   }
-// };
-
 //@desc   >>>> Get one admin
 //@route  >>>> GET /api/admin/:id
-//@Access >>>> privete(admins Only)
+//@Access >>>> Public(admins)
 const getOneAdmin = async (req, res) => {
   let admin;
   try {
@@ -26,6 +14,7 @@ const getOneAdmin = async (req, res) => {
       name: admin.admin_name,
       email: admin.email,
       role: admin.role,
+      token: generateAdminsToken(admin.id, admin.email, admin.role),
     });
   } catch (error) {
     if (!admin) return res.status(404).send("Admin Not Found!");
@@ -35,7 +24,7 @@ const getOneAdmin = async (req, res) => {
 
 //@desc   >>>> admin login
 //@route  >>>> GET /api/admins/login
-//@Access >>>> privete(admins + owner)
+//@Access >>>> Public(admins)
 const adminLogin = async (req, res) => {
   //check for empty body
   if (!req.body.email || !req.body.password)
@@ -81,7 +70,7 @@ const createAdmin = async (req, res) => {
       role: req.body.role,
     });
     res.status(201).json({
-      _id: admin.id,
+      id: admin.id,
       admin_name: admin.admin_name,
       email: admin.email,
       role: admin.role,
@@ -98,104 +87,39 @@ const createAdmin = async (req, res) => {
 //@desc   >>>> UPDATE Admin
 //@route  >>>> PUT /api/admins/:id
 //@Access >>>> private(all Admin for their accounts)
-// const updateAdmin = async (req, res) => {
-//   try {
-//     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-//     //get admin
-//     const admin = await Admin.findById(req.params.id);
-//     //update user with new values
-//     admin.email = req.body.email;
-//     admin.markModified("email");
-//     admin.password = hashedPassword;
-//     admin.markModified("password");
+const updateAdmin = async (req, res) => {
+  try {
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    //get admin
+    const admin = await Admin.findById(req.params.id);
+    //update user with new values
+    admin.email = req.body.email;
+    admin.markModified("email");
+    admin.password = hashedPassword;
+    admin.markModified("password");
 
-//     //get updated admin info & send it back
-//     const updatedAdmin = await admin.save();
+    //get updated admin info & send it back
+    const updatedAdmin = await admin.save();
 
-//     res.status(200).json(updatedAdmin);
-//   } catch (error) {
-//     if (error.message.match(/(email|password|name|role)/gi)) {
-//       return res.status(400).send(error.message);
-//     }
+    res.status(200).json({
+      id: updatedAdmin.id,
+      name: updatedAdmin.admin_name,
+      email: updatedAdmin.email,
+      role: updatedAdmin.role,
+      token: generateAdminsToken(admin.id, admin.email, admin.role),
+    });
+  } catch (error) {
+    if (error.message.match(/(email|password|name|role)/gi)) {
+      return res.status(400).send(error.message);
+    }
 
-//     res.status(500).send("Ooops!! Something Went Wrong, Try again...");
-//   }
-// };
-
-//@desc   >>>> UPDATE Owner
-//@route  >>>> PUT /api/admin/owner/:id
-//@Access >>>> private(Owner Only)
-// const updateOwner = async (req, res) => {
-//   try {
-//     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-//     //get owner
-//     const owner = await Admin.findById(req.params.id);
-//     //update owner info
-//     owner.email = req.body.email;
-//     owner.markModified("email");
-//     owner.password = hashedPassword;
-//     owner.markModified("password");
-
-//     //get updated Owner and send it back
-//     const updatedOwner = await owner.save();
-
-//     res.status(200).json(updatedOwner);
-//   } catch (error) {
-//     if (error.message.match(/(email|password|name|role)/gi)) {
-//       return res.status(400).send(error.message);
-//     }
-//     res.status(500).send("Ooops!! Something Went Wrong, Try again...");
-//   }
-// };
-
-//@desc   >>>> Delete one Admin
-//@route  >>>> DELETE /api/admins/:id
-//@Access >>>> private(Owner Only)
-// const deleteAdmin = async (req, res) => {
-//   try {
-//     const deletedAdmin = await Admin.findByIdAndDelete(req.params.id);
-//     res.status(200).json({ id: deletedAdmin.id });
-//   } catch (error) {
-//     res.status(500).send("Ooops!! Something Went Wrong, Try again...");
-//   }
-// };
-
-//@desc   >>>> Update Admin Role
-//@route  >>>> put /api/admins/updaterole/:id
-//@Access >>>> private(Owner Only)
-// const updateAdminRole = async (req, res) => {
-//   //check if new role is actually the old role
-//   if (req.body.newRole === req.body.oldRole) {
-//     return res.status(400).send("Please Specify New Role For That Admin");
-//   }
-
-//   try {
-//     //get admin wanted to update
-//     const admin = await Admin.findById(req.params.id);
-//     //update user with new role
-//     admin.role = req.body.newRole;
-//     admin.markModified("role");
-
-//     //get updated admin info & send it back
-//     const updatedAdmin = await admin.save();
-
-//     res.status(200).json({
-//       _id: updatedAdmin.id,
-//       admin_name: updatedAdmin.admin_name,
-//       email: updatedAdmin.email,
-//       role: updatedAdmin.role,
-//     });
-//   } catch (error) {
-//     if (error.message.match(/(email|password|name|role)/gi)) {
-//       return res.status(400).send(error.message);
-//     }
-
-//     res.status(500).send("Ooops!! Something Went Wrong, Try again...");
-//   }
-// };
+    res.status(500).send("Ooops!! Something Went Wrong, Try again...");
+  }
+};
 
 module.exports = {
-  getOneAdmin,
+  updateAdmin,
   createAdmin,
+  getOneAdmin,
   adminLogin,
 };
