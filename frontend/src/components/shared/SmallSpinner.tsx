@@ -1,18 +1,17 @@
 import { CSSProperties } from "react";
-import { BounceLoader } from "react-spinners";
+import { BeatLoader } from "react-spinners";
 
 const override: CSSProperties = {
-  display: "block",
-  margin: "55px auto",
+  margin: "0 0 -6px 4px",
 };
 
 function SmallSpinner({ isLoading }: { isLoading?: boolean }) {
   return (
-    <BounceLoader
-      color={"#ff1717"}
+    <BeatLoader
+      color={"#ffffff"}
       loading={isLoading}
       cssOverride={override}
-      size={70}
+      size={8}
     />
   );
 }

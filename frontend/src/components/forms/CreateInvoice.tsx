@@ -300,6 +300,7 @@ export const CreateInvoice = () => {
                 subtotal: +e.target.value,
               })
             }
+            step="0.01"
             min={0}
             required
           />
@@ -321,6 +322,7 @@ export const CreateInvoice = () => {
                 taxable: +e.target.value,
               })
             }
+            step="0.01"
             min={0}
             required
           />
@@ -343,6 +345,7 @@ export const CreateInvoice = () => {
                 taxRate: +e.target.value,
               })
             }
+            step="0.01"
             min={0}
             required
           />
@@ -362,6 +365,7 @@ export const CreateInvoice = () => {
             onChange={(e) =>
               setInvoieceDetails({ ...invoiceDetails, taxDue: +e.target.value })
             }
+            step="0.01"
             min={0}
             required
           />
@@ -381,6 +385,7 @@ export const CreateInvoice = () => {
             onChange={(e) =>
               setInvoieceDetails({ ...invoiceDetails, total: +e.target.value })
             }
+            step="0.01"
             min={0}
             required
           />
@@ -414,6 +419,7 @@ export const CreateInvoice = () => {
         {/*form button */}
         <FormButton
           text={{ default: "Save Invoice", loading: "Processing" }}
+          isLoading={isLoading}
           icon={<RiSendPlaneFill className="ml-1" size={25} />}
         />
       </form>

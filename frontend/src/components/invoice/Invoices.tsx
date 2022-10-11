@@ -4,7 +4,6 @@ import FormButton from "../shared/FormButton";
 import MessagesContainer from "../shared/MessagesContainer";
 import { TiDelete } from "react-icons/ti";
 import { FcSearch } from "react-icons/fc";
-import SmallSpinner from "../shared/SmallSpinner";
 import { PaginationTable } from "../shared/PaginationTable";
 import {
   useAppDispatch,
@@ -13,6 +12,7 @@ import {
 import { deleteInvoice } from "../../state/features/invoice/invoiceSlice";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
+import { MainSpinner } from "../shared/MainSpinner";
 
 const tableHeaderTitles = [
   "Customer ID",
@@ -241,7 +241,7 @@ export const InvoiceListControl = () => {
       )}
 
       {/* Show spinner when Loading State is true */}
-      {isLoading && <SmallSpinner />}
+      {isLoading && <MainSpinner isLoading={isLoading} />}
     </div>
   );
 };
