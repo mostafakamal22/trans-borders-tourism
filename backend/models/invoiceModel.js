@@ -25,10 +25,12 @@ const productSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: [true, "Please Provide Product Price!"],
+    min: [0, "Price Can NOT Be Less Than 0"],
   },
   quantity: {
     type: Number,
     required: [true, "Please Provide Product Quantity!"],
+    min: [0, "Quantity Can NOT Be Less Than 0"],
   },
 });
 
@@ -43,6 +45,10 @@ const invoiceSchema = new mongoose.Schema(
       type: [productSchema],
       required: [true, "Please Provide Ivoice Details!"],
     },
+    ID: {
+      type: String,
+      required: [true, "Please Provide Invoice ID!"],
+    },
     date: {
       type: Date,
       required: [true, "Please Provide Invoice Date!"],
@@ -54,19 +60,24 @@ const invoiceSchema = new mongoose.Schema(
     subtotal: {
       type: Number,
       required: [true, "Please Provide Invoice SubTotal!"],
+      min: [0, "Subtotal Can NOT Be Less Than 0"],
     },
     total: {
       type: Number,
       required: [true, "Please Provide Invoice Total!"],
+      min: [0, "Total Can NOT Be Less Than 0"],
     },
     taxable: {
       type: Number,
+      min: [0, "Taxable Can NOT Be Less Than 0"],
     },
     tax_rate: {
       type: Number,
+      min: [0, "Tax Rate Can NOT Be Less Than 0"],
     },
     tax_due: {
       type: Number,
+      min: [0, "Tax Due Can NOT Be Less Than 0"],
     },
     other: {
       type: String,

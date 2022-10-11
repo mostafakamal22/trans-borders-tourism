@@ -19,6 +19,7 @@ export const CreateInvoice = () => {
 
   //state for invoice Details
   const [invoiceDetails, setInvoieceDetails] = useState({
+    ID: "",
     date: "",
     dueDate: "",
     subtotal: 0,
@@ -86,6 +87,7 @@ export const CreateInvoice = () => {
 
     const invoiceData = {
       token: info.token,
+      ID: invoiceDetails.ID,
       customer: { ...customerDetails },
       details: [...itemsDetails],
       total: invoiceDetails.total,
@@ -245,6 +247,23 @@ export const CreateInvoice = () => {
 
         <p className="flex font-bold px-2 py-4 text-lg">Invoice Details:-</p>
         <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">
+          <label
+            className="basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
+            htmlFor="ID"
+          >
+            Invoice #
+          </label>
+
+          <input
+            className="basis-full  sm:basis-1/3  px-3 py-1.5 mx-4 text-base font-normal text-gray-700 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
+            type="text"
+            name="ID"
+            defaultValue={invoiceDetails.ID}
+            onChange={(e) =>
+              setInvoieceDetails({ ...invoiceDetails, ID: e.target.value })
+            }
+            required
+          />
           <label
             className="basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
             htmlFor="date"
