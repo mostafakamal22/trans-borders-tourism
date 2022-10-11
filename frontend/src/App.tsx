@@ -13,6 +13,18 @@ import { Home } from "./components/home/Home";
 import { InvoiceListControl } from "./components/invoice/Invoices";
 import { CreateInvoice } from "./components/forms/CreateInvoice";
 import { ShowInvoice } from "./components/invoice/ShowInvoice";
+import { Footer } from "./components/shared/Footer";
+import { Navbar } from "./components/shared/Navbar";
+
+//User And Admin Paths
+const paths = [
+  "/profile/",
+  "/profile/update",
+  "/profile/update",
+  "/invoices/create",
+  "/invoices/",
+  "/invoices/:id",
+];
 
 const App: FC = () => {
   //Detect admin
@@ -26,29 +38,39 @@ const App: FC = () => {
           <Route index element={<AdminLogin />} />
           <Route path="/admins/login" element={<AdminLogin />} />
           <Route path="/login" element={<AdminLogin />} />
-
+          {paths.map((stringPath) => (
+            <Route
+              key={"Home"}
+              path={stringPath}
+              element={<Navigate to={"/"} />}
+            />
+          ))}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       )}
 
       {/* Admin Routes */}
       {admin && (
-        <Routes>
-          <Route index element={<Home />} />
-          <Route path="/register" element={<Navigate to={"/"} />} />
-          <Route path="/login" element={<Navigate to={"/"} />} />
-          <Route path="/admins/login" element={<Navigate to={"/"} />} />
-          <Route path="/profile" element={<AdminProfile />} />
-          <Route path="/invoices" element={<InvoiceListControl />} />
-          <Route path="/invoices/create" element={<CreateInvoice />} />
-          <Route path="/invoices/:id" element={<ShowInvoice />} />
-          {/* <Route
+        <>
+          <Navbar />
+          <Routes>
+            <Route index element={<Home />} />
+            <Route path="/register" element={<Navigate to={"/"} />} />
+            <Route path="/login" element={<Navigate to={"/"} />} />
+            <Route path="/admins/login" element={<Navigate to={"/"} />} />
+            <Route path="/profile" element={<AdminProfile />} />
+            <Route path="/invoices" element={<InvoiceListControl />} />
+            <Route path="/invoices/create" element={<CreateInvoice />} />
+            <Route path="/invoices/:id" element={<ShowInvoice />} />
+            {/* <Route
             
             path="/profile/update"
             element={<UpdateAdminProfile />}
           /> */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+          <Footer />
+        </>
       )}
     </Router>
   );
