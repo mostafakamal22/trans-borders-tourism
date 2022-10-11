@@ -12,6 +12,7 @@ import AdminProfile from "./components/profile/AdminProfile";
 import { Home } from "./components/home/Home";
 import { InvoiceListControl } from "./components/invoice/Invoices";
 import { CreateInvoice } from "./components/forms/CreateInvoice";
+import { ShowInvoice } from "./components/invoice/ShowInvoice";
 
 const App: FC = () => {
   //Detect admin
@@ -40,6 +41,7 @@ const App: FC = () => {
           <Route path="/profile" element={<AdminProfile />} />
           <Route path="/invoices" element={<InvoiceListControl />} />
           <Route path="/invoices/create" element={<CreateInvoice />} />
+          <Route path="/invoices/:id" element={<ShowInvoice />} />
           {/* <Route
             
             path="/profile/update"
