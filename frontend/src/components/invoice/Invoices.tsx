@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import { MainSpinner } from "../shared/MainSpinner";
 
 const tableHeaderTitles = [
+  "Invoice #",
   "Customer ID",
   "Customer Name",
   "Date",
@@ -39,18 +40,18 @@ export const InvoiceListControl = () => {
   //search message state
   const [msg, setMsg] = useState("");
 
-  //   //filtered Invoiceslist
-  //   const filteredInvoices =
-  //     invoiceList &&
-  //     invoiceList.filter((invoice: any) => {
-  //       if (
-  //         invoice?.customer?.name
-  //           .toLowerCase()
-  //           .includes(searchQuery.trim().toLowerCase())
-  //       ) {
-  //         return invoice;
-  //       }
-  //     });
+  //filtered Invoiceslist
+  const filteredInvoices =
+    invoiceList &&
+    invoiceList.filter((invoice: any) => {
+      if (
+        invoice?.customer?.name
+          .toLowerCase()
+          .includes(searchQuery.trim().toLowerCase())
+      ) {
+        return invoice;
+      }
+    });
 
   // handle Delete Invoice
   const handleRemoving = (e: any, removedInvoiceID: string) => {
@@ -99,6 +100,14 @@ export const InvoiceListControl = () => {
         key={invoice._id}
         className={`${index % 2 === 0 ? "bg-white" : "bg-gray-100"} border-b `}
       >
+        {/*Invoice ID*/}
+        <th
+          scope="row"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x-2 text-center"
+        >
+          {invoice.ID}
+        </th>
+
         {/*Customer ID*/}
         <th
           scope="row"
@@ -172,31 +181,21 @@ export const InvoiceListControl = () => {
     );
   };
 
-  //   //clean up for usersList status (on mount , unmount)
-  //   UseResetStatus(() => {
-  //     dispatch(resetUsersStatus());
-  //   });
-
-  //   UseResetStatus(() => {
-  //     return () => {
-  //       dispatch(resetUsersStatus());
-  //     };
-  //   });
-
   return (
-    <div className="max-w-5xl min-h-[75vh] w-full overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
-      <h3 className="text-2xl my-10 p-3 text-center font-bold bg-blue-200 text-gray-900 border-b-4 border-blue-800 rounded shadow">
-        Invoices List ({invoiceList && invoiceList.length})
+    <div className="max-w-6xl min-h-[75vh] w-full overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
+      <h3 className="text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
+        Invoices List ({filteredInvoices && filteredInvoices.length})
       </h3>
 
       {/*search Invoices with name*/}
       {(invoiceList?.length !== 0 || isLoading) && (
-        <div className="flex justify-center items-center flex-wrap md:flex-nowrap gap-4 mb-6 p-4 bg-blue-200 rounded-md border-b-4 border-blue-800">
+        <div className="flex justify-center items-center flex-wrap md:flex-nowrap gap-4 mb-6 p-4 bg-red-200 rounded-md border-b-4 border-red-800">
           <label
             htmlFor="searchQuery"
             className="flex items-center w-full md:w-auto text-black font-bold"
           >
-            <FcSearch size={40} /> <span>Search Invoices By Name:-</span>
+            <FcSearch size={40} />{" "}
+            <span>Search Invoices By Customer Name:-</span>
           </label>
 
           <input
@@ -217,24 +216,24 @@ export const InvoiceListControl = () => {
       )}
 
       {/*Display Table All Data Needed*/}
-      {!isLoading && invoiceList?.length > 0 && (
+      {!isLoading && filteredInvoices?.length > 0 && (
         <PaginationTable
           tableRow={tableRow}
           tableHeader={tableHeader}
-          tableBodyData={invoiceList}
+          tableBodyData={filteredInvoices.reverse()}
           rowsPerPage={10}
         />
       )}
 
       {/* if there is No Invoice Records */}
-      {!searchQuery && invoiceList?.length === 0 && !isLoading && (
+      {!searchQuery && filteredInvoices?.length === 0 && !isLoading && (
         <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
           There No Invoice Records Currently!
         </div>
       )}
 
       {/* if there is search query no Invoice matches >>> No Search Found*/}
-      {searchQuery && invoiceList?.length === 0 && !isLoading && (
+      {searchQuery && filteredInvoices?.length === 0 && !isLoading && (
         <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
           There No Search Result!
         </div>
