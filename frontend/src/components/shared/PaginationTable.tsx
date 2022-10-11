@@ -11,7 +11,7 @@ export const PaginationTable = ({
   const [page, setPage] = useState(1);
   const { slice, range } = useTable(tableBodyData, page, rowsPerPage);
   return (
-    <div className="overflow-x-auto relative shadow-md sm:rounded-lg my-10 border-y-4 border-blue-800 rounded">
+    <div className="overflow-x-auto relative shadow-md sm:rounded-lg my-10 border-y-4 border-red-800 rounded">
       <table className="w-full text-sm font-bold text-gray-500 ">
         <thead className="text-gray-900 uppercase bg-gray-300">
           {tableHeader}

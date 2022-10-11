@@ -7,6 +7,7 @@ import {
 } from "../../state/features/hooks/StateHooks";
 import { useEffect } from "react";
 import { getAllInvoices } from "../../state/features/invoice/invoiceSlice";
+import logo from "../../assets/imgs/trans-logo.png";
 
 export default function AdminProfile() {
   const { info } = useAppSelector((state) => state.adminAuth);
@@ -17,13 +18,15 @@ export default function AdminProfile() {
   }, []);
 
   return (
-    <div className="max-w-4xl w-full  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
-      <h2 className="flex items-center text-gray-800 mb-4 text-2xl font-bold px-2 py-4 my-4 rounded shadow bg-red-200 border-b-4 border-red-800">
+    <div className="max-w-5xl w-full min-h-[75vh] mx-auto my-10 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
+      <h3 className="flex items-center text-gray-800 mb-4 text-2xl font-bold px-2 py-4 my-4 rounded shadow bg-red-200 border-b-4 border-red-800">
         <span className="flex justify-center items-center mr-2">
           <FcVip size={50} />
         </span>
         {info.name}
-      </h2>
+      </h3>
+
+      <img className="mx-auto" src={logo} alt="logo" />
 
       <ul className="w-full max-w-[550px] py-2 px-3 mt-3 rounded">
         <li className="flex items-center p-3 mb-2  border-r-4 border-red-800 rounded shadow bg-red-200">

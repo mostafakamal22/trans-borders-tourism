@@ -15,6 +15,7 @@ import { CreateInvoice } from "./components/forms/CreateInvoice";
 import { ShowInvoice } from "./components/invoice/ShowInvoice";
 import { Footer } from "./components/shared/Footer";
 import { Navbar } from "./components/shared/Navbar";
+import UpdateAdmin from "./components/forms/UpdateAdmin";
 
 //User And Admin Paths
 const paths = [
@@ -62,11 +63,7 @@ const App: FC = () => {
             <Route path="/invoices" element={<InvoiceListControl />} />
             <Route path="/invoices/create" element={<CreateInvoice />} />
             <Route path="/invoices/:id" element={<ShowInvoice />} />
-            {/* <Route
-            
-            path="/profile/update"
-            element={<UpdateAdminProfile />}
-          /> */}
+            <Route path="/profile/update" element={<UpdateAdmin />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />

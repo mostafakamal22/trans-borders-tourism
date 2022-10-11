@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
-import { FcElectroDevices } from "react-icons/fc";
+import { FcDocument } from "react-icons/fc";
 import { RiSendPlaneFill } from "react-icons/ri";
 import {
   useAppDispatch,
@@ -9,6 +9,7 @@ import {
 import { createInvoice } from "../../state/features/invoice/invoiceSlice";
 import FormButton from "../shared/FormButton";
 import MessagesContainer from "../shared/MessagesContainer";
+import logo from "../../assets/imgs/trans-logo.png";
 
 export const CreateInvoice = () => {
   //state for Customer Details
@@ -107,13 +108,18 @@ export const CreateInvoice = () => {
   };
 
   return (
-    <div className="max-w-6xl w-full p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
+    <div className="max-w-6xl w-full mx-auto my-10 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <h3 className="flex justify-center items-center text-xl text-center font-bold px-2 py-4 mb-10 bg-red-200 border-b-4 border-red-800 rounded shadow ">
-        <FcElectroDevices className="mr-1" size={50} />
+        <FcDocument className="mr-1" size={50} />
         <span>Add New Invoice</span>
       </h3>
+
+      <img className="mx-auto" src={logo} alt="logo" />
+
       <form onSubmit={handleSubmit}>
-        <p className="flex font-bold px-2 py-4 text-lg">Customer Details:-</p>
+        <p className="font-bold p-2 rounded text-lg text-white bg-red-800 my-4">
+          [ Customer Details ]
+        </p>
         <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">
           <label
             className="basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
@@ -170,7 +176,9 @@ export const CreateInvoice = () => {
           />
         </div>
 
-        <p className="flex font-bold px-2 py-4 text-lg">Items Details:-</p>
+        <p className="font-bold p-2 rounded text-lg text-white bg-red-800 my-4">
+          [ Items Details ]
+        </p>
         {itemsDetails.map((item, index) => (
           <div
             key={index}
@@ -262,7 +270,9 @@ export const CreateInvoice = () => {
           </button>
         </div>
 
-        <p className="flex font-bold px-2 py-4 text-lg">Invoice Details:-</p>
+        <p className="font-bold p-2 rounded text-lg text-white bg-red-800 my-4">
+          [ Invoice Details ]
+        </p>
         <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">
           <label
             className="basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import FormButton from "../shared/FormButton";
 import MessagesContainer from "../shared/MessagesContainer";
 import { TiDelete } from "react-icons/ti";
-import { FcSearch } from "react-icons/fc";
+import { FcBarChart, FcSearch } from "react-icons/fc";
 import { PaginationTable } from "../shared/PaginationTable";
 import {
   useAppDispatch,
@@ -13,6 +13,7 @@ import { deleteInvoice } from "../../state/features/invoice/invoiceSlice";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import { MainSpinner } from "../shared/MainSpinner";
+import logo from "../../assets/imgs/trans-logo.png";
 
 const tableHeaderTitles = [
   "Invoice #",
@@ -182,10 +183,15 @@ export const InvoiceListControl = () => {
   };
 
   return (
-    <div className="max-w-6xl min-h-[75vh] w-full overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
-      <h3 className="text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
+    <div className="max-w-6xl min-h-[75vh] w-full mx-auto my-10 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
+      <h3 className="flex justify-center items-center text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
+        <span className="flex justify-center items-center mr-2">
+          <FcBarChart size={50} />
+        </span>
         Invoices List ({filteredInvoices && filteredInvoices.length})
       </h3>
+
+      <img className="mx-auto" src={logo} alt="logo" />
 
       {/*search Invoices with name*/}
       {(invoiceList?.length !== 0 || isLoading) && (
