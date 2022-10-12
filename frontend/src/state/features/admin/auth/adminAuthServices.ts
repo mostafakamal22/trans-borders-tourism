@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL =
   process.env.NODE_ENV === "production"
-    ? `${process.env.CORS_DOMAINS}/api/admins/`
+    ? "https://cute-gold-bison-tie.cyclic.app/api/admins/"
     : "http://localhost:5000/api/admins/";
 
 //Login Admin
