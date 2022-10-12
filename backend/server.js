@@ -37,9 +37,11 @@ app.use("/api/invoices", invoicesRoute);
 
 //serve Frontend
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join("dist")));
+  app.use(express.static(path.join("dist/trans-borders-tourism")));
 
-  app.get("*", (req, res) => res.sendFile(path.resolve("dist", "index.html")));
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve("dist", "trans-borders-tourism", "index.html"))
+  );
 }
 
 app.listen(process.env.PORT || 5000, () => {
