@@ -2,6 +2,8 @@ require("dotenv").config();
 const path = require("path");
 const express = require("express");
 const cors = require("cors");
+const { corsDevOptions } = require("./config/corsConfig");
+const { corsProOptions } = require("./config/corsConfig");
 
 const app = express();
 
@@ -14,12 +16,11 @@ connectToMongoose();
 app.use(express.json());
 
 //cors middleware
-
-const { corsProOptions } = require("./config/corsConfig");
-app.use(cors(corsProOptions));
-
-// const { corsDevOptions } = require("./config/corsConfig");
-// app.use(cors(corsDevOptions));
+if (process.env.NODE_ENV === "production") {
+  app.use(cors(corsProOptions));
+} else {
+  app.use(cors(corsDevOptions));
+}
 
 // Apply the rate limiting middleware to API calls only
 // const {
