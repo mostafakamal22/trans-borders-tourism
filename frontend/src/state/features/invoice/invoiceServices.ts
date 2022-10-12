@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL =
   process.env.NODE_ENV === "production"
-    ? "https://e-bank-mern-app.herokuapp.com/api/users/"
+    ? "https://cute-gold-bison-tie.cyclic.app/api/users/"
     : "http://localhost:5000/api/invoices/";
 
 //Get All Invoices

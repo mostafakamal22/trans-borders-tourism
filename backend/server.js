@@ -14,11 +14,13 @@ connectToMongoose();
 app.use(express.json());
 
 //cors middleware
-// const { corsProOptions } = require("./config/corsConfig");
-// app.use(cors(corsProOptions));
-
-const { corsDevOptions } = require("./config/corsConfig");
-app.use(cors(corsDevOptions));
+if (process.env.NODE_ENV === "production") {
+  const { corsProOptions } = require("./config/corsConfig");
+  app.use(cors(corsProOptions));
+} else {
+  const { corsDevOptions } = require("./config/corsConfig");
+  app.use(cors(corsDevOptions));
+}
 
 // Apply the rate limiting middleware to API calls only
 // const {
