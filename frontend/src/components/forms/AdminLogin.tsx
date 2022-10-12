@@ -71,7 +71,7 @@ export default function AdminLogin() {
       {/* <Logo /> */}
       <h3 className="flex justify-center items-center text-2xl text-red-800 font-bold text-center p-2 my-4 rounded shadow bg-red-200 border-x-4 border-red-800 select-none">
         <FcPrivacy size={45} />
-        <span>Admins Login</span>
+        <span>تسجيل دخول الأدمن</span>
       </h3>
 
       <img className="mx-auto" src={logo} alt="logo" />
@@ -82,7 +82,7 @@ export default function AdminLogin() {
             htmlFor="email"
             className="w-full inline-block font-semibold mb-4 p-2 text-white rounded shadow bg-red-800"
           >
-            Email address
+            عنوان البريد الإلكترونى
           </label>
           <input
             type="email"
@@ -92,7 +92,7 @@ export default function AdminLogin() {
             onChange={(e) =>
               setFormInputs({ ...formInputs, email: e.target.value })
             }
-            placeholder="Enter your Email"
+            placeholder="أدخل البريد الإلكترونى الخاص بك"
             required
           />
         </div>
@@ -101,7 +101,7 @@ export default function AdminLogin() {
             htmlFor="password"
             className="w-full inline-block font-semibold mb-4 p-2 text-white rounded shadow bg-red-800"
           >
-            Password
+            كلمة السر
           </label>
           <input
             type="password"
@@ -111,7 +111,7 @@ export default function AdminLogin() {
             onChange={(e) =>
               setFormInputs({ ...formInputs, password: e.target.value })
             }
-            placeholder="Enter Your Password"
+            placeholder="أدخل كلمة السر الخاصة بك"
             required
           />
         </div>
@@ -127,7 +127,7 @@ export default function AdminLogin() {
 
         {/*form button */}
         <FormButton
-          text={{ loading: "Processing", default: "Login" }}
+          text={{ loading: "جارى تسجيل الدخول", default: "تسجيل الدخول" }}
           isLoading={isLoading}
           icon={<RiLoginCircleFill className="mb-[-2px] ml-1" size={27} />}
         />

@@ -77,7 +77,7 @@ export default function UpdateAdmin() {
     <div className="max-w-5xl w-full mx-auto my-10 p-6 bg-slate-50 rounded shadow-lg shadow-black/30 ">
       <h3 className="flex justify-center items-center text-2xl italic font-bold text-center px-2 py-4 mb-10 rounded shadow bg-red-200 border-b-4 border-red-800">
         <FcDoughnutChart className="ml-1" size={50} />
-        <span>Update Your Info</span>
+        <span>تعديل بيانات الحساب</span>
       </h3>
 
       <img className="mx-auto" src={logo} alt="logo" />
@@ -113,8 +113,8 @@ export default function UpdateAdmin() {
           <span className="flex items-center flex-col md:flex-row gap-2 text-sm md:text-base  text-blue-700 mb-2 font-medium">
             <FcInfo size={27} />
             <span>
-              If you DO NOT want to change password, just type it for all
-              password field.
+              إذا لم ترغب فى تغيير كلمة السر القديمة ,فعليك بتكرارها فى الثلاث
+              خانات القادمة
             </span>
           </span>
           <input
@@ -184,7 +184,7 @@ export default function UpdateAdmin() {
 
         {/*form button */}
         <FormButton
-          text={{ loading: "Updating", default: "Update" }}
+          text={{ loading: "جارى التعديل", default: "تعديل البيانات" }}
           isLoading={isLoading}
           icon={<AiFillSlackCircle className="ml-1" size={25} />}
         />

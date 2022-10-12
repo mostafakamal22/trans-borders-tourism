@@ -163,7 +163,7 @@ export const InvoiceListControl = () => {
             to={`/invoices/${invoice._id}`}
             className="max-w-[150px] m-auto text-white bg-blue-800 rounded shadow-sm px-3 py-2"
           >
-            Show
+            عرض الفاتورة
           </Link>
         </th>
 
@@ -177,7 +177,7 @@ export const InvoiceListControl = () => {
             onSubmit={(event) => handleRemoving(event, invoice._id)}
           >
             <FormButton
-              text={{ default: "Delete" }}
+              text={{ default: "مسح الفاتورة" }}
               bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}
               icon={<TiDelete className="mb-[-2px]" size={25} />}
             />
@@ -206,31 +206,29 @@ export const InvoiceListControl = () => {
         <span className="flex justify-center items-center mr-2">
           <FcBarChart size={50} />
         </span>
-        Invoices List ({filteredInvoices && filteredInvoices.length})
+        ({filteredInvoices && filteredInvoices.length}) الفواتير المحفوظة
       </h3>
 
       <img className="mx-auto" src={logo} alt="logo" />
 
       {/*search Invoices with name*/}
       {(invoiceList?.length !== 0 || isLoading) && (
-        <div className="flex justify-center items-center flex-wrap md:flex-nowrap gap-4 mb-6 p-4 bg-red-200 rounded-md border-b-4 border-red-800">
-          <label
-            htmlFor="searchQuery"
-            className="flex items-center w-full md:w-auto text-black font-bold"
-          >
-            <FcSearch size={40} />{" "}
-            <span>Search Invoices By Customer Name:-</span>
-          </label>
-
+        <div className="flex justify-center items-center flex-wrap md:flex-nowrap gap-4 m-6 p-4 bg-red-700 rounded-md ">
           <input
             type="text"
             name="searchQuery"
-            className="block w-full md:w-auto px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-500 rounded transition ease-in-out m-0
-          focus:text-gray-700 focus:bg-white focus:border-black focus:shadow-md focus:outline-none"
-            placeholder="search invoice"
+            className="block w-full md:w-md px-3 py-1.5 text-base font-normal text-red-700 bg-white bg-clip-padding border border-solid border-red-500 rounded transition ease-in-out m-0
+          focus:text-red-700 focus:bg-white focus:border-red focus:shadow-md focus:outline-none"
+            placeholder="بحث عن الفاتورة بالإسم"
             defaultValue={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
+          <label
+            htmlFor="searchQuery"
+            className="flex items-center w-full md:w-1/2 text-white font-bold"
+          >
+            <FcSearch size={40} /> <span>بحث عن فاتورة بإسم العميل </span>
+          </label>
         </div>
       )}
 

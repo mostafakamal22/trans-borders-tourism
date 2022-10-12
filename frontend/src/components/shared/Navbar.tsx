@@ -30,7 +30,7 @@ export const Navbar = () => {
                 }
                 end
               >
-                Home
+                الرئيسية
               </NavLink>
             </li>
             <li>
@@ -41,7 +41,7 @@ export const Navbar = () => {
                 }
                 end
               >
-                Invoices
+                الفواتير
               </NavLink>
             </li>
             <li>
@@ -51,7 +51,7 @@ export const Navbar = () => {
                   isActive ? "text-blue-700" : "text-black"
                 }
               >
-                Add Invoice
+                إضافة فاتورة
               </NavLink>
             </li>
 
@@ -80,7 +80,7 @@ export const Navbar = () => {
                 className="flex font-bold text-xs sm:text-sm bg-red-800 text-white hover:bg-white  px-2 sm:px-3 py-2 hover:text-red-800 border hover:border-red-800 items-center rounded
          shadow transition-all ease-in-out duration-300"
               >
-                Logout
+                تسجيل الخروج
                 <RiLogoutCircleFill className="ml-1" size={20} />
               </button>
             </li>
