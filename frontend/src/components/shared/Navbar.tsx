@@ -4,9 +4,33 @@ import logo from "../../assets/imgs/trans-logo.png";
 import { adminLogout } from "../../state/features/admin/auth/adminAuthSlice";
 import { useAppDispatch } from "../../state/features/hooks/StateHooks";
 import { adminsLogout } from "../../state/features/invoice/invoiceSlice";
+import { useEffect } from "react";
 
 export const Navbar = () => {
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const navbar = document.getElementsByTagName("nav")[0];
+    const navList = document.querySelector("nav  ul");
+
+    const changeNavPaddingAtScroll = () => {
+      if (window.scrollY && navbar?.classList.contains("py-2.5")) {
+        navbar?.classList.remove("py-2.5");
+        navList?.classList.remove("p-4");
+      }
+
+      if (!window.scrollY && !navbar?.classList.contains("py-2.5")) {
+        navbar?.classList.add("py-2.5");
+        navList?.classList.add("p-4");
+      }
+    };
+
+    window.addEventListener("scroll", changeNavPaddingAtScroll);
+
+    return () => {
+      window.removeEventListener("scroll", changeNavPaddingAtScroll);
+    };
+  }, []);
 
   const handleLogout = () => {
     dispatch(adminsLogout());
@@ -14,14 +38,14 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="bg-slate-50 px-2 sm:px-4 py-2.5 sticky w-full z-20 top-0 left-0 shadow-md">
-      <div className="container flex flex-wrap justify-between items-center mx-auto">
-        <Link to="/" className="flex items-center">
-          <img src={logo} className="mr-3 h-6 sm:h-16" alt="Trans Logo" />
+    <nav className="bg-slate-50 px-2 sm:px-4 py-2.5 sticky w-full z-20 top-0 left-0 shadow-md transition-all duration-300 ease-in-out">
+      <div className="container flex flex-wrap justify-between items-center ">
+        <Link to="/" className=" items-center m-auto hidden sm:flex md:m-0">
+          <img src={logo} className="md:mr-3 h-16" alt="Trans Logo" />
         </Link>
 
         <div className="justify-between items-center w-full flex md:w-auto md:order-1">
-          <ul className="flex items-center justify-center p-4 mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-lg md:font-semibold ">
+          <ul className="w-full flex items-center justify-center gap-4 flex-wrap p-4 my-1 md:text-lg md:font-semibold transition-all duration-300 ease-in-out">
             <li>
               <NavLink
                 to="/"

@@ -126,7 +126,7 @@ export const CreateInvoice = () => {
   });
 
   return (
-    <div className="max-w-6xl w-full mx-auto my-10 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
+    <div className="max-w-6xl w-full mx-auto my-20 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <h3 className="flex justify-center items-center text-xl text-center font-bold px-2 py-4 mb-10 bg-red-200 border-b-4 border-red-800 rounded shadow ">
         <FcDocument className="mr-1" size={50} />
         <span>إضافة فاتورة جديدة</span>

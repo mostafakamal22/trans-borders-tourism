@@ -8,7 +8,7 @@ export default function AdminProfile() {
   const { info } = useAppSelector((state) => state.adminAuth);
 
   return (
-    <div className="max-w-5xl w-full min-h-[75vh] mx-auto my-10 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
+    <div className="max-w-5xl w-full min-h-[75vh] mx-auto my-20 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <h3 className="flex items-center text-gray-800 mb-4 text-2xl font-bold px-2 py-4 my-4 rounded shadow bg-red-200 border-b-4 border-red-800">
         <span className="flex justify-center items-center mr-2">
           <FcVip size={50} />

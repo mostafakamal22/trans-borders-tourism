@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import { Navigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../../state/features/hooks/StateHooks";
-import { PaginationTable } from "../shared/PaginationTable";
 import logo from "../../assets/imgs/trans-logo.png";
 
 const tableHeaderTitles = ["Description", "Quantity", "Price"];
@@ -37,7 +36,7 @@ export const ShowInvoice = () => {
     return (
       <tr
         key={detail._id}
-        className={`${index % 2 === 0 ? "bg-white" : "bg-gray-100"} border-b `}
+        className={`${index % 2 === 0 ? "bg-white" : "bg-red-100"} border-b `}
       >
         {/*Description*/}
         <th
@@ -67,7 +66,7 @@ export const ShowInvoice = () => {
   };
 
   return (
-    <div className="max-w-6xl min-h-[75vh] w-full mx-auto my-10 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
+    <div className="max-w-6xl min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <div className="flex flex-wrap">
         <div className="basis-[38%] text-left">
           <p className="text-blue-700 text-lg font-bold">
@@ -117,12 +116,18 @@ export const ShowInvoice = () => {
         </div>
 
         <div className="basis-full">
-          <PaginationTable
-            tableRow={tableRow}
-            tableHeader={tableHeader}
-            tableBodyData={invoice.details}
-            rowsPerPage={10}
-          />
+          <div className="overflow-x-auto relative shadow-md sm:rounded-lg my-10 border-y-4 border-red-800 rounded">
+            <table className="w-full text-sm font-bold text-gray-500 ">
+              <thead className="text-gray-900 uppercase bg-red-100">
+                {tableHeader}
+              </thead>
+              <tbody>
+                {invoice.details.map((detail: any, index: number) =>
+                  tableRow(detail, index)
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div className="basis-full text-left font-semibold">

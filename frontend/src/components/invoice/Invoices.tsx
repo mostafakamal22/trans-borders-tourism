@@ -201,7 +201,7 @@ export const InvoiceListControl = () => {
   });
 
   return (
-    <div className="max-w-6xl min-h-[75vh] w-full mx-auto my-10 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
+    <div className="max-w-6xl min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <h3 className="flex justify-center items-center text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
         <span className="flex justify-center items-center mr-2">
           <FcBarChart size={50} />
