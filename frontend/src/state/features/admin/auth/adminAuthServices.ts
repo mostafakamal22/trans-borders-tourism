@@ -1,10 +1,8 @@
 import axios from "axios";
 
-const domainsFromEnv = process.env.CORS_DOMAINS;
-
 const API_URL =
   process.env.NODE_ENV === "production"
-    ? `${domainsFromEnv}${!domainsFromEnv?.endsWith("/") && "/"}api/admins/`
+    ? "https://cute-gold-bison-tie.cyclic.app/api/admins"
     : "http://localhost:5000/api/admins/";
 
 //Login Admin

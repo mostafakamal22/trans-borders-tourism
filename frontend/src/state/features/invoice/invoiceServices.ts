@@ -1,10 +1,8 @@
 import axios from "axios";
 
-const domainsFromEnv = process.env.CORS_DOMAINS;
-
 const API_URL =
   process.env.NODE_ENV === "production"
-    ? `${domainsFromEnv}${!domainsFromEnv?.endsWith("/") && "/"}api/invoices/`
+    ? "https://cute-gold-bison-tie.cyclic.app/api/invoices"
     : "http://localhost:5000/api/invoices/";
 
 //Get All Invoices
