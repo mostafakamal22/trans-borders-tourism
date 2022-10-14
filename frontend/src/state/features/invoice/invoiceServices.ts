@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL =
   process.env.NODE_ENV === "production"
-    ? "https://cute-gold-bison-tie.cyclic.app/api/invoices"
+    ? "https://cute-gold-bison-tie.cyclic.app/api/invoices/"
     : "http://localhost:5000/api/invoices/";
 
 //Get All Invoices
