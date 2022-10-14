@@ -1,8 +1,10 @@
 import axios from "axios";
 
+const domainsFromEnv = process.env.CORS_DOMAINS;
+
 const API_URL =
   process.env.NODE_ENV === "production"
-    ? process.env.CORS_DOMAINS + "api/admins/"
+    ? `${domainsFromEnv}${!domainsFromEnv?.endsWith("/") && "/"}api/admins/`
     : "http://localhost:5000/api/admins/";
 
 //Login Admin
