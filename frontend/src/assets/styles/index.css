@@ -19,6 +19,9 @@
     rgba(153, 27, 30, 1) 0%,
     rgba(2, 80, 145, 1) 100%
   );
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

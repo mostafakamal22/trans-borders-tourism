@@ -1,4 +1,4 @@
-import { FcHome } from "react-icons/fc";
+import { FcBusiness, FcHome } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { FcFile, FcBookmark } from "react-icons/fc";
 import logo from "../../assets/imgs/trans-logo.png";
@@ -10,6 +10,7 @@ import { getAllInvoices } from "../../state/features/invoice/invoiceSlice";
 
 import { useEffect } from "react";
 import { MainSpinner } from "../shared/MainSpinner";
+import { getAllPassports } from "../../state/features/passport/passportSlice";
 
 export const Home = () => {
   const { info } = useAppSelector((state) => state.adminAuth);
@@ -18,17 +19,21 @@ export const Home = () => {
 
   useEffect(() => {
     dispatch(getAllInvoices({ token: info.token }));
+    dispatch(getAllPassports({ token: info.token }));
   }, []);
 
-  const { isLoading } = useAppSelector((state) => state.invoiceData);
+  const invoiceData = useAppSelector((state) => state.invoiceData);
+  const passportsData = useAppSelector((state) => state.passportsData);
 
-  //Loading Spinner After Login Waiting Until Invoice data is Fetched.
-  if (isLoading)
+  //Loading Spinner After Login Waiting Until App data is Fetched.
+  if (invoiceData.isLoading || passportsData.isLoading)
     return (
       <div className="mx-5 h-min-screen">
         <div className="max-w-5xl w-full h-full flex justify-center items-center mx-auto my-10 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
           <div className="flex justify-center items-center">
-            <MainSpinner isLoading={isLoading} />
+            <MainSpinner
+              isLoading={invoiceData.isLoading || passportsData.isLoading}
+            />
           </div>
         </div>
       </div>
@@ -60,6 +65,14 @@ export const Home = () => {
         >
           <span>إضافة فاتورة</span>
           <FcFile size={50} />
+        </Link>
+
+        <Link
+          className="min-w-[250px] flex justify-center items-center flex-col px-3 py-6 gap-4 rounded shadow-md shadow-black/30 hover:bg-red-200 transition-all duration-100 ease-in-out"
+          to={"/passports"}
+        >
+          <span>عرض الجوازات</span>
+          <FcBusiness size={50} />
         </Link>
       </div>
     </div>

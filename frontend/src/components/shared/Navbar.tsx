@@ -5,6 +5,7 @@ import { adminLogout } from "../../state/features/admin/auth/adminAuthSlice";
 import { useAppDispatch } from "../../state/features/hooks/StateHooks";
 import { adminsLogout } from "../../state/features/invoice/invoiceSlice";
 import { useEffect } from "react";
+import { passportsLogout } from "../../state/features/passport/passportSlice";
 
 export const Navbar = () => {
   const dispatch = useAppDispatch();
@@ -35,6 +36,7 @@ export const Navbar = () => {
   const handleLogout = () => {
     dispatch(adminsLogout());
     dispatch(adminLogout());
+    dispatch(passportsLogout());
   };
 
   return (
@@ -76,6 +78,18 @@ export const Navbar = () => {
                 }
               >
                 إضافة فاتورة
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink
+                to="/passports"
+                className={({ isActive }) =>
+                  isActive ? "text-blue-700" : "text-black"
+                }
+                end
+              >
+                الجوازات
               </NavLink>
             </li>
 

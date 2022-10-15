@@ -15,6 +15,21 @@ import MessagesContainer from "../shared/MessagesContainer";
 import logo from "../../assets/imgs/trans-logo.png";
 import { resetAdminAuthStatus } from "../../state/features/admin/auth/adminAuthSlice";
 import { UseResetStatus } from "../../hooks/UseResetStatus";
+import { FormInput } from "../shared/FormInput";
+
+const lableClassNamesStyles: { default: string; threeCol: string } = {
+  default:
+    "basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800",
+  threeCol:
+    "text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800",
+};
+
+const inputClassNamesStyles: { default: string; threeCol: string } = {
+  default:
+    "basis-full  sm:basis-1/3  px-3 py-1.5 mx-4 text-base font-normal text-gray-700 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none",
+  threeCol:
+    "px-2 py-1.5 mx-2 text-base font-normal text-gray-700 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none",
+};
 
 export const CreateInvoice = () => {
   //state for Customer Details
@@ -139,17 +154,12 @@ export const CreateInvoice = () => {
           [ Customer Details ]
         </p>
         <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">
-          <label
-            className="basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
-            htmlFor="customerName"
-          >
-            Customer Name
-          </label>
-
-          <input
-            className="basis-full  sm:basis-1/3  px-3 py-1.5 mx-4 text-base font-normal text-gray-700 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
-            type="text"
+          <FormInput
+            label="Customer Name"
             name="customerName"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
+            type="text"
             defaultValue={customerDetails.name}
             onChange={(e) =>
               setCustomerDetails({ ...customerDetails, name: e.target.value })
@@ -157,17 +167,12 @@ export const CreateInvoice = () => {
             required
           />
 
-          <label
-            className="basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
-            htmlFor="customerID"
-          >
-            Customer ID
-          </label>
-
-          <input
-            className="basis-full  sm:basis-1/3  px-3 py-1.5 mx-4 text-base font-normal text-gray-700  bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-600 focus:outline-none"
-            type="text"
+          <FormInput
+            label="Customer ID"
             name="customerID"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
+            type="text"
             defaultValue={customerDetails.ID}
             onChange={(e) =>
               setCustomerDetails({ ...customerDetails, ID: e.target.value })
@@ -175,17 +180,12 @@ export const CreateInvoice = () => {
             required
           />
 
-          <label
-            className="basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
-            htmlFor="customerMobile"
-          >
-            Customer Mobile
-          </label>
-
-          <input
-            className="basis-full  sm:basis-1/3  px-3 py-1.5 mx-4 text-base font-normal text-gray-700  bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-600 focus:outline-none"
-            type="text"
+          <FormInput
+            label="Customer Mobile"
             name="customerMobile"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
+            type="text"
             defaultValue={customerDetails.number}
             onChange={(e) =>
               setCustomerDetails({ ...customerDetails, number: e.target.value })
@@ -202,17 +202,12 @@ export const CreateInvoice = () => {
             key={index}
             className="flex flex-wrap md:flex-nowrap items-center font-semibold  gap-4 px-5 py-5"
           >
-            <label
-              className="text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
-              htmlFor="itemName"
-            >
-              Item Name
-            </label>
-
-            <input
-              className="px-2 py-1.5 mx-2 text-base font-normal text-gray-700 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
-              type="text"
+            <FormInput
+              label="Item Name"
               name="itemName"
+              labeClassNames={lableClassNamesStyles.threeCol}
+              className={inputClassNamesStyles.threeCol}
+              type="text"
               defaultValue={item.name}
               onChange={(e) => {
                 const newArr = [...itemsDetails];
@@ -222,17 +217,12 @@ export const CreateInvoice = () => {
               required
             />
 
-            <label
-              className="text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
-              htmlFor="itemPrice"
-            >
-              Item Price
-            </label>
-
-            <input
-              className="px-2 py-1.5 mx-2 text-base font-normal text-gray-700 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
-              type="number"
+            <FormInput
+              label="Item Price"
               name="itemPrice"
+              labeClassNames={lableClassNamesStyles.threeCol}
+              className={inputClassNamesStyles.threeCol}
+              type="number"
               defaultValue={item.price}
               onChange={(e) => {
                 const newArr = [...itemsDetails];
@@ -243,17 +233,12 @@ export const CreateInvoice = () => {
               required
             />
 
-            <label
-              className="text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
-              htmlFor="itemQuantity"
-            >
-              Item Quantity
-            </label>
-
-            <input
-              className="px-2 py-1.5 mx-2 text-base font-normal text-gray-700 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
-              type="number"
+            <FormInput
+              label="Item Quantity"
               name="itemQuantity"
+              labeClassNames={lableClassNamesStyles.threeCol}
+              className={inputClassNamesStyles.threeCol}
+              type="number"
               defaultValue={item.quantity}
               onChange={(e) => {
                 const newArr = [...itemsDetails];
@@ -292,34 +277,25 @@ export const CreateInvoice = () => {
           [ Invoice Details ]
         </p>
         <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">
-          <label
-            className="basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
-            htmlFor="ID"
-          >
-            Invoice #
-          </label>
-
-          <input
-            className="basis-full  sm:basis-1/3  px-3 py-1.5 mx-4 text-base font-normal text-gray-700 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
+          <FormInput
+            label="Invoice #"
+            name="invoiceID"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
             type="text"
-            name="ID"
             defaultValue={invoiceDetails.ID}
             onChange={(e) =>
               setInvoieceDetails({ ...invoiceDetails, ID: e.target.value })
             }
             required
           />
-          <label
-            className="basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
-            htmlFor="date"
-          >
-            Date
-          </label>
 
-          <input
-            className="basis-full  sm:basis-1/3  px-3 py-1.5 mx-4 text-base font-normal text-gray-700 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
+          <FormInput
+            label="Date"
+            name="invoiceDate"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
             type="date"
-            name="date"
             defaultValue={invoiceDetails.date}
             onChange={(e) =>
               setInvoieceDetails({ ...invoiceDetails, date: e.target.value })
@@ -327,17 +303,12 @@ export const CreateInvoice = () => {
             required
           />
 
-          <label
-            className="basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
-            htmlFor="due_date"
-          >
-            Due Date
-          </label>
-
-          <input
-            className="basis-full  sm:basis-1/3  px-3 py-1.5 mx-4 text-base font-normal text-gray-700 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
+          <FormInput
+            label="Due Date"
+            name="invoiceDueDate"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
             type="date"
-            name="due_date"
             defaultValue={invoiceDetails.dueDate}
             onChange={(e) =>
               setInvoieceDetails({ ...invoiceDetails, dueDate: e.target.value })
@@ -346,17 +317,12 @@ export const CreateInvoice = () => {
           />
         </div>
         <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">
-          <label
-            className="basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
-            htmlFor="subtotal"
-          >
-            SubTotal
-          </label>
-
-          <input
-            className="basis-full  sm:basis-1/3  px-3 py-1.5 mx-4 text-base font-normal text-gray-700 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
+          <FormInput
+            label="SubTotal"
+            name="invoiceSubTotal"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
             type="number"
-            name="subtotal"
             defaultValue={invoiceDetails.subtotal}
             onChange={(e) =>
               setInvoieceDetails({
@@ -368,17 +334,13 @@ export const CreateInvoice = () => {
             min={0}
             required
           />
-          <label
-            className="basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
-            htmlFor="taxable"
-          >
-            taxable
-          </label>
 
-          <input
-            className="basis-full  sm:basis-1/3  px-3 py-1.5 mx-4 text-base font-normal text-gray-700  bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-600 focus:outline-none"
+          <FormInput
+            label="Taxable"
+            name="invoiceTaxable"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
             type="number"
-            name="taxable"
             defaultValue={invoiceDetails.taxable}
             onChange={(e) =>
               setInvoieceDetails({
@@ -391,17 +353,12 @@ export const CreateInvoice = () => {
             required
           />
 
-          <label
-            className="basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
-            htmlFor="tax_rate"
-          >
-            tax rate
-          </label>
-
-          <input
-            className="basis-full  sm:basis-1/3  px-3 py-1.5 mx-4 text-base font-normal text-gray-700  bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-600 focus:outline-none"
+          <FormInput
+            label="Tax Rate"
+            name="invoiceTaxRate"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
             type="number"
-            name="tax_rate"
             defaultValue={invoiceDetails.taxRate}
             onChange={(e) =>
               setInvoieceDetails({
@@ -414,17 +371,12 @@ export const CreateInvoice = () => {
             required
           />
 
-          <label
-            className="basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
-            htmlFor="tax_due"
-          >
-            Tax Due
-          </label>
-
-          <input
-            className="basis-full  sm:basis-1/3  px-3 py-1.5 mx-4 text-base font-normal text-gray-700  bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-600 focus:outline-none"
+          <FormInput
+            label="Tax Due"
+            name="invoiceTaxDue"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
             type="number"
-            name="tax due"
             defaultValue={invoiceDetails.taxDue}
             onChange={(e) =>
               setInvoieceDetails({ ...invoiceDetails, taxDue: +e.target.value })
@@ -434,17 +386,12 @@ export const CreateInvoice = () => {
             required
           />
 
-          <label
-            className="basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
-            htmlFor="Total"
-          >
-            Total
-          </label>
-
-          <input
-            className="basis-full  sm:basis-1/3  px-3 py-1.5 mx-4 text-base font-normal text-gray-700  bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-600 focus:outline-none"
+          <FormInput
+            label="Total"
+            name="invoiceTotal"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
             type="number"
-            name="Total"
             defaultValue={invoiceDetails.total}
             onChange={(e) =>
               setInvoieceDetails({ ...invoiceDetails, total: +e.target.value })
@@ -454,15 +401,12 @@ export const CreateInvoice = () => {
             required
           />
 
-          <label
-            className="basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800"
-            htmlFor="other"
-          >
+          <label className={lableClassNamesStyles.default} htmlFor="other">
             Other Comments
           </label>
 
           <textarea
-            className="basis-full  sm:basis-1/3  px-3 py-1.5 mx-4 text-base font-normal text-gray-700  bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-600 focus:outline-none"
+            className={inputClassNamesStyles.default}
             name="other"
             defaultValue={invoiceDetails.other}
             onChange={(e) =>

@@ -16,6 +16,8 @@ import { ShowInvoice } from "./components/invoice/ShowInvoice";
 import { Footer } from "./components/shared/Footer";
 import { Navbar } from "./components/shared/Navbar";
 import UpdateAdmin from "./components/forms/UpdateAdmin";
+import { Passports } from "./components/passport/Passports";
+import { CreatePassport } from "./components/forms/CreatePassport";
 
 //User And Admin Paths
 const paths = [
@@ -25,6 +27,8 @@ const paths = [
   "/invoices/create",
   "/invoices/",
   "/invoices/:id",
+  "/passports/create",
+  "/passports/",
 ];
 
 const App: FC = () => {
@@ -62,10 +66,12 @@ const App: FC = () => {
             <Route path="/login" element={<Navigate to={"/"} />} />
             <Route path="/admins/login" element={<Navigate to={"/"} />} />
             <Route path="/profile" element={<AdminProfile />} />
+            <Route path="/profile/update" element={<UpdateAdmin />} />
             <Route path="/invoices" element={<InvoiceListControl />} />
             <Route path="/invoices/create" element={<CreateInvoice />} />
             <Route path="/invoices/:id" element={<ShowInvoice />} />
-            <Route path="/profile/update" element={<UpdateAdmin />} />
+            <Route path="/passports" element={<Passports />} />
+            <Route path="/passports/create" element={<CreatePassport />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />
