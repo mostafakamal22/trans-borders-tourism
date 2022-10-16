@@ -1,4 +1,4 @@
-import { FcBusiness, FcHome } from "react-icons/fc";
+import { FcBusiness, FcHome, FcTemplate } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { FcFile, FcBookmark } from "react-icons/fc";
 import logo from "../../assets/imgs/trans-logo.png";
@@ -50,7 +50,7 @@ export const Home = () => {
 
       <img className="mx-auto" src={logo} alt="logo" />
 
-      <div className="flex flex-col md:flex-row justify-center items-center gap-16 p-3 font-semibold">
+      <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-16 p-3 font-semibold">
         <Link
           className="min-w-[250px] flex justify-center items-center flex-col px-3 py-6 gap-4 rounded shadow-md shadow-black/30 hover:bg-red-200 transition-all duration-100 ease-in-out"
           to={"/invoices"}
@@ -73,6 +73,14 @@ export const Home = () => {
         >
           <span>عرض الجوازات</span>
           <FcBusiness size={50} />
+        </Link>
+
+        <Link
+          className="min-w-[250px] flex justify-center items-center flex-col px-3 py-6 gap-4 rounded shadow-md shadow-black/30 hover:bg-red-200 transition-all duration-100 ease-in-out"
+          to={"/passports/create"}
+        >
+          <span>إضافة الجوازات</span>
+          <FcTemplate size={50} />
         </Link>
       </div>
     </div>

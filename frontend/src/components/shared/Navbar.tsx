@@ -7,6 +7,14 @@ import { adminsLogout } from "../../state/features/invoice/invoiceSlice";
 import { useEffect } from "react";
 import { passportsLogout } from "../../state/features/passport/passportSlice";
 
+const navbarLinks = [
+  ["الرئيسية", "/"],
+  ["الفواتير", "/invoices"],
+  ["إضافة فاتورة", "/invoices/create"],
+  ["الجوازات", "/passports"],
+  [" إضافة جوازات", "/passports/create"],
+];
+
 export const Navbar = () => {
   const dispatch = useAppDispatch();
 
@@ -48,50 +56,19 @@ export const Navbar = () => {
 
         <div className="justify-between items-center w-full flex md:w-auto md:order-1">
           <ul className="w-full flex items-center justify-center gap-4 flex-wrap p-4 my-1 md:text-lg md:font-semibold transition-all duration-300 ease-in-out">
-            <li>
-              <NavLink
-                to="/"
-                className={({ isActive }) =>
-                  isActive ? "text-blue-700" : "text-black"
-                }
-                end
-              >
-                الرئيسية
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/invoices"
-                className={({ isActive }) =>
-                  isActive ? "text-blue-700" : "text-black"
-                }
-                end
-              >
-                الفواتير
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/invoices/create"
-                className={({ isActive }) =>
-                  isActive ? "text-blue-700" : "text-black"
-                }
-              >
-                إضافة فاتورة
-              </NavLink>
-            </li>
-
-            <li>
-              <NavLink
-                to="/passports"
-                className={({ isActive }) =>
-                  isActive ? "text-blue-700" : "text-black"
-                }
-                end
-              >
-                الجوازات
-              </NavLink>
-            </li>
+            {navbarLinks.map((link: any, index: number) => (
+              <li key={index}>
+                <NavLink
+                  to={link[1]}
+                  className={({ isActive }) =>
+                    isActive ? "text-blue-700" : "text-black"
+                  }
+                  end
+                >
+                  {link[0]}
+                </NavLink>
+              </li>
+            ))}
 
             <li>
               <Link

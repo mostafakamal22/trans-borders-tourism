@@ -17,14 +17,14 @@ import { resetAdminAuthStatus } from "../../state/features/admin/auth/adminAuthS
 import { UseResetStatus } from "../../hooks/UseResetStatus";
 import { FormInput } from "../shared/FormInput";
 
-const lableClassNamesStyles: { default: string; threeCol: string } = {
+export const lableClassNamesStyles: { default: string; threeCol: string } = {
   default:
     "basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800",
   threeCol:
     "text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800",
 };
 
-const inputClassNamesStyles: { default: string; threeCol: string } = {
+export const inputClassNamesStyles: { default: string; threeCol: string } = {
   default:
     "basis-full  sm:basis-1/3  px-3 py-1.5 mx-4 text-base font-normal text-gray-700 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none",
   threeCol:

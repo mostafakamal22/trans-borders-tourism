@@ -19,27 +19,31 @@ import MessagesContainer from "../shared/MessagesContainer";
 import { PaginationTable } from "../shared/PaginationTable";
 import { MainSpinner } from "../shared/MainSpinner";
 import { UpdatePassportState } from "./UpdatePassportState";
+import {
+  inputClassNamesStyles,
+  lableClassNamesStyles,
+} from "../forms/CreateInvoice";
 
-const tableHeaderTitles = [
-  "Customer Name",
-  "Nationality",
-  "Passport ID",
-  "State",
-  "Service",
-  "Total Payment",
-  "Payment Date",
-  "Update State",
-  "Delete Passport",
+export const tableHeaderTitles = [
+  "إسم العميل",
+  "الجنسية",
+  "رقم الجواز",
+  "الوضعية",
+  "الخدمة",
+  "المبلغ المدفوع",
+  "تاريخ الدفع",
+  "تعديل الوضعية",
+  "مسح الجواز",
 ];
 
-type PassportState = {
+export type PassportState = {
   accepted: string[];
   rejected: string[];
   refunded: string[];
   delivered: string[];
 };
 
-type PassportService = {
+export type PassportService = {
   "30days": "٣٠يوم";
   "90days": "٩٠يوم";
   extend_permission: "تمديد إذن دخول";
@@ -70,6 +74,29 @@ export const Passports = () => {
   const { info } = useAppSelector((state) => state.adminAuth);
   const { passportsList } = useAppSelector((state) => state.passportsData);
   const dispatch = useAppDispatch();
+
+  //search Params
+  const [searchQuery, setSearchQuery] = useState({
+    year: "",
+    month: "",
+  });
+
+  const { year, month } = searchQuery;
+
+  //filtered Passports
+  const filteredPassports: [] =
+    month || year
+      ? passportsList.filter((passport: any) => {
+          const paymentDate = dayjs(passport.payment_date)
+            .format("DD/MM/YYYY")
+            .split("/");
+          const yearOfPassport = paymentDate[2];
+          const monthOfPassport = paymentDate[1];
+
+          if (yearOfPassport === year && +monthOfPassport === +month)
+            return passport;
+        })
+      : passportsList;
 
   const { isLoading, isError, isSuccess, message } = useAppSelector(
     (state) => state.passportsData
@@ -254,14 +281,57 @@ export const Passports = () => {
 
   return (
     <div className="max-w-7xl min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
+      <img className="mx-auto" src={logo} alt="logo" />
+
+      <div className="flex  justify-center items-center flex-wrap  gap-4 m-6 p-4 bg-red-700 rounded-md ">
+        <h4 className="basis-full flex justify-center items-center text-2xl my-4 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
+          إدخل الشهر والسنة
+        </h4>
+        <form className="basis-full md:basis-[35%] flex flex-col justify-center gap-2 mx-auto font-semibold ">
+          <label className={lableClassNamesStyles.default} htmlFor="year">
+            ادخل السنة
+          </label>
+          <input
+            type="text"
+            name="year"
+            className={inputClassNamesStyles.default}
+            defaultValue={year}
+            onChange={(e) =>
+              setSearchQuery({
+                ...searchQuery,
+                year: e.target.value,
+              })
+            }
+            required
+          />
+
+          <label className={lableClassNamesStyles.default} htmlFor="month">
+            ادخل الشهر
+          </label>
+          <input
+            type="text"
+            name="month"
+            className={inputClassNamesStyles.default}
+            defaultValue={month}
+            onChange={(e) =>
+              setSearchQuery({
+                ...searchQuery,
+                month: e.target.value,
+              })
+            }
+            required
+          />
+        </form>
+      </div>
       <h3 className="flex justify-center items-center text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
         <span className="flex justify-center items-center mr-2">
           <FcBusiness size={50} />
         </span>
-        ({passportsList && passportsList.length}) الجوازات المحفوظة
+        ({filteredPassports.length}) الجوازات المحفوظة{" "}
+        {!month && !year && "الكلية"}
+        {month && " عن شهر " + month}
+        {year && " سنة " + year}
       </h3>
-
-      <img className="mx-auto" src={logo} alt="logo" />
 
       {/*Request Status and Errors*/}
       {(isError || (isSuccess && message)) && (
@@ -269,19 +339,26 @@ export const Passports = () => {
       )}
 
       {/*Display Table All Data Needed*/}
-      {!isLoading && passportsList?.length > 0 && (
+      {!isLoading && filteredPassports?.length > 0 && (
         <PaginationTable
           tableRow={tableRow}
           tableHeader={tableHeader}
-          tableBodyData={[...passportsList].reverse()}
+          tableBodyData={[...filteredPassports].reverse()}
           rowsPerPage={10}
         />
       )}
 
       {/* if there is No Passports Records */}
-      {passportsList?.length === 0 && !isLoading && (
+      {!year && !month && filteredPassports?.length === 0 && !isLoading && (
         <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
-          There No Passports Records Currently!
+          لا يوجد جوازات محفوظة الان, يرجى إضافة الجوازات لعرضها.
+        </div>
+      )}
+
+      {/* if there is search query no passport matches >>> No Search Found*/}
+      {(year || month) && filteredPassports?.length === 0 && !isLoading && (
+        <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
+          لا يوجد نتائج تطابق هذا البحث, تأكد من الشهر و السنة وحاول مجدداً
         </div>
       )}
 

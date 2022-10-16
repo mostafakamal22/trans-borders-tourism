@@ -250,14 +250,14 @@ export const InvoiceListControl = () => {
       {/* if there is No Invoice Records */}
       {!searchQuery && filteredInvoices?.length === 0 && !isLoading && (
         <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
-          There No Invoice Records Currently!
+          لا يوجد فواتير محفوظة حالياُ, يرجى إضافة فواتير حتى يتم عرضها
         </div>
       )}
 
       {/* if there is search query no Invoice matches >>> No Search Found*/}
       {searchQuery && filteredInvoices?.length === 0 && !isLoading && (
         <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
-          There No Search Result!
+          لا يوجد فاتورة تطابق هذا الإسم, يرجى التأكد من الإسم وحاول مجدداً
         </div>
       )}
 
