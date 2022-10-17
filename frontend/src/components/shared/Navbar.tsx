@@ -13,6 +13,8 @@ const navbarLinks = [
   ["إضافة فاتورة", "/invoices/create"],
   ["الجوازات", "/passports"],
   [" إضافة جوازات", "/passports/create"],
+  ["عرض  التأشيرات", "/visas"],
+  ["إضافة التأشيرات", "/visas/create"],
 ];
 
 export const Navbar = () => {
@@ -55,7 +57,7 @@ export const Navbar = () => {
         </Link>
 
         <div className="justify-between items-center w-full flex md:w-auto md:order-1">
-          <ul className="w-full flex items-center justify-center gap-4 flex-wrap p-4 my-1 md:text-lg md:font-semibold transition-all duration-300 ease-in-out">
+          <ul className="w-full flex items-center justify-center gap-4 flex-wrap p-4 my-1 md:text-base md:font-semibold transition-all duration-300 ease-in-out">
             {navbarLinks.map((link: any, index: number) => (
               <li key={index}>
                 <NavLink

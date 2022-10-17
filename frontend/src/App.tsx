@@ -18,6 +18,8 @@ import { Navbar } from "./components/shared/Navbar";
 import UpdateAdmin from "./components/forms/UpdateAdmin";
 import { Passports } from "./components/passport/Passports";
 import { CreatePassport } from "./components/forms/CreatePassport";
+import { Visas } from "./components/visa/Visas";
+import { CreateVisa } from "./components/forms/CreateVisa";
 
 //User And Admin Paths
 const paths = [
@@ -29,6 +31,8 @@ const paths = [
   "/invoices/:id",
   "/passports/create",
   "/passports/",
+  "/visas/",
+  "/visas/create",
 ];
 
 const App: FC = () => {
@@ -72,6 +76,8 @@ const App: FC = () => {
             <Route path="/invoices/:id" element={<ShowInvoice />} />
             <Route path="/passports" element={<Passports />} />
             <Route path="/passports/create" element={<CreatePassport />} />
+            <Route path="/visas" element={<Visas />} />
+            <Route path="/visas/create" element={<CreateVisa />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />

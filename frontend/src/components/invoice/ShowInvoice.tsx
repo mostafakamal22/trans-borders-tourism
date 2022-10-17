@@ -24,12 +24,12 @@ export const ShowInvoice = () => {
 
   //Define table data
   const tableHeader = (
-    <tr>
+    <tr className="border-b border-b-black">
       {tableHeaderTitles.map((title: string) => (
         <th
           key={title}
           scope="col"
-          className="py-3 px-3 text-center border-x-2"
+          className="py-3 px-3 text-center border-x border-x-black"
         >
           {title}
         </th>
@@ -41,12 +41,14 @@ export const ShowInvoice = () => {
     return (
       <tr
         key={detail._id}
-        className={`${index % 2 === 0 ? "bg-white" : "bg-red-100"} border-b `}
+        className={`${
+          index % 2 === 0 ? "bg-white" : "bg-red-100"
+        } border-b border-b-black`}
       >
         {/*Description*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x-2 text-center"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
           {detail.name}
         </th>
@@ -54,7 +56,7 @@ export const ShowInvoice = () => {
         {/*Quantity*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x-2 text-center"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
           {detail.quantity}
         </th>
@@ -62,7 +64,7 @@ export const ShowInvoice = () => {
         {/*Price*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x-2 text-center"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
           {detail.price}
         </th>

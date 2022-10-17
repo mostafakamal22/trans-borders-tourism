@@ -87,12 +87,12 @@ export const InvoiceListControl = () => {
 
   //Define table data
   const tableHeader = (
-    <tr>
+    <tr className="border-b border-b-black">
       {tableHeaderTitles.map((title) => (
         <th
           key={title}
           scope="col"
-          className="py-3 px-3 text-center border-x-2"
+          className="py-3 px-3 text-center border-x border-x-black"
         >
           {title}
         </th>
@@ -104,12 +104,14 @@ export const InvoiceListControl = () => {
     return (
       <tr
         key={invoice._id}
-        className={`${index % 2 === 0 ? "bg-white" : "bg-gray-100"} border-b `}
+        className={`${
+          index % 2 === 0 ? "bg-white" : "bg-gray-100"
+        } border-b border-b-black`}
       >
         {/*Invoice ID*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x-2 text-center"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
           {invoice.ID}
         </th>
@@ -117,7 +119,7 @@ export const InvoiceListControl = () => {
         {/*Customer ID*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x-2 text-center"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
           {invoice.customer.ID}
         </th>
@@ -125,7 +127,7 @@ export const InvoiceListControl = () => {
         {/*Customer Name*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x-2 text-center"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
           {invoice.customer.name}
         </th>
@@ -133,7 +135,7 @@ export const InvoiceListControl = () => {
         {/*Invoice Date*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x-2 text-center"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
           {dayjs(invoice.date).format("DD/MM/YYYY")}
         </th>
@@ -141,7 +143,7 @@ export const InvoiceListControl = () => {
         {/*Invoice Date*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x-2 text-center"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
           {dayjs(invoice.due_date).format("DD/MM/YYYY")}
         </th>
@@ -149,7 +151,7 @@ export const InvoiceListControl = () => {
         {/*Invoice Total*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x-2 text-center"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
           {invoice.total}
         </th>
@@ -157,7 +159,7 @@ export const InvoiceListControl = () => {
         {/* Show Invoice */}
         <th
           scope="row"
-          className="p-2 text-gray-900 whitespace-nowrap  border-x-2 text-center"
+          className="p-2 text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
           <Link
             to={`/invoices/${invoice._id}`}
@@ -170,7 +172,7 @@ export const InvoiceListControl = () => {
         {/* Delete Invoice */}
         <th
           scope="row"
-          className="p-2 text-gray-900 whitespace-nowrap  border-x-2 text-center"
+          className="p-2 text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
           <form
             className="max-w-[150px] m-auto"

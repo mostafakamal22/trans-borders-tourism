@@ -40,6 +40,10 @@ app.use("/api/invoices", invoicesRoute);
 const passportsRoute = require("./routes/passportRoutes");
 app.use("/api/passports", passportsRoute);
 
+//visas Router
+const visasRoute = require("./routes/visaRoutes");
+app.use("/api/visas", visasRoute);
+
 //serve Frontend
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));

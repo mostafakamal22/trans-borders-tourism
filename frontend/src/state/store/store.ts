@@ -6,6 +6,7 @@ import thunk from "redux-thunk";
 import adminAuthReducer from "../features/admin/auth/adminAuthSlice";
 import invoiceReducer from "../features/invoice/invoiceSlice";
 import passportReducer from "../features/passport/passportSlice";
+import visaReducer from "../features/visa/visaSlice";
 
 const persistConfig = {
   key: "root",
@@ -26,6 +27,7 @@ const appReducer = combineReducers({
   adminAuth: adminAuthReducer,
   invoiceData: invoiceReducer,
   passportsData: passportReducer,
+  visasData: visaReducer,
 });
 
 //All Logout actions
@@ -33,6 +35,7 @@ const logoutActions = [
   "auth/admin/logout",
   "admins/logout",
   "passports/logout",
+  "visas/logout",
 ];
 
 //remove All Stored state in local storage when logging out
