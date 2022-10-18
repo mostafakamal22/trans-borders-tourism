@@ -8,7 +8,7 @@ const passportSchema = new mongoose.Schema(
     },
     customer_nationality: {
       type: String,
-      required: [true, "Please Type Customer Nationality!"],
+      default: "-",
     },
     passport_id: {
       type: String || Number,
@@ -24,11 +24,11 @@ const passportSchema = new mongoose.Schema(
     },
     total: {
       type: Number,
-      required: [true, "Please Type Service Total"],
+      default: 0,
     },
     payment_date: {
       type: Date,
-      required: [true, "Please Type Service Payment Date"],
+      default: "1970-10-10T19:46:38.721Z",
     },
   },
   {

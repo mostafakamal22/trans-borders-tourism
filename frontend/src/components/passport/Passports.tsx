@@ -157,7 +157,7 @@ export const Passports = () => {
   //Define table data
   const tableHeader = (
     <tr className="border-b border-b-black">
-      {tableHeaderTitles.map((title) => (
+      {[...tableHeaderTitles].reverse().map((title) => (
         <th
           key={title}
           scope="col"
@@ -177,62 +177,21 @@ export const Passports = () => {
           index % 2 === 0 ? "bg-white" : "bg-gray-100"
         } border-b border-b-black`}
       >
-        {/*Customer Name*/}
+        {/* Delete passport */}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2 text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
         >
-          {passport.customer_name}
-        </th>
-
-        {/*Customer Nationality*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
-        >
-          {passport.customer_nationality}
-        </th>
-
-        {/*passport ID*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
-        >
-          {passport.passport_id}
-        </th>
-
-        {/*passport State*/}
-        <th
-          scope="row"
-          className={`${
-            passportState[passport.state as keyof PassportState][1]
-          } p-2 text-gray-900 whitespace-nowrap  border-x text-center border-x-black`}
-        >
-          {passportState[passport.state as keyof PassportState][0]}
-        </th>
-
-        {/*passport Service*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
-        >
-          {passportService[passport.service as keyof PassportService]}
-        </th>
-
-        {/*Total Payment*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
-        >
-          {passport.total}
-        </th>
-
-        {/*Payment Date*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
-        >
-          {dayjs(passport.payment_date).format("DD/MM/YYYY")}
+          <form
+            className="max-w-[150px] m-auto"
+            onSubmit={(event) => handleRemoving(event, passport._id)}
+          >
+            <FormButton
+              text={{ default: "مسح الجواز" }}
+              bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}
+              icon={<TiDelete className="mb-[-2px] mr-1" size={25} />}
+            />
+          </form>
         </th>
 
         {/* Update State */}
@@ -246,21 +205,64 @@ export const Passports = () => {
           />
         </th>
 
-        {/* Delete passport */}
+        {/*Payment Date*/}
         <th
           scope="row"
-          className="p-2 text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
         >
-          <form
-            className="max-w-[150px] m-auto"
-            onSubmit={(event) => handleRemoving(event, passport._id)}
-          >
-            <FormButton
-              text={{ default: "مسح الجواز" }}
-              bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}
-              icon={<TiDelete className="mb-[-2px]" size={25} />}
-            />
-          </form>
+          {dayjs(passport.payment_date).format("DD/MM/YYYY") === "10/10/1970"
+            ? "-"
+            : dayjs(passport.payment_date).format("DD/MM/YYYY")}
+        </th>
+
+        {/*Total Payment*/}
+        <th
+          scope="row"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+        >
+          {passport.total}
+        </th>
+
+        {/*passport Service*/}
+        <th
+          scope="row"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+        >
+          {passportService[passport.service as keyof PassportService]}
+        </th>
+
+        {/*passport State*/}
+        <th
+          scope="row"
+          className={`${
+            passportState[passport.state as keyof PassportState][1]
+          } p-2 text-gray-900 whitespace-nowrap  border-x text-center border-x-black`}
+        >
+          {passportState[passport.state as keyof PassportState][0]}
+        </th>
+
+        {/*passport ID*/}
+        <th
+          scope="row"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+        >
+          {passport.passport_id}
+        </th>
+
+        {/*Customer Nationality*/}
+        <th
+          scope="row"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+        >
+          {passport.customer_nationality}
+        </th>
+
+        {/*Customer Name*/}
+        <th
+          scope="row"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+        >
+          {passport.customer_name}
         </th>
       </tr>
     );
@@ -280,7 +282,7 @@ export const Passports = () => {
   });
 
   return (
-    <div className="max-w-7xl min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
+    <div className="max-w-[1300px] min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <img className="mx-auto" src={logo} alt="logo" />
 
       <div className="flex  justify-center items-center flex-wrap  gap-4 m-6 p-4 bg-red-700 rounded-md ">

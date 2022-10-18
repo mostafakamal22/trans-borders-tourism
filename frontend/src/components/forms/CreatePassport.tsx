@@ -64,7 +64,7 @@ export const CreatePassport = () => {
     const passportData = {
       token: info.token,
       name: passportDetails.name,
-      nationality: passportDetails.nationality,
+      nationality: passportDetails.nationality.trim(),
       state: passportDetails.state,
       service: passportDetails.service,
       passportId: passportDetails.passportId,
@@ -128,7 +128,6 @@ export const CreatePassport = () => {
                 nationality: e.target.value,
               })
             }
-            required
           />
 
           <FormInput
@@ -160,7 +159,6 @@ export const CreatePassport = () => {
                 total: +e.target.value,
               })
             }
-            required
             min={0}
             step={0.01}
           />
@@ -178,7 +176,6 @@ export const CreatePassport = () => {
                 paymentDate: e.target.value,
               })
             }
-            required
           />
 
           <label htmlFor="state" className={lableClassNamesStyles.default}>

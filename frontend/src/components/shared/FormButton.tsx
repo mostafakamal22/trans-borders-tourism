@@ -21,11 +21,12 @@ export default function FormButton({
         " w-full flex items-center justify-center px-6 py-2.5 text-white font-bold text-md leading-tight rounded shadow-md hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0  active:shadow-lg disabled:cursor-not-allowed transition duration-150 ease-in-out"
       }
     >
+      {!isLoading && icon}
+      <SmallSpinner isLoading={isLoading} />
+
       <span className="inline-block ">
         {isLoading ? text.loading : text.default}
       </span>
-      {!isLoading && icon}
-      <SmallSpinner isLoading={isLoading} />
     </button>
   );
 }

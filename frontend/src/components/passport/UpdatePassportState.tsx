@@ -25,7 +25,7 @@ export const UpdatePassportState = ({ passport, handleUpdate }: any) => {
       </select>
       <FormButton
         text={{ default: "تعديل الوضعية" }}
-        icon={<RiExchangeFill className="mb-[-2px] ml-1" size={25} />}
+        icon={<RiExchangeFill className="mb-[-2px] mr-1" size={25} />}
       />
     </form>
   );
