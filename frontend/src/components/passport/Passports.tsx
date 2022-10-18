@@ -79,22 +79,35 @@ export const Passports = () => {
   const [searchQuery, setSearchQuery] = useState({
     year: "",
     month: "",
+    state: "",
   });
 
-  const { year, month } = searchQuery;
+  const { year, month, state } = searchQuery;
 
   //filtered Passports
   const filteredPassports: [] =
-    month || year
+    month || year || state
       ? passportsList.filter((passport: any) => {
           const paymentDate = dayjs(passport.payment_date)
             .format("DD/MM/YYYY")
             .split("/");
           const yearOfPassport = paymentDate[2];
           const monthOfPassport = paymentDate[1];
+          const passportState = passport.state;
 
-          if (yearOfPassport === year && +monthOfPassport === +month)
-            return passport;
+          if (!state && year && month) {
+            if (yearOfPassport === year && +monthOfPassport === +month)
+              return passport;
+          } else if (state && year && month) {
+            if (
+              yearOfPassport === year &&
+              +monthOfPassport === +month &&
+              passportState === state
+            )
+              return passport;
+          } else if (state && !year && !month) {
+            if (passportState === state) return passport;
+          }
         })
       : passportsList;
 
@@ -260,7 +273,7 @@ export const Passports = () => {
         {/*Customer Name*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2  text-gray-900 bg-red-200 whitespace-nowrap  border-x text-center border-x-black"
         >
           {passport.customer_name}
         </th>
@@ -323,16 +336,54 @@ export const Passports = () => {
             }
             required
           />
+          <label className={lableClassNamesStyles.default} htmlFor="state">
+            اختر الوضعية
+          </label>
+          <select
+            name="state"
+            className="my-2 p-2 rounded text-right"
+            value={state}
+            onChange={(e) =>
+              setSearchQuery({ ...searchQuery, state: e.target.value })
+            }
+          >
+            <option className="bg-red-200 text-right" value={""}>
+              كــل الوضعيات
+            </option>
+            <option value={"accepted"}>تمت الموافقة</option>
+            <option value={"rejected"}>مرفوض</option>
+            <option value={"refunded"}>تم استرداد الرسوم</option>
+            <option value={"delivered"}>تم التسليم للعميل</option>
+          </select>
         </form>
       </div>
-      <h3 className="flex justify-center items-center text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
+      <h3 className="flex justify-center items-center flex-row-reverse text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
+        <span>{" الجوازات المحفوظة"}</span>
+        {!month && !year && (
+          <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
+            {" الكلية "}
+          </span>
+        )}
+        {month && (
+          <span className="bg-rose-500 p-1 rounded-md text-white mx-1">
+            {" عن شهر " + month}
+          </span>
+        )}
+        {year && (
+          <span className="bg-amber-500 p-1 rounded-md text-white mx-1">
+            {" سنة " + year}
+          </span>
+        )}
+        {state && (
+          <span className="bg-emerald-500 p-1 rounded-md text-white mx-1">
+            {" والوضعية " + passportState[state as keyof PassportState][0]}
+          </span>
+        )}
+        <span>({filteredPassports.length})</span>
+
         <span className="flex justify-center items-center mr-2">
           <FcBusiness size={50} />
         </span>
-        ({filteredPassports.length}) الجوازات المحفوظة{" "}
-        {!month && !year && "الكلية"}
-        {month && " عن شهر " + month}
-        {year && " سنة " + year}
       </h3>
 
       {/*Request Status and Errors*/}
@@ -351,18 +402,24 @@ export const Passports = () => {
       )}
 
       {/* if there is No Passports Records */}
-      {!year && !month && filteredPassports?.length === 0 && !isLoading && (
-        <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
-          لا يوجد جوازات محفوظة الان, يرجى إضافة الجوازات لعرضها.
-        </div>
-      )}
+      {!year &&
+        !month &&
+        !state &&
+        filteredPassports?.length === 0 &&
+        !isLoading && (
+          <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
+            لا يوجد جوازات محفوظة الان, يرجى إضافة الجوازات لعرضها.
+          </div>
+        )}
 
       {/* if there is search query no passport matches >>> No Search Found*/}
-      {(year || month) && filteredPassports?.length === 0 && !isLoading && (
-        <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
-          لا يوجد نتائج تطابق هذا البحث, تأكد من الشهر و السنة وحاول مجدداً
-        </div>
-      )}
+      {(year || month || state) &&
+        filteredPassports?.length === 0 &&
+        !isLoading && (
+          <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
+            لا يوجد نتائج تطابق هذا البحث, تأكد من الشهر و السنة وحاول مجدداً
+          </div>
+        )}
 
       {/* Show spinner when Loading State is true */}
       {isLoading && <MainSpinner isLoading={isLoading} />}

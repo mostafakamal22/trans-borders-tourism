@@ -23,11 +23,11 @@ type MainPagesLinks = [string, string, ReactElement][];
 
 const mainPageLinks: MainPagesLinks = [
   ["عرض الفواتير", "/invoices", <FcBookmark size={50} />],
-  ["إضافة فاتورة", "/invoices/create", <FcFile size={50} />],
-  ["عرض الجوازات", "/passports", <FcBusiness size={50} />],
-  ["إضافة الجوازات", "/passports/create", <FcTemplate size={50} />],
   ["عرض  التأشيرات", "/visas", <FcCurrencyExchange size={50} />],
+  ["عرض الجوازات", "/passports", <FcBusiness size={50} />],
+  ["إضافة فاتورة", "/invoices/create", <FcFile size={50} />],
   ["إضافة التأشيرات", "/visas/create", <FcDebt size={50} />],
+  ["إضافة الجوازات", "/passports/create", <FcTemplate size={50} />],
 ];
 
 export const Home = () => {
