@@ -1,45 +1,37 @@
-import dayjs from "dayjs";
-import { useEffect, useState } from "react";
-import { FcCurrencyExchange } from "react-icons/fc";
-import { TiDelete } from "react-icons/ti";
-import { UseResetStatus } from "../../hooks/UseResetStatus";
-import { resetAdminAuthStatus } from "../../state/features/admin/auth/adminAuthSlice";
 import {
   useAppDispatch,
   useAppSelector,
 } from "../../state/features/hooks/StateHooks";
+import { useState, useEffect } from "react";
+import dayjs from "dayjs";
+import {
+  deletePayment,
+  resetPaymentsStatus,
+} from "../../state/features/payment/paymentSlice";
 import FormButton from "../shared/FormButton";
+import { TiDelete } from "react-icons/ti";
+import { UseResetStatus } from "../../hooks/UseResetStatus";
+import { resetAdminAuthStatus } from "../../state/features/admin/auth/adminAuthSlice";
 import logo from "../../assets/imgs/trans-logo.png";
-import MessagesContainer from "../shared/MessagesContainer";
-import { PaginationTable } from "../shared/PaginationTable";
-import { MainSpinner } from "../shared/MainSpinner";
 import {
   inputClassNamesStyles,
   lableClassNamesStyles,
 } from "../forms/CreateInvoice";
-import {
-  deleteVisa,
-  resetVisasStatus,
-} from "../../state/features/visa/visaSlice";
+import { FcMoneyTransfer } from "react-icons/fc";
+import MessagesContainer from "../shared/MessagesContainer";
+import { PaginationTable } from "../shared/PaginationTable";
+import { MainSpinner } from "../shared/MainSpinner";
 
-export const visaTableHeaderTitles = [
-  "مسح التأشيرة",
-  "حالة التأشيرة",
-  "رقم التليفون",
-  "رقم الجواز",
-  "إسم العميل",
-  "صافى الربح",
-  "سعر البيع",
-  "تكلفة التأشيرة",
-  "نوع التأشيرة",
-  "الإصدار",
-  "مورد التأشيرة",
-  "التاريخ",
+export const paymentTableHeaderTitles = [
+  "مسح المصروف",
+  "المبلغ الكلى",
+  "نوع المصروف",
+  "تاريخ المصروف",
 ];
 
-export const Visas = () => {
+export const Payments = () => {
   const { info } = useAppSelector((state) => state.adminAuth);
-  const { visasList } = useAppSelector((state) => state.visasData);
+  const { paymentsList } = useAppSelector((state) => state.paymentsData);
   const dispatch = useAppDispatch();
 
   //search Params
@@ -50,41 +42,42 @@ export const Visas = () => {
 
   const { year, month } = searchQuery;
 
-  //filtered Visas
-  const filteredVisas: [] =
+  //filtered Payemnts
+  const filteredPayments: [] =
     month || year
-      ? visasList.filter((visa: any) => {
-          const paymentDate = dayjs(visa.payment_date)
+      ? paymentsList.filter((payment: any) => {
+          const paymentDate = dayjs(payment.date)
             .format("DD/MM/YYYY")
             .split("/");
-          const yearOfVisa = paymentDate[2];
-          const monthOfVisa = paymentDate[1];
+          const yearOfPayment = paymentDate[2];
+          const monthOfPayment = paymentDate[1];
 
-          if (yearOfVisa === year && +monthOfVisa === +month) return visa;
+          if (yearOfPayment === year && +monthOfPayment === +month)
+            return payment;
         })
-      : visasList;
+      : paymentsList;
 
   const { isLoading, isError, isSuccess, message } = useAppSelector(
-    (state) => state.visasData
+    (state) => state.paymentsData
   );
 
   //search message state
   const [msg, setMsg] = useState("");
 
-  // handle Delete visa
-  const handleRemoving = (e: any, removedVisaID: string) => {
+  // handle Delete payment
+  const handleRemoving = (e: any, removedPaymentID: string) => {
     e.preventDefault();
 
     //get admin token
     const token = info.token;
 
-    //payload (admin token + id of the visa to delete)
-    const visaData = {
-      id: removedVisaID,
+    //payload (admin token + id of the payment to delete)
+    const paymentData = {
+      id: removedPaymentID,
       token,
     };
 
-    dispatch(deleteVisa(visaData));
+    dispatch(deletePayment(paymentData));
   };
 
   useEffect(() => {
@@ -100,7 +93,7 @@ export const Visas = () => {
   //Define table data
   const tableHeader = (
     <tr className="border-b border-b-black">
-      {visaTableHeaderTitles.map((title) => (
+      {paymentTableHeaderTitles.map((title) => (
         <th
           key={title}
           scope="col"
@@ -112,109 +105,55 @@ export const Visas = () => {
     </tr>
   );
 
-  const tableRow = (visa: any, index: number) => {
+  const tableRow = (payment: any, index: number) => {
     return (
       <tr
-        key={visa._id}
+        key={payment._id}
         className={`${
           index % 2 === 0 ? "bg-white" : "bg-gray-100"
         } border-b border-b-black`}
       >
-        {/* Delete Visa */}
+        {/* Delete payment */}
         <th
           scope="row"
           className="p-2 text-gray-900 whitespace-nowrap text-xs border-x text-center border-x-black"
         >
           <form
             className="max-w-[150px] m-auto"
-            onSubmit={(event) => handleRemoving(event, visa._id)}
+            onSubmit={(event) => handleRemoving(event, payment._id)}
           >
             <FormButton
-              text={{ default: "مسح التأشيرة" }}
+              text={{ default: "مسح المصــروف" }}
               bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}
               icon={<TiDelete className="mb-[-2px]" size={25} />}
             />
           </form>
         </th>
 
-        {/*Visa State*/}
+        {/*Payment Total*/}
         <th
           scope="row"
           className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
         >
-          {visa.state}
+          {payment.total}
         </th>
 
-        {/*Customer Number*/}
+        {/*Payment Types*/}
         <th
           scope="row"
           className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
         >
-          {visa.customer_number}
-        </th>
-
-        {/*passport ID*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
-        >
-          {visa.passport_id}
-        </th>
-
-        {/*Customer Name*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
-        >
-          {visa.customer_name}
-        </th>
-
-        {/*Profit*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
-        >
-          {visa.profit}
-        </th>
-
-        {/*Sales*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
-        >
-          {visa.sales}
-        </th>
-
-        {/*Net Fare*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
-        >
-          {visa.net_fare}
-        </th>
-
-        {/*Visa Type*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
-        >
-          {visa.type}
-        </th>
-
-        {/*Visa Version*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
-        >
-          {visa.version}
-        </th>
-
-        {/*Visa Provider*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
-        >
-          {visa.provider}
+          {payment.payment_types.map(
+            (type: { name: string; total: number }, index: number) => (
+              <span
+                key={index}
+                className="flex flex-row-reverse justify-center items-center gap-1 my-1 bg-amber-400 rounded"
+              >
+                <span>{type.name}</span>
+                <span>{type.total + " <== "}</span>
+              </span>
+            )
+          )}
         </th>
 
         {/*Payment Date*/}
@@ -222,7 +161,7 @@ export const Visas = () => {
           scope="row"
           className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
         >
-          {dayjs(visa.payment_date).format("DD/MM/YYYY")}
+          {dayjs(payment.date).format("DD/MM/YYYY")}
         </th>
       </tr>
     );
@@ -231,13 +170,13 @@ export const Visas = () => {
   //clean up status (when mount and unmount)
   UseResetStatus(() => {
     dispatch(resetAdminAuthStatus());
-    dispatch(resetVisasStatus());
+    dispatch(resetPaymentsStatus());
   });
 
   UseResetStatus(() => {
     return () => {
       dispatch(resetAdminAuthStatus());
-      dispatch(resetVisasStatus());
+      dispatch(resetPaymentsStatus());
     };
   });
 
@@ -247,7 +186,7 @@ export const Visas = () => {
 
       <div className="flex  justify-center items-center flex-wrap  gap-4 m-6 p-4 bg-red-700 rounded-md ">
         <h4 className="basis-full flex justify-center items-center text-2xl my-4 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
-          عرض التأشـيرات بالشهــر و السنــة
+          عرض المصــروفات بالشهــر و السنــة
         </h4>
         <form className="basis-full md:basis-[35%] flex flex-col justify-center gap-2 mx-auto font-semibold ">
           <label className={lableClassNamesStyles.default} htmlFor="year">
@@ -286,7 +225,7 @@ export const Visas = () => {
         </form>
       </div>
       <h3 className="flex justify-center items-center flex-row-reverse text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
-        <span>{" التأشيرات المحفوظة"}</span>
+        <span>{" المصــروفات المحفوظة"}</span>
         {!month && !year && (
           <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
             {" الكلية "}
@@ -303,9 +242,9 @@ export const Visas = () => {
           </span>
         )}
 
-        <span>({filteredVisas.length})</span>
+        <span>({filteredPayments.length})</span>
         <span className="flex justify-center items-center mr-2">
-          <FcCurrencyExchange size={50} />
+          <FcMoneyTransfer size={50} />
         </span>
       </h3>
 
@@ -315,24 +254,24 @@ export const Visas = () => {
       )}
 
       {/*Display Table All Data Needed*/}
-      {!isLoading && filteredVisas?.length > 0 && (
+      {!isLoading && filteredPayments?.length > 0 && (
         <PaginationTable
           tableRow={tableRow}
           tableHeader={tableHeader}
-          tableBodyData={[...filteredVisas].reverse()}
+          tableBodyData={[...filteredPayments].reverse()}
           rowsPerPage={10}
         />
       )}
 
-      {/* if there is No Visas Records */}
-      {!year && !month && filteredVisas?.length === 0 && !isLoading && (
+      {/* if there is No Payments Records */}
+      {!year && !month && filteredPayments?.length === 0 && !isLoading && (
         <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
-          لا يوجد تأشيرات محفوظة الان, يرجى إضافة التأشيرات لعرضها.
+          لا يوجد مصــروفات محفوظة الان, يرجى إضافة المصــروفات لعرضها.
         </div>
       )}
 
-      {/* if there is search query no passport matches >>> No Search Found*/}
-      {(year || month) && filteredVisas?.length === 0 && !isLoading && (
+      {/* if there is search query no payment matches >>> No Search Found*/}
+      {(year || month) && filteredPayments?.length === 0 && !isLoading && (
         <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
           لا يوجد نتائج تطابق هذا البحث, تأكد من الشهر و السنة وحاول مجدداً
         </div>

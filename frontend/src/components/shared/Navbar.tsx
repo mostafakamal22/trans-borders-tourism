@@ -6,6 +6,8 @@ import { useAppDispatch } from "../../state/features/hooks/StateHooks";
 import { adminsLogout } from "../../state/features/invoice/invoiceSlice";
 import { useEffect } from "react";
 import { passportsLogout } from "../../state/features/passport/passportSlice";
+import { visasLogout } from "../../state/features/visa/visaSlice";
+import { paymentsLogout } from "../../state/features/payment/paymentSlice";
 
 const navbarLinks = [
   ["الرئيسية", "/"],
@@ -15,6 +17,8 @@ const navbarLinks = [
   [" إضافة جوازات", "/passports/create"],
   ["التأشيرات", "/visas"],
   ["إضافة التأشيرات", "/visas/create"],
+  ["المصروفات", "/payments"],
+  ["إضافة المصروفات", "/payments/create"],
 ];
 
 export const Navbar = () => {
@@ -47,11 +51,13 @@ export const Navbar = () => {
     dispatch(adminsLogout());
     dispatch(adminLogout());
     dispatch(passportsLogout());
+    dispatch(visasLogout());
+    dispatch(paymentsLogout());
   };
 
   return (
     <nav className="bg-slate-50 px-2 sm:px-4 py-2.5 sticky w-full z-20 top-0 left-0 shadow-md transition-all duration-300 ease-in-out">
-      <div className="container flex flex-wrap justify-between items-center ">
+      <div className=" flex flex-wrap justify-between items-center ">
         <Link to="/" className=" items-center m-auto hidden sm:flex md:m-0">
           <img src={logo} className="md:mr-3 h-16" alt="Trans Logo" />
         </Link>
@@ -80,15 +86,6 @@ export const Navbar = () => {
               >
                 <RiAdminFill size={20} />
               </Link>
-            </li>
-
-            <li>
-              <button
-                className="flex font-bold text-xs sm:text-sm bg-blue-800 text-white hover:bg-white  px-2 sm:px-3 py-2 hover:text-blue-800 border hover:border-blue-800 items-center rounded
-         shadow transition-all ease-in-out duration-300"
-              >
-                EN
-              </button>
             </li>
 
             <li>

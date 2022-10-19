@@ -22,12 +22,6 @@ if (process.env.NODE_ENV === "production") {
   app.use(cors(corsDevOptions));
 }
 
-// Apply the rate limiting middleware to API calls only
-// const {
-//   apiLimiter,
-// } = require("./middlewares/rateLimitMiddleware/rateLimitMiddleware");
-// app.use("/api", apiLimiter);
-
 //admins Router
 const adminsRoute = require("./routes/adminRoutes");
 app.use("/api/admins", adminsRoute);
@@ -43,6 +37,10 @@ app.use("/api/passports", passportsRoute);
 //visas Router
 const visasRoute = require("./routes/visaRoutes");
 app.use("/api/visas", visasRoute);
+
+//payments Router
+const paymentsRoute = require("./routes/paymentRoutes");
+app.use("/api/payments", paymentsRoute);
 
 //serve Frontend
 if (process.env.NODE_ENV === "production") {

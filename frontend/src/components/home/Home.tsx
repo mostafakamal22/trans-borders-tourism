@@ -3,6 +3,8 @@ import {
   FcCurrencyExchange,
   FcDebt,
   FcHome,
+  FcInvite,
+  FcMoneyTransfer,
   FcTemplate,
 } from "react-icons/fc";
 import { Link } from "react-router-dom";
@@ -18,16 +20,37 @@ import { ReactElement, useEffect } from "react";
 import { MainSpinner } from "../shared/MainSpinner";
 import { getAllPassports } from "../../state/features/passport/passportSlice";
 import { getAllVisas } from "../../state/features/visa/visaSlice";
+import { getAllPayments } from "../../state/features/payment/paymentSlice";
 
-type MainPagesLinks = [string, string, ReactElement][];
+type MainHeadings = string[];
+
+type MainPagesLinks = [string, string, ReactElement][][];
 
 const mainPageLinks: MainPagesLinks = [
-  ["عرض الفواتير", "/invoices", <FcBookmark size={50} />],
-  ["عرض  التأشيرات", "/visas", <FcCurrencyExchange size={50} />],
-  ["عرض الجوازات", "/passports", <FcBusiness size={50} />],
-  ["إضافة فاتورة", "/invoices/create", <FcFile size={50} />],
-  ["إضافة التأشيرات", "/visas/create", <FcDebt size={50} />],
-  ["إضافة الجوازات", "/passports/create", <FcTemplate size={50} />],
+  [
+    ["عرض الفواتير", "/invoices", <FcBookmark size={50} />],
+    ["إضافة فاتورة", "/invoices/create", <FcFile size={50} />],
+  ],
+
+  [
+    ["عرض  التأشيرات", "/visas", <FcCurrencyExchange size={50} />],
+    ["إضافة التأشيرات", "/visas/create", <FcDebt size={50} />],
+  ],
+  [
+    ["عرض الجوازات", "/passports", <FcBusiness size={50} />],
+    ["إضافة الجوازات", "/passports/create", <FcTemplate size={50} />],
+  ],
+  [
+    ["عرض المصروفات", "/payments", <FcMoneyTransfer size={50} />],
+    ["إضافة المصروفات", "/payments/create", <FcInvite size={50} />],
+  ],
+];
+
+const mainHeadings: MainHeadings = [
+  "الفواتير",
+  "التأشيرات",
+  "الجوازات",
+  "المصروفات",
 ];
 
 export const Home = () => {
@@ -39,14 +62,21 @@ export const Home = () => {
     dispatch(getAllInvoices({ token: info.token }));
     dispatch(getAllPassports({ token: info.token }));
     dispatch(getAllVisas({ token: info.token }));
+    dispatch(getAllPayments({ token: info.token }));
   }, []);
 
   const invoiceData = useAppSelector((state) => state.invoiceData);
   const passportsData = useAppSelector((state) => state.passportsData);
   const visasData = useAppSelector((state) => state.visasData);
+  const paymentsData = useAppSelector((state) => state.paymentsData);
 
   //Loading Spinner After Login Waiting Until App data is Fetched.
-  if (invoiceData.isLoading || passportsData.isLoading || visasData.isLoading)
+  if (
+    invoiceData.isLoading ||
+    passportsData.isLoading ||
+    visasData.isLoading ||
+    paymentsData.isLoading
+  )
     return (
       <div className="mx-5 h-min-screen">
         <div className="max-w-5xl w-full h-full flex justify-center items-center mx-auto my-10 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
@@ -55,7 +85,8 @@ export const Home = () => {
               isLoading={
                 invoiceData.isLoading ||
                 passportsData.isLoading ||
-                visasData.isLoading
+                visasData.isLoading ||
+                paymentsData.isLoading
               }
             />
           </div>
@@ -76,14 +107,30 @@ export const Home = () => {
 
       <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-16 p-3 font-semibold">
         {mainPageLinks.map((link: any, index: number) => (
-          <Link
+          <div
             key={index}
-            className="min-w-[250px] flex justify-center items-center flex-col px-3 py-6 gap-4 rounded shadow-md shadow-black/30 hover:bg-red-200 transition-all duration-100 ease-in-out"
-            to={link[1]}
+            className="basis-full flex justify-center items-center flex-wrap gap-3"
           >
-            <span>{link[0]}</span>
-            {link[2]}
-          </Link>
+            <h1 className="basis-full p-2 mb-2 bg-red-800 text-white text-2xl rounded">
+              {mainHeadings[index]}
+            </h1>
+
+            <Link
+              className="min-w-[250px] flex justify-center items-center flex-col px-3 py-6 gap-4 rounded shadow-md shadow-black/30 hover:bg-red-200 transition-all duration-100 ease-in-out"
+              to={link[0][1]}
+            >
+              <span>{link[0][0]}</span>
+              {link[0][2]}
+            </Link>
+
+            <Link
+              className="min-w-[250px] flex justify-center items-center flex-col px-3 py-6 gap-4 rounded shadow-md shadow-black/30 hover:bg-red-200 transition-all duration-100 ease-in-out"
+              to={link[1][1]}
+            >
+              <span>{link[1][0]}</span>
+              {link[1][2]}
+            </Link>
+          </div>
         ))}
       </div>
     </div>
