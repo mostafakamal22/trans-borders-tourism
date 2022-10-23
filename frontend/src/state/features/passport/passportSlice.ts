@@ -48,10 +48,7 @@ export const createPassport = createAsyncThunk(
 //Update passport
 export const updatePassport = createAsyncThunk(
   "passports/updatePassport",
-  async (
-    payload: { id: string; token: string; newState: string; oldState: string },
-    thunkAPI
-  ) => {
+  async (payload: any, thunkAPI) => {
     try {
       return await passportServices.updatePassport(payload);
     } catch (error: any) {
@@ -126,7 +123,7 @@ export const passportSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.message = "State Updated Successfully!";
+        state.message = "تم تعديل الجواز بنجاح";
         state.passportsList = state.passportsList.map((passport: any) => {
           if (passport._id === action.payload._id) {
             return action.payload;
@@ -150,7 +147,7 @@ export const passportSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.message = "Passport Deleted Successfully!";
+        state.message = "تم حذف الجواز بنجاح";
         state.passportsList = state.passportsList.filter(
           (invoice: any) => invoice._id !== action.payload.id
         );
@@ -171,7 +168,7 @@ export const passportSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.message = "Passport Has Been Created Successfully!";
+        state.message = "تم حفظ الجواز بنجاح";
         state.passportsList = [...state.passportsList, action.payload];
       })
       .addCase(createPassport.rejected, (state, action) => {

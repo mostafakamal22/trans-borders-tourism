@@ -31,12 +31,7 @@ const createPassport = async (passportData: any) => {
 };
 
 //update Passport
-const updatePassport = async (passportData: {
-  id: string;
-  token: string;
-  newState: string;
-  oldState: string;
-}) => {
+const updatePassport = async (passportData: any) => {
   const res = await axios.put(API_URL + passportData.id, passportData, {
     headers: {
       "Content-Type": "application/json",

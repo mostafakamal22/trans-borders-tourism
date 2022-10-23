@@ -38,6 +38,14 @@ const passportSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    sales: {
+      type: Number,
+      default: 0,
+    },
+    profit: {
+      type: Number,
+      default: 0,
+    },
     payment_date: {
       type: Date,
       default: "1970-10-10T19:46:38.721Z",

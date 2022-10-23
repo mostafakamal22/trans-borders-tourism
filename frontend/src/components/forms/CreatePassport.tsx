@@ -37,6 +37,8 @@ export const CreatePassport = () => {
     taxable: 0,
     taxRate: 0,
     total: 0,
+    sales: 0,
+    profit: 0,
   });
 
   //state for alert messages
@@ -76,6 +78,8 @@ export const CreatePassport = () => {
       taxable: passportDetails.taxable,
       taxRate: passportDetails.taxRate,
       total: passportDetails.total,
+      sales: passportDetails.sales,
+      profit: passportDetails.profit,
     };
 
     dispatch(createPassport(passportData));
@@ -105,7 +109,7 @@ export const CreatePassport = () => {
 
       <form onSubmit={handleSubmit}>
         <p className="font-bold p-2 rounded text-lg text-white bg-red-800 my-4">
-          [ Passport Details ]
+          [ بيانات الجواز ]
         </p>
         <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">
           <FormInput
@@ -114,7 +118,7 @@ export const CreatePassport = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            defaultValue={passportDetails.name}
+            value={passportDetails.name}
             onChange={(e) =>
               setPassportDetails({ ...passportDetails, name: e.target.value })
             }
@@ -127,7 +131,7 @@ export const CreatePassport = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            defaultValue={passportDetails.nationality}
+            value={passportDetails.nationality}
             onChange={(e) =>
               setPassportDetails({
                 ...passportDetails,
@@ -142,7 +146,7 @@ export const CreatePassport = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            defaultValue={passportDetails.passportId}
+            value={passportDetails.passportId}
             onChange={(e) =>
               setPassportDetails({
                 ...passportDetails,
@@ -158,11 +162,20 @@ export const CreatePassport = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="number"
-            defaultValue={passportDetails.servicePrice}
+            value={passportDetails.servicePrice}
             onChange={(e) =>
               setPassportDetails({
                 ...passportDetails,
                 servicePrice: +e.target.value,
+                total:
+                  +e.target.value +
+                  passportDetails.taxable +
+                  passportDetails.taxRate,
+                profit:
+                  passportDetails.sales -
+                  +e.target.value -
+                  passportDetails.taxable -
+                  passportDetails.taxRate,
               })
             }
             min={0}
@@ -175,11 +188,20 @@ export const CreatePassport = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="number"
-            defaultValue={passportDetails.taxable}
+            value={passportDetails.taxable}
             onChange={(e) =>
               setPassportDetails({
                 ...passportDetails,
                 taxable: +e.target.value,
+                total:
+                  +e.target.value +
+                  passportDetails.servicePrice +
+                  passportDetails.taxRate,
+                profit:
+                  passportDetails.sales -
+                  +e.target.value -
+                  passportDetails.servicePrice -
+                  passportDetails.taxRate,
               })
             }
             min={0}
@@ -192,11 +214,20 @@ export const CreatePassport = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="number"
-            defaultValue={passportDetails.taxRate}
+            value={passportDetails.taxRate}
             onChange={(e) =>
               setPassportDetails({
                 ...passportDetails,
                 taxRate: +e.target.value,
+                total:
+                  +e.target.value +
+                  passportDetails.taxable +
+                  passportDetails.servicePrice,
+                profit:
+                  passportDetails.sales -
+                  +e.target.value -
+                  passportDetails.taxable -
+                  passportDetails.servicePrice,
               })
             }
             min={0}
@@ -209,11 +240,12 @@ export const CreatePassport = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="number"
-            defaultValue={passportDetails.total}
+            value={passportDetails.total}
             onChange={(e) =>
               setPassportDetails({
                 ...passportDetails,
                 total: +e.target.value,
+                profit: passportDetails.sales - +e.target.value,
               })
             }
             min={0}
@@ -222,11 +254,46 @@ export const CreatePassport = () => {
 
           <FormInput
             label={tableHeaderTitles[9]}
+            name="sales"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
+            type="number"
+            value={passportDetails.sales}
+            onChange={(e) =>
+              setPassportDetails({
+                ...passportDetails,
+                sales: +e.target.value,
+                profit: +e.target.value - passportDetails.total,
+              })
+            }
+            min={0}
+            step={0.01}
+          />
+
+          <FormInput
+            label={tableHeaderTitles[10]}
+            name="profit"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
+            type="number"
+            value={passportDetails.profit}
+            onChange={(e) =>
+              setPassportDetails({
+                ...passportDetails,
+                profit: +e.target.value,
+              })
+            }
+            min={0}
+            step={0.01}
+          />
+
+          <FormInput
+            label={tableHeaderTitles[11]}
             name="paymentDate"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="date"
-            defaultValue={passportDetails.paymentDate}
+            value={passportDetails.paymentDate}
             onChange={(e) =>
               setPassportDetails({
                 ...passportDetails,

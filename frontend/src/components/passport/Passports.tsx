@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FcBusiness } from "react-icons/fc";
 import { TiDelete } from "react-icons/ti";
 import { UseResetStatus } from "../../hooks/UseResetStatus";
@@ -11,19 +11,18 @@ import {
 import {
   deletePassport,
   resetPassportsStatus,
-  updatePassport,
 } from "../../state/features/passport/passportSlice";
 import FormButton from "../shared/FormButton";
 import logo from "../../assets/imgs/trans-logo.png";
 import MessagesContainer from "../shared/MessagesContainer";
 import { PaginationTable } from "../shared/PaginationTable";
 import { MainSpinner } from "../shared/MainSpinner";
-import { UpdatePassportState } from "./UpdatePassportState";
 import {
   inputClassNamesStyles,
   lableClassNamesStyles,
 } from "../forms/CreateInvoice";
 import { passportsCalculations } from "../helpers/passportCalculations";
+import { UpdatePassport } from "../forms/UpdatePassport";
 
 export const tableHeaderTitles = [
   "إسم العميل",
@@ -34,9 +33,11 @@ export const tableHeaderTitles = [
   "الرسوم",
   "رسوم الخدمة",
   "ضريبة رسوم الخدمة",
-  "المبلغ الكلى",
+  "إجمالى التكلفة",
+  "سعر البيع",
+  "صافى الربح",
   "تاريخ الدفع",
-  "تعديل الوضعية",
+  "تعديل الجواز",
   "مسح الجواز",
 ];
 
@@ -60,7 +61,7 @@ export type PassportService = {
 export const passportState: PassportState = {
   accepted: ["تمت الموافقة", "bg-green-200"],
   rejected: ["مرفوض", "bg-red-200"],
-  refunded: ["تم استلام الرسوم", "bg-blue-200"],
+  refunded: ["تم إسترداد الرسوم", "bg-blue-200"],
   delivered: ["تم التسليم للعميل", "bg-yellow-200"],
 };
 
@@ -85,6 +86,12 @@ export const Passports = () => {
     month: "",
     state: "",
   });
+
+  //Is modal open
+  const [isOpen, setIsOpen] = useState(false);
+
+  //PassportID to Update
+  const [id, setId] = useState("");
 
   const { year, month, state } = searchQuery;
 
@@ -115,7 +122,7 @@ export const Passports = () => {
         })
       : passportsList;
 
-  const { totals, servicePrices, taxRates, taxables } =
+  const { totals, servicePrices, taxRates, taxables, profits, sales } =
     passportsCalculations(filteredPassports);
 
   const { isLoading, isError, isSuccess, message } = useAppSelector(
@@ -141,29 +148,6 @@ export const Passports = () => {
     dispatch(deletePassport(passportData));
   };
 
-  // handle Update Passport
-  const handleUpdate = (
-    e: React.SyntheticEvent,
-    passportID: string,
-    newState: string,
-    oldState: string
-  ) => {
-    e.preventDefault();
-
-    //get admin token
-    const token = info.token;
-
-    //payload (admin token + id of the passport to delete)
-    const passportData = {
-      id: passportID,
-      newState,
-      oldState,
-      token,
-    };
-
-    dispatch(updatePassport(passportData));
-  };
-
   useEffect(() => {
     if (isError) {
       setMsg(message);
@@ -186,6 +170,9 @@ export const Passports = () => {
           {title}
         </th>
       ))}
+      <th scope="col" className="p-1 text-center border-x border-x-black">
+        م
+      </th>
     </tr>
   );
 
@@ -200,45 +187,67 @@ export const Passports = () => {
         {/* Delete passport */}
         <th
           scope="row"
-          className="p-1 text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1 text-gray-900 border-x text-center border-x-black"
         >
           <form
-            className="max-w-[150px] m-auto"
+            className="max-w-[50px] m-auto"
             onSubmit={(event) => handleRemoving(event, passport._id)}
           >
             <FormButton
-              text={{ default: "مسح الجواز" }}
+              text={{ default: "حذف" }}
               bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}
-              icon={<TiDelete className="mb-[-2px] mr-1" size={25} />}
+              icon={<TiDelete className="mb-[-2px]" size={25} />}
             />
           </form>
         </th>
 
-        {/* Update State */}
+        {/* Update Passport */}
         <th
           scope="row"
-          className="p-1 text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1 text-gray-900 border-x text-center border-x-black"
         >
-          <UpdatePassportState
-            passport={passport}
-            handleUpdate={handleUpdate}
-          />
+          <button
+            className="inline-flex font-bold text-xs bg-blue-800 text-white hover:bg-white px-2 py-2 border-transparent hover:text-blue-800 border hover:border-blue-800 items-center rounded
+           transition-all ease-in-out duration-300"
+            onClick={() => {
+              setId(passport._id);
+              setIsOpen(true);
+            }}
+          >
+            تعديل
+          </button>
         </th>
 
         {/*Payment Date*/}
         <th
           scope="row"
-          className="p-1  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1  text-gray-900 border-x text-center border-x-black"
         >
           {dayjs(passport.payment_date).format("DD/MM/YYYY") === "10/10/1970"
             ? "-"
             : dayjs(passport.payment_date).format("DD/MM/YYYY")}
         </th>
 
+        {/*Profit*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-900  border-x text-center border-x-black"
+        >
+          {passport.profit}
+        </th>
+
+        {/*Sales*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-900  border-x text-center border-x-black"
+        >
+          {passport.sales}
+        </th>
+
         {/*Total Payment*/}
         <th
           scope="row"
-          className="p-1  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1  text-gray-900  border-x text-center border-x-black"
         >
           {passport.total}
         </th>
@@ -246,7 +255,7 @@ export const Passports = () => {
         {/*Service Tax Rate*/}
         <th
           scope="row"
-          className="p-1  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1  text-gray-900  border-x text-center border-x-black"
         >
           {passport.tax_rate}
         </th>
@@ -254,7 +263,7 @@ export const Passports = () => {
         {/*Service Taxable*/}
         <th
           scope="row"
-          className="p-1  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1  text-gray-900  border-x text-center border-x-black"
         >
           {passport.taxable}
         </th>
@@ -262,7 +271,7 @@ export const Passports = () => {
         {/*Service Price*/}
         <th
           scope="row"
-          className="p-1  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1  text-gray-900  border-x text-center border-x-black"
         >
           {passport.service_price}
         </th>
@@ -270,7 +279,7 @@ export const Passports = () => {
         {/*passport Service*/}
         <th
           scope="row"
-          className="p-1  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="max-w-[90px] p-1 text-gray-900  border-x text-center border-x-black"
         >
           {passportService[passport.service as keyof PassportService]}
         </th>
@@ -280,7 +289,7 @@ export const Passports = () => {
           scope="row"
           className={`${
             passportState[passport.state as keyof PassportState][1]
-          } p-1 text-gray-900 whitespace-nowrap  border-x text-center border-x-black`}
+          } p-1 text-gray-900  border-x text-center border-x-black`}
         >
           {passportState[passport.state as keyof PassportState][0]}
         </th>
@@ -288,7 +297,7 @@ export const Passports = () => {
         {/*passport ID*/}
         <th
           scope="row"
-          className="p-1  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1  text-gray-900  border-x text-center border-x-black"
         >
           {passport.passport_id}
         </th>
@@ -296,7 +305,7 @@ export const Passports = () => {
         {/*Customer Nationality*/}
         <th
           scope="row"
-          className="p-1  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1  text-gray-900 border-x text-center border-x-black"
         >
           {passport.customer_nationality}
         </th>
@@ -304,9 +313,19 @@ export const Passports = () => {
         {/*Customer Name*/}
         <th
           scope="row"
-          className="p-1  text-gray-900 bg-red-200 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1  text-gray-900 bg-red-200 border-x text-center border-x-black"
         >
           {passport.customer_name}
+        </th>
+
+        {/*passport NO*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-90 border-x text-center border-x-black"
+        >
+          {[...filteredPassports]
+            .reverse()
+            .findIndex((p: any) => p._id === passport._id) + 1}
         </th>
       </tr>
     );
@@ -431,7 +450,15 @@ export const Passports = () => {
         </span>
 
         <span className="bg-emerald-500 p-1 rounded-md text-white mx-1">
-          {" إجمالى المدفوع " + `[ ${totals} ]`}
+          {" إجمالى التكلفة " + `[ ${totals} ]`}
+        </span>
+
+        <span className="bg-lime-500 p-1 rounded-md text-white mx-1">
+          {" إجمالى سعر البيع " + `[ ${sales} ]`}
+        </span>
+
+        <span className="bg-fuchsia-500 p-1 rounded-md text-white mx-1">
+          {" إجمالى الربح " + `[ ${profits} ]`}
         </span>
       </h4>
 
@@ -469,6 +496,9 @@ export const Passports = () => {
             لا يوجد نتائج تطابق هذا البحث, تأكد من الشهر و السنة وحاول مجدداً
           </div>
         )}
+
+      {/* Show update Passport Modal */}
+      {isOpen && <UpdatePassport setIsOpen={setIsOpen} id={id} />}
 
       {/* Show spinner when Loading State is true */}
       {isLoading && <MainSpinner isLoading={isLoading} />}
