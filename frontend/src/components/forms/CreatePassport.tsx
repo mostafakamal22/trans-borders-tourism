@@ -263,7 +263,7 @@ export const CreatePassport = () => {
               setPassportDetails({
                 ...passportDetails,
                 sales: +e.target.value,
-                profit: +e.target.value - passportDetails.total,
+                profit: +(+e.target.value - passportDetails.total).toFixed(2),
               })
             }
             min={0}

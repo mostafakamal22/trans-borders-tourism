@@ -438,27 +438,27 @@ export const Passports = () => {
 
       <h4 className="flex justify-center items-center flex-row-reverse flex-wrap gap-2 text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
         <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
-          {" إجمالى الرسوم " + `[ ${servicePrices} ]`}
+          {" إجمالى الرسوم " + `[ ${servicePrices.toFixed(2)} ]`}
         </span>
 
         <span className="bg-rose-500 p-1 rounded-md text-white mx-1">
-          {" إجمالى رسوم الخدمة " + `[ ${taxables} ]`}
+          {" إجمالى رسوم الخدمة " + `[ ${taxables.toFixed(2)} ]`}
         </span>
 
         <span className="bg-amber-500 p-1 rounded-md text-white mx-1">
-          {" إجمالى ضريبة رسوم الخدمة " + `[ ${taxRates} ]`}
+          {" إجمالى ضريبة رسوم الخدمة " + `[ ${taxRates.toFixed(2)} ]`}
         </span>
 
         <span className="bg-emerald-500 p-1 rounded-md text-white mx-1">
-          {" إجمالى التكلفة " + `[ ${totals} ]`}
+          {" إجمالى التكلفة " + `[ ${totals.toFixed(2)} ]`}
         </span>
 
         <span className="bg-lime-500 p-1 rounded-md text-white mx-1">
-          {" إجمالى سعر البيع " + `[ ${sales} ]`}
+          {" إجمالى سعر البيع " + `[ ${sales.toFixed(2)} ]`}
         </span>
 
         <span className="bg-fuchsia-500 p-1 rounded-md text-white mx-1">
-          {" إجمالى الربح " + `[ ${profits} ]`}
+          {" إجمالى الربح " + `[ ${profits.toFixed(2)} ]`}
         </span>
       </h4>
 

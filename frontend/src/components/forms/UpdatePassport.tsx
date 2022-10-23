@@ -24,7 +24,7 @@ import MessagesContainer from "../shared/MessagesContainer";
 import { inputClassNamesStyles, lableClassNamesStyles } from "./CreateInvoice";
 import logo from "../../assets/imgs/trans-logo.png";
 import { AiFillCloseCircle } from "react-icons/ai";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 export const UpdatePassport = ({
   id,
@@ -42,7 +42,7 @@ export const UpdatePassport = ({
     state: passport.state,
     service: passport.service,
     passportId: passport.passport_id,
-    paymentDate: dayjs(passport.payment_date).format("YYYY-DD-MM"),
+    paymentDate: dayjs(passport.payment_date).format("YYYY-MM-DD"),
     servicePrice: passport.service_price,
     taxable: passport.taxable,
     taxRate: passport.tax_rate,
@@ -284,7 +284,7 @@ export const UpdatePassport = ({
                 setPassportDetails({
                   ...passportDetails,
                   sales: +e.target.value,
-                  profit: +e.target.value - passportDetails.total,
+                  profit: +(+e.target.value - passportDetails.total).toFixed(2),
                 })
               }
               min={0}
@@ -314,7 +314,7 @@ export const UpdatePassport = ({
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
               type="date"
-              value={dayjs(passportDetails.paymentDate).format("YYYY-MM-DD")}
+              value={passportDetails.paymentDate}
               onChange={(e) =>
                 setPassportDetails({
                   ...passportDetails,
