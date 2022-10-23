@@ -23,6 +23,7 @@ import {
   inputClassNamesStyles,
   lableClassNamesStyles,
 } from "../forms/CreateInvoice";
+import { passportsCalculations } from "../helpers/passportCalculations";
 
 export const tableHeaderTitles = [
   "إسم العميل",
@@ -30,7 +31,10 @@ export const tableHeaderTitles = [
   "رقم الجواز",
   "الوضعية",
   "الخدمة",
-  "المبلغ المدفوع",
+  "الرسوم",
+  "رسوم الخدمة",
+  "ضريبة رسوم الخدمة",
+  "المبلغ الكلى",
   "تاريخ الدفع",
   "تعديل الوضعية",
   "مسح الجواز",
@@ -111,6 +115,9 @@ export const Passports = () => {
         })
       : passportsList;
 
+  const { totals, servicePrices, taxRates, taxables } =
+    passportsCalculations(filteredPassports);
+
   const { isLoading, isError, isSuccess, message } = useAppSelector(
     (state) => state.passportsData
   );
@@ -174,7 +181,7 @@ export const Passports = () => {
         <th
           key={title}
           scope="col"
-          className="py-3 px-3 text-center border-x border-x-black"
+          className="p-1 text-center border-x border-x-black"
         >
           {title}
         </th>
@@ -193,7 +200,7 @@ export const Passports = () => {
         {/* Delete passport */}
         <th
           scope="row"
-          className="p-2 text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1 text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
         >
           <form
             className="max-w-[150px] m-auto"
@@ -210,7 +217,7 @@ export const Passports = () => {
         {/* Update State */}
         <th
           scope="row"
-          className="p-2 text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1 text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
         >
           <UpdatePassportState
             passport={passport}
@@ -221,7 +228,7 @@ export const Passports = () => {
         {/*Payment Date*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
         >
           {dayjs(passport.payment_date).format("DD/MM/YYYY") === "10/10/1970"
             ? "-"
@@ -231,15 +238,39 @@ export const Passports = () => {
         {/*Total Payment*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
         >
           {passport.total}
+        </th>
+
+        {/*Service Tax Rate*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+        >
+          {passport.tax_rate}
+        </th>
+
+        {/*Service Taxable*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+        >
+          {passport.taxable}
+        </th>
+
+        {/*Service Price*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+        >
+          {passport.service_price}
         </th>
 
         {/*passport Service*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
         >
           {passportService[passport.service as keyof PassportService]}
         </th>
@@ -249,7 +280,7 @@ export const Passports = () => {
           scope="row"
           className={`${
             passportState[passport.state as keyof PassportState][1]
-          } p-2 text-gray-900 whitespace-nowrap  border-x text-center border-x-black`}
+          } p-1 text-gray-900 whitespace-nowrap  border-x text-center border-x-black`}
         >
           {passportState[passport.state as keyof PassportState][0]}
         </th>
@@ -257,7 +288,7 @@ export const Passports = () => {
         {/*passport ID*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
         >
           {passport.passport_id}
         </th>
@@ -265,7 +296,7 @@ export const Passports = () => {
         {/*Customer Nationality*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
         >
           {passport.customer_nationality}
         </th>
@@ -273,7 +304,7 @@ export const Passports = () => {
         {/*Customer Name*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 bg-red-200 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-1  text-gray-900 bg-red-200 whitespace-nowrap  border-x text-center border-x-black"
         >
           {passport.customer_name}
         </th>
@@ -385,6 +416,24 @@ export const Passports = () => {
           <FcBusiness size={50} />
         </span>
       </h3>
+
+      <h4 className="flex justify-center items-center flex-row-reverse flex-wrap gap-2 text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
+        <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
+          {" إجمالى الرسوم " + `[ ${servicePrices} ]`}
+        </span>
+
+        <span className="bg-rose-500 p-1 rounded-md text-white mx-1">
+          {" إجمالى رسوم الخدمة " + `[ ${taxables} ]`}
+        </span>
+
+        <span className="bg-amber-500 p-1 rounded-md text-white mx-1">
+          {" إجمالى ضريبة رسوم الخدمة " + `[ ${taxRates} ]`}
+        </span>
+
+        <span className="bg-emerald-500 p-1 rounded-md text-white mx-1">
+          {" إجمالى المدفوع " + `[ ${totals} ]`}
+        </span>
+      </h4>
 
       {/*Request Status and Errors*/}
       {(isError || (isSuccess && message)) && (

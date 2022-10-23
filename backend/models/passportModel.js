@@ -22,6 +22,18 @@ const passportSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please Type Service"],
     },
+    service_price: {
+      type: Number,
+      default: 0,
+    },
+    tax_rate: {
+      type: Number,
+      default: 0,
+    },
+    taxable: {
+      type: Number,
+      default: 0,
+    },
     total: {
       type: Number,
       default: 0,

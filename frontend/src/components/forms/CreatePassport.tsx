@@ -33,6 +33,9 @@ export const CreatePassport = () => {
     service: "30days",
     passportId: "",
     paymentDate: "",
+    servicePrice: 0,
+    taxable: 0,
+    taxRate: 0,
     total: 0,
   });
 
@@ -69,6 +72,9 @@ export const CreatePassport = () => {
       service: passportDetails.service,
       passportId: passportDetails.passportId,
       paymentDate: passportDetails.paymentDate,
+      servicePrice: passportDetails.servicePrice,
+      taxable: passportDetails.taxable,
+      taxRate: passportDetails.taxRate,
       total: passportDetails.total,
     };
 
@@ -148,6 +154,57 @@ export const CreatePassport = () => {
 
           <FormInput
             label={tableHeaderTitles[5]}
+            name="servicePrice"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
+            type="number"
+            defaultValue={passportDetails.servicePrice}
+            onChange={(e) =>
+              setPassportDetails({
+                ...passportDetails,
+                servicePrice: +e.target.value,
+              })
+            }
+            min={0}
+            step={0.01}
+          />
+
+          <FormInput
+            label={tableHeaderTitles[6]}
+            name="taxable"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
+            type="number"
+            defaultValue={passportDetails.taxable}
+            onChange={(e) =>
+              setPassportDetails({
+                ...passportDetails,
+                taxable: +e.target.value,
+              })
+            }
+            min={0}
+            step={0.01}
+          />
+
+          <FormInput
+            label={tableHeaderTitles[7]}
+            name="taxRate"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
+            type="number"
+            defaultValue={passportDetails.taxRate}
+            onChange={(e) =>
+              setPassportDetails({
+                ...passportDetails,
+                taxRate: +e.target.value,
+              })
+            }
+            min={0}
+            step={0.01}
+          />
+
+          <FormInput
+            label={tableHeaderTitles[8]}
             name="totalPayment"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -164,7 +221,7 @@ export const CreatePassport = () => {
           />
 
           <FormInput
-            label={tableHeaderTitles[6]}
+            label={tableHeaderTitles[9]}
             name="paymentDate"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -197,7 +254,7 @@ export const CreatePassport = () => {
           </select>
 
           <label htmlFor="service" className={lableClassNamesStyles.default}>
-            {tableHeaderTitles[3]}
+            {tableHeaderTitles[4]}
           </label>
           <select
             name="service"

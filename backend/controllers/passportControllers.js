@@ -23,6 +23,9 @@ const createPassport = async (req, res) => {
       passport_id: req.body.passportId,
       state: req.body.state,
       service: req.body.service,
+      service_price: req.body.servicePrice,
+      taxable: req.body.taxable,
+      tax_rate: req.body.taxRate,
       total: req.body.total,
       payment_date: req.body.paymentDate || undefined,
     });
