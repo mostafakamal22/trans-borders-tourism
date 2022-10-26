@@ -49,7 +49,7 @@ export const CreateInvoice = () => {
     taxRate: 0,
     taxDue: 0,
     taxable: 0,
-    other: " ",
+    other: "",
   });
 
   //state for items Details
@@ -164,7 +164,6 @@ export const CreateInvoice = () => {
             onChange={(e) =>
               setCustomerDetails({ ...customerDetails, name: e.target.value })
             }
-            required
           />
 
           <FormInput
@@ -177,7 +176,6 @@ export const CreateInvoice = () => {
             onChange={(e) =>
               setCustomerDetails({ ...customerDetails, ID: e.target.value })
             }
-            required
           />
 
           <FormInput
@@ -190,7 +188,6 @@ export const CreateInvoice = () => {
             onChange={(e) =>
               setCustomerDetails({ ...customerDetails, number: e.target.value })
             }
-            required
           />
         </div>
 
@@ -214,7 +211,6 @@ export const CreateInvoice = () => {
                 newArr[index].name = e.target.value;
                 setItemsDetails(newArr);
               }}
-              required
             />
 
             <FormInput
@@ -287,7 +283,6 @@ export const CreateInvoice = () => {
             onChange={(e) =>
               setInvoieceDetails({ ...invoiceDetails, ID: e.target.value })
             }
-            required
           />
 
           <FormInput
@@ -300,7 +295,6 @@ export const CreateInvoice = () => {
             onChange={(e) =>
               setInvoieceDetails({ ...invoiceDetails, date: e.target.value })
             }
-            required
           />
 
           <FormInput
@@ -313,7 +307,6 @@ export const CreateInvoice = () => {
             onChange={(e) =>
               setInvoieceDetails({ ...invoiceDetails, dueDate: e.target.value })
             }
-            required
           />
         </div>
         <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">

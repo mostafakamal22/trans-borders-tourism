@@ -113,7 +113,7 @@ export const InvoiceListControl = () => {
           scope="row"
           className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
-          {invoice.ID}
+          {invoice.ID ? invoice.ID : "-"}
         </th>
 
         {/*Customer ID*/}
@@ -121,7 +121,7 @@ export const InvoiceListControl = () => {
           scope="row"
           className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
-          {invoice.customer.ID}
+          {invoice.customer.ID ? invoice.customer.ID : "-"}
         </th>
 
         {/*Customer Name*/}
@@ -129,7 +129,7 @@ export const InvoiceListControl = () => {
           scope="row"
           className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
-          {invoice.customer.name}
+          {invoice.customer.name ? invoice.customer.name : "-"}
         </th>
 
         {/*Invoice Date*/}
@@ -137,7 +137,7 @@ export const InvoiceListControl = () => {
           scope="row"
           className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
-          {dayjs(invoice.date).format("DD/MM/YYYY")}
+          {invoice.date ? dayjs(invoice.date).format("DD/MM/YYYY") : "-"}
         </th>
 
         {/*Invoice Date*/}
@@ -145,7 +145,9 @@ export const InvoiceListControl = () => {
           scope="row"
           className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
-          {dayjs(invoice.due_date).format("DD/MM/YYYY")}
+          {invoice.due_date
+            ? dayjs(invoice.due_date).format("DD/MM/YYYY")
+            : "-"}
         </th>
 
         {/*Invoice Total*/}

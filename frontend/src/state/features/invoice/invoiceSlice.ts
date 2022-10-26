@@ -106,7 +106,7 @@ export const invoiceSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.message = "Invoice Deleted Successfully!";
+        state.message = "تم حـذف الفاتــورة بنجاح";
         state.invoiceList = state.invoiceList.filter(
           (invoice: any) => invoice._id !== action.payload.id
         );
@@ -127,7 +127,7 @@ export const invoiceSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.message = "Invioce Has Been Created Successfully!";
+        state.message = "تم حفظ الفاتــورة بنجاح";
         state.invoiceList = [...state.invoiceList, action.payload];
       })
       .addCase(createInvoice.rejected, (state, action) => {

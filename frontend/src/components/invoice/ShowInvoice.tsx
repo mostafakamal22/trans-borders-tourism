@@ -50,7 +50,7 @@ export const ShowInvoice = () => {
           scope="row"
           className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
-          {detail.name}
+          {detail.name ? detail.name : "-"}
         </th>
 
         {/*Quantity*/}
@@ -110,23 +110,27 @@ export const ShowInvoice = () => {
             <p>
               DATE{" "}
               <span className="bg-red-100 p-1 rounded-sm">
-                {dayjs(invoice.date).format("DD/MM/YYYY")}
+                {invoice.date ? dayjs(invoice.date).format("DD/MM/YYYY") : "-"}
               </span>
             </p>
             <p>
               INVOICE #{" "}
-              <span className="bg-red-100 p-1 rounded-sm">[{invoice.ID}]</span>
+              <span className="bg-red-100 p-1 rounded-sm">
+                [{invoice.ID ? invoice.ID : "-"}]
+              </span>
             </p>
             <p>
               CUSTOMER ID{" "}
               <span className="bg-red-100 p-1 rounded-sm">
-                {invoice.customer.ID}
+                {invoice.customer.ID ? invoice.customer.ID : "-"}
               </span>
             </p>
             <p>
               DUE DATE{" "}
               <span className="bg-red-100 p-1 rounded-sm">
-                {dayjs(invoice.due_date).format("DD/MM/YYYY")}
+                {invoice.due_date
+                  ? dayjs(invoice.due_date).format("DD/MM/YYYY")
+                  : "-"}
               </span>
             </p>
           </div>
@@ -136,8 +140,12 @@ export const ShowInvoice = () => {
               Bill To
             </h2>
 
-            <p className="text-left">Name:- {invoice.customer.name}</p>
-            <p className="text-left">Mobile:- {invoice.customer.number}</p>
+            <p className="text-left">
+              Name:- {invoice.customer.name ? invoice.customer.name : "-"}
+            </p>
+            <p className="text-left">
+              Mobile:- {invoice.customer.number ? invoice.customer.number : "-"}
+            </p>
           </div>
 
           <div className="basis-full">
@@ -194,7 +202,7 @@ export const ShowInvoice = () => {
             </h3>
 
             <p className="text-left">
-              {invoice.other == 0 ? "No Comment" : invoice.other}
+              {!invoice.other ? "No Comment" : invoice.other}
             </p>
           </div>
 
