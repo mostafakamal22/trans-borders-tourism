@@ -127,7 +127,7 @@ export const CreatePayment = () => {
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
               type="text"
-              defaultValue={item.name}
+              value={item.name}
               onChange={(e) => {
                 const newArr = [...paymentTypesDetails];
                 newArr[index].name = e.target.value;
@@ -142,13 +142,20 @@ export const CreatePayment = () => {
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
               type="number"
-              defaultValue={item.total}
+              value={item.total}
               onChange={(e) => {
                 const newArr = [...paymentTypesDetails];
                 newArr[index].total = +e.target.value;
                 setPaymentTypesDetails(newArr);
+
+                const newTotal = paymentTypesDetails.reduce(
+                  (prev, curr) => prev + curr.total,
+                  0
+                );
+                setPaymentDetails({ ...paymentDetails, total: newTotal });
               }}
               min={0}
+              step={0.01}
               required
             />
           </div>
@@ -186,10 +193,12 @@ export const CreatePayment = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="number"
-            defaultValue={paymentDetails.total}
+            value={paymentDetails.total}
             onChange={(e) =>
               setPaymentDetails({ ...paymentDetails, total: +e.target.value })
             }
+            min={0}
+            step={0.01}
             required
           />
 
@@ -199,7 +208,7 @@ export const CreatePayment = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="date"
-            defaultValue={paymentDetails.date}
+            value={paymentDetails.date}
             onChange={(e) =>
               setPaymentDetails({ ...paymentDetails, date: e.target.value })
             }
