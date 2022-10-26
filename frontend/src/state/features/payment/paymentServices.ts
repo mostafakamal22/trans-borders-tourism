@@ -30,6 +30,18 @@ const createPayment = async (paymentData: any) => {
   return data;
 };
 
+//Update Payment
+const updatePayment = async (paymentData: any) => {
+  const res = await axios.put(API_URL + paymentData.id, paymentData, {
+    headers: {
+      authorization: `Bearer ${paymentData.token}`,
+    },
+  });
+  const data = res.data;
+
+  return data;
+};
+
 //Delete Payment
 const deletePayment = async (payload: { id: string; token: string }) => {
   const res = await axios.delete(API_URL + payload.id, {
@@ -52,6 +64,7 @@ const paymentServices = {
   createPayment,
   deletePayment,
   paymentsLogout,
+  updatePayment,
 };
 
 export default paymentServices;

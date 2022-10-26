@@ -3,6 +3,7 @@ const {
   getPayments,
   createPayment,
   deletePayment,
+  updatePayment,
 } = require("../controllers/paymentControllers");
 
 const router = express.Router();
@@ -16,6 +17,9 @@ router
   .post(authAdminProtect, createPayment)
   .get(authAdminProtect, getPayments);
 
-router.route("/:id").delete(authAdminProtect, deletePayment);
+router
+  .route("/:id")
+  .put(authAdminProtect, updatePayment)
+  .delete(authAdminProtect, deletePayment);
 
 module.exports = router;

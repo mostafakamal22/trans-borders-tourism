@@ -73,6 +73,9 @@ export const CreatePayment = () => {
         : paymentTypesDetails.splice(0, paymentTypesDetails.length - 1);
 
     setPaymentTypesDetails(newItems);
+
+    const newTotal = newItems.reduce((prev, curr) => prev + curr.total, 0);
+    setPaymentDetails({ ...paymentDetails, total: newTotal });
   };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
@@ -152,7 +155,10 @@ export const CreatePayment = () => {
                   (prev, curr) => prev + curr.total,
                   0
                 );
-                setPaymentDetails({ ...paymentDetails, total: newTotal });
+                setPaymentDetails({
+                  ...paymentDetails,
+                  total: +newTotal.toFixed(2),
+                });
               }}
               min={0}
               step={0.01}

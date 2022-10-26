@@ -32,6 +32,30 @@ const createPayment = async (req, res) => {
   }
 };
 
+//@desc   >>>> UPDATE Payment
+//@route  >>>> PUT /api/payments/:id
+//@Access >>>> Public(for Admins)
+const updatePayment = async (req, res) => {
+  try {
+    //get payment
+    const payment = await Payment.findById(req.params.id);
+
+    //update Payment with new values
+    payment.total = req.body.total;
+    payment.payment_types = req.body.paymentTypes;
+    payment.date = req.body.paymentDate;
+    //get updated Payment info & send it back
+    const updatedPayment = await payment.save();
+
+    res.status(200).json(updatedPayment);
+  } catch (error) {
+    if (error.message.match(/(name|total|payment_types|date)/gi)) {
+      return res.status(400).send(error.message);
+    }
+    res.status(500).send("Ooops!! Something Went Wrong, Try again...");
+  }
+};
+
 //@desc   >>>> Delete one Payment
 //@route  >>>> DELETE /api/payments/:id
 //@Access >>>> public(For Admins)
@@ -48,4 +72,5 @@ module.exports = {
   getPayments,
   deletePayment,
   createPayment,
+  updatePayment,
 };

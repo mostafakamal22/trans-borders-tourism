@@ -21,9 +21,12 @@ import { FcMoneyTransfer } from "react-icons/fc";
 import MessagesContainer from "../shared/MessagesContainer";
 import { PaginationTable } from "../shared/PaginationTable";
 import { MainSpinner } from "../shared/MainSpinner";
+import { UpdatePayment } from "../forms/UpdatePayment";
+import { paymentsCalculations } from "../helpers/paymentCalculations";
 
 export const paymentTableHeaderTitles = [
   "مسح المصروف",
+  "تعديل المصروف",
   "المبلغ الكلى",
   "نوع المصروف",
   "تاريخ المصروف",
@@ -41,6 +44,12 @@ export const Payments = () => {
   });
 
   const { year, month } = searchQuery;
+
+  //Is modal open
+  const [isOpen, setIsOpen] = useState(false);
+
+  //PaymentID to Update
+  const [id, setId] = useState("");
 
   //filtered Payemnts
   const filteredPayments: [] =
@@ -63,6 +72,9 @@ export const Payments = () => {
 
   //search message state
   const [msg, setMsg] = useState("");
+
+  //Get Totals
+  const { totals } = paymentsCalculations(filteredPayments);
 
   // handle Delete payment
   const handleRemoving = (e: any, removedPaymentID: string) => {
@@ -116,7 +128,7 @@ export const Payments = () => {
         {/* Delete payment */}
         <th
           scope="row"
-          className="p-2 text-gray-900 whitespace-nowrap text-xs border-x text-center border-x-black"
+          className="p-2 text-gray-900 text-xs border-x text-center border-x-black"
         >
           <form
             className="max-w-[150px] m-auto"
@@ -130,10 +142,27 @@ export const Payments = () => {
           </form>
         </th>
 
+        {/*Update Payment*/}
+        <th
+          scope="row"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
+        >
+          <button
+            className="inline-flex font-bold text-xs bg-blue-800 text-white hover:bg-white px-2 py-2 border-transparent hover:text-blue-800 border hover:border-blue-800 items-center rounded
+           transition-all ease-in-out duration-300"
+            onClick={() => {
+              setId(payment._id);
+              setIsOpen(true);
+            }}
+          >
+            تعديل
+          </button>
+        </th>
+
         {/*Payment Total*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           {payment.total}
         </th>
@@ -141,7 +170,7 @@ export const Payments = () => {
         {/*Payment Types*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           {payment.payment_types.map(
             (type: { name: string; total: number }, index: number) => (
@@ -159,7 +188,7 @@ export const Payments = () => {
         {/*Payment Date*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           {dayjs(payment.date).format("DD/MM/YYYY")}
         </th>
@@ -248,6 +277,12 @@ export const Payments = () => {
         </span>
       </h3>
 
+      <h4 className="flex justify-center items-center flex-row-reverse flex-wrap gap-2 text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
+        <span className="bg-emerald-500 p-1 rounded-md text-white mx-1">
+          {" إجمالى المصروفات " + `[ ${totals.toFixed(2)} ]`}
+        </span>
+      </h4>
+
       {/*Request Status and Errors*/}
       {(isError || (isSuccess && message)) && (
         <MessagesContainer msg={msg} isSuccess={isSuccess} isError={isError} />
@@ -276,6 +311,9 @@ export const Payments = () => {
           لا يوجد نتائج تطابق هذا البحث, تأكد من الشهر و السنة وحاول مجدداً
         </div>
       )}
+
+      {/* Show update Payment Modal */}
+      {isOpen && <UpdatePayment setIsOpen={setIsOpen} id={id} />}
 
       {/* Show spinner when Loading State is true */}
       {isLoading && <MainSpinner isLoading={isLoading} />}

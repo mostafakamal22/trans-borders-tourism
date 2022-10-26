@@ -34,9 +34,23 @@ export const getAllPayments = createAsyncThunk(
 //Create Payment
 export const createPayment = createAsyncThunk(
   "payments/createPayment",
-  async (visaData: any, thunkAPI) => {
+  async (paymentData: any, thunkAPI) => {
     try {
-      return await paymentServices.createPayment(visaData);
+      return await paymentServices.createPayment(paymentData);
+    } catch (error: any) {
+      const message = error.response.data;
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+//Update Payment
+export const updatePayment = createAsyncThunk(
+  "payments/updatePayment",
+  async (paymentData: any, thunkAPI) => {
+    try {
+      return await paymentServices.updatePayment(paymentData);
     } catch (error: any) {
       const message = error.response.data;
 
@@ -131,6 +145,30 @@ export const paymentSlice = createSlice({
         state.paymentsList = [...state.paymentsList, action.payload];
       })
       .addCase(createPayment.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
+        state.isSuccess = false;
+      })
+      .addCase(updatePayment.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(updatePayment.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.message = "تم تعديل المصــروف بنجــاح";
+        state.paymentsList = state.paymentsList.map((payment: any) => {
+          if (payment._id === action.payload._id) {
+            return action.payload;
+          }
+          return payment;
+        });
+      })
+      .addCase(updatePayment.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;
