@@ -274,8 +274,8 @@ export const CreateInvoice = () => {
         </p>
         <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">
           <FormInput
-            label="Invoice #"
-            name="invoiceID"
+            label="Passport ID"
+            name="PassportID"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"

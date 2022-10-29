@@ -116,7 +116,10 @@ export const ShowInvoice = () => {
             <p>
               INVOICE #{" "}
               <span className="bg-red-100 p-1 rounded-sm">
-                [{invoice.ID ? invoice.ID : "-"}]
+                [
+                {"000" +
+                  [...invoiceList].findIndex((p: any) => p._id === invoice._id)}
+                ]
               </span>
             </p>
             <p>

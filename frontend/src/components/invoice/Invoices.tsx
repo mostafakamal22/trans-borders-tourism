@@ -113,7 +113,8 @@ export const InvoiceListControl = () => {
           scope="row"
           className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
-          {invoice.ID ? invoice.ID : "-"}
+          {"000" +
+            [...invoiceList].findIndex((p: any) => p._id === invoice._id)}
         </th>
 
         {/*Customer ID*/}

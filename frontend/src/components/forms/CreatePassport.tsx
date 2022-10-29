@@ -171,11 +171,13 @@ export const CreatePassport = () => {
                   +e.target.value +
                   passportDetails.taxable +
                   passportDetails.taxRate,
-                profit:
-                  passportDetails.sales -
-                  +e.target.value -
-                  passportDetails.taxable -
-                  passportDetails.taxRate,
+                sales:
+                  passportDetails.service === "change_situation"
+                    ? +e.target.value +
+                      passportDetails.taxRate +
+                      passportDetails.taxable
+                    : 0,
+                profit: 0,
               })
             }
             min={0}
@@ -197,11 +199,14 @@ export const CreatePassport = () => {
                   +e.target.value +
                   passportDetails.servicePrice +
                   passportDetails.taxRate,
-                profit:
-                  passportDetails.sales -
-                  +e.target.value -
-                  passportDetails.servicePrice -
-                  passportDetails.taxRate,
+
+                sales:
+                  passportDetails.service === "change_situation"
+                    ? +e.target.value +
+                      passportDetails.taxRate +
+                      passportDetails.servicePrice
+                    : 0,
+                profit: 0,
               })
             }
             min={0}
@@ -223,11 +228,13 @@ export const CreatePassport = () => {
                   +e.target.value +
                   passportDetails.taxable +
                   passportDetails.servicePrice,
-                profit:
-                  passportDetails.sales -
-                  +e.target.value -
-                  passportDetails.taxable -
-                  passportDetails.servicePrice,
+                sales:
+                  passportDetails.service === "change_situation"
+                    ? +e.target.value +
+                      passportDetails.taxable +
+                      passportDetails.servicePrice
+                    : 0,
+                profit: 0,
               })
             }
             min={0}

@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { FcBusiness } from "react-icons/fc";
-import { TiDelete } from "react-icons/ti";
+import { TiDelete, TiEdit } from "react-icons/ti";
 import { UseResetStatus } from "../../hooks/UseResetStatus";
 import { resetAdminAuthStatus } from "../../state/features/admin/auth/adminAuthSlice";
 import {
@@ -23,6 +23,10 @@ import {
 } from "../forms/CreateInvoice";
 import { passportsCalculations } from "../helpers/passportCalculations";
 import { UpdatePassport } from "../forms/UpdatePassport";
+import {
+  createInvoice,
+  resetInvoicesStatus,
+} from "../../state/features/invoice/invoiceSlice";
 
 export const tableHeaderTitles = [
   "إسم العميل",
@@ -38,6 +42,7 @@ export const tableHeaderTitles = [
   "صافى الربح",
   "تاريخ الدفع",
   "تعديل الجواز",
+  "إضافة فاتورة",
   "مسح الجواز",
 ];
 
@@ -78,6 +83,8 @@ export const passportService: PassportService = {
 export const Passports = () => {
   const { info } = useAppSelector((state) => state.adminAuth);
   const { passportsList } = useAppSelector((state) => state.passportsData);
+  const invoiceData = useAppSelector((state) => state.invoiceData);
+
   const dispatch = useAppDispatch();
 
   //search Params
@@ -123,11 +130,6 @@ export const Passports = () => {
           const paymentDate = dayjs(passport.payment_date)
             .format("DD/MM/YYYY")
             .split("/");
-          // const yearOfPassport = paymentDate[2];
-          // const monthOfPassport = paymentDate[1];
-          // const passportState = passport.state;
-          // const passportService = passport.service;
-          // const passportNationality = passport.customer_nationality;
 
           const passportData: SearchQueries = {
             year: paymentDate[2],
@@ -145,20 +147,6 @@ export const Passports = () => {
             )
           )
             return passport;
-
-          // if (!state && year && month) {
-          //   if (yearOfPassport === year && +monthOfPassport === +month)
-          //     return passport;
-          // } else if (state && year && month) {
-          //   if (
-          //     yearOfPassport === year &&
-          //     +monthOfPassport === +month &&
-          //     passportState === state
-          //   )
-          //     return passport;
-          // } else if (state && !year && !month) {
-          //   if (passportState === state) return passport;
-          // }
         })
       : passportsList;
 
@@ -188,6 +176,45 @@ export const Passports = () => {
     dispatch(deletePassport(passportData));
   };
 
+  // handle Creating invoice
+  const handleAddInvoice = (
+    e: any,
+    customerName: string,
+    ID: string,
+    passport_service: string,
+    paymentDate: string,
+    passportSales: number
+  ) => {
+    e.preventDefault();
+
+    //set msg to none first
+    setMsg("");
+
+    const invoiceData = {
+      token: info.token,
+      ID: ID,
+      customer: { name: customerName },
+      details: [
+        {
+          name:
+            passport_service === "90days" || passport_service === "30days"
+              ? " فيزا " + passportService[passport_service]
+              : passportService[passport_service as keyof PassportService],
+          quantity: 1,
+          price: passportSales,
+        },
+      ],
+      total: passportSales,
+      subtotal: 0,
+      date: paymentDate,
+      taxDue: 0,
+      taxRate: 0,
+      taxable: 0,
+    };
+
+    dispatch(createInvoice(invoiceData));
+  };
+
   useEffect(() => {
     if (isError) {
       setMsg(message);
@@ -198,6 +225,8 @@ export const Passports = () => {
     }
   }, [isError, message, isSuccess, msg]);
 
+  console.log(msg);
+
   //Define table data
   const tableHeader = (
     <tr className="border-b border-b-black">
@@ -205,7 +234,7 @@ export const Passports = () => {
         <th
           key={title}
           scope="col"
-          className="p-1 text-center border-x border-x-black"
+          className="max-w-[100px] p-1 text-center border-x border-x-black"
         >
           {title}
         </th>
@@ -237,6 +266,33 @@ export const Passports = () => {
               text={{ default: "حذف" }}
               bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}
               icon={<TiDelete className="mb-[-2px]" size={25} />}
+            />
+          </form>
+        </th>
+
+        {/* Make Invoice */}
+        <th
+          scope="row"
+          className="p-1 text-gray-900 border-x text-center border-x-black"
+        >
+          <form
+            className="max-w-[50px] m-auto"
+            onSubmit={(event) =>
+              handleAddInvoice(
+                event,
+                passport.customer_name,
+                passport.ID,
+                passport.service,
+                passport.payment_date,
+                passport.sales
+              )
+            }
+          >
+            <FormButton
+              text={{ default: "إضافة", loading: " " }}
+              bgColor={["bg-orange-600", "bg-orange-700", "bg-orange-800"]}
+              isLoading={invoiceData.isLoading}
+              icon={<TiEdit className="mb-[-2px]" size={25} />}
             />
           </form>
         </th>
@@ -375,12 +431,14 @@ export const Passports = () => {
   UseResetStatus(() => {
     dispatch(resetAdminAuthStatus());
     dispatch(resetPassportsStatus());
+    dispatch(resetInvoicesStatus());
   });
 
   UseResetStatus(() => {
     return () => {
       dispatch(resetAdminAuthStatus());
       dispatch(resetPassportsStatus());
+      dispatch(resetInvoicesStatus());
     };
   });
 
@@ -388,7 +446,7 @@ export const Passports = () => {
     <div className="max-w-[1300px] min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <img className="mx-auto" src={logo} alt="logo" />
 
-      <div className="flex  justify-center items-center flex-wrap gap-4 m-6 p-4 bg-red-700 rounded-md ">
+      <div className="flex  justify-center items-center flex-wrap gap-4 my-5 p-4 bg-red-700 rounded-md ">
         <h4 className="basis-full flex justify-center items-center text-2xl my-4 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
           فلتــرة الجـــوازات
         </h4>
@@ -502,51 +560,53 @@ export const Passports = () => {
             </select>
           </div>
         </form>
+
+        <h3 className="flex justify-center items-center flex-row-reverse flex-wrap text-2xl my-5 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
+          <span>{" الجوازات المحفوظة"}</span>
+          {!month && !year && (
+            <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
+              {" الكلية "}
+            </span>
+          )}
+          {month && (
+            <span className="bg-rose-500 p-1 rounded-md text-white mx-1">
+              {" عن شهر " + month}
+            </span>
+          )}
+          {year && (
+            <span className="bg-amber-500 p-1 rounded-md text-white mx-1">
+              {" سنة " + year}
+            </span>
+          )}
+          {state && (
+            <span className="bg-emerald-500 p-1 rounded-md text-white mx-1">
+              {" والوضعية " + passportState[state as keyof PassportState][0]}
+            </span>
+          )}
+
+          {service && (
+            <span className="bg-purple-500 p-1 rounded-md text-white mx-1">
+              {" و الخدمة " + passportService[service as keyof PassportService]}
+            </span>
+          )}
+
+          {nationality && (
+            <span className="bg-pink-500 p-1 rounded-md text-white mx-1">
+              {" و الجنسية " + nationality}
+            </span>
+          )}
+          <span>({filteredPassports.length})</span>
+
+          <span className="flex justify-center items-center mr-2">
+            <FcBusiness size={50} />
+          </span>
+        </h3>
       </div>
-      <h3 className="flex justify-center items-center flex-row-reverse flex-wrap text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
-        <span>{" الجوازات المحفوظة"}</span>
-        {!month && !year && (
-          <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
-            {" الكلية "}
-          </span>
-        )}
-        {month && (
-          <span className="bg-rose-500 p-1 rounded-md text-white mx-1">
-            {" عن شهر " + month}
-          </span>
-        )}
-        {year && (
-          <span className="bg-amber-500 p-1 rounded-md text-white mx-1">
-            {" سنة " + year}
-          </span>
-        )}
-        {state && (
-          <span className="bg-emerald-500 p-1 rounded-md text-white mx-1">
-            {" والوضعية " + passportState[state as keyof PassportState][0]}
-          </span>
-        )}
 
-        {service && (
-          <span className="bg-purple-500 p-1 rounded-md text-white mx-1">
-            {" و الخدمة " + passportService[service as keyof PassportService]}
-          </span>
-        )}
-
-        {nationality && (
-          <span className="bg-pink-500 p-1 rounded-md text-white mx-1">
-            {" و الجنسية " + nationality}
-          </span>
-        )}
-        <span>({filteredPassports.length})</span>
-
-        <span className="flex justify-center items-center mr-2">
-          <FcBusiness size={50} />
-        </span>
-      </h3>
-
-      <h4 className="flex justify-center items-center flex-row-reverse flex-wrap gap-2 text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
+      <h4 className="flex justify-center items-center flex-row-reverse flex-wrap gap-2 text-2xl my-10 p-3 text-center font-bold bg-red-700 text-gray-900 rounded shadow">
         <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
-          {" إجمالى الرسوم " + `[ ${servicePrices.toFixed(2)} ]`}
+          {" إجمالى الرسوم الغير خاضعه للضريبه " +
+            `[ ${servicePrices.toFixed(2)} ]`}
         </span>
 
         <span className="bg-rose-500 p-1 rounded-md text-white mx-1">
@@ -571,9 +631,14 @@ export const Passports = () => {
       </h4>
 
       {/*Request Status and Errors*/}
-      {(isError || (isSuccess && message)) && (
-        <MessagesContainer msg={msg} isSuccess={isSuccess} isError={isError} />
-      )}
+      {isError ||
+        (isSuccess && message && (
+          <MessagesContainer
+            msg={msg}
+            isSuccess={isSuccess || invoiceData.isSuccess}
+            isError={isError || invoiceData.isError}
+          />
+        ))}
 
       {/*Display Table All Data Needed*/}
       {!isLoading && filteredPassports?.length > 0 && (
