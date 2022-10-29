@@ -19,9 +19,9 @@ import { FormInput } from "../shared/FormInput";
 
 export const lableClassNamesStyles: { default: string; threeCol: string } = {
   default:
-    "basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800",
+    "basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2  rounded shadow bg-red-200 border-red-800",
   threeCol:
-    "text-md  my-2 sm:my-0 mx-2 p-2 sm:border-r-4 rounded shadow bg-red-200 border-red-800",
+    "text-md  my-2 sm:my-0 mx-2 p-2  rounded shadow bg-red-200 border-red-800",
 };
 
 export const inputClassNamesStyles: { default: string; threeCol: string } = {

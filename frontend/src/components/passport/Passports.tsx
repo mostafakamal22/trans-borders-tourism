@@ -85,6 +85,8 @@ export const Passports = () => {
     year: "",
     month: "",
     state: "",
+    service: "",
+    nationality: "",
   });
 
   //Is modal open
@@ -93,32 +95,70 @@ export const Passports = () => {
   //PassportID to Update
   const [id, setId] = useState("");
 
-  const { year, month, state } = searchQuery;
+  const { year, month, state, service, nationality } = searchQuery;
+
+  type SearchQueries = {
+    year: string;
+    month: string | number;
+    state: string;
+    service: string;
+    nationality: string;
+  };
+
+  let availableSearchQueries: SearchQueries = {
+    ...searchQuery,
+    month: +month,
+  };
+
+  for (const key in availableSearchQueries) {
+    if (!availableSearchQueries[key as keyof SearchQueries]) {
+      delete availableSearchQueries[key as keyof SearchQueries];
+    }
+  }
 
   //filtered Passports
   const filteredPassports: [] =
-    month || year || state
+    month || year || state || service || nationality
       ? passportsList.filter((passport: any) => {
           const paymentDate = dayjs(passport.payment_date)
             .format("DD/MM/YYYY")
             .split("/");
-          const yearOfPassport = paymentDate[2];
-          const monthOfPassport = paymentDate[1];
-          const passportState = passport.state;
+          // const yearOfPassport = paymentDate[2];
+          // const monthOfPassport = paymentDate[1];
+          // const passportState = passport.state;
+          // const passportService = passport.service;
+          // const passportNationality = passport.customer_nationality;
 
-          if (!state && year && month) {
-            if (yearOfPassport === year && +monthOfPassport === +month)
-              return passport;
-          } else if (state && year && month) {
-            if (
-              yearOfPassport === year &&
-              +monthOfPassport === +month &&
-              passportState === state
+          const passportData: SearchQueries = {
+            year: paymentDate[2],
+            month: +paymentDate[1],
+            state: passport.state,
+            service: passport.service,
+            nationality: passport.customer_nationality,
+          };
+
+          if (
+            Object.keys(availableSearchQueries).every(
+              (key) =>
+                passportData[key as keyof SearchQueries] ===
+                availableSearchQueries[key as keyof SearchQueries]
             )
-              return passport;
-          } else if (state && !year && !month) {
-            if (passportState === state) return passport;
-          }
+          )
+            return passport;
+
+          // if (!state && year && month) {
+          //   if (yearOfPassport === year && +monthOfPassport === +month)
+          //     return passport;
+          // } else if (state && year && month) {
+          //   if (
+          //     yearOfPassport === year &&
+          //     +monthOfPassport === +month &&
+          //     passportState === state
+          //   )
+          //     return passport;
+          // } else if (state && !year && !month) {
+          //   if (passportState === state) return passport;
+          // }
         })
       : passportsList;
 
@@ -348,66 +388,122 @@ export const Passports = () => {
     <div className="max-w-[1300px] min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <img className="mx-auto" src={logo} alt="logo" />
 
-      <div className="flex  justify-center items-center flex-wrap  gap-4 m-6 p-4 bg-red-700 rounded-md ">
+      <div className="flex  justify-center items-center flex-wrap gap-4 m-6 p-4 bg-red-700 rounded-md ">
         <h4 className="basis-full flex justify-center items-center text-2xl my-4 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
-          عرض الجـــوازات بالشهــر و السنــة
+          فلتــرة الجـــوازات
         </h4>
-        <form className="basis-full md:basis-[35%] flex flex-col justify-center gap-2 mx-auto font-semibold ">
-          <label className={lableClassNamesStyles.default} htmlFor="year">
-            ادخل السنة
-          </label>
-          <input
-            type="text"
-            name="year"
-            className={inputClassNamesStyles.default}
-            defaultValue={year}
-            onChange={(e) =>
-              setSearchQuery({
-                ...searchQuery,
-                year: e.target.value,
-              })
-            }
-            required
-          />
+        <form className="basis-full  flex flex-col flex-wrap  md:flex-row-reverse justify-center items-center gap-4 mx-auto font-semibold ">
+          <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="year">
+              السنة
+            </label>
+            <input
+              type="text"
+              name="year"
+              className={inputClassNamesStyles.default}
+              defaultValue={year}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  year: e.target.value,
+                })
+              }
+              required
+            />
+          </div>
 
-          <label className={lableClassNamesStyles.default} htmlFor="month">
-            ادخل الشهر
-          </label>
-          <input
-            type="text"
-            name="month"
-            className={inputClassNamesStyles.default}
-            defaultValue={month}
-            onChange={(e) =>
-              setSearchQuery({
-                ...searchQuery,
-                month: e.target.value,
-              })
-            }
-            required
-          />
-          <label className={lableClassNamesStyles.default} htmlFor="state">
-            اختر الوضعية
-          </label>
-          <select
-            name="state"
-            className="my-2 p-2 rounded text-right"
-            value={state}
-            onChange={(e) =>
-              setSearchQuery({ ...searchQuery, state: e.target.value })
-            }
-          >
-            <option className="bg-red-200 text-right" value={""}>
-              كــل الوضعيات
-            </option>
-            <option value={"accepted"}>تمت الموافقة</option>
-            <option value={"rejected"}>مرفوض</option>
-            <option value={"refunded"}>تم استرداد الرسوم</option>
-            <option value={"delivered"}>تم التسليم للعميل</option>
-          </select>
+          <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="month">
+              الشهر
+            </label>
+            <input
+              type="text"
+              name="month"
+              className={inputClassNamesStyles.default}
+              defaultValue={month}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  month: e.target.value,
+                })
+              }
+              required
+            />
+          </div>
+
+          <div className="flex justify-center items-center flex-col gap-2">
+            <label
+              className={lableClassNamesStyles.default}
+              htmlFor="nationality"
+            >
+              الجنسية
+            </label>
+            <input
+              type="text"
+              name="nationality"
+              className={inputClassNamesStyles.default}
+              defaultValue={nationality}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  nationality: e.target.value,
+                })
+              }
+              required
+            />
+          </div>
+
+          <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="state">
+              الوضعية
+            </label>
+            <select
+              name="state"
+              className="p-2 rounded text-right"
+              value={state}
+              onChange={(e) =>
+                setSearchQuery({ ...searchQuery, state: e.target.value })
+              }
+            >
+              <option className="bg-red-200 text-right" value={""}>
+                كــل الوضعيات
+              </option>
+              <option value={"accepted"}>تمت الموافقة</option>
+              <option value={"rejected"}>مرفوض</option>
+              <option value={"refunded"}>تم استرداد الرسوم</option>
+              <option value={"delivered"}>تم التسليم للعميل</option>
+            </select>
+          </div>
+
+          <div className="flex justify-center items-center flex-col gap-2">
+            <label htmlFor="service" className={lableClassNamesStyles.default}>
+              الخدمة
+            </label>
+            <select
+              name="service"
+              className="p-2 rounded text-right"
+              value={service}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  service: e.target.value,
+                })
+              }
+            >
+              <option className="bg-red-200 text-right" value={""}>
+                كــل الخدمات
+              </option>
+
+              {Object.keys(passportService).map((name: string) => (
+                <option key={name} value={name}>
+                  {passportService[name as keyof PassportService]}
+                </option>
+              ))}
+            </select>
+          </div>
         </form>
       </div>
-      <h3 className="flex justify-center items-center flex-row-reverse text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
+      <h3 className="flex justify-center items-center flex-row-reverse flex-wrap text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
         <span>{" الجوازات المحفوظة"}</span>
         {!month && !year && (
           <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
@@ -427,6 +523,18 @@ export const Passports = () => {
         {state && (
           <span className="bg-emerald-500 p-1 rounded-md text-white mx-1">
             {" والوضعية " + passportState[state as keyof PassportState][0]}
+          </span>
+        )}
+
+        {service && (
+          <span className="bg-purple-500 p-1 rounded-md text-white mx-1">
+            {" و الخدمة " + passportService[service as keyof PassportService]}
+          </span>
+        )}
+
+        {nationality && (
+          <span className="bg-pink-500 p-1 rounded-md text-white mx-1">
+            {" و الجنسية " + nationality}
           </span>
         )}
         <span>({filteredPassports.length})</span>
@@ -481,6 +589,8 @@ export const Passports = () => {
       {!year &&
         !month &&
         !state &&
+        !nationality &&
+        !service &&
         filteredPassports?.length === 0 &&
         !isLoading && (
           <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
@@ -489,11 +599,12 @@ export const Passports = () => {
         )}
 
       {/* if there is search query no passport matches >>> No Search Found*/}
-      {(year || month || state) &&
+      {(year || month || state || service || nationality) &&
         filteredPassports?.length === 0 &&
         !isLoading && (
           <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
-            لا يوجد نتائج تطابق هذا البحث, تأكد من الشهر و السنة وحاول مجدداً
+            لا يوجد نتائج تطابق هذا البحث, تأكد من البيانات التى ادخلتها و حاول
+            مجدداً
           </div>
         )}
 
