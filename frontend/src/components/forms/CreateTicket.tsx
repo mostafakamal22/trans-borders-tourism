@@ -57,12 +57,13 @@ export const CreateTicket = () => {
 
     const ticketData = {
       token: info.token,
-      name: ticketsDetails.name,
+      name: ticketsDetails.name.trim(),
       booking: ticketsDetails.booking.trim(),
       suplier: ticketsDetails.suplier,
       cost: ticketsDetails.cost,
       sales: ticketsDetails.sales,
       profit: ticketsDetails.profit,
+      paymentDate: ticketsDetails.paymentDate,
     };
 
     dispatch(createTicket(ticketData));
@@ -175,6 +176,21 @@ export const CreateTicket = () => {
             value={ticketsDetails.booking}
             onChange={(e) =>
               setTicketsDetails({ ...ticketsDetails, booking: e.target.value })
+            }
+          />
+
+          <FormInput
+            label={ticketsTableHeaderTitles[6]}
+            name="paymentDate"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
+            type="date"
+            value={ticketsDetails.paymentDate}
+            onChange={(e) =>
+              setTicketsDetails({
+                ...ticketsDetails,
+                paymentDate: e.target.value,
+              })
             }
           />
         </div>

@@ -26,6 +26,7 @@ import MessagesContainer from "../shared/MessagesContainer";
 import { PaginationTable } from "../shared/PaginationTable";
 import logo from "../../assets/imgs/trans-logo.png";
 import { ticketsCalculations } from "../helpers/ticketCalculations";
+import { UpdateTicket } from "../forms/UpdateTicket";
 
 export const ticketsTableHeaderTitles = [
   "Customer Name",
@@ -558,7 +559,7 @@ export const Tickets = () => {
         )}
 
       {/* Show update Passport Modal */}
-      {/* {isOpen && <UpdatePassport setIsOpen={setIsOpen} id={id} />} */}
+      {isOpen && <UpdateTicket setIsOpen={setIsOpen} id={id} />}
 
       {/* Show spinner when Loading State is true */}
       {isLoading && <MainSpinner isLoading={isLoading} />}
