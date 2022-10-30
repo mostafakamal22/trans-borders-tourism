@@ -19,6 +19,8 @@ const navbarLinks = [
   ["إضافة التأشيرات", "/visas/create"],
   ["المصروفات", "/payments"],
   ["إضافة المصروفات", "/payments/create"],
+  ["التذاكر", "/tickets"],
+  ["إضافة التذاكر", "/tickets/create"],
 ];
 
 export const Navbar = () => {
@@ -58,11 +60,11 @@ export const Navbar = () => {
   return (
     <nav className="bg-slate-50 px-2 sm:px-4 py-2.5 sticky w-full z-20 top-0 left-0 shadow-md transition-all duration-300 ease-in-out">
       <div className=" flex flex-wrap justify-between items-center ">
-        <Link to="/" className=" items-center m-auto hidden sm:flex md:m-0">
+        <Link to="/" className=" items-center m-auto hidden sm:flex">
           <img src={logo} className="md:mr-3 h-16" alt="Trans Logo" />
         </Link>
 
-        <div className="justify-between items-center w-full flex md:w-auto md:order-1">
+        <div className="justify-between items-center w-full flex md:w-auto">
           <ul className="w-full flex items-center justify-center gap-4 flex-wrap p-4 my-1 md:text-base md:font-semibold transition-all duration-300 ease-in-out">
             {navbarLinks.map((link: any, index: number) => (
               <li key={index}>

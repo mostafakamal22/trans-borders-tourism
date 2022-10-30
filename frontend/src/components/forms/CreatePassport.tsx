@@ -87,6 +87,10 @@ export const CreatePassport = () => {
 
   //clean up status (when mount and unmount)
   UseResetStatus(() => {
+    //scroll page back to top when component first mount
+    const yOffset = window.pageYOffset;
+    window.scrollBy(0, -yOffset);
+
     dispatch(resetAdminAuthStatus());
     dispatch(resetPassportsStatus());
   });

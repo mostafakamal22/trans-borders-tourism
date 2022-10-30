@@ -225,8 +225,6 @@ export const Passports = () => {
     }
   }, [isError, message, isSuccess, msg]);
 
-  console.log(msg);
-
   //Define table data
   const tableHeader = (
     <tr className="border-b border-b-black">
@@ -429,6 +427,10 @@ export const Passports = () => {
 
   //clean up status (when mount and unmount)
   UseResetStatus(() => {
+    //scroll page back to top when component first mount
+    const yOffset = window.pageYOffset;
+    window.scrollBy(0, -yOffset);
+
     dispatch(resetAdminAuthStatus());
     dispatch(resetPassportsStatus());
     dispatch(resetInvoicesStatus());
@@ -561,7 +563,7 @@ export const Passports = () => {
           </div>
         </form>
 
-        <h3 className="flex justify-center items-center flex-row-reverse flex-wrap text-2xl my-5 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
+        <h3 className="basis-full flex justify-center items-center flex-row-reverse flex-wrap text-2xl my-5 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
           <span>{" الجوازات المحفوظة"}</span>
           {!month && !year && (
             <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
@@ -603,7 +605,7 @@ export const Passports = () => {
         </h3>
       </div>
 
-      <h4 className="flex justify-center items-center flex-row-reverse flex-wrap gap-2 text-2xl my-10 p-3 text-center font-bold bg-red-700 text-gray-900 rounded shadow">
+      <h4 className="flex justify-center items-center flex-row-reverse flex-wrap gap-2 text-2xl my-10 p-4 text-center font-bold bg-red-700 text-gray-900 rounded shadow">
         <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
           {" إجمالى الرسوم الغير خاضعه للضريبه " +
             `[ ${servicePrices.toFixed(2)} ]`}

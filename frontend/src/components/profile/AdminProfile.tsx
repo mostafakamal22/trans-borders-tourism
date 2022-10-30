@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { FcVip } from "react-icons/fc";
 import { RiArrowRightLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
@@ -6,6 +7,12 @@ import logo from "../../assets/imgs/trans-logo.png";
 
 export default function AdminProfile() {
   const { info } = useAppSelector((state) => state.adminAuth);
+
+  useEffect(() => {
+    //scroll page back to top when component first mount
+    const yOffset = window.pageYOffset;
+    window.scrollBy(0, -yOffset);
+  }, []);
 
   return (
     <div className="max-w-5xl w-full min-h-[75vh] mx-auto my-20 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">

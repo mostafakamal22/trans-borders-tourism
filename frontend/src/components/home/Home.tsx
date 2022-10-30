@@ -5,7 +5,9 @@ import {
   FcHome,
   FcInvite,
   FcMoneyTransfer,
+  FcPuzzle,
   FcTemplate,
+  FcTrademark,
 } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { FcFile, FcBookmark } from "react-icons/fc";
@@ -21,6 +23,7 @@ import { MainSpinner } from "../shared/MainSpinner";
 import { getAllPassports } from "../../state/features/passport/passportSlice";
 import { getAllVisas } from "../../state/features/visa/visaSlice";
 import { getAllPayments } from "../../state/features/payment/paymentSlice";
+import { getAllTickets } from "../../state/features/ticket/ticketSlice";
 
 type MainHeadings = string[];
 
@@ -44,6 +47,11 @@ const mainPageLinks: MainPagesLinks = [
     ["عرض المصروفات", "/payments", <FcMoneyTransfer size={50} />],
     ["إضافة المصروفات", "/payments/create", <FcInvite size={50} />],
   ],
+
+  [
+    ["عرض التذاكـر", "/tickets", <FcTrademark size={50} />],
+    ["إضافة التذاكـر", "/tickets/create", <FcPuzzle size={50} />],
+  ],
 ];
 
 const mainHeadings: MainHeadings = [
@@ -51,6 +59,7 @@ const mainHeadings: MainHeadings = [
   "التأشيرات",
   "الجوازات",
   "المصروفات",
+  "التذاكـر",
 ];
 
 export const Home = () => {
@@ -59,23 +68,31 @@ export const Home = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    //scroll page back to top when component first mount
+    const yOffset = window.pageYOffset;
+    window.scrollBy(0, -yOffset);
+
+    //Then Fetch App Data
     dispatch(getAllInvoices({ token: info.token }));
     dispatch(getAllPassports({ token: info.token }));
     dispatch(getAllVisas({ token: info.token }));
     dispatch(getAllPayments({ token: info.token }));
+    dispatch(getAllTickets({ token: info.token }));
   }, []);
 
   const invoiceData = useAppSelector((state) => state.invoiceData);
   const passportsData = useAppSelector((state) => state.passportsData);
   const visasData = useAppSelector((state) => state.visasData);
   const paymentsData = useAppSelector((state) => state.paymentsData);
+  const ticketsData = useAppSelector((state) => state.ticketsData);
 
   //Loading Spinner After Login Waiting Until App data is Fetched.
   if (
     invoiceData.isLoading ||
     passportsData.isLoading ||
     visasData.isLoading ||
-    paymentsData.isLoading
+    paymentsData.isLoading ||
+    ticketsData.isLoading
   )
     return (
       <div className="mx-5 h-min-screen">
@@ -86,7 +103,8 @@ export const Home = () => {
                 invoiceData.isLoading ||
                 passportsData.isLoading ||
                 visasData.isLoading ||
-                paymentsData.isLoading
+                paymentsData.isLoading ||
+                ticketsData.isLoading
               }
             />
           </div>

@@ -2,9 +2,6 @@ const mongoose = require("mongoose");
 
 //Define customer Schema
 const customerSchema = new mongoose.Schema({
-  ID: {
-    type: String,
-  },
   name: {
     type: String,
   },
@@ -43,9 +40,6 @@ const invoiceSchema = new mongoose.Schema(
       type: String,
     },
     date: {
-      type: Date,
-    },
-    due_date: {
       type: Date,
     },
     subtotal: {

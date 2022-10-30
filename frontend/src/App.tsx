@@ -22,6 +22,8 @@ import { Visas } from "./components/visa/Visas";
 import { CreateVisa } from "./components/forms/CreateVisa";
 import { Payments } from "./components/payment/Payments";
 import { CreatePayment } from "./components/forms/CreatePayment";
+import { Tickets } from "./components/ticket/Tickets";
+import { CreateTicket } from "./components/forms/CreateTicket";
 
 //User And Admin Paths
 const paths = [
@@ -37,6 +39,8 @@ const paths = [
   "/visas/create",
   "/payments",
   "/payments/create",
+  "/tickets",
+  "/tickets/create",
 ];
 
 const App: FC = () => {
@@ -84,6 +88,8 @@ const App: FC = () => {
             <Route path="/visas/create" element={<CreateVisa />} />
             <Route path="/payments" element={<Payments />} />
             <Route path="/payments/create" element={<CreatePayment />} />
+            <Route path="/tickets" element={<Tickets />} />
+            <Route path="/tickets/create" element={<CreateTicket />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />

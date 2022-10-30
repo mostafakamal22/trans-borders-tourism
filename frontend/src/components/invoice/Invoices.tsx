@@ -22,10 +22,8 @@ import { resetAdminAuthStatus } from "../../state/features/admin/auth/adminAuthS
 
 const tableHeaderTitles = [
   "Invoice #",
-  "Customer ID",
   "Customer Name",
   "Date",
-  "Due Date",
   "Total",
   "Show Invoice",
   "Delete Invoice",
@@ -88,6 +86,10 @@ export const InvoiceListControl = () => {
   //Define table data
   const tableHeader = (
     <tr className="border-b border-b-black">
+      <th scope="col" className="p-1 text-center border-x border-x-black">
+        No.
+      </th>
+
       {tableHeaderTitles.map((title) => (
         <th
           key={title}
@@ -108,6 +110,16 @@ export const InvoiceListControl = () => {
           index % 2 === 0 ? "bg-white" : "bg-gray-100"
         } border-b border-b-black`}
       >
+        {/*Invoice NO*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-90 border-x text-center border-x-black"
+        >
+          {[...filteredInvoices]
+            .reverse()
+            .findIndex((p: any) => p._id === invoice._id) + 1}
+        </th>
+
         {/*Invoice ID*/}
         <th
           scope="row"
@@ -115,14 +127,6 @@ export const InvoiceListControl = () => {
         >
           {"000" +
             [...invoiceList].findIndex((p: any) => p._id === invoice._id)}
-        </th>
-
-        {/*Customer ID*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
-        >
-          {invoice.customer.ID ? invoice.customer.ID : "-"}
         </th>
 
         {/*Customer Name*/}
@@ -139,16 +143,6 @@ export const InvoiceListControl = () => {
           className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
         >
           {invoice.date ? dayjs(invoice.date).format("DD/MM/YYYY") : "-"}
-        </th>
-
-        {/*Invoice Date*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x border-x-black text-center"
-        >
-          {invoice.due_date
-            ? dayjs(invoice.due_date).format("DD/MM/YYYY")
-            : "-"}
         </th>
 
         {/*Invoice Total*/}
@@ -194,6 +188,10 @@ export const InvoiceListControl = () => {
 
   //clean up status (when mount and unmount)
   UseResetStatus(() => {
+    //scroll page back to top when component first mount
+    const yOffset = window.pageYOffset;
+    window.scrollBy(0, -yOffset);
+
     dispatch(resetAdminAuthStatus());
     dispatch(resetInvoicesStatus());
   });

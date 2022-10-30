@@ -35,7 +35,6 @@ export const CreateInvoice = () => {
   //state for Customer Details
   const [customerDetails, setCustomerDetails] = useState({
     name: "",
-    ID: "",
     number: "",
   });
 
@@ -43,7 +42,6 @@ export const CreateInvoice = () => {
   const [invoiceDetails, setInvoieceDetails] = useState({
     ID: "",
     date: "",
-    dueDate: "",
     subtotal: 0,
     total: 0,
     taxRate: 0,
@@ -117,7 +115,6 @@ export const CreateInvoice = () => {
       total: invoiceDetails.total,
       subtotal: invoiceDetails.subtotal,
       date: invoiceDetails.date,
-      dueDate: invoiceDetails.dueDate,
       taxDue: invoiceDetails.taxDue,
       taxRate: invoiceDetails.taxRate,
       taxable: invoiceDetails.taxable,
@@ -129,6 +126,10 @@ export const CreateInvoice = () => {
 
   //clean up status (when mount and unmount)
   UseResetStatus(() => {
+    //scroll page back to top when component first mount
+    const yOffset = window.pageYOffset;
+    window.scrollBy(0, -yOffset);
+
     dispatch(resetAdminAuthStatus());
     dispatch(resetInvoicesStatus());
   });
@@ -163,18 +164,6 @@ export const CreateInvoice = () => {
             defaultValue={customerDetails.name}
             onChange={(e) =>
               setCustomerDetails({ ...customerDetails, name: e.target.value })
-            }
-          />
-
-          <FormInput
-            label="Customer ID"
-            name="customerID"
-            labeClassNames={lableClassNamesStyles.default}
-            className={inputClassNamesStyles.default}
-            type="text"
-            defaultValue={customerDetails.ID}
-            onChange={(e) =>
-              setCustomerDetails({ ...customerDetails, ID: e.target.value })
             }
           />
 
@@ -294,18 +283,6 @@ export const CreateInvoice = () => {
             defaultValue={invoiceDetails.date}
             onChange={(e) =>
               setInvoieceDetails({ ...invoiceDetails, date: e.target.value })
-            }
-          />
-
-          <FormInput
-            label="Due Date"
-            name="invoiceDueDate"
-            labeClassNames={lableClassNamesStyles.default}
-            className={inputClassNamesStyles.default}
-            type="date"
-            defaultValue={invoiceDetails.dueDate}
-            onChange={(e) =>
-              setInvoieceDetails({ ...invoiceDetails, dueDate: e.target.value })
             }
           />
         </div>

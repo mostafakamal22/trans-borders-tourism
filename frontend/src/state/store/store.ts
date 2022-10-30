@@ -8,6 +8,7 @@ import invoiceReducer from "../features/invoice/invoiceSlice";
 import passportReducer from "../features/passport/passportSlice";
 import visaReducer from "../features/visa/visaSlice";
 import paymentReducer from "../features/payment/paymentSlice";
+import ticketReducer from "../features/ticket/ticketSlice";
 
 const persistConfig = {
   key: "root",
@@ -30,6 +31,7 @@ const appReducer = combineReducers({
   passportsData: passportReducer,
   visasData: visaReducer,
   paymentsData: paymentReducer,
+  ticketsData: ticketReducer,
 });
 
 //All Logout actions
@@ -39,6 +41,7 @@ const logoutActions = [
   "passports/logout",
   "visas/logout",
   "payments/logout",
+  "tickets/logout",
 ];
 
 //remove All Stored state in local storage when logging out

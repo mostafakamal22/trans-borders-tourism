@@ -114,6 +114,9 @@ export const Payments = () => {
           {title}
         </th>
       ))}
+      <th scope="col" className="p-1 text-center border-x border-x-black">
+        م
+      </th>
     </tr>
   );
 
@@ -192,12 +195,26 @@ export const Payments = () => {
         >
           {dayjs(payment.date).format("DD/MM/YYYY")}
         </th>
+
+        {/*Payment NO*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-90 border-x text-center border-x-black"
+        >
+          {[...filteredPayments]
+            .reverse()
+            .findIndex((p: any) => p._id === payment._id) + 1}
+        </th>
       </tr>
     );
   };
 
   //clean up status (when mount and unmount)
   UseResetStatus(() => {
+    //scroll page back to top when component first mount
+    const yOffset = window.pageYOffset;
+    window.scrollBy(0, -yOffset);
+
     dispatch(resetAdminAuthStatus());
     dispatch(resetPaymentsStatus());
   });
@@ -213,71 +230,76 @@ export const Payments = () => {
     <div className="max-w-7xl min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <img className="mx-auto" src={logo} alt="logo" />
 
-      <div className="flex  justify-center items-center flex-wrap  gap-4 m-6 p-4 bg-red-700 rounded-md ">
+      <div className="flex justify-center items-center flex-wrap gap-4 my-5 p-4 bg-red-700 rounded-md">
         <h4 className="basis-full flex justify-center items-center text-2xl my-4 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
-          عرض المصــروفات بالشهــر و السنــة
+          فلتــرة المصــروفات
         </h4>
-        <form className="basis-full md:basis-[35%] flex flex-col justify-center gap-2 mx-auto font-semibold ">
-          <label className={lableClassNamesStyles.default} htmlFor="year">
-            ادخل السنة
-          </label>
-          <input
-            type="text"
-            name="year"
-            className={inputClassNamesStyles.default}
-            defaultValue={year}
-            onChange={(e) =>
-              setSearchQuery({
-                ...searchQuery,
-                year: e.target.value,
-              })
-            }
-            required
-          />
+        <form className="basis-full  flex flex-col flex-wrap  md:flex-row-reverse justify-center items-center gap-4 mx-auto font-semibold ">
+          <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="year">
+              السنة
+            </label>
+            <input
+              type="text"
+              name="year"
+              className={inputClassNamesStyles.default}
+              defaultValue={year}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  year: e.target.value,
+                })
+              }
+              required
+            />
+          </div>
 
-          <label className={lableClassNamesStyles.default} htmlFor="month">
-            ادخل الشهر
-          </label>
-          <input
-            type="text"
-            name="month"
-            className={inputClassNamesStyles.default}
-            defaultValue={month}
-            onChange={(e) =>
-              setSearchQuery({
-                ...searchQuery,
-                month: e.target.value,
-              })
-            }
-            required
-          />
+          <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="month">
+              الشهر
+            </label>
+            <input
+              type="text"
+              name="month"
+              className={inputClassNamesStyles.default}
+              defaultValue={month}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  month: e.target.value,
+                })
+              }
+              required
+            />
+          </div>
         </form>
+
+        <h3 className="basis-full flex justify-center items-center flex-row-reverse flex-wrap text-2xl my-5 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
+          <span>{" المصــروفات المحفوظة"}</span>
+          {!month && !year && (
+            <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
+              {" الكلية "}
+            </span>
+          )}
+          {month && (
+            <span className="bg-rose-500 p-1 rounded-md text-white mx-1">
+              {" عن شهر " + month}
+            </span>
+          )}
+          {year && (
+            <span className="bg-amber-500 p-1 rounded-md text-white mx-1">
+              {" سنة " + year}
+            </span>
+          )}
+
+          <span>({filteredPayments.length})</span>
+          <span className="flex justify-center items-center mr-2">
+            <FcMoneyTransfer size={50} />
+          </span>
+        </h3>
       </div>
-      <h3 className="flex justify-center items-center flex-row-reverse text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
-        <span>{" المصــروفات المحفوظة"}</span>
-        {!month && !year && (
-          <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
-            {" الكلية "}
-          </span>
-        )}
-        {month && (
-          <span className="bg-rose-500 p-1 rounded-md text-white mx-1">
-            {" عن شهر " + month}
-          </span>
-        )}
-        {year && (
-          <span className="bg-amber-500 p-1 rounded-md text-white mx-1">
-            {" سنة " + year}
-          </span>
-        )}
 
-        <span>({filteredPayments.length})</span>
-        <span className="flex justify-center items-center mr-2">
-          <FcMoneyTransfer size={50} />
-        </span>
-      </h3>
-
-      <h4 className="flex justify-center items-center flex-row-reverse flex-wrap gap-2 text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
+      <h4 className="flex justify-center items-center flex-row-reverse flex-wrap gap-2 text-2xl my-10 p-4 text-center font-bold bg-red-700 text-gray-900 rounded shadow">
         <span className="bg-emerald-500 p-1 rounded-md text-white mx-1">
           {" إجمالى المصروفات " + `[ ${totals.toFixed(2)} ]`}
         </span>

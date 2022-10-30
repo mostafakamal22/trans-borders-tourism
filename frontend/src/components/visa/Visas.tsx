@@ -109,6 +109,9 @@ export const Visas = () => {
           {title}
         </th>
       ))}
+      <th scope="col" className="p-1 text-center border-x border-x-black">
+        م
+      </th>
     </tr>
   );
 
@@ -123,7 +126,7 @@ export const Visas = () => {
         {/* Delete Visa */}
         <th
           scope="row"
-          className="p-2 text-gray-900 whitespace-nowrap text-xs border-x text-center border-x-black"
+          className="p-2 text-gray-900  text-xs border-x text-center border-x-black"
         >
           <form
             className="max-w-[150px] m-auto"
@@ -140,7 +143,7 @@ export const Visas = () => {
         {/*Visa State*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           {visa.state}
         </th>
@@ -148,7 +151,7 @@ export const Visas = () => {
         {/*Customer Number*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           {visa.customer_number}
         </th>
@@ -156,7 +159,7 @@ export const Visas = () => {
         {/*passport ID*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           {visa.passport_id}
         </th>
@@ -164,7 +167,7 @@ export const Visas = () => {
         {/*Customer Name*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           {visa.customer_name}
         </th>
@@ -172,7 +175,7 @@ export const Visas = () => {
         {/*Profit*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           {visa.profit}
         </th>
@@ -180,7 +183,7 @@ export const Visas = () => {
         {/*Sales*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           {visa.sales}
         </th>
@@ -188,7 +191,7 @@ export const Visas = () => {
         {/*Net Fare*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           {visa.net_fare}
         </th>
@@ -196,7 +199,7 @@ export const Visas = () => {
         {/*Visa Type*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           {visa.type}
         </th>
@@ -204,7 +207,7 @@ export const Visas = () => {
         {/*Visa Version*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           {visa.version}
         </th>
@@ -212,17 +215,27 @@ export const Visas = () => {
         {/*Visa Provider*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           {visa.provider}
         </th>
 
-        {/*Payment Date*/}
+        {/*Visa Date*/}
         <th
           scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x text-center border-x-black"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           {dayjs(visa.payment_date).format("DD/MM/YYYY")}
+        </th>
+
+        {/*Visa NO*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-90 border-x text-center border-x-black"
+        >
+          {[...filteredVisas]
+            .reverse()
+            .findIndex((p: any) => p._id === visa._id) + 1}
         </th>
       </tr>
     );
@@ -230,6 +243,10 @@ export const Visas = () => {
 
   //clean up status (when mount and unmount)
   UseResetStatus(() => {
+    //scroll page back to top when component first mount
+    const yOffset = window.pageYOffset;
+    window.scrollBy(0, -yOffset);
+
     dispatch(resetAdminAuthStatus());
     dispatch(resetVisasStatus());
   });
@@ -245,69 +262,73 @@ export const Visas = () => {
     <div className="max-w-7xl min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <img className="mx-auto" src={logo} alt="logo" />
 
-      <div className="flex  justify-center items-center flex-wrap  gap-4 m-6 p-4 bg-red-700 rounded-md ">
+      <div className="flex justify-center items-center flex-wrap gap-4 my-5 p-4 bg-red-700 rounded-md">
         <h4 className="basis-full flex justify-center items-center text-2xl my-4 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
-          عرض التأشـيرات بالشهــر و السنــة
+          فلتـرة التأشـيرات
         </h4>
         <form className="basis-full md:basis-[35%] flex flex-col justify-center gap-2 mx-auto font-semibold ">
-          <label className={lableClassNamesStyles.default} htmlFor="year">
-            ادخل السنة
-          </label>
-          <input
-            type="text"
-            name="year"
-            className={inputClassNamesStyles.default}
-            defaultValue={year}
-            onChange={(e) =>
-              setSearchQuery({
-                ...searchQuery,
-                year: e.target.value,
-              })
-            }
-            required
-          />
+          <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="year">
+              السنة
+            </label>
+            <input
+              type="text"
+              name="year"
+              className={inputClassNamesStyles.default}
+              defaultValue={year}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  year: e.target.value,
+                })
+              }
+              required
+            />
+          </div>
 
-          <label className={lableClassNamesStyles.default} htmlFor="month">
-            ادخل الشهر
-          </label>
-          <input
-            type="text"
-            name="month"
-            className={inputClassNamesStyles.default}
-            defaultValue={month}
-            onChange={(e) =>
-              setSearchQuery({
-                ...searchQuery,
-                month: e.target.value,
-              })
-            }
-            required
-          />
+          <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="month">
+              الشهر
+            </label>
+            <input
+              type="text"
+              name="month"
+              className={inputClassNamesStyles.default}
+              defaultValue={month}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  month: e.target.value,
+                })
+              }
+              required
+            />
+          </div>
         </form>
-      </div>
-      <h3 className="flex justify-center items-center flex-row-reverse text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
-        <span>{" التأشيرات المحفوظة"}</span>
-        {!month && !year && (
-          <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
-            {" الكلية "}
-          </span>
-        )}
-        {month && (
-          <span className="bg-rose-500 p-1 rounded-md text-white mx-1">
-            {" عن شهر " + month}
-          </span>
-        )}
-        {year && (
-          <span className="bg-amber-500 p-1 rounded-md text-white mx-1">
-            {" سنة " + year}
-          </span>
-        )}
+        <h3 className="basis-full flex justify-center items-center flex-row-reverse text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
+          <span>{" التأشيرات المحفوظة"}</span>
+          {!month && !year && (
+            <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
+              {" الكلية "}
+            </span>
+          )}
+          {month && (
+            <span className="bg-rose-500 p-1 rounded-md text-white mx-1">
+              {" عن شهر " + month}
+            </span>
+          )}
+          {year && (
+            <span className="bg-amber-500 p-1 rounded-md text-white mx-1">
+              {" سنة " + year}
+            </span>
+          )}
 
-        <span>({filteredVisas.length})</span>
-        <span className="flex justify-center items-center mr-2">
-          <FcCurrencyExchange size={50} />
-        </span>
-      </h3>
+          <span>({filteredVisas.length})</span>
+          <span className="flex justify-center items-center mr-2">
+            <FcCurrencyExchange size={50} />
+          </span>
+        </h3>
+      </div>
 
       {/*Request Status and Errors*/}
       {(isError || (isSuccess && message)) && (

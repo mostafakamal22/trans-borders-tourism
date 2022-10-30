@@ -79,6 +79,10 @@ export const CreateVisa = () => {
 
   //clean up status (when mount and unmount)
   UseResetStatus(() => {
+    //scroll page back to top when component first mount
+    const yOffset = window.pageYOffset;
+    window.scrollBy(0, -yOffset);
+
     dispatch(resetAdminAuthStatus());
     dispatch(resetVisasStatus());
   });
@@ -94,7 +98,7 @@ export const CreateVisa = () => {
     <div className="max-w-6xl w-full mx-auto my-20 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <h3 className="flex justify-center items-center text-xl text-center font-bold px-2 py-4 mb-10 bg-red-200 border-b-4 border-red-800 rounded shadow ">
         <FcDebt className="mr-1" size={50} />
-        <span>إضافة تأشيرة جديد</span>
+        <span>إضافة تأشيرة جديدة</span>
       </h3>
 
       <img className="mx-auto" src={logo} alt="logo" />

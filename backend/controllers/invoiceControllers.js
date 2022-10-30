@@ -35,7 +35,6 @@ const createInvoice = async (req, res) => {
       customer: req.body.customer,
       details: req.body.details,
       date: req.body.date,
-      due_date: req.body.dueDate,
       subtotal: req.body.subtotal,
       total: req.body.total,
       ID: req.body.ID,
@@ -46,11 +45,7 @@ const createInvoice = async (req, res) => {
     });
     res.status(201).json(invoice);
   } catch (error) {
-    if (
-      error.message.match(
-        /(date|due date|details|customer|subtotal|total|ID)/gi
-      )
-    ) {
+    if (error.message.match(/(date|details|customer|subtotal|total|ID)/gi)) {
       return res.status(400).send(error.message);
     }
 
