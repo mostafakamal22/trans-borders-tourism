@@ -22,8 +22,8 @@ import { Visas } from "./components/visa/Visas";
 import { CreateVisa } from "./components/forms/CreateVisa";
 import { Payments } from "./components/payment/Payments";
 import { CreatePayment } from "./components/forms/CreatePayment";
-import { Tickets } from "./components/ticket/Tickets";
 import { CreateTicket } from "./components/forms/CreateTicket";
+import { Tickets } from "./components/ticket/Tickets";
 
 //User And Admin Paths
 const paths = [

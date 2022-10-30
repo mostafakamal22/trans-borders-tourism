@@ -14,9 +14,9 @@ import {
 import FormButton from "../shared/FormButton";
 import { FormInput } from "../shared/FormInput";
 import MessagesContainer from "../shared/MessagesContainer";
-import { ticketsTableHeaderTitles } from "../ticket/Tickets";
 import { inputClassNamesStyles, lableClassNamesStyles } from "./CreateInvoice";
 import logo from "../../assets/imgs/trans-logo.png";
+import { ticketsTableHeaderTitles } from "../ticket/Tickets";
 
 export const CreateTicket = () => {
   //state for Ticket Details
