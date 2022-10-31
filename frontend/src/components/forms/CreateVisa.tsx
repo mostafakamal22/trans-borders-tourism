@@ -22,8 +22,6 @@ export const CreateVisa = () => {
   //state for Visa Details
   const [visaDetails, setVisaDetails] = useState({
     name: "",
-    number: "",
-    version: "",
     provider: "",
     type: "",
     state: "",
@@ -62,8 +60,6 @@ export const CreateVisa = () => {
     const visaData = {
       token: info.token,
       name: visaDetails.name,
-      number: visaDetails.number,
-      version: visaDetails.version,
       provider: visaDetails.provider,
       type: visaDetails.type,
       state: visaDetails.state,
@@ -114,22 +110,9 @@ export const CreateVisa = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            defaultValue={visaDetails.name}
+            value={visaDetails.name}
             onChange={(e) =>
               setVisaDetails({ ...visaDetails, name: e.target.value })
-            }
-            required
-          />
-
-          <FormInput
-            label={visaTableHeaderTitles[2]}
-            name="customerNumber"
-            labeClassNames={lableClassNamesStyles.default}
-            className={inputClassNamesStyles.default}
-            type="text"
-            defaultValue={visaDetails.number}
-            onChange={(e) =>
-              setVisaDetails({ ...visaDetails, number: e.target.value })
             }
             required
           />
@@ -140,7 +123,7 @@ export const CreateVisa = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            defaultValue={visaDetails.passportId}
+            value={visaDetails.passportId}
             onChange={(e) =>
               setVisaDetails({ ...visaDetails, passportId: e.target.value })
             }
@@ -148,16 +131,15 @@ export const CreateVisa = () => {
           />
 
           <FormInput
-            label={visaTableHeaderTitles[10]}
+            label={visaTableHeaderTitles[9]}
             name="VisaProvider"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            defaultValue={visaDetails.provider}
+            value={visaDetails.provider}
             onChange={(e) =>
               setVisaDetails({ ...visaDetails, provider: e.target.value })
             }
-            required
           />
 
           <FormInput
@@ -166,37 +148,22 @@ export const CreateVisa = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            defaultValue={visaDetails.type}
+            value={visaDetails.type}
             onChange={(e) =>
               setVisaDetails({ ...visaDetails, type: e.target.value })
             }
-            required
           />
 
           <FormInput
-            label={visaTableHeaderTitles[1]}
+            label={visaTableHeaderTitles[2]}
             name="VisaState"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            defaultValue={visaDetails.state}
+            value={visaDetails.state}
             onChange={(e) =>
               setVisaDetails({ ...visaDetails, state: e.target.value })
             }
-            required
-          />
-
-          <FormInput
-            label={visaTableHeaderTitles[9]}
-            name="VisaVersion"
-            labeClassNames={lableClassNamesStyles.default}
-            className={inputClassNamesStyles.default}
-            type="text"
-            defaultValue={visaDetails.version}
-            onChange={(e) =>
-              setVisaDetails({ ...visaDetails, version: e.target.value })
-            }
-            required
           />
 
           <FormInput
@@ -205,14 +172,14 @@ export const CreateVisa = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="number"
-            defaultValue={visaDetails.netFare}
+            value={visaDetails.netFare}
             onChange={(e) =>
               setVisaDetails({
                 ...visaDetails,
                 netFare: +e.target.value,
+                profit: visaDetails.sales - +e.target.value,
               })
             }
-            required
             min={0}
             step={0.01}
           />
@@ -223,14 +190,14 @@ export const CreateVisa = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="number"
-            defaultValue={visaDetails.sales}
+            value={visaDetails.sales}
             onChange={(e) =>
               setVisaDetails({
                 ...visaDetails,
                 sales: +e.target.value,
+                profit: +e.target.value - visaDetails.netFare,
               })
             }
-            required
             min={0}
             step={0.01}
           />
@@ -241,32 +208,30 @@ export const CreateVisa = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="number"
-            defaultValue={visaDetails.profit}
+            value={visaDetails.profit}
             onChange={(e) =>
               setVisaDetails({
                 ...visaDetails,
                 profit: +e.target.value,
               })
             }
-            required
             min={0}
             step={0.01}
           />
 
           <FormInput
-            label={visaTableHeaderTitles[11]}
+            label={visaTableHeaderTitles[10]}
             name="paymentDate"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="date"
-            defaultValue={visaDetails.paymentDate}
+            value={visaDetails.paymentDate}
             onChange={(e) =>
               setVisaDetails({
                 ...visaDetails,
                 paymentDate: e.target.value,
               })
             }
-            required
           />
         </div>
 

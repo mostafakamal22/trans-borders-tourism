@@ -6,45 +6,36 @@ const visaSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please Type Customer Name!"],
     },
-    customer_number: {
-      type: Number,
-      required: [true, "Please Type Customer Mobile Number!"],
-    },
-    version: {
-      type: String,
-      required: [true, "Please Type Visa Version!"],
-    },
     passport_id: {
       type: String || Number,
       required: [true, "Please Type Customer Passport Id!"],
     },
     provider: {
       type: String,
-      required: [true, "Please Type Visa Provider"],
     },
     type: {
       type: String,
-      required: [true, "Please Type Visa Type"],
     },
     state: {
       type: String,
-      required: [true, "Please Type Visa Type"],
     },
     net_fare: {
       type: Number,
-      required: [true, "Please Type Visa Net Fare"],
+      default: 0,
+      min: [0, "Visa net fare Can Not Be less than 0"],
     },
     sales: {
       type: Number,
-      required: [true, "Please Type Visa Sales"],
+      default: 0,
+      min: [0, "Visa Sales Can Not Be less than 0"],
     },
     profit: {
       type: Number,
-      required: [true, "Please Type Visa Profit"],
+      default: 0,
+      min: [0, "Visa Profit Can Not Be less than 0"],
     },
     payment_date: {
       type: Date,
-      required: [true, "Please Type Visa Payment Date"],
     },
   },
   {

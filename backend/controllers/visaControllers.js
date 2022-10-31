@@ -19,8 +19,6 @@ const createVisa = async (req, res) => {
   try {
     const visa = await Visa.create({
       customer_name: req.body.name,
-      customer_number: req.body.number,
-      version: req.body.version,
       passport_id: req.body.passportId,
       provider: req.body.provider,
       type: req.body.type,

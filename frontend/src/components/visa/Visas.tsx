@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { FcCurrencyExchange } from "react-icons/fc";
-import { TiDelete } from "react-icons/ti";
+import { TiDelete, TiEdit } from "react-icons/ti";
 import { UseResetStatus } from "../../hooks/UseResetStatus";
 import { resetAdminAuthStatus } from "../../state/features/admin/auth/adminAuthSlice";
 import {
@@ -21,18 +21,22 @@ import {
   deleteVisa,
   resetVisasStatus,
 } from "../../state/features/visa/visaSlice";
+import {
+  createInvoice,
+  resetInvoicesStatus,
+} from "../../state/features/invoice/invoiceSlice";
+import { visaCalculations } from "../helpers/visaCalculations";
 
 export const visaTableHeaderTitles = [
   "مسح التأشيرة",
+  "إضافة فاتورة",
   "حالة التأشيرة",
-  "رقم التليفون",
   "رقم الجواز",
   "إسم العميل",
   "صافى الربح",
   "سعر البيع",
   "تكلفة التأشيرة",
   "نوع التأشيرة",
-  "الإصدار",
   "مورد التأشيرة",
   "التاريخ",
 ];
@@ -40,6 +44,8 @@ export const visaTableHeaderTitles = [
 export const Visas = () => {
   const { info } = useAppSelector((state) => state.adminAuth);
   const { visasList } = useAppSelector((state) => state.visasData);
+  const invoiceData = useAppSelector((state) => state.invoiceData);
+
   const dispatch = useAppDispatch();
 
   //search Params
@@ -68,12 +74,18 @@ export const Visas = () => {
     (state) => state.visasData
   );
 
+  const { netFares, profits, sales } = visaCalculations(filteredVisas);
+
   //search message state
   const [msg, setMsg] = useState("");
 
   // handle Delete visa
   const handleRemoving = (e: any, removedVisaID: string) => {
     e.preventDefault();
+
+    //set msg to none first
+    setMsg("");
+    dispatch(resetInvoicesStatus());
 
     //get admin token
     const token = info.token;
@@ -87,15 +99,60 @@ export const Visas = () => {
     dispatch(deleteVisa(visaData));
   };
 
+  // handle Creating invoice
+  const handleAddInvoice = (
+    e: React.SyntheticEvent,
+    customerName: string,
+    passportId: string,
+    visaType: string,
+    paymentDate: string,
+    visaSales: number
+  ) => {
+    e.preventDefault();
+
+    //set msg to none first
+    setMsg("");
+    dispatch(resetVisasStatus());
+
+    const invoiceData = {
+      token: info.token,
+      ID: passportId,
+      customer: { name: customerName },
+      details: [
+        {
+          name: "Visa " + visaType,
+          quantity: 1,
+          price: visaSales,
+        },
+      ],
+      total: visaSales,
+      subtotal: 0,
+      date: paymentDate,
+      taxDue: 0,
+      taxRate: 0,
+      taxable: 0,
+    };
+
+    dispatch(createInvoice(invoiceData));
+  };
+
   useEffect(() => {
     if (isError) {
       setMsg(message);
     }
 
+    if (invoiceData.isError) {
+      setMsg(invoiceData.message);
+    }
+
     if (isSuccess && message) {
       setMsg(message);
     }
-  }, [isError, message, isSuccess, msg]);
+
+    if (invoiceData.isSuccess && invoiceData.message) {
+      setMsg(invoiceData.message);
+    }
+  }, [isError, message, isSuccess, msg, invoiceData]);
 
   //Define table data
   const tableHeader = (
@@ -140,20 +197,38 @@ export const Visas = () => {
           </form>
         </th>
 
+        {/* Make Invoice */}
+        <th
+          scope="row"
+          className="p-1 text-gray-900 text-xs border-x text-center border-x-black"
+        >
+          <form
+            className="max-w-[150px] m-auto"
+            onSubmit={(event) =>
+              handleAddInvoice(
+                event,
+                visa.customer_name,
+                visa.passport_id,
+                visa.type,
+                visa.payment_date,
+                visa.sales
+              )
+            }
+          >
+            <FormButton
+              text={{ default: "إضافة" }}
+              bgColor={["bg-orange-600", "bg-orange-700", "bg-orange-800"]}
+              icon={<TiEdit className="mr-1 mb-1" size={25} />}
+            />
+          </form>
+        </th>
+
         {/*Visa State*/}
         <th
           scope="row"
           className="p-2  text-gray-900  border-x text-center border-x-black"
         >
-          {visa.state}
-        </th>
-
-        {/*Customer Number*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900  border-x text-center border-x-black"
-        >
-          {visa.customer_number}
+          {visa.state ? visa.state : "-"}
         </th>
 
         {/*passport ID*/}
@@ -201,15 +276,7 @@ export const Visas = () => {
           scope="row"
           className="p-2  text-gray-900  border-x text-center border-x-black"
         >
-          {visa.type}
-        </th>
-
-        {/*Visa Version*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900  border-x text-center border-x-black"
-        >
-          {visa.version}
+          {visa.type ? visa.type : "-"}
         </th>
 
         {/*Visa Provider*/}
@@ -217,7 +284,7 @@ export const Visas = () => {
           scope="row"
           className="p-2  text-gray-900  border-x text-center border-x-black"
         >
-          {visa.provider}
+          {visa.provider ? visa.provider : "-"}
         </th>
 
         {/*Visa Date*/}
@@ -225,7 +292,9 @@ export const Visas = () => {
           scope="row"
           className="p-2  text-gray-900  border-x text-center border-x-black"
         >
-          {dayjs(visa.payment_date).format("DD/MM/YYYY")}
+          {visa.payment_date
+            ? dayjs(visa.payment_date).format("DD/MM/YYYY")
+            : "-"}
         </th>
 
         {/*Visa NO*/}
@@ -248,12 +317,14 @@ export const Visas = () => {
     window.scrollBy(0, -yOffset);
 
     dispatch(resetAdminAuthStatus());
+    dispatch(resetInvoicesStatus());
     dispatch(resetVisasStatus());
   });
 
   UseResetStatus(() => {
     return () => {
       dispatch(resetAdminAuthStatus());
+      dispatch(resetInvoicesStatus());
       dispatch(resetVisasStatus());
     };
   });
@@ -266,13 +337,14 @@ export const Visas = () => {
         <h4 className="basis-full flex justify-center items-center text-2xl my-4 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
           فلتـرة التأشـيرات
         </h4>
-        <form className="basis-full md:basis-[35%] flex flex-col justify-center gap-2 mx-auto font-semibold ">
+
+        <form className="basis-full  flex flex-col flex-wrap  md:flex-row-reverse justify-center items-center gap-4 mx-auto font-semibold ">
           <div className="flex justify-center items-center flex-col gap-2">
             <label className={lableClassNamesStyles.default} htmlFor="year">
               السنة
             </label>
             <input
-              type="text"
+              type="number"
               name="year"
               className={inputClassNamesStyles.default}
               defaultValue={year}
@@ -282,16 +354,14 @@ export const Visas = () => {
                   year: e.target.value,
                 })
               }
-              required
             />
           </div>
-
           <div className="flex justify-center items-center flex-col gap-2">
             <label className={lableClassNamesStyles.default} htmlFor="month">
               الشهر
             </label>
             <input
-              type="text"
+              type="number"
               name="month"
               className={inputClassNamesStyles.default}
               defaultValue={month}
@@ -301,7 +371,6 @@ export const Visas = () => {
                   month: e.target.value,
                 })
               }
-              required
             />
           </div>
         </form>
@@ -330,13 +399,36 @@ export const Visas = () => {
         </h3>
       </div>
 
+      <h4 className="flex justify-center items-center flex-row-reverse flex-wrap gap-2 text-2xl my-10 p-4 text-center font-bold bg-red-700 text-gray-900 rounded shadow">
+        <span className="bg-emerald-500 p-1 rounded-md text-white mx-1">
+          {" إجمالى التكلفة " + `[ ${netFares.toFixed(2)} ]`}
+        </span>
+
+        <span className="bg-lime-500 p-1 rounded-md text-white mx-1">
+          {" إجمالى سعر البيع " + `[ ${sales.toFixed(2)} ]`}
+        </span>
+
+        <span className="bg-fuchsia-500 p-1 rounded-md text-white mx-1">
+          {" إجمالى الربح " + `[ ${profits.toFixed(2)} ]`}
+        </span>
+      </h4>
+
       {/*Request Status and Errors*/}
       {(isError || (isSuccess && message)) && (
         <MessagesContainer msg={msg} isSuccess={isSuccess} isError={isError} />
       )}
 
+      {invoiceData.isError ||
+        (invoiceData.isSuccess && invoiceData.message && (
+          <MessagesContainer
+            msg={msg}
+            isSuccess={invoiceData.isSuccess}
+            isError={invoiceData.isError}
+          />
+        ))}
+
       {/*Display Table All Data Needed*/}
-      {!isLoading && filteredVisas?.length > 0 && (
+      {!isLoading && !invoiceData.isLoading && filteredVisas?.length > 0 && (
         <PaginationTable
           tableRow={tableRow}
           tableHeader={tableHeader}
@@ -346,21 +438,32 @@ export const Visas = () => {
       )}
 
       {/* if there is No Visas Records */}
-      {!year && !month && filteredVisas?.length === 0 && !isLoading && (
-        <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
-          لا يوجد تأشيرات محفوظة الان, يرجى إضافة التأشيرات لعرضها.
-        </div>
-      )}
+      {!year &&
+        !month &&
+        filteredVisas?.length === 0 &&
+        !isLoading &&
+        !invoiceData.isLoading && (
+          <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
+            لا يوجد تأشيرات محفوظة الان, يرجى إضافة التأشيرات لعرضها.
+          </div>
+        )}
 
-      {/* if there is search query no passport matches >>> No Search Found*/}
-      {(year || month) && filteredVisas?.length === 0 && !isLoading && (
-        <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
-          لا يوجد نتائج تطابق هذا البحث, تأكد من الشهر و السنة وحاول مجدداً
-        </div>
-      )}
+      {/* if there is search query no Visa matches >>> No Search Found*/}
+      {(year || month) &&
+        filteredVisas?.length === 0 &&
+        !isLoading &&
+        !invoiceData.isLoading && (
+          <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
+            لا يوجد نتائج تطابق هذا البحث, تأكد من الشهر و السنة وحاول مجدداً
+          </div>
+        )}
 
       {/* Show spinner when Loading State is true */}
-      {isLoading && <MainSpinner isLoading={isLoading} />}
+      {(isLoading || invoiceData.isLoading) && (
+        <MainSpinner
+          isLoading={isLoading ? isLoading : invoiceData.isLoading}
+        />
+      )}
     </div>
   );
 };

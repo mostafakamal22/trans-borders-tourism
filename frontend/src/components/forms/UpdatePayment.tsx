@@ -99,7 +99,7 @@ export const UpdatePayment = ({
               total: 0,
             },
           ]
-        : paymentTypesDetails.splice(0, paymentTypesDetails.length - 1);
+        : [...paymentTypesDetails].splice(0, paymentTypesDetails.length - 1);
 
     setPaymentTypesDetails(newItems);
 

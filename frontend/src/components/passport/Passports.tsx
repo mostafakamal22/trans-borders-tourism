@@ -182,7 +182,7 @@ export const Passports = () => {
 
   // handle Creating invoice
   const handleAddInvoice = (
-    e: any,
+    e: React.SyntheticEvent,
     customerName: string,
     ID: string,
     passport_service: string,

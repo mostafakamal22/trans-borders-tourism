@@ -106,7 +106,7 @@ export const visaSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.message = "Visa Deleted Successfully!";
+        state.message = "تم حذف التأشيرة بنجاح";
         state.visasList = state.visasList.filter(
           (invoice: any) => invoice._id !== action.payload.id
         );
@@ -127,7 +127,7 @@ export const visaSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.message = "Visa Has Been Created Successfully!";
+        state.message = "تم حفظ التأشيرة بنجاح";
         state.visasList = [...state.visasList, action.payload];
       })
       .addCase(createVisa.rejected, (state, action) => {
