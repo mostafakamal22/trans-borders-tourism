@@ -6,6 +6,12 @@ const paymentTypeSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please Payment Type Name!"],
   },
+  description: {
+    type: String,
+  },
+  method: {
+    type: String,
+  },
   total: {
     type: Number,
     required: [true, "Please Payment Type Total!"],

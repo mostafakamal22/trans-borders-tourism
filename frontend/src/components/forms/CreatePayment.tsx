@@ -18,6 +18,44 @@ import { FormInput } from "../shared/FormInput";
 import { inputClassNamesStyles, lableClassNamesStyles } from "./CreateInvoice";
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 
+export type PaymentTypes = {
+  rent: string;
+  papers: string;
+  payrolls: string;
+  phone_calls: string;
+  water_and_electricity: string;
+  bank_payments: string;
+  destroyed_devices: string;
+  buffet: string;
+  other: string;
+};
+
+export type PaymentMethods = {
+  bank: string;
+  later: string;
+  cash: string;
+  credit: string;
+};
+
+export const paymentTypes: PaymentTypes = {
+  rent: "إيجار",
+  papers: "أوراق مكتبية",
+  payrolls: "رواتب",
+  phone_calls: "مصاريف إتصالات وموبيلات",
+  water_and_electricity: "مياة وكهرباء",
+  bank_payments: "مصاريف بنكية",
+  destroyed_devices: "اهلاك أجهزة",
+  buffet: "مصاريف بوفية",
+  other: "مصاريف أخرى",
+};
+
+export const paymentMethods: PaymentMethods = {
+  bank: "بنكى",
+  later: "اجل",
+  cash: "نقدى",
+  credit: "credit",
+};
+
 export const CreatePayment = () => {
   //state for payment Details
   const [paymentDetails, setPaymentDetails] = useState({
@@ -28,7 +66,9 @@ export const CreatePayment = () => {
   //state for paymentTypes Details
   const [paymentTypesDetails, setPaymentTypesDetails] = useState([
     {
-      name: "",
+      name: "rent",
+      description: "",
+      method: "bank",
       total: 0,
     },
   ]);
@@ -56,7 +96,7 @@ export const CreatePayment = () => {
     }
   }, [isError, isSuccess, message, info, msg]);
 
-  const handleItemCount = async (num: number) => {
+  const handleItemCount = (num: number) => {
     if (num < 0 && itemsCount === 1) return;
 
     setItemsCount(itemsCount + num);
@@ -66,7 +106,9 @@ export const CreatePayment = () => {
         ? [
             ...paymentTypesDetails,
             {
-              name: "",
+              name: "rent",
+              description: "",
+              method: "bank",
               total: 0,
             },
           ]
@@ -128,19 +170,58 @@ export const CreatePayment = () => {
             key={index}
             className="flex flex-wrap items-center font-semibold  gap-4 px-5 py-5"
           >
-            <FormInput
-              label="نوع المصـروف"
+            <label htmlFor="itemName" className={lableClassNamesStyles.default}>
+              نوع المصـروف
+            </label>
+            <select
               name="itemName"
-              labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
-              type="text"
               value={item.name}
               onChange={(e) => {
                 const newArr = [...paymentTypesDetails];
                 newArr[index].name = e.target.value;
                 setPaymentTypesDetails(newArr);
               }}
-              required
+            >
+              {Object.keys(paymentTypes).map((name: string) => (
+                <option key={name} value={name}>
+                  {paymentTypes[name as keyof PaymentTypes]}
+                </option>
+              ))}
+            </select>
+
+            <label htmlFor="method" className={lableClassNamesStyles.default}>
+              طريقة دفع المصـروف
+            </label>
+            <select
+              name="method"
+              className={inputClassNamesStyles.default}
+              value={item.method}
+              onChange={(e) => {
+                const newArr = [...paymentTypesDetails];
+                newArr[index].method = e.target.value;
+                setPaymentTypesDetails(newArr);
+              }}
+            >
+              {Object.keys(paymentMethods).map((name: string) => (
+                <option key={name} value={name}>
+                  {paymentMethods[name as keyof PaymentMethods]}
+                </option>
+              ))}
+            </select>
+
+            <FormInput
+              label="شرح المصـروف"
+              name="itemDescription"
+              labeClassNames={lableClassNamesStyles.default}
+              className={inputClassNamesStyles.default}
+              type="text"
+              value={item.description}
+              onChange={(e) => {
+                const newArr = [...paymentTypesDetails];
+                newArr[index].description = e.target.value;
+                setPaymentTypesDetails(newArr);
+              }}
             />
 
             <FormInput

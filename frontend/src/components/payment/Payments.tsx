@@ -23,6 +23,7 @@ import { PaginationTable } from "../shared/PaginationTable";
 import { MainSpinner } from "../shared/MainSpinner";
 import { UpdatePayment } from "../forms/UpdatePayment";
 import { paymentsCalculations } from "../helpers/paymentCalculations";
+import { PaymentTypes, paymentTypes } from "../forms/CreatePayment";
 
 export const paymentTableHeaderTitles = [
   "مسح المصروف",
@@ -179,9 +180,9 @@ export const Payments = () => {
             (type: { name: string; total: number }, index: number) => (
               <span
                 key={index}
-                className="flex flex-row-reverse justify-center items-center gap-1 my-1 bg-amber-400 rounded"
+                className="flex flex-row-reverse justify-center items-center gap-1 my-1 p-1 bg-amber-400 rounded"
               >
-                <span>{type.name}</span>
+                <span>{paymentTypes[type.name as keyof PaymentTypes]}</span>
                 <span>{type.total + " <== "}</span>
               </span>
             )
@@ -240,7 +241,7 @@ export const Payments = () => {
               السنة
             </label>
             <input
-              type="text"
+              type="number"
               name="year"
               className={inputClassNamesStyles.default}
               defaultValue={year}
@@ -250,7 +251,6 @@ export const Payments = () => {
                   year: e.target.value,
                 })
               }
-              required
             />
           </div>
 
@@ -259,7 +259,7 @@ export const Payments = () => {
               الشهر
             </label>
             <input
-              type="text"
+              type="number"
               name="month"
               className={inputClassNamesStyles.default}
               defaultValue={month}
@@ -269,7 +269,6 @@ export const Payments = () => {
                   month: e.target.value,
                 })
               }
-              required
             />
           </div>
         </form>
