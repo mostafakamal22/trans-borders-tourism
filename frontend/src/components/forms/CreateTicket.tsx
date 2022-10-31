@@ -135,7 +135,11 @@ export const CreateTicket = () => {
             type="nmuber"
             value={ticketsDetails.sales}
             onChange={(e) =>
-              setTicketsDetails({ ...ticketsDetails, sales: +e.target.value })
+              setTicketsDetails({
+                ...ticketsDetails,
+                sales: +e.target.value,
+                profit: +e.target.value - ticketsDetails.cost,
+              })
             }
             min={0}
             step={0.01}

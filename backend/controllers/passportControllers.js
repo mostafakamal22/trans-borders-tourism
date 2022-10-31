@@ -19,7 +19,7 @@ const createPassport = async (req, res) => {
   try {
     const passport = await Passport.create({
       customer_name: req.body.name,
-      customer_nationality: req.body.nationality || undefined,
+      customer_nationality: req.body.nationality,
       passport_id: req.body.passportId,
       state: req.body.state,
       service: req.body.service,
@@ -29,7 +29,7 @@ const createPassport = async (req, res) => {
       total: req.body.total,
       sales: req.body.sales,
       profit: req.body.profit,
-      payment_date: req.body.paymentDate || undefined,
+      payment_date: req.body.paymentDate,
     });
     res.status(201).json(passport);
   } catch (error) {

@@ -164,6 +164,10 @@ export const Passports = () => {
   const handleRemoving = (e: any, removedPassportID: string) => {
     e.preventDefault();
 
+    //set msg to none first
+    setMsg("");
+    dispatch(resetInvoicesStatus());
+
     //get admin token
     const token = info.token;
 
@@ -189,6 +193,7 @@ export const Passports = () => {
 
     //set msg to none first
     setMsg("");
+    dispatch(resetPassportsStatus());
 
     const invoiceData = {
       token: info.token,
@@ -220,10 +225,18 @@ export const Passports = () => {
       setMsg(message);
     }
 
+    if (invoiceData.isError) {
+      setMsg(invoiceData.message);
+    }
+
     if (isSuccess && message) {
       setMsg(message);
     }
-  }, [isError, message, isSuccess, msg]);
+
+    if (invoiceData.isSuccess && invoiceData.message) {
+      setMsg(invoiceData.message);
+    }
+  }, [isError, message, isSuccess, msg, invoiceData]);
 
   //Define table data
   const tableHeader = (
@@ -317,9 +330,9 @@ export const Passports = () => {
           scope="row"
           className="p-1  text-gray-900 border-x text-center border-x-black"
         >
-          {dayjs(passport.payment_date).format("DD/MM/YYYY") === "10/10/1970"
-            ? "-"
-            : dayjs(passport.payment_date).format("DD/MM/YYYY")}
+          {passport.payment_date
+            ? dayjs(passport.payment_date).format("DD/MM/YYYY")
+            : "-"}
         </th>
 
         {/*Profit*/}
@@ -458,7 +471,7 @@ export const Passports = () => {
               السنة
             </label>
             <input
-              type="text"
+              type="number"
               name="year"
               className={inputClassNamesStyles.default}
               defaultValue={year}
@@ -468,7 +481,6 @@ export const Passports = () => {
                   year: e.target.value,
                 })
               }
-              required
             />
           </div>
 
@@ -477,7 +489,7 @@ export const Passports = () => {
               الشهر
             </label>
             <input
-              type="text"
+              type="number"
               name="month"
               className={inputClassNamesStyles.default}
               defaultValue={month}
@@ -487,7 +499,6 @@ export const Passports = () => {
                   month: e.target.value,
                 })
               }
-              required
             />
           </div>
 
@@ -509,7 +520,6 @@ export const Passports = () => {
                   nationality: e.target.value,
                 })
               }
-              required
             />
           </div>
 
@@ -642,15 +652,26 @@ export const Passports = () => {
           />
         ))}
 
+      {invoiceData.isError ||
+        (invoiceData.isSuccess && invoiceData.message && (
+          <MessagesContainer
+            msg={msg}
+            isSuccess={invoiceData.isSuccess}
+            isError={invoiceData.isError}
+          />
+        ))}
+
       {/*Display Table All Data Needed*/}
-      {!isLoading && filteredPassports?.length > 0 && (
-        <PaginationTable
-          tableRow={tableRow}
-          tableHeader={tableHeader}
-          tableBodyData={[...filteredPassports].reverse()}
-          rowsPerPage={10}
-        />
-      )}
+      {!isLoading &&
+        !invoiceData.isLoading &&
+        filteredPassports?.length > 0 && (
+          <PaginationTable
+            tableRow={tableRow}
+            tableHeader={tableHeader}
+            tableBodyData={[...filteredPassports].reverse()}
+            rowsPerPage={10}
+          />
+        )}
 
       {/* if there is No Passports Records */}
       {!year &&
@@ -659,7 +680,8 @@ export const Passports = () => {
         !nationality &&
         !service &&
         filteredPassports?.length === 0 &&
-        !isLoading && (
+        !isLoading &&
+        !invoiceData.isLoading && (
           <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
             لا يوجد جوازات محفوظة الان, يرجى إضافة الجوازات لعرضها.
           </div>
@@ -668,7 +690,8 @@ export const Passports = () => {
       {/* if there is search query no passport matches >>> No Search Found*/}
       {(year || month || state || service || nationality) &&
         filteredPassports?.length === 0 &&
-        !isLoading && (
+        !isLoading &&
+        !invoiceData.isLoading && (
           <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
             لا يوجد نتائج تطابق هذا البحث, تأكد من البيانات التى ادخلتها و حاول
             مجدداً
@@ -679,7 +702,11 @@ export const Passports = () => {
       {isOpen && <UpdatePassport setIsOpen={setIsOpen} id={id} />}
 
       {/* Show spinner when Loading State is true */}
-      {isLoading && <MainSpinner isLoading={isLoading} />}
+      {(isLoading || invoiceData.isLoading) && (
+        <MainSpinner
+          isLoading={isLoading ? isLoading : invoiceData.isLoading}
+        />
+      )}
     </div>
   );
 };

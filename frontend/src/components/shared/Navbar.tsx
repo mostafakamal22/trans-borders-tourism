@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { passportsLogout } from "../../state/features/passport/passportSlice";
 import { visasLogout } from "../../state/features/visa/visaSlice";
 import { paymentsLogout } from "../../state/features/payment/paymentSlice";
+import { ticketsLogout } from "../../state/features/ticket/ticketSlice";
 
 const navbarLinks = [
   ["الرئيسية", "/"],
@@ -55,6 +56,7 @@ export const Navbar = () => {
     dispatch(passportsLogout());
     dispatch(visasLogout());
     dispatch(paymentsLogout());
+    dispatch(ticketsLogout());
   };
 
   return (

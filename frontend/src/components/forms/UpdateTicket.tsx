@@ -35,7 +35,9 @@ export const UpdateTicket = ({
     name: ticket.customer_name,
     booking: ticket.booking,
     suplier: ticket.suplier,
-    paymentDate: dayjs(ticket.payment_date).format("YYYY-MM-DD"),
+    paymentDate: ticket.payment_date
+      ? dayjs(ticket?.payment_date).format("YYYY-MM-DD")
+      : "",
     cost: ticket.cost,
     sales: ticket.sales,
     profit: ticket.profit,

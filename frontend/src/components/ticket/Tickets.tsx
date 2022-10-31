@@ -124,6 +124,9 @@ export const Tickets = () => {
   const handleRemoving = (e: any, removedTicketID: string) => {
     e.preventDefault();
 
+    //set msg to none first
+    setMsg("");
+    dispatch(resetInvoicesStatus());
     //get admin token
     const token = info.token;
 
@@ -148,6 +151,8 @@ export const Tickets = () => {
 
     //set msg to none first
     setMsg("");
+
+    dispatch(resetTicketsStatus);
 
     const invoiceData = {
       token: info.token,
@@ -175,10 +180,18 @@ export const Tickets = () => {
       setMsg(message);
     }
 
+    if (invoiceData.isError) {
+      setMsg(invoiceData.message);
+    }
+
     if (isSuccess && message) {
       setMsg(message);
     }
-  }, [isError, message, isSuccess, msg]);
+
+    if (invoiceData.isSuccess && invoiceData.message) {
+      setMsg(invoiceData.message);
+    }
+  }, [isError, message, isSuccess, msg, invoiceData]);
 
   //Define table data
   const tableHeader = (
@@ -369,7 +382,7 @@ export const Tickets = () => {
               السنة
             </label>
             <input
-              type="text"
+              type="number"
               name="year"
               className={inputClassNamesStyles.default}
               value={year}
@@ -387,7 +400,7 @@ export const Tickets = () => {
               الشهر
             </label>
             <input
-              type="text"
+              type="number"
               name="month"
               className={inputClassNamesStyles.default}
               value={month}
@@ -520,13 +533,22 @@ export const Tickets = () => {
         (isSuccess && message && (
           <MessagesContainer
             msg={msg}
-            isSuccess={isSuccess || invoiceData.isSuccess}
-            isError={isError || invoiceData.isError}
+            isSuccess={isSuccess}
+            isError={isError}
+          />
+        ))}
+
+      {invoiceData.isError ||
+        (invoiceData.isSuccess && invoiceData.message && (
+          <MessagesContainer
+            msg={msg}
+            isSuccess={invoiceData.isSuccess}
+            isError={invoiceData.isError}
           />
         ))}
 
       {/*Display Table All Data Needed*/}
-      {!isLoading && filteredTickets?.length > 0 && (
+      {!isLoading && !invoiceData.isLoading && filteredTickets?.length > 0 && (
         <PaginationTable
           tableRow={tableRow}
           tableHeader={tableHeader}
@@ -535,34 +557,40 @@ export const Tickets = () => {
         />
       )}
 
-      {/* if there is No Passports Records */}
+      {/* if there is No Tickets Records */}
       {!year &&
         !month &&
         !name &&
         !suplier &&
         !booking &&
         filteredTickets?.length === 0 &&
-        !isLoading && (
+        !isLoading &&
+        !invoiceData.isLoading && (
           <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
-            لا يوجد جوازات محفوظة الان, يرجى إضافة الجوازات لعرضها.
+            لا يوجد تذاكر محفوظة الان, يرجى إضافة التذاكر لعرضها.
           </div>
         )}
 
-      {/* if there is search query no passport matches >>> No Search Found*/}
+      {/* if there is search query no Tickets matches >>> No Search Found*/}
       {(year || month || booking || name || suplier) &&
         filteredTickets?.length === 0 &&
-        !isLoading && (
+        !isLoading &&
+        !invoiceData.isLoading && (
           <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
             لا يوجد نتائج تطابق هذا البحث, تأكد من البيانات التى ادخلتها و حاول
             مجدداً
           </div>
         )}
 
-      {/* Show update Passport Modal */}
+      {/* Show update Tickets Modal */}
       {isOpen && <UpdateTicket setIsOpen={setIsOpen} id={id} />}
 
       {/* Show spinner when Loading State is true */}
-      {isLoading && <MainSpinner isLoading={isLoading} />}
+      {(isLoading || invoiceData.isLoading) && (
+        <MainSpinner
+          isLoading={isLoading ? isLoading : invoiceData.isLoading}
+        />
+      )}
     </div>
   );
 };

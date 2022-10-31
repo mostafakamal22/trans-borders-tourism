@@ -42,7 +42,9 @@ export const UpdatePassport = ({
     state: passport.state,
     service: passport.service,
     passportId: passport.passport_id,
-    paymentDate: dayjs(passport.payment_date).format("YYYY-MM-DD"),
+    paymentDate: passport.payment_date
+      ? dayjs(passport.payment_date).format("YYYY-MM-DD")
+      : "",
     servicePrice: passport.service_price,
     taxable: passport.taxable,
     taxRate: passport.tax_rate,
@@ -79,7 +81,7 @@ export const UpdatePassport = ({
     const passportData = {
       token: info.token,
       id: id,
-      name: passportDetails.name,
+      name: passportDetails.name.trim(),
       nationality: passportDetails.nationality.trim(),
       state: passportDetails.state,
       service: passportDetails.service,

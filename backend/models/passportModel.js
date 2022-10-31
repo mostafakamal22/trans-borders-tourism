@@ -48,7 +48,6 @@ const passportSchema = new mongoose.Schema(
     },
     payment_date: {
       type: Date,
-      default: "1970-10-10T19:46:38.721Z",
     },
   },
   {
