@@ -2,10 +2,12 @@ import {
   FcBusiness,
   FcCurrencyExchange,
   FcDebt,
+  FcFeedback,
   FcHome,
   FcInvite,
   FcMoneyTransfer,
   FcPuzzle,
+  FcSalesPerformance,
   FcTemplate,
   FcTrademark,
 } from "react-icons/fc";
@@ -24,6 +26,7 @@ import { getAllPassports } from "../../state/features/passport/passportSlice";
 import { getAllVisas } from "../../state/features/visa/visaSlice";
 import { getAllPayments } from "../../state/features/payment/paymentSlice";
 import { getAllTickets } from "../../state/features/ticket/ticketSlice";
+import { getAllPurchases } from "../../state/features/purchase/purchaseSlice";
 
 type MainHeadings = string[];
 
@@ -52,6 +55,10 @@ const mainPageLinks: MainPagesLinks = [
     ["عرض التذاكـر", "/tickets", <FcTrademark size={50} />],
     ["إضافة التذاكـر", "/tickets/create", <FcPuzzle size={50} />],
   ],
+  [
+    ["عرض المشتريات", "/purchases", <FcSalesPerformance size={50} />],
+    ["إضافة المشتريات", "/purchases/create", <FcFeedback size={50} />],
+  ],
 ];
 
 const mainHeadings: MainHeadings = [
@@ -60,6 +67,7 @@ const mainHeadings: MainHeadings = [
   "الجوازات",
   "المصروفات",
   "التذاكـر",
+  "المشتريات",
 ];
 
 export const Home = () => {
@@ -78,6 +86,7 @@ export const Home = () => {
     dispatch(getAllVisas({ token: info.token }));
     dispatch(getAllPayments({ token: info.token }));
     dispatch(getAllTickets({ token: info.token }));
+    dispatch(getAllPurchases({ token: info.token }));
   }, []);
 
   const invoiceData = useAppSelector((state) => state.invoiceData);
@@ -85,6 +94,7 @@ export const Home = () => {
   const visasData = useAppSelector((state) => state.visasData);
   const paymentsData = useAppSelector((state) => state.paymentsData);
   const ticketsData = useAppSelector((state) => state.ticketsData);
+  const purchasesData = useAppSelector((state) => state.purchasesData);
 
   //Loading Spinner After Login Waiting Until App data is Fetched.
   if (
@@ -92,7 +102,8 @@ export const Home = () => {
     passportsData.isLoading ||
     visasData.isLoading ||
     paymentsData.isLoading ||
-    ticketsData.isLoading
+    ticketsData.isLoading ||
+    purchasesData.isLoading
   )
     return (
       <div className="mx-5 h-min-screen">
@@ -104,7 +115,8 @@ export const Home = () => {
                 passportsData.isLoading ||
                 visasData.isLoading ||
                 paymentsData.isLoading ||
-                ticketsData.isLoading
+                ticketsData.isLoading ||
+                purchasesData.isLoading
               }
             />
           </div>

@@ -9,6 +9,7 @@ import { passportsLogout } from "../../state/features/passport/passportSlice";
 import { visasLogout } from "../../state/features/visa/visaSlice";
 import { paymentsLogout } from "../../state/features/payment/paymentSlice";
 import { ticketsLogout } from "../../state/features/ticket/ticketSlice";
+import { purchasesLogout } from "../../state/features/purchase/purchaseSlice";
 
 const navbarLinks = [
   ["الرئيسية", "/"],
@@ -22,6 +23,8 @@ const navbarLinks = [
   ["إضافة المصروفات", "/payments/create"],
   ["التذاكر", "/tickets"],
   ["إضافة التذاكر", "/tickets/create"],
+  ["المشتريات", "/purchases"],
+  ["إضافة المشتريات", "/purchases/create"],
 ];
 
 export const Navbar = () => {
@@ -57,6 +60,7 @@ export const Navbar = () => {
     dispatch(visasLogout());
     dispatch(paymentsLogout());
     dispatch(ticketsLogout());
+    dispatch(purchasesLogout());
   };
 
   return (

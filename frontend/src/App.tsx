@@ -24,6 +24,8 @@ import { Payments } from "./components/payment/Payments";
 import { CreatePayment } from "./components/forms/CreatePayment";
 import { CreateTicket } from "./components/forms/CreateTicket";
 import { Tickets } from "./components/ticket/Tickets";
+import { Purchases } from "./components/purchase/Purchases";
+import { CreatePurchase } from "./components/forms/CreatePurchase";
 
 //User And Admin Paths
 const paths = [
@@ -41,6 +43,8 @@ const paths = [
   "/payments/create",
   "/tickets",
   "/tickets/create",
+  "/purchases",
+  "/purchases/create",
 ];
 
 const App: FC = () => {
@@ -90,6 +94,8 @@ const App: FC = () => {
             <Route path="/payments/create" element={<CreatePayment />} />
             <Route path="/tickets" element={<Tickets />} />
             <Route path="/tickets/create" element={<CreateTicket />} />
+            <Route path="/purchases" element={<Purchases />} />
+            <Route path="/purchases/create" element={<CreatePurchase />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />

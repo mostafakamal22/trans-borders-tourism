@@ -46,6 +46,10 @@ app.use("/api/payments", paymentsRoute);
 const ticketsRoute = require("./routes/ticketRoutes");
 app.use("/api/tickets", ticketsRoute);
 
+//Purchase Router
+const purchasesRoute = require("./routes/purchaseRoutes");
+app.use("/api/purchases", purchasesRoute);
+
 //serve Frontend
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
