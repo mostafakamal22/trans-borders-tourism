@@ -26,6 +26,7 @@ import { CreateTicket } from "./components/forms/CreateTicket";
 import { Tickets } from "./components/ticket/Tickets";
 import { Purchases } from "./components/purchase/Purchases";
 import { CreatePurchase } from "./components/forms/CreatePurchase";
+import SideBar from "./components/shared/SideBar";
 
 //User And Admin Paths
 const paths = [
@@ -75,7 +76,8 @@ const App: FC = () => {
       {/* Admin Routes */}
       {admin && (
         <>
-          <Navbar />
+          <SideBar />
+
           <Routes>
             <Route index element={<Home />} />
             <Route path="/register" element={<Navigate to={"/"} />} />

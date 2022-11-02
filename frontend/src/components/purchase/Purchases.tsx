@@ -233,7 +233,7 @@ export const Purchases = () => {
 
       <div className="flex justify-center items-center flex-wrap gap-4 my-5 p-4 bg-red-700 rounded-md">
         <h4 className="basis-full flex justify-center items-center text-2xl my-4 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
-          فلتــرة المشتــرى
+          فلتــرة المشتــريات
         </h4>
         <form className="basis-full  flex flex-col flex-wrap  md:flex-row-reverse justify-center items-center gap-4 mx-auto font-semibold ">
           <div className="flex justify-center items-center flex-col gap-2">
