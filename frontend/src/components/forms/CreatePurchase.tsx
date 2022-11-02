@@ -20,15 +20,17 @@ import {
 
 export type PurchaseTypes = {
   tickets: string;
-  visas: string;
+  visas_one_month: string;
+  visas_two_month: string;
   assets: string;
   other: string;
 };
 
 export const purchaseTypes: PurchaseTypes = {
-  tickets: "مشتريات تذاكر",
-  visas: "مشتريات فيزا",
-  assets: "مشتريات اصول",
+  tickets: "مشتريات تذاكر طيران",
+  visas_one_month: "مشتريات فيزا سياحه 1 شهر",
+  visas_two_month: "مشتريات فيزا سياحه 2 شهر",
+  assets: "مشتريات اصول ثابتة",
   other: "مشتريات اخرى",
 };
 
@@ -183,7 +185,7 @@ export const CreatePurchase = () => {
             />
 
             <FormInput
-              label="المبلغ قبل الضرائب"
+              label="المبلغ قبل الضريبة"
               name="itemTotal"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
@@ -192,7 +194,7 @@ export const CreatePurchase = () => {
               onChange={(e) => {
                 const newArr = [...purchaseTypesDetails];
                 newArr[index].cost = +e.target.value;
-                newArr[index].total = +e.target.value - newArr[index].tax;
+                newArr[index].total = +e.target.value + newArr[index].tax;
                 setPurchaseTypesDetails(newArr);
 
                 const newTotal = purchaseTypesDetails.reduce(
@@ -209,7 +211,7 @@ export const CreatePurchase = () => {
             />
 
             <FormInput
-              label="الضرائب"
+              label="الضريبة"
               name="itemTotal"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
@@ -218,7 +220,7 @@ export const CreatePurchase = () => {
               onChange={(e) => {
                 const newArr = [...purchaseTypesDetails];
                 newArr[index].tax = +e.target.value;
-                newArr[index].total = newArr[index].cost - +e.target.value;
+                newArr[index].total = newArr[index].cost + +e.target.value;
                 setPurchaseTypesDetails(newArr);
 
                 const newTotal = purchaseTypesDetails.reduce(
@@ -235,7 +237,7 @@ export const CreatePurchase = () => {
             />
 
             <FormInput
-              label="الاجمالى بعد الضرائب"
+              label="الاجمالى بعد الضريبة"
               name="itemTotal"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}

@@ -20,13 +20,17 @@ import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 
 export type PaymentTypes = {
   rent: string;
+  office: string;
   papers: string;
+  transportation: string;
   payrolls: string;
-  phone_calls: string;
+  Commission: string;
+  end_of_service: string;
   water_and_electricity: string;
   bank_payments: string;
+  consultations: string;
   destroyed_devices: string;
-  buffet: string;
+  marketing: string;
   other: string;
 };
 
@@ -38,14 +42,18 @@ export type PaymentMethods = {
 };
 
 export const paymentTypes: PaymentTypes = {
-  rent: "إيجار",
-  papers: "أوراق مكتبية",
-  payrolls: "رواتب",
-  phone_calls: "مصاريف إتصالات وموبيلات",
-  water_and_electricity: "مياة وكهرباء",
   bank_payments: "مصاريف بنكية",
-  destroyed_devices: "اهلاك أجهزة",
-  buffet: "مصاريف بوفية",
+  papers: "مصاريف أدوات مكتبية",
+  office: "مصاريف مكتب",
+  rent: "إيجارات",
+  transportation: "مصاريف انتقالات",
+  water_and_electricity: "مصاريف مياة وكهرباء",
+  Commission: "مصاريف عمولات",
+  payrolls: "رواتب",
+  consultations: "مصاريف استشارات",
+  marketing: "مصاريف تسويق",
+  end_of_service: "مصاريف نهايه الخدمه",
+  destroyed_devices: "مصاريف اهلاك اصول ثابته",
   other: "مصاريف أخرى",
 };
 
@@ -66,7 +74,7 @@ export const CreatePayment = () => {
   //state for paymentTypes Details
   const [paymentTypesDetails, setPaymentTypesDetails] = useState([
     {
-      name: "rent",
+      name: "bank_payments",
       description: "",
       method: "bank",
       total: 0,
@@ -106,7 +114,7 @@ export const CreatePayment = () => {
         ? [
             ...paymentTypesDetails,
             {
-              name: "rent",
+              name: "bank_payments",
               description: "",
               method: "bank",
               total: 0,

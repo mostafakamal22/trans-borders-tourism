@@ -204,7 +204,7 @@ export const UpdatePurchase = ({
               />
 
               <FormInput
-                label="المبلغ قبل الضرائب"
+                label="المبلغ قبل الضريبة"
                 name="itemTotal"
                 labeClassNames={lableClassNamesStyles.default}
                 className={inputClassNamesStyles.default}
@@ -213,7 +213,7 @@ export const UpdatePurchase = ({
                 onChange={(e) => {
                   const newArr = [...purchaseTypesDetails];
                   newArr[index].cost = +e.target.value;
-                  newArr[index].total = +e.target.value - newArr[index].tax;
+                  newArr[index].total = +e.target.value + newArr[index].tax;
                   setPurchaseTypesDetails(newArr);
 
                   const newTotal = purchaseTypesDetails.reduce(
@@ -230,7 +230,7 @@ export const UpdatePurchase = ({
               />
 
               <FormInput
-                label="الضرائب"
+                label="الضريبة"
                 name="itemTotal"
                 labeClassNames={lableClassNamesStyles.default}
                 className={inputClassNamesStyles.default}
@@ -239,7 +239,7 @@ export const UpdatePurchase = ({
                 onChange={(e) => {
                   const newArr = [...purchaseTypesDetails];
                   newArr[index].tax = +e.target.value;
-                  newArr[index].total = newArr[index].cost - +e.target.value;
+                  newArr[index].total = newArr[index].cost + +e.target.value;
                   setPurchaseTypesDetails(newArr);
 
                   const newTotal = purchaseTypesDetails.reduce(
@@ -256,7 +256,7 @@ export const UpdatePurchase = ({
               />
 
               <FormInput
-                label="الاجمالى بعد الضرائب"
+                label="الاجمالى بعد الضريبة"
                 name="itemTotal"
                 labeClassNames={lableClassNamesStyles.default}
                 className={inputClassNamesStyles.default}

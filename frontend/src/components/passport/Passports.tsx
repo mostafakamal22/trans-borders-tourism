@@ -91,6 +91,7 @@ export const Passports = () => {
   const [searchQuery, setSearchQuery] = useState({
     year: "",
     month: "",
+    day: "",
     state: "",
     service: "",
     nationality: "",
@@ -102,11 +103,12 @@ export const Passports = () => {
   //PassportID to Update
   const [id, setId] = useState("");
 
-  const { year, month, state, service, nationality } = searchQuery;
+  const { year, month, day, state, service, nationality } = searchQuery;
 
   type SearchQueries = {
     year: string;
     month: string | number;
+    day: string | number;
     state: string;
     service: string;
     nationality: string;
@@ -115,6 +117,7 @@ export const Passports = () => {
   let availableSearchQueries: SearchQueries = {
     ...searchQuery,
     month: +month,
+    day: +day,
   };
 
   for (const key in availableSearchQueries) {
@@ -125,7 +128,7 @@ export const Passports = () => {
 
   //filtered Passports
   const filteredPassports: [] =
-    month || year || state || service || nationality
+    month || year || day || state || service || nationality
       ? passportsList.filter((passport: any) => {
           const paymentDate = dayjs(passport.payment_date)
             .format("DD/MM/YYYY")
@@ -134,6 +137,7 @@ export const Passports = () => {
           const passportData: SearchQueries = {
             year: paymentDate[2],
             month: +paymentDate[1],
+            day: +paymentDate[0],
             state: passport.state,
             service: passport.service,
             nationality: passport.customer_nationality,
@@ -503,6 +507,24 @@ export const Passports = () => {
           </div>
 
           <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="day">
+              اليوم
+            </label>
+            <input
+              type="number"
+              name="day"
+              className={inputClassNamesStyles.default}
+              defaultValue={day}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  day: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          <div className="flex justify-center items-center flex-col gap-2">
             <label
               className={lableClassNamesStyles.default}
               htmlFor="nationality"
@@ -575,7 +597,7 @@ export const Passports = () => {
 
         <h3 className="basis-full flex justify-center items-center flex-row-reverse flex-wrap text-2xl my-5 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
           <span>{" الجوازات المحفوظة"}</span>
-          {!month && !year && (
+          {!month && !day && !year && (
             <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
               {" الكلية "}
             </span>
@@ -583,6 +605,11 @@ export const Passports = () => {
           {month && (
             <span className="bg-rose-500 p-1 rounded-md text-white mx-1">
               {" عن شهر " + month}
+            </span>
+          )}
+          {day && (
+            <span className="bg-rose-500 p-1 rounded-md text-white mx-1">
+              {" يوم " + day}
             </span>
           )}
           {year && (
@@ -676,6 +703,7 @@ export const Passports = () => {
       {/* if there is No Passports Records */}
       {!year &&
         !month &&
+        !day &&
         !state &&
         !nationality &&
         !service &&
@@ -688,7 +716,7 @@ export const Passports = () => {
         )}
 
       {/* if there is search query no passport matches >>> No Search Found*/}
-      {(year || month || state || service || nationality) &&
+      {(year || month || day || state || service || nationality) &&
         filteredPassports?.length === 0 &&
         !isLoading &&
         !invoiceData.isLoading && (
