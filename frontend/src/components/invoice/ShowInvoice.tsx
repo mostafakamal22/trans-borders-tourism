@@ -111,7 +111,7 @@ export const ShowInvoice = () => {
             </p>
             <p className="underline text-blue-700">
               WEBSITE:-{" "}
-              <a href="http://tbttourism.com/" target={"_blank"}>
+              <a href="http://tbtourism.com/" target={"_blank"}>
                 http://tbttourism.com/
               </a>
             </p>

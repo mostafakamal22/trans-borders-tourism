@@ -22,7 +22,7 @@ const createVisa = async (req, res) => {
       passport_id: req.body.passportId,
       provider: req.body.provider,
       type: req.body.type,
-      state: req.body.state,
+      employee: req.body.employee,
       net_fare: req.body.netFare,
       sales: req.body.sales,
       profit: req.body.profit,

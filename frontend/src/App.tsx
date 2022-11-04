@@ -27,6 +27,7 @@ import { Tickets } from "./components/ticket/Tickets";
 import { Purchases } from "./components/purchase/Purchases";
 import { CreatePurchase } from "./components/forms/CreatePurchase";
 import SideBar from "./components/shared/SideBar";
+import { PaymentVoucher } from "./components/purchase/PaymentVoucher";
 
 //User And Admin Paths
 const paths = [
@@ -46,6 +47,7 @@ const paths = [
   "/tickets/create",
   "/purchases",
   "/purchases/create",
+  "/purchases/:id",
 ];
 
 const App: FC = () => {
@@ -98,6 +100,7 @@ const App: FC = () => {
             <Route path="/tickets/create" element={<CreateTicket />} />
             <Route path="/purchases" element={<Purchases />} />
             <Route path="/purchases/create" element={<CreatePurchase />} />
+            <Route path="/purchases/:id" element={<PaymentVoucher />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />

@@ -28,17 +28,17 @@ import {
 import { visaCalculations } from "../helpers/visaCalculations";
 
 export const visaTableHeaderTitles = [
-  "مسح التأشيرة",
+  "مسح",
   "إضافة فاتورة",
-  "حالة التأشيرة",
+  "اسم الموظف",
   "رقم الجواز",
   "إسم العميل",
-  "صافى الربح",
-  "سعر البيع",
-  "تكلفة التأشيرة",
-  "نوع التأشيرة",
-  "مورد التأشيرة",
-  "التاريخ",
+  "Profit",
+  "Sales",
+  "Cost",
+  "Type",
+  "Supplier",
+  "Date",
 ];
 
 export const Visas = () => {
@@ -190,7 +190,7 @@ export const Visas = () => {
             onSubmit={(event) => handleRemoving(event, visa._id)}
           >
             <FormButton
-              text={{ default: "مسح التأشيرة" }}
+              text={{ default: "مسح" }}
               bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}
               icon={<TiDelete className="mb-[-2px]" size={25} />}
             />
@@ -223,12 +223,12 @@ export const Visas = () => {
           </form>
         </th>
 
-        {/*Visa State*/}
+        {/*Visa Employee*/}
         <th
           scope="row"
           className="p-2  text-gray-900  border-x text-center border-x-black"
         >
-          {visa.state ? visa.state : "-"}
+          {visa.employee ? visa.employee : "-"}
         </th>
 
         {/*passport ID*/}
@@ -242,7 +242,7 @@ export const Visas = () => {
         {/*Customer Name*/}
         <th
           scope="row"
-          className="p-2  text-gray-900  border-x text-center border-x-black"
+          className="p-2 bg-red-200 text-gray-900  border-x text-center border-x-black"
         >
           {visa.customer_name}
         </th>
@@ -335,7 +335,7 @@ export const Visas = () => {
 
       <div className="flex justify-center items-center flex-wrap gap-4 my-5 p-4 bg-red-700 rounded-md">
         <h4 className="basis-full flex justify-center items-center text-2xl my-4 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
-          فلتـرة التأشـيرات
+          فلتـرة المبيعات
         </h4>
 
         <form className="basis-full  flex flex-col flex-wrap  md:flex-row-reverse justify-center items-center gap-4 mx-auto font-semibold ">
@@ -375,7 +375,7 @@ export const Visas = () => {
           </div>
         </form>
         <h3 className="basis-full flex justify-center items-center flex-row-reverse text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
-          <span>{" التأشيرات المحفوظة"}</span>
+          <span>{" المبيعات المحفوظة"}</span>
           {!month && !year && (
             <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
               {" الكلية "}
@@ -444,7 +444,7 @@ export const Visas = () => {
         !isLoading &&
         !invoiceData.isLoading && (
           <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
-            لا يوجد تأشيرات محفوظة الان, يرجى إضافة التأشيرات لعرضها.
+            لا يوجد مبيعات محفوظة الان, يرجى إضافة المبيعات لعرضها.
           </div>
         )}
 

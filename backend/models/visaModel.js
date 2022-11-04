@@ -16,7 +16,7 @@ const visaSchema = new mongoose.Schema(
     type: {
       type: String,
     },
-    state: {
+    employee: {
       type: String,
     },
     net_fare: {

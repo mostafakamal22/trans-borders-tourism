@@ -1,3 +1,4 @@
+import React from "react";
 import {
   AiFillAccountBook,
   AiFillBell,
@@ -60,7 +61,7 @@ const SideBar = () => {
       <Divider />
 
       {navbarLinks.slice(1).map((navlink: any, index: number) => (
-        <>
+        <React.Fragment key={navlink[1]}>
           <SideBarIcon
             key={index}
             link={navlink[1]}
@@ -68,7 +69,7 @@ const SideBar = () => {
             icon={navlink[2]}
           />
           {index % 2 !== 0 && <Divider />}
-        </>
+        </React.Fragment>
       ))}
 
       <SideBarIcon

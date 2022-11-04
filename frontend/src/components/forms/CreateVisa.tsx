@@ -24,7 +24,7 @@ export const CreateVisa = () => {
     name: "",
     provider: "",
     type: "",
-    state: "",
+    employee: "",
     passportId: "",
     paymentDate: "",
     netFare: 0,
@@ -62,7 +62,7 @@ export const CreateVisa = () => {
       name: visaDetails.name,
       provider: visaDetails.provider,
       type: visaDetails.type,
-      state: visaDetails.state,
+      employee: visaDetails.employee,
       passportId: visaDetails.passportId,
       paymentDate: visaDetails.paymentDate,
       netFare: visaDetails.netFare,
@@ -94,14 +94,14 @@ export const CreateVisa = () => {
     <div className="max-w-6xl w-full mx-auto my-20 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <h3 className="flex justify-center items-center text-xl text-center font-bold px-2 py-4 mb-10 bg-red-200 border-b-4 border-red-800 rounded shadow ">
         <FcDebt className="mr-1" size={50} />
-        <span>إضافة تأشيرة جديدة</span>
+        <span>إضافة مبيعات جديدة</span>
       </h3>
 
       <img className="mx-auto" src={logo} alt="logo" />
 
       <form onSubmit={handleSubmit}>
         <p className="font-bold p-2 rounded text-lg text-white bg-red-800 my-4">
-          [ Visa Details ]
+          [ التفاصيل ]
         </p>
         <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">
           <FormInput
@@ -156,13 +156,13 @@ export const CreateVisa = () => {
 
           <FormInput
             label={visaTableHeaderTitles[2]}
-            name="VisaState"
+            name="employee"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            value={visaDetails.state}
+            value={visaDetails.employee}
             onChange={(e) =>
-              setVisaDetails({ ...visaDetails, state: e.target.value })
+              setVisaDetails({ ...visaDetails, employee: e.target.value })
             }
           />
 
@@ -246,7 +246,7 @@ export const CreateVisa = () => {
 
         {/*form button */}
         <FormButton
-          text={{ default: "حفظ التأشيرة", loading: "جارى الحفظ" }}
+          text={{ default: "حفظ المبيعات", loading: "جارى الحفظ" }}
           isLoading={isLoading}
           icon={<RiSendPlaneFill className="ml-1" size={25} />}
         />
