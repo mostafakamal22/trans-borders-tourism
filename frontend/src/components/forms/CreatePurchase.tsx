@@ -18,37 +18,37 @@ import {
   resetPurchasesStatus,
 } from "../../state/features/purchase/purchaseSlice";
 
-export type PurchaseTypes = {
-  tickets: string;
-  assets: string;
-  other: string;
-};
+// export type PurchaseTypes = {
+//   tickets: string;
+//   assets: string;
+//   other: string;
+// };
 
-export const purchaseTypes: PurchaseTypes = {
-  tickets: "مشتريات تذاكر طيران",
-  assets: "مشتريات اصول ثابتة",
-  other: "مشتريات اخرى",
-};
+// export const purchaseTypes: PurchaseTypes = {
+//   tickets: "مشتريات تذاكر طيران",
+//   assets: "مشتريات اصول ثابتة",
+//   other: "مشتريات اخرى",
+// };
 
-export type PurchaseSuppliers = {
-  none: string;
-  NDC: string;
-  Crown: string;
-  Top_Travel: string;
-  COZMO: string;
-  Air_Arabia: string;
-  VISA: string;
-};
+// export type PurchaseSuppliers = {
+//   none: string;
+//   NDC: string;
+//   Crown: string;
+//   Top_Travel: string;
+//   COZMO: string;
+//   Air_Arabia: string;
+//   VISA: string;
+// };
 
-export const purchaseSuppliers: PurchaseSuppliers = {
-  none: "لا يوجد",
-  NDC: "NDC",
-  Crown: "Crown",
-  Top_Travel: "Top Travel",
-  COZMO: "COZMO",
-  Air_Arabia: "Air Arabia",
-  VISA: "VISA",
-};
+// export const purchaseSuppliers: PurchaseSuppliers = {
+//   none: "لا يوجد",
+//   NDC: "NDC",
+//   Crown: "Crown",
+//   Top_Travel: "Top Travel",
+//   COZMO: "COZMO",
+//   Air_Arabia: "Air Arabia",
+//   VISA: "VISA",
+// };
 
 export const CreatePurchase = () => {
   //state for Purchase Details
@@ -60,9 +60,9 @@ export const CreatePurchase = () => {
   //state for purchaseTypes Details
   const [purchaseTypesDetails, setPurchaseTypesDetails] = useState([
     {
-      name: "tickets",
+      name: "",
       description: "",
-      supplier: "none",
+      supplier: "",
       cost: 0,
       tax: 0,
       total: 0,
@@ -102,9 +102,9 @@ export const CreatePurchase = () => {
         ? [
             ...purchaseTypesDetails,
             {
-              name: "tickets",
+              name: "",
               description: "",
-              supplier: "none",
+              supplier: "",
               cost: 0,
               tax: 0,
               total: 0,
@@ -168,7 +168,21 @@ export const CreatePurchase = () => {
             key={index}
             className="flex flex-wrap items-center font-semibold  gap-4 px-5 py-5"
           >
-            <label htmlFor="itemName" className={lableClassNamesStyles.default}>
+            <FormInput
+              label="Supplier"
+              name="itemSupplier"
+              labeClassNames={lableClassNamesStyles.default}
+              className={inputClassNamesStyles.default}
+              type="text"
+              value={item.supplier}
+              onChange={(e) => {
+                const newArr = [...purchaseTypesDetails];
+                newArr[index].supplier = e.target.value;
+                setPurchaseTypesDetails(newArr);
+              }}
+            />
+
+            {/* <label htmlFor="itemName" className={lableClassNamesStyles.default}>
               نوع المشترى
             </label>
             <select
@@ -186,7 +200,7 @@ export const CreatePurchase = () => {
                   {purchaseTypes[name as keyof PurchaseTypes]}
                 </option>
               ))}
-            </select>
+            </select> */}
 
             <FormInput
               label="شرح المشتري"
@@ -202,7 +216,21 @@ export const CreatePurchase = () => {
               }}
             />
 
-            <label
+            <FormInput
+              label="نوع المشتري"
+              name="itemName"
+              labeClassNames={lableClassNamesStyles.default}
+              className={inputClassNamesStyles.default}
+              type="text"
+              value={item.name}
+              onChange={(e) => {
+                const newArr = [...purchaseTypesDetails];
+                newArr[index].name = e.target.value;
+                setPurchaseTypesDetails(newArr);
+              }}
+            />
+
+            {/* <label
               htmlFor="itemSupplier"
               className={lableClassNamesStyles.default}
             >
@@ -223,7 +251,7 @@ export const CreatePurchase = () => {
                   {purchaseSuppliers[supplier as keyof PurchaseSuppliers]}
                 </option>
               ))}
-            </select>
+            </select> */}
 
             <FormInput
               label="المبلغ قبل الضريبة"

@@ -21,7 +21,6 @@ import {
   inputClassNamesStyles,
   lableClassNamesStyles,
 } from "../forms/CreateInvoice";
-import { PurchaseTypes, purchaseTypes } from "../forms/CreatePurchase";
 import { UpdatePurchase } from "../forms/UpdatePurchase";
 import { purchaseCalculations } from "../helpers/purchaseCalculations";
 import FormButton from "../shared/FormButton";
@@ -34,6 +33,8 @@ export const purchaseTableHeaderTitles = [
   "إضافة فاتورة",
   "تعديل المشترى",
   "المبلغ الكلى",
+  "Supplier",
+  "شرح المشترى",
   "نوع المشترى",
   "تاريخ المشترى",
 ];
@@ -125,7 +126,7 @@ export const Purchases = () => {
       customer: { name: customerName },
       details: [
         ...purchaseDetails.map((purchase: any) => ({
-          name: purchaseTypes[purchase.name as keyof PurchaseTypes],
+          name: purchase.name,
           quantity: 1,
           price: purchase.total,
         })),
@@ -254,6 +255,40 @@ export const Purchases = () => {
           {purchase.total}
         </th>
 
+        {/*Purchase Supplier*/}
+        <th
+          scope="row"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
+        >
+          {purchase.purchase_types.map(
+            (type: { supplier: string }, index: number) => (
+              <span
+                key={index}
+                className="flex flex-row-reverse justify-center items-center gap-1 my-1 p-1 bg-purple-400 rounded"
+              >
+                <span>{type.supplier ? type.supplier : "-"}</span>
+              </span>
+            )
+          )}
+        </th>
+
+        {/*Purchase Description*/}
+        <th
+          scope="row"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
+        >
+          {purchase.purchase_types.map(
+            (type: { description: string }, index: number) => (
+              <span
+                key={index}
+                className="flex flex-row-reverse justify-center items-center gap-1 my-1 p-1 bg-purple-400 rounded"
+              >
+                <span>{type.description ? type.description : "-"}</span>
+              </span>
+            )
+          )}
+        </th>
+
         {/*Purchase Types*/}
         <th
           scope="row"
@@ -265,7 +300,7 @@ export const Purchases = () => {
                 key={index}
                 className="flex flex-row-reverse justify-center items-center gap-1 my-1 p-1 bg-amber-400 rounded"
               >
-                <span>{purchaseTypes[type.name as keyof PurchaseTypes]}</span>
+                <span>{type.name}</span>
                 <span>{type.total + " <== "}</span>
               </span>
             )

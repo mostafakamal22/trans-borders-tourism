@@ -17,12 +17,6 @@ import FormButton from "../shared/FormButton";
 import { FormInput } from "../shared/FormInput";
 import MessagesContainer from "../shared/MessagesContainer";
 import { inputClassNamesStyles, lableClassNamesStyles } from "./CreateInvoice";
-import {
-  PurchaseSuppliers,
-  purchaseSuppliers,
-  PurchaseTypes,
-  purchaseTypes,
-} from "./CreatePurchase";
 import logo from "../../assets/imgs/trans-logo.png";
 import {
   resetPurchasesStatus,
@@ -95,9 +89,9 @@ export const UpdatePurchase = ({
         ? [
             ...purchaseTypesDetails,
             {
-              name: "tickets",
+              name: "",
               description: "",
-              supplier: "none",
+              supplier: "",
               cost: 0,
               tax: 0,
               total: 0,
@@ -173,28 +167,19 @@ export const UpdatePurchase = ({
               key={index}
               className="flex flex-wrap items-center font-semibold  gap-4 px-5 py-5"
             >
-              <label
-                htmlFor="itemName"
-                className={lableClassNamesStyles.default}
-              >
-                نوع المشترى
-              </label>
-              <select
-                name="itemName"
+              <FormInput
+                label="Supplier"
+                name="itemSupplier"
+                labeClassNames={lableClassNamesStyles.default}
                 className={inputClassNamesStyles.default}
-                value={item.name}
+                type="text"
+                value={item.supplier}
                 onChange={(e) => {
                   const newArr = [...purchaseTypesDetails];
-                  newArr[index].name = e.target.value;
+                  newArr[index].supplier = e.target.value;
                   setPurchaseTypesDetails(newArr);
                 }}
-              >
-                {Object.keys(purchaseTypes).map((name: string) => (
-                  <option key={name} value={name}>
-                    {purchaseTypes[name as keyof PurchaseTypes]}
-                  </option>
-                ))}
-              </select>
+              />
 
               <FormInput
                 label="شرح المشتري"
@@ -210,28 +195,19 @@ export const UpdatePurchase = ({
                 }}
               />
 
-              <label
-                htmlFor="itemSupplier"
-                className={lableClassNamesStyles.default}
-              >
-                Supplier
-              </label>
-              <select
-                name="itemSupplier"
+              <FormInput
+                label="نوع المشتري"
+                name="itemName"
+                labeClassNames={lableClassNamesStyles.default}
                 className={inputClassNamesStyles.default}
-                value={item.supplier}
+                type="text"
+                value={item.name}
                 onChange={(e) => {
                   const newArr = [...purchaseTypesDetails];
-                  newArr[index].supplier = e.target.value;
+                  newArr[index].name = e.target.value;
                   setPurchaseTypesDetails(newArr);
                 }}
-              >
-                {Object.keys(purchaseSuppliers).map((supplier: string) => (
-                  <option key={supplier} value={supplier}>
-                    {purchaseSuppliers[supplier as keyof PurchaseSuppliers]}
-                  </option>
-                ))}
-              </select>
+              />
 
               <FormInput
                 label="المبلغ قبل الضريبة"
