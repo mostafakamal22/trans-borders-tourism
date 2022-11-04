@@ -1,27 +1,10 @@
-import { useRef, useEffect } from "react";
-import { Navigate, useParams } from "react-router-dom";
-import { useAppSelector } from "../../state/features/hooks/StateHooks";
-import logo from "../../assets/imgs/trans-logo.png";
-import ReactToPrint from "react-to-print";
+import { useEffect, useRef } from "react";
 import { AiFillPrinter } from "react-icons/ai";
-import dayjs from "dayjs";
+import ReactToPrint from "react-to-print";
+import logo from "../../assets/imgs/trans-logo.png";
 
-export const PaymentVoucher = () => {
-  const { purchasesList } = useAppSelector((state) => state.purchasesData);
-  const purchaseID = useParams().id;
-  const purchase = purchasesList.find(
-    (purchase: any) => purchase._id === purchaseID
-  );
-
+export const CreateVoucher = () => {
   const componentRef = useRef<HTMLDivElement>(null);
-
-  if (!purchase)
-    return (
-      <>
-        <Navigate to={"not-found"} />
-      </>
-    );
-
   //scroll page back to top when component first mount
   useEffect(() => {
     const yOffset = window.pageYOffset;
@@ -60,13 +43,8 @@ export const PaymentVoucher = () => {
               <span>Dhs درهم</span>
               <span>Fils فلس</span>
             </p>
-            <p className="max-w-[150px]  flex items-center border-2 border-black">
-              <span className="p-2 border-r-2 border-black">
-                {Math.floor(purchase.total)}
-              </span>
-              <span className=" p-2 ml-auto">
-                {(purchase.total % 1).toFixed(2).split(".")[1]}
-              </span>
+            <p className="max-w-[150px] p-2 flex justify-center items-center border-2 border-black">
+              <input className="bg-transparent text-center" type="text" />
             </p>
           </div>
 
@@ -90,31 +68,16 @@ export const PaymentVoucher = () => {
 
             <p className="flex flex-col justify-center items-end text-xl mt-5">
               <span>
-                No.{" "}
-                <span
-                  style={{ printColorAdjust: "exact" }}
-                  className="bg-red-100 p-1 rounded-sm"
-                >
-                  [
-                  {"0" +
-                    [...purchasesList].findIndex(
-                      (p: any) => p._id === purchase._id
-                    )}
-                  ]
-                </span>
+                No. <span>[{"   "}]</span>
               </span>
 
               <span>
                 {" "}
-                DATE التاريخ
-                <span
-                  style={{ printColorAdjust: "exact" }}
-                  className="bg-red-100 p-1 rounded-sm"
-                >
-                  {purchase.date
-                    ? dayjs(purchase.date).format("DD/MM/YYYY")
-                    : "-"}
+                DATE
+                <span className=" p-1 rounded-sm">
+                  <input className="text-center" type="text" />
                 </span>
+                التاريخ
               </span>
             </p>
           </div>
@@ -122,54 +85,47 @@ export const PaymentVoucher = () => {
 
         <div className="flex items-center my-5 mt-10 underline underline-offset-2">
           <p className="text-left font-semibold">Paid To Mr or M/s</p>
-          <p
-            style={{ printColorAdjust: "exact" }}
-            className="mx-auto text-xl bg-red-200 p-1"
-          >
-            {purchase.purchase_types[0].supplier}
-          </p>
+          <input
+            className="mx-auto text-xl  p-1 text-center w-[50%]"
+            type="text"
+          />
           <p>يصرف إلى السيد /السادة</p>
         </div>
 
         <div className="flex items-center my-5 underline underline-offset-2">
           <p className="text-left font-semibold">The Sum of Dhs</p>
-          <p
-            style={{ printColorAdjust: "exact" }}
-            className="mx-auto text-xl bg-red-200 p-1"
-          >
-            {purchase.total.toFixed(2)}
-          </p>
+          <input
+            className="mx-auto text-xl  p-1 text-center w-[50%]"
+            type="text"
+          />
           <p>مبلغ وقدرة درهم</p>
         </div>
 
         <div className="flex items-center gap-2 my-5  underline underline-offset-2">
           <p className="text-left font-semibold">Cash / Cheque NO</p>
-          <p
-            style={{ printColorAdjust: "exact" }}
-            className="mx-auto text-xl"
-          ></p>
+          <p className="mx-auto text-xl">
+            <input className="text-center" type="text" />
+          </p>
           <p>نقدا / شيك رقم</p>
 
           <p className="text-left font-semibold">Bank</p>
-          <p
-            style={{ printColorAdjust: "exact" }}
-            className="mx-auto text-xl"
-          ></p>
+          <p className="mx-auto text-xl">
+            {" "}
+            <input className="text-center" type="text" />
+          </p>
           <p>بنك</p>
 
           <p className="text-left font-semibold">Date</p>
-          <p
-            style={{ printColorAdjust: "exact" }}
-            className="mx-auto text-xl bg-red-200 p-1"
-          >
-            {purchase.date ? dayjs(purchase.date).format("DD/MM/YYYY") : "-"}
-          </p>
+          <input className="text-center" type="text" />
           <p>التاريخ</p>
         </div>
 
         <div className="flex items-center my-5  underline underline-offset-2">
           <p className="text-left font-semibold">Being</p>
-          <p className="mx-auto text-xl  "></p>
+          <input
+            className="mx-auto text-xl  p-1 text-center w-[50%]"
+            type="text"
+          />
           <p>وذلك من</p>
         </div>
 

@@ -14,7 +14,6 @@ import { InvoiceListControl } from "./components/invoice/Invoices";
 import { CreateInvoice } from "./components/forms/CreateInvoice";
 import { ShowInvoice } from "./components/invoice/ShowInvoice";
 import { Footer } from "./components/shared/Footer";
-import { Navbar } from "./components/shared/Navbar";
 import UpdateAdmin from "./components/forms/UpdateAdmin";
 import { Passports } from "./components/passport/Passports";
 import { CreatePassport } from "./components/forms/CreatePassport";
@@ -28,6 +27,7 @@ import { Purchases } from "./components/purchase/Purchases";
 import { CreatePurchase } from "./components/forms/CreatePurchase";
 import SideBar from "./components/shared/SideBar";
 import { PaymentVoucher } from "./components/purchase/PaymentVoucher";
+import { CreateVoucher } from "./components/forms/CreateVoucher";
 
 //User And Admin Paths
 const paths = [
@@ -48,6 +48,7 @@ const paths = [
   "/purchases",
   "/purchases/create",
   "/purchases/:id",
+  "/voucher/create",
 ];
 
 const App: FC = () => {
@@ -101,6 +102,7 @@ const App: FC = () => {
             <Route path="/purchases" element={<Purchases />} />
             <Route path="/purchases/create" element={<CreatePurchase />} />
             <Route path="/purchases/:id" element={<PaymentVoucher />} />
+            <Route path="/voucher/create" element={<CreateVoucher />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />

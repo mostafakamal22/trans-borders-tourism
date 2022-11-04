@@ -36,6 +36,7 @@ const navbarLinks: NavbarLinks = [
   ["إضافة التذاكر", "/tickets/create", <BsPlus size={20} />],
   ["المشتريات", "/purchases", <AiFillShopping size={20} />],
   ["إضافة المشتريات", "/purchases/create", <BsPlus size={20} />],
+  ["إضافة سند", "/voucher/create", <BsPlus size={20} />],
 ];
 
 const SideBar = () => {
