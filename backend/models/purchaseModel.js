@@ -9,6 +9,9 @@ const purchaseTypeSchema = new mongoose.Schema({
   description: {
     type: String,
   },
+  supplier: {
+    type: String,
+  },
   cost: {
     type: Number,
     required: [true, "Please Purchase Type Cost!"],

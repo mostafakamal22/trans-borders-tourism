@@ -20,18 +20,34 @@ import {
 
 export type PurchaseTypes = {
   tickets: string;
-  visas_one_month: string;
-  visas_two_month: string;
   assets: string;
   other: string;
 };
 
 export const purchaseTypes: PurchaseTypes = {
   tickets: "مشتريات تذاكر طيران",
-  visas_one_month: "مشتريات فيزا سياحه 1 شهر",
-  visas_two_month: "مشتريات فيزا سياحه 2 شهر",
   assets: "مشتريات اصول ثابتة",
   other: "مشتريات اخرى",
+};
+
+export type PurchaseSuppliers = {
+  none: string;
+  NDC: string;
+  Crown: string;
+  Top_Travel: string;
+  COZMO: string;
+  Air_Arabia: string;
+  VISA: string;
+};
+
+export const purchaseSuppliers: PurchaseSuppliers = {
+  none: "لا يوجد",
+  NDC: "NDC",
+  Crown: "Crown",
+  Top_Travel: "Top Travel",
+  COZMO: "COZMO",
+  Air_Arabia: "Air Arabia",
+  VISA: "VISA",
 };
 
 export const CreatePurchase = () => {
@@ -46,6 +62,7 @@ export const CreatePurchase = () => {
     {
       name: "tickets",
       description: "",
+      supplier: "none",
       cost: 0,
       tax: 0,
       total: 0,
@@ -87,6 +104,7 @@ export const CreatePurchase = () => {
             {
               name: "tickets",
               description: "",
+              supplier: "none",
               cost: 0,
               tax: 0,
               total: 0,
@@ -183,6 +201,29 @@ export const CreatePurchase = () => {
                 setPurchaseTypesDetails(newArr);
               }}
             />
+
+            <label
+              htmlFor="itemSupplier"
+              className={lableClassNamesStyles.default}
+            >
+              Supplier
+            </label>
+            <select
+              name="itemSupplier"
+              className={inputClassNamesStyles.default}
+              value={item.supplier}
+              onChange={(e) => {
+                const newArr = [...purchaseTypesDetails];
+                newArr[index].supplier = e.target.value;
+                setPurchaseTypesDetails(newArr);
+              }}
+            >
+              {Object.keys(purchaseSuppliers).map((supplier: string) => (
+                <option key={supplier} value={supplier}>
+                  {purchaseSuppliers[supplier as keyof PurchaseSuppliers]}
+                </option>
+              ))}
+            </select>
 
             <FormInput
               label="المبلغ قبل الضريبة"

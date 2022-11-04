@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { FcSalesPerformance } from "react-icons/fc";
-import { TiDelete } from "react-icons/ti";
+import { TiDelete, TiEdit } from "react-icons/ti";
 import logo from "../../assets/imgs/trans-logo.png";
 import { UseResetStatus } from "../../hooks/UseResetStatus";
 import { resetAdminAuthStatus } from "../../state/features/admin/auth/adminAuthSlice";
@@ -9,6 +9,10 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../state/features/hooks/StateHooks";
+import {
+  createInvoice,
+  resetInvoicesStatus,
+} from "../../state/features/invoice/invoiceSlice";
 import {
   deletePurchase,
   resetPurchasesStatus,
@@ -27,6 +31,7 @@ import { PaginationTable } from "../shared/PaginationTable";
 
 export const purchaseTableHeaderTitles = [
   "مسح المشترى",
+  "إضافة فاتورة",
   "تعديل المشترى",
   "المبلغ الكلى",
   "نوع المشترى",
@@ -36,6 +41,8 @@ export const purchaseTableHeaderTitles = [
 export const Purchases = () => {
   const { info } = useAppSelector((state) => state.adminAuth);
   const { purchasesList } = useAppSelector((state) => state.purchasesData);
+  const invoiceData = useAppSelector((state) => state.invoiceData);
+
   const dispatch = useAppDispatch();
 
   //search Params
@@ -81,6 +88,10 @@ export const Purchases = () => {
   const handleRemoving = (e: any, removedPurchaseID: string) => {
     e.preventDefault();
 
+    //set msg to none first
+    setMsg("");
+    dispatch(resetInvoicesStatus());
+
     //get admin token
     const token = info.token;
 
@@ -93,15 +104,60 @@ export const Purchases = () => {
     dispatch(deletePurchase(purchaseData));
   };
 
+  // handle Creating invoice
+  const handleAddInvoice = (
+    e: React.SyntheticEvent,
+    customerName: string,
+    ID: string,
+    purchaseDetails: [],
+    paymentDate: string,
+    purchaseTotal: number
+  ) => {
+    e.preventDefault();
+
+    //set msg to none first
+    setMsg("");
+    dispatch(resetPurchasesStatus());
+
+    const invoiceData = {
+      token: info.token,
+      ID: ID,
+      customer: { name: customerName },
+      details: [
+        ...purchaseDetails.map((purchase: any) => ({
+          name: purchaseTypes[purchase.name as keyof PurchaseTypes],
+          quantity: 1,
+          price: purchase.total,
+        })),
+      ],
+      total: purchaseTotal,
+      subtotal: 0,
+      date: paymentDate,
+      taxDue: 0,
+      taxRate: 0,
+      taxable: 0,
+    };
+
+    dispatch(createInvoice(invoiceData));
+  };
+
   useEffect(() => {
     if (isError) {
       setMsg(message);
     }
 
+    if (invoiceData.isError) {
+      setMsg(invoiceData.message);
+    }
+
     if (isSuccess && message) {
       setMsg(message);
     }
-  }, [isError, message, isSuccess, msg]);
+
+    if (invoiceData.isSuccess && invoiceData.message) {
+      setMsg(invoiceData.message);
+    }
+  }, [isError, message, isSuccess, msg, invoiceData]);
 
   //Define table data
   const tableHeader = (
@@ -142,6 +198,33 @@ export const Purchases = () => {
               text={{ default: "مسح المشتـرى" }}
               bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}
               icon={<TiDelete className="mb-[-2px]" size={25} />}
+            />
+          </form>
+        </th>
+
+        {/* Make Invoice */}
+        <th
+          scope="row"
+          className="p-1 text-gray-900 border-x text-center border-x-black"
+        >
+          <form
+            className="max-w-[150px] m-auto"
+            onSubmit={(event) =>
+              handleAddInvoice(
+                event,
+                "",
+                purchase._id,
+                purchase.purchase_types,
+                purchase.date,
+                purchase.total
+              )
+            }
+          >
+            <FormButton
+              text={{ default: "إضافة", loading: " " }}
+              bgColor={["bg-orange-600", "bg-orange-700", "bg-orange-800"]}
+              isLoading={invoiceData.isLoading}
+              icon={<TiEdit className="mb-[-2px]" size={25} />}
             />
           </form>
         </th>
@@ -218,12 +301,14 @@ export const Purchases = () => {
 
     dispatch(resetAdminAuthStatus());
     dispatch(resetPurchasesStatus());
+    dispatch(resetInvoicesStatus());
   });
 
   UseResetStatus(() => {
     return () => {
       dispatch(resetAdminAuthStatus());
       dispatch(resetPurchasesStatus());
+      dispatch(resetInvoicesStatus());
     };
   });
 
@@ -309,35 +394,57 @@ export const Purchases = () => {
         <MessagesContainer msg={msg} isSuccess={isSuccess} isError={isError} />
       )}
 
+      {invoiceData.isError ||
+        (invoiceData.isSuccess && invoiceData.message && (
+          <MessagesContainer
+            msg={msg}
+            isSuccess={invoiceData.isSuccess}
+            isError={invoiceData.isError}
+          />
+        ))}
+
       {/*Display Table All Data Needed*/}
-      {!isLoading && filteredPurchases?.length > 0 && (
-        <PaginationTable
-          tableRow={tableRow}
-          tableHeader={tableHeader}
-          tableBodyData={[...filteredPurchases].reverse()}
-          rowsPerPage={10}
-        />
-      )}
+      {!isLoading &&
+        !invoiceData.isLoading &&
+        filteredPurchases?.length > 0 && (
+          <PaginationTable
+            tableRow={tableRow}
+            tableHeader={tableHeader}
+            tableBodyData={[...filteredPurchases].reverse()}
+            rowsPerPage={10}
+          />
+        )}
 
       {/* if there is No Purchases Records */}
-      {!year && !month && filteredPurchases?.length === 0 && !isLoading && (
-        <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
-          لا يوجد مشتــريات محفوظة الان , يرجى إضافة المشتــريات لعرضها.
-        </div>
-      )}
+      {!year &&
+        !month &&
+        filteredPurchases?.length === 0 &&
+        !isLoading &&
+        !invoiceData.isLoading && (
+          <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
+            لا يوجد مشتــريات محفوظة الان , يرجى إضافة المشتــريات لعرضها.
+          </div>
+        )}
 
       {/* if there is search query no Purchase matches >>> No Search Found*/}
-      {(year || month) && filteredPurchases?.length === 0 && !isLoading && (
-        <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
-          لا يوجد نتائج تطابق هذا البحث, تأكد من الشهر و السنة وحاول مجدداً
-        </div>
-      )}
+      {(year || month) &&
+        filteredPurchases?.length === 0 &&
+        !isLoading &&
+        !invoiceData.isLoading && (
+          <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
+            لا يوجد نتائج تطابق هذا البحث, تأكد من الشهر و السنة وحاول مجدداً
+          </div>
+        )}
 
       {/* Show update Purchase Modal */}
       {isOpen && <UpdatePurchase setIsOpen={setIsOpen} id={id} />}
 
       {/* Show spinner when Loading State is true */}
-      {isLoading && <MainSpinner isLoading={isLoading} />}
+      {(isLoading || invoiceData.isLoading) && (
+        <MainSpinner
+          isLoading={isLoading ? isLoading : invoiceData.isLoading}
+        />
+      )}
     </div>
   );
 };

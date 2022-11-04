@@ -17,7 +17,12 @@ import FormButton from "../shared/FormButton";
 import { FormInput } from "../shared/FormInput";
 import MessagesContainer from "../shared/MessagesContainer";
 import { inputClassNamesStyles, lableClassNamesStyles } from "./CreateInvoice";
-import { PurchaseTypes, purchaseTypes } from "./CreatePurchase";
+import {
+  PurchaseSuppliers,
+  purchaseSuppliers,
+  PurchaseTypes,
+  purchaseTypes,
+} from "./CreatePurchase";
 import logo from "../../assets/imgs/trans-logo.png";
 import {
   resetPurchasesStatus,
@@ -45,6 +50,7 @@ export const UpdatePurchase = ({
       return {
         name: item.name,
         description: item.description,
+        supplier: item.supplier,
         cost: item.cost,
         tax: item.tax,
         total: item.total,
@@ -91,6 +97,7 @@ export const UpdatePurchase = ({
             {
               name: "tickets",
               description: "",
+              supplier: "none",
               cost: 0,
               tax: 0,
               total: 0,
@@ -202,6 +209,29 @@ export const UpdatePurchase = ({
                   setPurchaseTypesDetails(newArr);
                 }}
               />
+
+              <label
+                htmlFor="itemSupplier"
+                className={lableClassNamesStyles.default}
+              >
+                Supplier
+              </label>
+              <select
+                name="itemSupplier"
+                className={inputClassNamesStyles.default}
+                value={item.supplier}
+                onChange={(e) => {
+                  const newArr = [...purchaseTypesDetails];
+                  newArr[index].supplier = e.target.value;
+                  setPurchaseTypesDetails(newArr);
+                }}
+              >
+                {Object.keys(purchaseSuppliers).map((supplier: string) => (
+                  <option key={supplier} value={supplier}>
+                    {purchaseSuppliers[supplier as keyof PurchaseSuppliers]}
+                  </option>
+                ))}
+              </select>
 
               <FormInput
                 label="المبلغ قبل الضريبة"
