@@ -39,8 +39,8 @@ const mainPageLinks: MainPagesLinks = [
   ],
 
   [
-    ["عرض  التأشيرات", "/visas", <FcCurrencyExchange size={50} />],
-    ["إضافة التأشيرات", "/visas/create", <FcDebt size={50} />],
+    ["عرض  المبيعات", "/visas", <FcCurrencyExchange size={50} />],
+    ["إضافة المبيعات", "/visas/create", <FcDebt size={50} />],
   ],
   [
     ["عرض الجوازات", "/passports", <FcBusiness size={50} />],
@@ -63,7 +63,7 @@ const mainPageLinks: MainPagesLinks = [
 
 const mainHeadings: MainHeadings = [
   "الفواتير",
-  "التأشيرات",
+  "المبيعات",
   "الجوازات",
   "المصروفات",
   "التذاكـر",

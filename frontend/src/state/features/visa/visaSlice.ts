@@ -45,6 +45,20 @@ export const createVisa = createAsyncThunk(
   }
 );
 
+//Update Visa
+export const updateVisa = createAsyncThunk(
+  "visas/updateVisa",
+  async (visaData: any, thunkAPI) => {
+    try {
+      return await visaServices.updateVisa(visaData);
+    } catch (error: any) {
+      const message = error.response.data;
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 //Delete Visa
 export const deleteVisa = createAsyncThunk(
   "visas/deleteVisa",
@@ -106,7 +120,7 @@ export const visaSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.message = "تم حذف التأشيرة بنجاح";
+        state.message = "تم حذف المبيعات بنجاح";
         state.visasList = state.visasList.filter(
           (invoice: any) => invoice._id !== action.payload.id
         );
@@ -127,10 +141,34 @@ export const visaSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.message = "تم حفظ التأشيرة بنجاح";
+        state.message = "تم حفظ المبيعات بنجاح";
         state.visasList = [...state.visasList, action.payload];
       })
       .addCase(createVisa.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload as string;
+        state.isSuccess = false;
+      })
+      .addCase(updateVisa.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.isSuccess = false;
+        state.message = "";
+      })
+      .addCase(updateVisa.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.message = "تم تعديل المبيعات بنجــاح";
+        state.visasList = state.visasList.map((visa: any) => {
+          if (visa._id === action.payload._id) {
+            return action.payload;
+          }
+          return visa;
+        });
+      })
+      .addCase(updateVisa.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload as string;

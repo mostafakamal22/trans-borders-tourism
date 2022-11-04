@@ -28,8 +28,8 @@ const navbarLinks: NavbarLinks = [
   ["إضافة فاتورة", "/invoices/create", <BsPlus size={20} />],
   ["الجوازات", "/passports", <AiFillProject size={20} />],
   [" إضافة جوازات", "/passports/create", <BsPlus size={20} />],
-  ["التأشيرات", "/visas", <AiFillCalendar size={20} />],
-  ["إضافة التأشيرات", "/visas/create", <BsPlus size={20} />],
+  ["المبيعات", "/visas", <AiFillCalendar size={20} />],
+  ["إضافة المبيعات", "/visas/create", <BsPlus size={20} />],
   ["المصروفات", "/payments", <AiFillAccountBook size={20} />],
   ["إضافة المصروفات", "/payments/create", <BsPlus size={20} />],
   ["التذاكر", "/tickets", <AiFillSchedule size={20} />],
@@ -52,7 +52,7 @@ const SideBar = () => {
   };
 
   return (
-    <nav className="bg-slate-50 px-2 sm:px-4 py-2.5 sticky w-full z-20 top-0 left-0 flex justify-center items-center flex-wrap shadow-md transition-all duration-300 ease-in-out">
+    <nav className="bg-slate-50 px-2 sm:px-4 py-2.5 sticky w-full z-20 top-0 left-0 flex justify-center  items-center gap-4 flex-wrap text-xs shadow-md transition-all duration-300 ease-in-out">
       <SideBarIcon
         link={navbarLinks[0][1]}
         text={navbarLinks[0][0]}
@@ -77,13 +77,12 @@ const SideBar = () => {
         text={"تعديل الحساب"}
         icon={<BsGearFill size={20} />}
       />
-
-      <button onClick={handleLogout} className="sidebar-icon group">
-        <RiLogoutBoxFill size={20} />
-        <span className="sidebar-tooltip group-hover:scale-100">
-          تسجيل الخروج
-        </span>
-      </button>
+      <div className="max-w-[50px] flex flex-col justify-center items-center">
+        <button onClick={handleLogout} className="sidebar-icon group">
+          <RiLogoutBoxFill size={20} />
+        </button>
+        <span className="font-semibold">تسجيل الخروج</span>
+      </div>
     </nav>
   );
 };
@@ -97,17 +96,20 @@ const SideBarIcon = ({
   text: string;
   link: string;
 }) => (
-  <div className="sidebar-icon group">
-    <NavLink
-      to={link}
-      className={({ isActive }) =>
-        isActive ? "realtive text-black" : "relative"
-      }
-      end
-    >
-      {icon}
-      <span className="sidebar-tooltip group-hover:scale-100">{text}</span>
-    </NavLink>
+  <div className="max-w-[50px] flex flex-col justify-center items-center">
+    <div className="sidebar-icon group">
+      <NavLink
+        to={link}
+        className={({ isActive }) =>
+          isActive ? "realtive text-black" : "relative"
+        }
+        end
+      >
+        {icon}
+        {/* sidebar-tooltip group-hover:scale-100 */}
+      </NavLink>
+    </div>
+    <span className="font-semibold">{text}</span>
   </div>
 );
 

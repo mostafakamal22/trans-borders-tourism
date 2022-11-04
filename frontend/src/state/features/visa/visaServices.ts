@@ -42,6 +42,18 @@ const deleteVisa = async (payload: { id: string; token: string }) => {
   return data;
 };
 
+//Update Visa
+const updateVisa = async (visaData: any) => {
+  const res = await axios.put(API_URL + visaData.id, visaData, {
+    headers: {
+      authorization: `Bearer ${visaData.token}`,
+    },
+  });
+  const data = res.data;
+
+  return data;
+};
+
 //Logout
 const visasLogout = () => {
   return;
@@ -50,6 +62,7 @@ const visasLogout = () => {
 const visaServices = {
   getAllVisas,
   createVisa,
+  updateVisa,
   deleteVisa,
   visasLogout,
 };

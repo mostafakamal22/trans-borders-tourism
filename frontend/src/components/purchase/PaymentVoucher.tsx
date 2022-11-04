@@ -64,7 +64,7 @@ export const PaymentVoucher = () => {
                 {Math.floor(purchase.total)}
               </span>
               <span className=" p-2 ml-auto">
-                {(purchase.total % 1).toFixed(2)}
+                {(purchase.total % 1).toFixed(2).split(".")[1]}
               </span>
             </p>
           </div>
@@ -73,13 +73,13 @@ export const PaymentVoucher = () => {
             <img src={logo} alt="TbT Logo" />
             <p className="flex flex-col justify-center items-center p-3 text-2xl font-bold border-2 border-black mt-4">
               <span>سند صرف</span>
-              <span>Purchase Voucher</span>
+              <span>Payment Voucher</span>
             </p>
           </div>
 
           <div className="max-w-[300px] text-right">
             <p className="text-blue-700 text-2xl font-bold underline underline-offset-4">
-              عبر الحدود للسباحة ش.ذ.م.م
+              عبر الحدود للسياحة ش.ذ.م.م
             </p>
             <p>171511 ص.ب.ا </p>
             <p> دبى أ.ع.م </p>
@@ -118,17 +118,73 @@ export const PaymentVoucher = () => {
           </div>
         </div>
 
-        {/* <div className="mt-5">
-          <h2
+        <div className="flex items-center my-5 mt-10 underline underline-offset-2">
+          <p className="text-left font-semibold">Paid To Mr or M/s</p>
+          <p
             style={{ printColorAdjust: "exact" }}
-            className="text-white font-bold text-xl p-1 bg-red-800 print:!bg-red-800 mb-4"
+            className="mx-auto text-xl bg-red-200 p-1"
           >
-            Bill To
-          </h2>
+            {purchase.purchase_types[0].supplier}
+          </p>
+          <p>يصرف إلى السيد /السادة</p>
+        </div>
 
-          <p className="text-left">Name:-</p>
-          <p className="text-left">Mobile:-</p>
-        </div> */}
+        <div className="flex items-center my-5 underline underline-offset-2">
+          <p className="text-left font-semibold">The Sum of Dhs</p>
+          <p
+            style={{ printColorAdjust: "exact" }}
+            className="mx-auto text-xl bg-red-200 p-1"
+          >
+            {purchase.total.toFixed(2)}
+          </p>
+          <p>مبلغ وقدرة درهم</p>
+        </div>
+
+        <div className="flex items-center gap-2 my-5  underline underline-offset-2">
+          <p className="text-left font-semibold">Cash / Cheque NO</p>
+          <p
+            style={{ printColorAdjust: "exact" }}
+            className="mx-auto text-xl"
+          ></p>
+          <p>نقدا / شيك رقم</p>
+
+          <p className="text-left font-semibold">Bank</p>
+          <p
+            style={{ printColorAdjust: "exact" }}
+            className="mx-auto text-xl"
+          ></p>
+          <p>بنك</p>
+
+          <p className="text-left font-semibold">Date</p>
+          <p
+            style={{ printColorAdjust: "exact" }}
+            className="mx-auto text-xl bg-red-200 p-1"
+          >
+            {purchase.date ? dayjs(purchase.date).format("DD/MM/YYYY") : "-"}
+          </p>
+          <p>التاريخ</p>
+        </div>
+
+        <div className="flex items-center my-5  underline underline-offset-2">
+          <p className="text-left font-semibold">Being</p>
+          <p className="mx-auto text-xl  "></p>
+          <p>وذلك من</p>
+        </div>
+
+        <div className="flex items-center mt-20  font-semibold">
+          <p className="text-left flex flex-col">
+            <span>Prepared By</span>
+            <span>تم التحضير</span>
+          </p>
+          <p className="mx-auto flex flex-col">
+            <span>Approved By</span>
+            <span>المفوض</span>
+          </p>
+          <p className="text-right flex flex-col">
+            <span>Received By</span>
+            <span>المستلم</span>
+          </p>
+        </div>
       </div>
     </>
   );

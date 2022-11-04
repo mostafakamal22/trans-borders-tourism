@@ -105,7 +105,7 @@ export const CreateVisa = () => {
         </p>
         <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">
           <FormInput
-            label={visaTableHeaderTitles[4]}
+            label={visaTableHeaderTitles[5]}
             name="customerName"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -118,7 +118,7 @@ export const CreateVisa = () => {
           />
 
           <FormInput
-            label={visaTableHeaderTitles[3]}
+            label={visaTableHeaderTitles[4]}
             name="passportId"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -131,7 +131,7 @@ export const CreateVisa = () => {
           />
 
           <FormInput
-            label={visaTableHeaderTitles[9]}
+            label={visaTableHeaderTitles[10]}
             name="VisaProvider"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -143,7 +143,7 @@ export const CreateVisa = () => {
           />
 
           <FormInput
-            label={visaTableHeaderTitles[8]}
+            label={visaTableHeaderTitles[9]}
             name="VisaType"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -155,7 +155,7 @@ export const CreateVisa = () => {
           />
 
           <FormInput
-            label={visaTableHeaderTitles[2]}
+            label={visaTableHeaderTitles[3]}
             name="employee"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -167,7 +167,7 @@ export const CreateVisa = () => {
           />
 
           <FormInput
-            label={visaTableHeaderTitles[7]}
+            label={visaTableHeaderTitles[8]}
             name="netFare"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -185,7 +185,7 @@ export const CreateVisa = () => {
           />
 
           <FormInput
-            label={visaTableHeaderTitles[6]}
+            label={visaTableHeaderTitles[7]}
             name="sales"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -203,7 +203,7 @@ export const CreateVisa = () => {
           />
 
           <FormInput
-            label={visaTableHeaderTitles[5]}
+            label={visaTableHeaderTitles[6]}
             name="totalPayment"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -220,7 +220,7 @@ export const CreateVisa = () => {
           />
 
           <FormInput
-            label={visaTableHeaderTitles[10]}
+            label={visaTableHeaderTitles[11]}
             name="paymentDate"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}

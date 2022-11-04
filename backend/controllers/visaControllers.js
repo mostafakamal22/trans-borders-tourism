@@ -32,12 +32,46 @@ const createVisa = async (req, res) => {
   } catch (error) {
     if (
       error.message.match(
-        /(provider|passport_id|version|customer_name|customer_number|type|state|net_fare|sales|profit|payment_date)/gi
+        /(provider|passport_id|version|customer_name|customer_number|type|employee|net_fare|sales|profit|payment_date)/gi
       )
     ) {
       return res.status(400).send(error.message);
     }
 
+    res.status(500).send("Ooops!! Something Went Wrong, Try again...");
+  }
+};
+
+//@desc   >>>> UPDATE Visa
+//@route  >>>> PUT /api/visas/:id
+//@Access >>>> Public(for Admins)
+const updateVisa = async (req, res) => {
+  try {
+    //get Visa
+    const visa = await Visa.findById(req.params.id);
+
+    //update Ticket with new values
+    visa.customer_name = req.body.name;
+    visa.passport_id = req.body.passportId;
+    visa.provider = req.body.provider;
+    visa.type = req.body.type;
+    visa.employee = req.body.employee;
+    visa.net_fare = req.body.netFare;
+    visa.sales = req.body.sales;
+    visa.profit = req.body.profit;
+    visa.payment_date = req.body.paymentDate;
+    //get updated Visa info & send it back
+    const updatedVisa = await visa.save();
+
+    res.status(200).json(updatedVisa);
+  } catch (error) {
+    if (
+      error.message.match(
+        /(provider|passport_id|version|customer_name|customer_number|type|employee|net_fare|sales|profit|payment_date)/gi
+      )
+    ) {
+      return res.status(400).send(error.message);
+    }
     res.status(500).send("Ooops!! Something Went Wrong, Try again...");
   }
 };
@@ -58,4 +92,5 @@ module.exports = {
   getVisas,
   deleteVisa,
   createVisa,
+  updateVisa,
 };

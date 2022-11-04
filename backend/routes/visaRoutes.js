@@ -3,6 +3,7 @@ const {
   createVisa,
   deleteVisa,
   getVisas,
+  updateVisa,
 } = require("../controllers/visaControllers");
 
 const router = express.Router();
@@ -16,6 +17,9 @@ router
   .post(authAdminProtect, createVisa)
   .get(authAdminProtect, getVisas);
 
-router.route("/:id").delete(authAdminProtect, deleteVisa);
+router
+  .route("/:id")
+  .put(authAdminProtect, updateVisa)
+  .delete(authAdminProtect, deleteVisa);
 
 module.exports = router;

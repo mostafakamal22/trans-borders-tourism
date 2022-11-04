@@ -26,10 +26,12 @@ import {
   resetInvoicesStatus,
 } from "../../state/features/invoice/invoiceSlice";
 import { visaCalculations } from "../helpers/visaCalculations";
+import { UpdateVisa } from "../forms/UpdateVisa";
 
 export const visaTableHeaderTitles = [
   "مسح",
   "إضافة فاتورة",
+  "تعديل المبيعات",
   "اسم الموظف",
   "رقم الجواز",
   "إسم العميل",
@@ -48,25 +50,66 @@ export const Visas = () => {
 
   const dispatch = useAppDispatch();
 
+  //Is modal open
+  const [isOpen, setIsOpen] = useState(false);
+
+  //PurchaseID to Update
+  const [id, setId] = useState("");
+
   //search Params
   const [searchQuery, setSearchQuery] = useState({
     year: "",
     month: "",
+    employee: "",
+    type: "",
+    supplier: "",
   });
 
-  const { year, month } = searchQuery;
+  const { year, month, employee, type, supplier } = searchQuery;
+
+  type SearchQueries = {
+    year: string;
+    month: string | number;
+    employee: string;
+    type: string;
+    supplier: string;
+  };
+
+  let availableSearchQueries: SearchQueries = {
+    ...searchQuery,
+    month: +month,
+  };
+
+  for (const key in availableSearchQueries) {
+    if (!availableSearchQueries[key as keyof SearchQueries]) {
+      delete availableSearchQueries[key as keyof SearchQueries];
+    }
+  }
 
   //filtered Visas
   const filteredVisas: [] =
-    month || year
+    month || year || supplier || type || employee
       ? visasList.filter((visa: any) => {
           const paymentDate = dayjs(visa.payment_date)
             .format("DD/MM/YYYY")
             .split("/");
-          const yearOfVisa = paymentDate[2];
-          const monthOfVisa = paymentDate[1];
 
-          if (yearOfVisa === year && +monthOfVisa === +month) return visa;
+          const visaData: SearchQueries = {
+            year: paymentDate[2],
+            month: +paymentDate[1],
+            type: visa.type,
+            employee: visa.employee,
+            supplier: visa.provider,
+          };
+
+          if (
+            Object.keys(availableSearchQueries).every(
+              (key) =>
+                visaData[key as keyof SearchQueries] ===
+                availableSearchQueries[key as keyof SearchQueries]
+            )
+          )
+            return visa;
         })
       : visasList;
 
@@ -223,6 +266,23 @@ export const Visas = () => {
           </form>
         </th>
 
+        {/*Update Visa*/}
+        <th
+          scope="row"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
+        >
+          <button
+            className="inline-flex font-bold text-xs bg-blue-800 text-white hover:bg-white px-2 py-2 border-transparent hover:text-blue-800 border hover:border-blue-800 items-center rounded
+             transition-all ease-in-out duration-300"
+            onClick={() => {
+              setId(visa._id);
+              setIsOpen(true);
+            }}
+          >
+            تعديل
+          </button>
+        </th>
+
         {/*Visa Employee*/}
         <th
           scope="row"
@@ -347,7 +407,7 @@ export const Visas = () => {
               type="number"
               name="year"
               className={inputClassNamesStyles.default}
-              defaultValue={year}
+              value={year}
               onChange={(e) =>
                 setSearchQuery({
                   ...searchQuery,
@@ -364,11 +424,65 @@ export const Visas = () => {
               type="number"
               name="month"
               className={inputClassNamesStyles.default}
-              defaultValue={month}
+              value={month}
               onChange={(e) =>
                 setSearchQuery({
                   ...searchQuery,
                   month: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="supplier">
+              Supplier
+            </label>
+            <input
+              type="text"
+              name="supplier"
+              className={inputClassNamesStyles.default}
+              value={supplier}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  supplier: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="type">
+              Type
+            </label>
+            <input
+              type="text"
+              name="type"
+              className={inputClassNamesStyles.default}
+              value={type}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  type: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="employee">
+              Employee
+            </label>
+            <input
+              type="text"
+              name="employee"
+              className={inputClassNamesStyles.default}
+              defaultValue={employee}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  employee: e.target.value,
                 })
               }
             />
@@ -389,6 +503,24 @@ export const Visas = () => {
           {year && (
             <span className="bg-amber-500 p-1 rounded-md text-white mx-1">
               {" سنة " + year}
+            </span>
+          )}
+
+          {supplier && (
+            <span className="bg-emerald-500 p-1 rounded-md text-white mx-1">
+              {" Supplier:- " + supplier}
+            </span>
+          )}
+
+          {type && (
+            <span className="bg-purple-500 p-1 rounded-md text-white mx-1">
+              {" Type:- " + type}
+            </span>
+          )}
+
+          {employee && (
+            <span className="bg-purple-500 p-1 rounded-md text-white mx-1">
+              {" Emplyee:- " + employee}
             </span>
           )}
 
@@ -440,6 +572,9 @@ export const Visas = () => {
       {/* if there is No Visas Records */}
       {!year &&
         !month &&
+        !supplier &&
+        !employee &&
+        !type &&
         filteredVisas?.length === 0 &&
         !isLoading &&
         !invoiceData.isLoading && (
@@ -449,7 +584,7 @@ export const Visas = () => {
         )}
 
       {/* if there is search query no Visa matches >>> No Search Found*/}
-      {(year || month) &&
+      {(year || month || supplier || type || employee) &&
         filteredVisas?.length === 0 &&
         !isLoading &&
         !invoiceData.isLoading && (
@@ -457,6 +592,9 @@ export const Visas = () => {
             لا يوجد نتائج تطابق هذا البحث, تأكد من الشهر و السنة وحاول مجدداً
           </div>
         )}
+
+      {/* Show Update Visa Modal */}
+      {isOpen && <UpdateVisa setIsOpen={setIsOpen} id={id} />}
 
       {/* Show spinner when Loading State is true */}
       {(isLoading || invoiceData.isLoading) && (
