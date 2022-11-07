@@ -30,11 +30,13 @@ import { UpdateTicket } from "../forms/UpdateTicket";
 
 export const ticketsTableHeaderTitles = [
   "Customer Name",
+  "Passport Id",
+  "Type",
+  "اسم الموظف",
   "Cost",
   "Sales",
   "Profit",
   "Suplier",
-  "Booking",
   "Date",
   "تعديل التذكرة",
   "إضافة فاتورة",
@@ -54,7 +56,7 @@ export const Tickets = () => {
     month: "",
     name: "",
     suplier: "",
-    booking: "",
+    employee: "",
   });
 
   //Is modal open
@@ -63,13 +65,13 @@ export const Tickets = () => {
   //PassportID to Update
   const [id, setId] = useState("");
 
-  const { year, month, suplier, booking, name } = searchQuery;
+  const { year, month, suplier, employee, name } = searchQuery;
 
   type SearchQueries = {
     year: string;
     month: string | number;
     suplier: string;
-    booking: string;
+    employee: string;
     name: string;
   };
 
@@ -86,7 +88,7 @@ export const Tickets = () => {
 
   //filtered Tickets
   const filteredTickets: [] =
-    month || year || suplier || booking || name
+    month || year || suplier || employee || name
       ? ticketsList.filter((ticket: any) => {
           const ticketDate = dayjs(ticket.payment_date)
             .format("DD/MM/YYYY")
@@ -96,7 +98,7 @@ export const Tickets = () => {
             year: ticketDate[2],
             month: +ticketDate[1],
             suplier: ticket.suplier,
-            booking: ticket.booking,
+            employee: ticket.employee,
             name: ticket.customer_name,
           };
 
@@ -237,6 +239,30 @@ export const Tickets = () => {
           {ticket.customer_name}
         </th>
 
+        {/*Passport Id*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-900  border-x text-center border-x-black"
+        >
+          {ticket.passport_id}
+        </th>
+
+        {/*Type*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-900  border-x text-center border-x-black"
+        >
+          {ticket.type ? ticket.type : "-"}
+        </th>
+
+        {/*Employee*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-900  border-x text-center border-x-black"
+        >
+          {ticket.employee ? ticket.employee : "-"}
+        </th>
+
         {/*Total Cost*/}
         <th
           scope="row"
@@ -269,13 +295,6 @@ export const Tickets = () => {
           {ticket.suplier}
         </th>
 
-        {/*Booking*/}
-        <th
-          scope="row"
-          className="p-1  text-gray-900  border-x text-center border-x-black"
-        >
-          {ticket.booking}
-        </th>
         {/*Payment Date*/}
         <th
           scope="row"
@@ -314,7 +333,7 @@ export const Tickets = () => {
               handleAddInvoice(
                 event,
                 ticket.customer_name,
-                ticket.booking,
+                ticket.type,
                 ticket.payment_date,
                 ticket.sales
               )
@@ -436,17 +455,17 @@ export const Tickets = () => {
 
           <div className="flex justify-center items-center flex-col gap-2">
             <label className={lableClassNamesStyles.default} htmlFor="booking">
-              Booking
+              employee
             </label>
             <input
               type="text"
               name="booking"
               className={inputClassNamesStyles.default}
-              value={booking}
+              value={employee}
               onChange={(e) =>
                 setSearchQuery({
                   ...searchQuery,
-                  booking: e.target.value,
+                  employee: e.target.value,
                 })
               }
             />
@@ -495,9 +514,9 @@ export const Tickets = () => {
             </span>
           )}
 
-          {booking && (
+          {employee && (
             <span className="bg-emerald-500 p-1 rounded-md text-white mx-1">
-              {" Booking:- " + booking}
+              {"employee:- " + employee}
             </span>
           )}
 
@@ -562,7 +581,7 @@ export const Tickets = () => {
         !month &&
         !name &&
         !suplier &&
-        !booking &&
+        !employee &&
         filteredTickets?.length === 0 &&
         !isLoading &&
         !invoiceData.isLoading && (
@@ -572,7 +591,7 @@ export const Tickets = () => {
         )}
 
       {/* if there is search query no Tickets matches >>> No Search Found*/}
-      {(year || month || booking || name || suplier) &&
+      {(year || month || employee || name || suplier) &&
         filteredTickets?.length === 0 &&
         !isLoading &&
         !invoiceData.isLoading && (

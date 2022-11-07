@@ -33,7 +33,9 @@ export const UpdateTicket = ({
   //state for Ticket Details
   const [ticketsDetails, setTicketsDetails] = useState({
     name: ticket.customer_name,
-    booking: ticket.booking,
+    type: ticket.type,
+    passportId: ticket.passport_id,
+    employee: ticket.employee,
     suplier: ticket.suplier,
     paymentDate: ticket.payment_date
       ? dayjs(ticket?.payment_date).format("YYYY-MM-DD")
@@ -72,7 +74,9 @@ export const UpdateTicket = ({
       token: info.token,
       id,
       name: ticketsDetails.name.trim(),
-      booking: ticketsDetails.booking.trim(),
+      type: ticketsDetails.type.trim(),
+      employee: ticketsDetails.employee.trim(),
+      passportId: ticketsDetails.passportId.trim(),
       suplier: ticketsDetails.suplier.trim(),
       cost: ticketsDetails.cost,
       sales: ticketsDetails.sales,
@@ -140,34 +144,85 @@ export const UpdateTicket = ({
 
             <FormInput
               label={ticketsTableHeaderTitles[1]}
+              name="passportId"
+              labeClassNames={lableClassNamesStyles.default}
+              className={inputClassNamesStyles.default}
+              type="text"
+              value={ticketsDetails.passportId}
+              onChange={(e) =>
+                setTicketsDetails({
+                  ...ticketsDetails,
+                  passportId: e.target.value,
+                })
+              }
+              required
+            />
+
+            <FormInput
+              label={ticketsTableHeaderTitles[2]}
+              name="type"
+              labeClassNames={lableClassNamesStyles.default}
+              className={inputClassNamesStyles.default}
+              type="text"
+              value={ticketsDetails.type}
+              onChange={(e) =>
+                setTicketsDetails({ ...ticketsDetails, type: e.target.value })
+              }
+            />
+
+            <FormInput
+              label={ticketsTableHeaderTitles[3]}
+              name="اسم الموظف"
+              labeClassNames={lableClassNamesStyles.default}
+              className={inputClassNamesStyles.default}
+              type="text"
+              value={ticketsDetails.employee}
+              onChange={(e) =>
+                setTicketsDetails({
+                  ...ticketsDetails,
+                  employee: e.target.value,
+                })
+              }
+            />
+
+            <FormInput
+              label={ticketsTableHeaderTitles[4]}
               name="cost"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
               type="nmuber"
               value={ticketsDetails.cost}
               onChange={(e) =>
-                setTicketsDetails({ ...ticketsDetails, cost: +e.target.value })
+                setTicketsDetails({
+                  ...ticketsDetails,
+                  cost: +e.target.value,
+                  profit: ticketsDetails.sales - +e.target.value,
+                })
               }
               min={0}
               step={0.01}
             />
 
             <FormInput
-              label={ticketsTableHeaderTitles[2]}
+              label={ticketsTableHeaderTitles[5]}
               name="sales"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
               type="nmuber"
               value={ticketsDetails.sales}
               onChange={(e) =>
-                setTicketsDetails({ ...ticketsDetails, sales: +e.target.value })
+                setTicketsDetails({
+                  ...ticketsDetails,
+                  sales: +e.target.value,
+                  profit: +e.target.value - ticketsDetails.cost,
+                })
               }
               min={0}
               step={0.01}
             />
 
             <FormInput
-              label={ticketsTableHeaderTitles[3]}
+              label={ticketsTableHeaderTitles[6]}
               name="profit"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
@@ -184,7 +239,7 @@ export const UpdateTicket = ({
             />
 
             <FormInput
-              label={ticketsTableHeaderTitles[4]}
+              label={ticketsTableHeaderTitles[7]}
               name="suplier"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
@@ -199,22 +254,7 @@ export const UpdateTicket = ({
             />
 
             <FormInput
-              label={ticketsTableHeaderTitles[5]}
-              name="booking"
-              labeClassNames={lableClassNamesStyles.default}
-              className={inputClassNamesStyles.default}
-              type="text"
-              value={ticketsDetails.booking}
-              onChange={(e) =>
-                setTicketsDetails({
-                  ...ticketsDetails,
-                  booking: e.target.value,
-                })
-              }
-            />
-
-            <FormInput
-              label={ticketsTableHeaderTitles[6]}
+              label={ticketsTableHeaderTitles[8]}
               name="paymentDate"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}

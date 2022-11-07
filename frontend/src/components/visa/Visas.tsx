@@ -31,7 +31,7 @@ import { UpdateVisa } from "../forms/UpdateVisa";
 export const visaTableHeaderTitles = [
   "مسح",
   "إضافة فاتورة",
-  "تعديل المبيعات",
+  "تعديل التأشيرات",
   "اسم الموظف",
   "رقم الجواز",
   "إسم العميل",
@@ -163,7 +163,7 @@ export const Visas = () => {
       customer: { name: customerName },
       details: [
         {
-          name: "Visa " + visaType,
+          name: visaType,
           quantity: 1,
           price: visaSales,
         },
@@ -395,7 +395,7 @@ export const Visas = () => {
 
       <div className="flex justify-center items-center flex-wrap gap-4 my-5 p-4 bg-red-700 rounded-md">
         <h4 className="basis-full flex justify-center items-center text-2xl my-4 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
-          فلتـرة المبيعات
+          فلتـرة التأشيرات
         </h4>
 
         <form className="basis-full  flex flex-col flex-wrap  md:flex-row-reverse justify-center items-center gap-4 mx-auto font-semibold ">
@@ -489,7 +489,7 @@ export const Visas = () => {
           </div>
         </form>
         <h3 className="basis-full flex justify-center items-center flex-row-reverse text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
-          <span>{" المبيعات المحفوظة"}</span>
+          <span>{" التأشيرات المحفوظة"}</span>
           {!month && !year && (
             <span className="bg-blue-500 p-1 rounded-md text-white mx-1">
               {" الكلية "}
@@ -579,7 +579,7 @@ export const Visas = () => {
         !isLoading &&
         !invoiceData.isLoading && (
           <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
-            لا يوجد مبيعات محفوظة الان, يرجى إضافة المبيعات لعرضها.
+            لا يوجد تأشيرات محفوظة الان, يرجى إضافة التأشيرات لعرضها.
           </div>
         )}
 
@@ -589,7 +589,8 @@ export const Visas = () => {
         !isLoading &&
         !invoiceData.isLoading && (
           <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
-            لا يوجد نتائج تطابق هذا البحث, تأكد من الشهر و السنة وحاول مجدداً
+            لا يوجد نتائج تطابق هذا البحث, تأكد من البيانات التى أدخلتها وحاول
+            مجدداً
           </div>
         )}
 
