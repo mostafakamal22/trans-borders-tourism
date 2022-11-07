@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { FcSalesPerformance } from "react-icons/fc";
-import { TiDelete, TiEdit } from "react-icons/ti";
+import { TiDelete } from "react-icons/ti";
 import { Link } from "react-router-dom";
 import logo from "../../assets/imgs/trans-logo.png";
 import { UseResetStatus } from "../../hooks/UseResetStatus";
@@ -10,10 +10,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../state/features/hooks/StateHooks";
-import {
-  createInvoice,
-  resetInvoicesStatus,
-} from "../../state/features/invoice/invoiceSlice";
+import { resetInvoicesStatus } from "../../state/features/invoice/invoiceSlice";
 import {
   deletePurchase,
   resetPurchasesStatus,
@@ -50,9 +47,10 @@ export const Purchases = () => {
   const [searchQuery, setSearchQuery] = useState({
     year: "",
     month: "",
+    supplier: "",
   });
 
-  const { year, month } = searchQuery;
+  const { year, month, supplier } = searchQuery;
 
   //Is modal open
   const [isOpen, setIsOpen] = useState(false);
@@ -62,7 +60,7 @@ export const Purchases = () => {
 
   //filtered Purchases
   const filteredPurchases: [] =
-    month || year
+    month || year || supplier
       ? purchasesList.filter((purchase: any) => {
           const purchaseDate = dayjs(purchase.date)
             .format("DD/MM/YYYY")
@@ -70,7 +68,30 @@ export const Purchases = () => {
           const yearOfPurchase = purchaseDate[2];
           const monthOfPurchase = purchaseDate[1];
 
-          if (yearOfPurchase === year && +monthOfPurchase === +month)
+          //Filter supplier only
+          if (supplier && !year && !month) {
+            if (
+              supplier.toLowerCase() ===
+              purchase.purchase_types[0].supplier.toLowerCase()
+            ) {
+              return purchase;
+            }
+          }
+
+          //Filter With Month + Yaer only
+          if (!supplier) {
+            if (yearOfPurchase === year && +monthOfPurchase === +month) {
+              return purchase;
+            }
+          }
+
+          //Filter With All Search Queries
+          if (
+            yearOfPurchase === year &&
+            +monthOfPurchase === +month &&
+            supplier.toLowerCase() ===
+              purchase.purchase_types[0].supplier.toLowerCase()
+          )
             return purchase;
         })
       : purchasesList;
@@ -305,7 +326,7 @@ export const Purchases = () => {
               type="number"
               name="year"
               className={inputClassNamesStyles.default}
-              defaultValue={year}
+              value={year}
               onChange={(e) =>
                 setSearchQuery({
                   ...searchQuery,
@@ -323,11 +344,29 @@ export const Purchases = () => {
               type="number"
               name="month"
               className={inputClassNamesStyles.default}
-              defaultValue={month}
+              value={month}
               onChange={(e) =>
                 setSearchQuery({
                   ...searchQuery,
                   month: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="supplier">
+              Supplier
+            </label>
+            <input
+              type="text"
+              name="supplier"
+              className={inputClassNamesStyles.default}
+              value={supplier}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  supplier: e.target.value,
                 })
               }
             />
@@ -349,6 +388,12 @@ export const Purchases = () => {
           {year && (
             <span className="bg-amber-500 p-1 rounded-md text-white mx-1">
               {" سنة " + year}
+            </span>
+          )}
+
+          {supplier && (
+            <span className="bg-amber-500 p-1 rounded-md text-white mx-1">
+              {" Supplier:- " + supplier}
             </span>
           )}
 
@@ -381,18 +426,25 @@ export const Purchases = () => {
       )}
 
       {/* if there is No Purchases Records */}
-      {!year && !month && filteredPurchases?.length === 0 && !isLoading && (
-        <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
-          لا يوجد مشتــريات محفوظة الان , يرجى إضافة المشتــريات لعرضها.
-        </div>
-      )}
+      {!year &&
+        !month &&
+        !supplier &&
+        filteredPurchases?.length === 0 &&
+        !isLoading && (
+          <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
+            لا يوجد مشتــريات محفوظة الان , يرجى إضافة المشتــريات لعرضها.
+          </div>
+        )}
 
       {/* if there is search query no Purchase matches >>> No Search Found*/}
-      {(year || month) && filteredPurchases?.length === 0 && !isLoading && (
-        <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
-          لا يوجد نتائج تطابق هذا البحث, تأكد من الشهر و السنة وحاول مجدداً
-        </div>
-      )}
+      {(year || month || supplier) &&
+        filteredPurchases?.length === 0 &&
+        !isLoading && (
+          <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
+            لا يوجد نتائج تطابق هذا البحث, تأكد من البيانات التى أدخلتها وحاول
+            مجدداً
+          </div>
+        )}
 
       {/* Show update Purchase Modal */}
       {isOpen && <UpdatePurchase setIsOpen={setIsOpen} id={id} />}

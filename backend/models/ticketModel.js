@@ -6,11 +6,7 @@ const ticketSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please Type Customer Name!"],
     },
-    passport_id: {
-      type: String || Number,
-      required: [true, "Please Type Passport Id!"],
-    },
-    suplier: {
+    supplier: {
       type: String,
     },
     employee: {

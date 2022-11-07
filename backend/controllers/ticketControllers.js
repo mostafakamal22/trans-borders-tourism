@@ -19,9 +19,8 @@ const createTicket = async (req, res) => {
   try {
     const ticket = await Ticket.create({
       customer_name: req.body?.name,
-      passport_id: req.body?.passportId,
       employee: req.body?.employee,
-      suplier: req.body?.suplier,
+      supplier: req.body?.supplier,
       type: req.body?.type,
       cost: req.body?.cost,
       sales: req.body?.sales,
@@ -32,7 +31,7 @@ const createTicket = async (req, res) => {
   } catch (error) {
     if (
       error.message.match(
-        /(customer_name|booking|payment_date|profit|sales|cost|type|passport_id|employee)/gi
+        /(customer_name|booking|payment_date|profit|sales|cost|type|supplier|employee)/gi
       )
     ) {
       return res.status(400).send(error.message);
@@ -52,9 +51,8 @@ const updateTicket = async (req, res) => {
 
     //update Ticket with new values
     ticket.customer_name = req.body?.name;
-    ticket.suplier = req.body?.suplier;
+    ticket.supplier = req.body?.supplier;
     ticket.employee = req.body?.employee;
-    ticket.passport_id = req.body?.passportId;
     ticket.type = req.body?.type;
     ticket.cost = req.body?.cost;
     ticket.sales = req.body?.sales;
@@ -67,7 +65,7 @@ const updateTicket = async (req, res) => {
   } catch (error) {
     if (
       error.message.match(
-        /(customer_name|booking|payment_date|profit|sales|cost|type|passport_id|employee)/gi
+        /(customer_name|booking|payment_date|profit|sales|cost|type|supplier|employee)/gi
       )
     ) {
       return res.status(400).send(error.message);

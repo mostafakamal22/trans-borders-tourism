@@ -118,7 +118,7 @@ export const ShowInvoice = () => {
           </div>
 
           <img
-            className="self-start max-h-[100%] w-[250px]  mx-auto"
+            className="max-h-[100%] w-[300px]  mx-auto"
             src={logo}
             alt="logo"
           />

@@ -30,13 +30,12 @@ import { UpdateTicket } from "../forms/UpdateTicket";
 
 export const ticketsTableHeaderTitles = [
   "Customer Name",
-  "Passport Id",
   "Type",
   "اسم الموظف",
   "Cost",
   "Sales",
   "Profit",
-  "Suplier",
+  "Supplier",
   "Date",
   "تعديل التذكرة",
   "إضافة فاتورة",
@@ -55,7 +54,7 @@ export const Tickets = () => {
     year: "",
     month: "",
     name: "",
-    suplier: "",
+    supplier: "",
     employee: "",
   });
 
@@ -65,12 +64,12 @@ export const Tickets = () => {
   //PassportID to Update
   const [id, setId] = useState("");
 
-  const { year, month, suplier, employee, name } = searchQuery;
+  const { year, month, supplier, employee, name } = searchQuery;
 
   type SearchQueries = {
     year: string;
     month: string | number;
-    suplier: string;
+    supplier: string;
     employee: string;
     name: string;
   };
@@ -88,7 +87,7 @@ export const Tickets = () => {
 
   //filtered Tickets
   const filteredTickets: [] =
-    month || year || suplier || employee || name
+    month || year || supplier || employee || name
       ? ticketsList.filter((ticket: any) => {
           const ticketDate = dayjs(ticket.payment_date)
             .format("DD/MM/YYYY")
@@ -97,7 +96,7 @@ export const Tickets = () => {
           const ticketData: SearchQueries = {
             year: ticketDate[2],
             month: +ticketDate[1],
-            suplier: ticket.suplier,
+            supplier: ticket.supplier,
             employee: ticket.employee,
             name: ticket.customer_name,
           };
@@ -239,14 +238,6 @@ export const Tickets = () => {
           {ticket.customer_name}
         </th>
 
-        {/*Passport Id*/}
-        <th
-          scope="row"
-          className="p-1  text-gray-900  border-x text-center border-x-black"
-        >
-          {ticket.passport_id}
-        </th>
-
         {/*Type*/}
         <th
           scope="row"
@@ -287,12 +278,12 @@ export const Tickets = () => {
           {ticket.profit}
         </th>
 
-        {/*Suplier*/}
+        {/*Supplier*/}
         <th
           scope="row"
           className="p-1  text-gray-900  border-x text-center border-x-black"
         >
-          {ticket.suplier}
+          {ticket.supplier}
         </th>
 
         {/*Payment Date*/}
@@ -455,7 +446,7 @@ export const Tickets = () => {
 
           <div className="flex justify-center items-center flex-col gap-2">
             <label className={lableClassNamesStyles.default} htmlFor="booking">
-              employee
+              الموظف
             </label>
             <input
               type="text"
@@ -472,18 +463,18 @@ export const Tickets = () => {
           </div>
 
           <div className="flex justify-center items-center flex-col gap-2">
-            <label className={lableClassNamesStyles.default} htmlFor="suplier">
-              Suplier
+            <label className={lableClassNamesStyles.default} htmlFor="supplier">
+              Supplier
             </label>
             <input
               type="text"
-              name="suplier"
+              name="supplier"
               className={inputClassNamesStyles.default}
-              value={suplier}
+              value={supplier}
               onChange={(e) =>
                 setSearchQuery({
                   ...searchQuery,
-                  suplier: e.target.value,
+                  supplier: e.target.value,
                 })
               }
             />
@@ -516,13 +507,13 @@ export const Tickets = () => {
 
           {employee && (
             <span className="bg-emerald-500 p-1 rounded-md text-white mx-1">
-              {"employee:- " + employee}
+              {"الموظف:- " + employee}
             </span>
           )}
 
-          {suplier && (
+          {supplier && (
             <span className="bg-pink-500 p-1 rounded-md text-white mx-1">
-              {" Suplier:- " + suplier}
+              {" Supplier:- " + supplier}
             </span>
           )}
           <span>({filteredTickets.length})</span>
@@ -580,7 +571,7 @@ export const Tickets = () => {
       {!year &&
         !month &&
         !name &&
-        !suplier &&
+        !supplier &&
         !employee &&
         filteredTickets?.length === 0 &&
         !isLoading &&
@@ -591,7 +582,7 @@ export const Tickets = () => {
         )}
 
       {/* if there is search query no Tickets matches >>> No Search Found*/}
-      {(year || month || employee || name || suplier) &&
+      {(year || month || employee || name || supplier) &&
         filteredTickets?.length === 0 &&
         !isLoading &&
         !invoiceData.isLoading && (

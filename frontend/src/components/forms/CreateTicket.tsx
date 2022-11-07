@@ -23,9 +23,8 @@ export const CreateTicket = () => {
   const [ticketsDetails, setTicketsDetails] = useState({
     name: "",
     type: "",
-    passportId: "",
     employee: "",
-    suplier: "",
+    supplier: "",
     paymentDate: "",
     cost: 0,
     sales: 0,
@@ -62,8 +61,7 @@ export const CreateTicket = () => {
       name: ticketsDetails.name.trim(),
       type: ticketsDetails.type.trim(),
       employee: ticketsDetails.employee.trim(),
-      passportId: ticketsDetails.passportId.trim(),
-      suplier: ticketsDetails.suplier.trim(),
+      supplier: ticketsDetails.supplier.trim(),
       cost: ticketsDetails.cost,
       sales: ticketsDetails.sales,
       profit: ticketsDetails.profit,
@@ -119,22 +117,6 @@ export const CreateTicket = () => {
 
           <FormInput
             label={ticketsTableHeaderTitles[1]}
-            name="passportId"
-            labeClassNames={lableClassNamesStyles.default}
-            className={inputClassNamesStyles.default}
-            type="text"
-            value={ticketsDetails.passportId}
-            onChange={(e) =>
-              setTicketsDetails({
-                ...ticketsDetails,
-                passportId: e.target.value,
-              })
-            }
-            required
-          />
-
-          <FormInput
-            label={ticketsTableHeaderTitles[2]}
             name="type"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -146,7 +128,7 @@ export const CreateTicket = () => {
           />
 
           <FormInput
-            label={ticketsTableHeaderTitles[3]}
+            label={ticketsTableHeaderTitles[2]}
             name="اسم الموظف"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -161,7 +143,7 @@ export const CreateTicket = () => {
           />
 
           <FormInput
-            label={ticketsTableHeaderTitles[4]}
+            label={ticketsTableHeaderTitles[3]}
             name="cost"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -179,7 +161,7 @@ export const CreateTicket = () => {
           />
 
           <FormInput
-            label={ticketsTableHeaderTitles[5]}
+            label={ticketsTableHeaderTitles[4]}
             name="sales"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -197,7 +179,7 @@ export const CreateTicket = () => {
           />
 
           <FormInput
-            label={ticketsTableHeaderTitles[6]}
+            label={ticketsTableHeaderTitles[5]}
             name="profit"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -214,22 +196,22 @@ export const CreateTicket = () => {
           />
 
           <FormInput
-            label={ticketsTableHeaderTitles[7]}
-            name="suplier"
+            label={ticketsTableHeaderTitles[6]}
+            name="supplier"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            value={ticketsDetails.suplier}
+            value={ticketsDetails.supplier}
             onChange={(e) =>
               setTicketsDetails({
                 ...ticketsDetails,
-                suplier: e.target.value,
+                supplier: e.target.value,
               })
             }
           />
 
           <FormInput
-            label={ticketsTableHeaderTitles[8]}
+            label={ticketsTableHeaderTitles[7]}
             name="paymentDate"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}

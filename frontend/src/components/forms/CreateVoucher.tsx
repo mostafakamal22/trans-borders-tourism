@@ -48,8 +48,8 @@ export const CreateVoucher = () => {
             </p>
           </div>
 
-          <div className="self-start max-h-[100%] w-[250px]  mx-auto">
-            <img src={logo} alt="TbT Logo" />
+          <div className="flex flex-col justify-center items-center w-[400px] mx-auto">
+            <img className="max-h-[100%] h-[130px]" src={logo} alt="TbT Logo" />
             <p className="flex flex-col justify-center items-center p-3 text-2xl font-bold border-2 border-black mt-4">
               <span>سند صرف</span>
               <span>Payment Voucher</span>
@@ -62,9 +62,9 @@ export const CreateVoucher = () => {
             </p>
             <p>171511 ص.ب.ا </p>
             <p> دبى أ.ع.م </p>
-            <p> 045782747 موبيل </p>
-            <p>+975 556620879 تليفون </p>
-            <p>+975 507597677 تليفون </p>
+            <p> 045782747 تليفون</p>
+            <p>+975 556620879 موبيل</p>
+            <p>+975 507597677 موبيل </p>
 
             <p className="flex flex-col justify-center items-end text-xl mt-5">
               <span>
@@ -83,53 +83,64 @@ export const CreateVoucher = () => {
           </div>
         </div>
 
-        <div className="flex items-center my-5 mt-10 underline underline-offset-2">
-          <p className="text-left font-semibold">Paid To Mr or M/s</p>
-          <input
-            className="mx-auto text-xl  p-1 text-center w-[50%]"
-            type="text"
-          />
-          <p>يصرف إلى السيد /السادة</p>
+        <div
+          style={{ printColorAdjust: "exact" }}
+          className="bg-red-700 p-2 mt-5 text-white  font-semibold underline underline-offset-2 rounded"
+        >
+          <div className="flex items-center my-5">
+            <p className="text-left">Paid To Mr or M/s</p>
+            <input
+              className="mx-auto w-[60%] text-xl text-black bg-red-200 p-2 text-center rounded"
+              type="text"
+            />
+            <p>يصرف إلى السيد /السادة</p>
+          </div>
+
+          <div className="flex items-center my-5">
+            <p className="text-left">The Sum of Dhs</p>
+            <input
+              className="mx-auto text-xl text-black text-center bg-red-200 p-2 rounded"
+              type="text"
+            />
+            <p>مبلغ وقدرة درهم</p>
+          </div>
+
+          <div className="flex items-center my-5">
+            <p className="text-left">Cash / Cheque NO</p>
+
+            <input
+              className="w-[200px] h-[40px] mx-auto text-xl text-black text-center bg-red-200 p-2 rounded"
+              type="text"
+            />
+
+            <p>نقدا / شيك رقم</p>
+
+            <p className="text-left">Bank</p>
+            <input
+              className="w-[200px] h-[40px] mx-auto text-xl text-black text-center bg-red-200 p-2 rounded"
+              type="text"
+            />
+            <p>بنك</p>
+
+            <p className="text-left">Date</p>
+            <input
+              className="w-[200px] h-[40px] mx-auto text-xl text-black text-center bg-red-200 p-2 rounded"
+              type="text"
+            />
+            <p>التاريخ</p>
+          </div>
+
+          <div className="flex items-center my-5">
+            <p className="text-left">Being</p>
+            <input
+              className="mx-auto w-[70%] text-xl text-black bg-red-200 p-2 text-center rounded"
+              type="text"
+            />
+            <p>وذلك عن</p>
+          </div>
         </div>
 
-        <div className="flex items-center my-5 underline underline-offset-2">
-          <p className="text-left font-semibold">The Sum of Dhs</p>
-          <input
-            className="mx-auto text-xl  p-1 text-center w-[50%]"
-            type="text"
-          />
-          <p>مبلغ وقدرة درهم</p>
-        </div>
-
-        <div className="flex items-center gap-2 my-5  underline underline-offset-2">
-          <p className="text-left font-semibold">Cash / Cheque NO</p>
-          <p className="mx-auto text-xl">
-            <input className="text-center" type="text" />
-          </p>
-          <p>نقدا / شيك رقم</p>
-
-          <p className="text-left font-semibold">Bank</p>
-          <p className="mx-auto text-xl">
-            {" "}
-            <input className="text-center" type="text" />
-          </p>
-          <p>بنك</p>
-
-          <p className="text-left font-semibold">Date</p>
-          <input className="text-center" type="text" />
-          <p>التاريخ</p>
-        </div>
-
-        <div className="flex items-center my-5  underline underline-offset-2">
-          <p className="text-left font-semibold">Being</p>
-          <input
-            className="mx-auto text-xl  p-1 text-center w-[50%]"
-            type="text"
-          />
-          <p>وذلك من</p>
-        </div>
-
-        <div className="flex items-center mt-20  font-semibold">
+        <div className="flex items-center mt-20 font-semibold">
           <p className="text-left flex flex-col">
             <span>Prepared By</span>
             <span>تم التحضير</span>
