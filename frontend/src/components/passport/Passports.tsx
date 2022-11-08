@@ -58,6 +58,7 @@ export type PassportService = {
   "90days": "٩٠يوم";
   extend_permission: "تمديد إذن دخول";
   cancel_permission: "إلغاء إذن دخول";
+  cancel_resedency: "إلغاء إقامة";
   report_request: "طلب كشف كفيل ومكفولين";
   renew_resedency: "تجديد إقامة";
   temp_shutdown_with_escape: "إغلاق مؤقت مع بلاغ هروب";
@@ -78,6 +79,7 @@ export const passportService: PassportService = {
   cancel_permission: "إلغاء إذن دخول",
   report_request: "طلب كشف كفيل ومكفولين",
   renew_resedency: "تجديد إقامة",
+  cancel_resedency: "إلغاء إقامة",
   temp_shutdown_with_escape: "إغلاق مؤقت مع بلاغ هروب",
   change_situation: "تعديل وضع",
 };

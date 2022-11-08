@@ -60,7 +60,7 @@ export const CreatePassport = () => {
       //Set message To Suucess Message
       setMsg(message);
 
-      //Set Passport Message To Default
+      //Set Passport Inputs To Default
       setPassportDetails({
         name: "",
         nationality: "",
