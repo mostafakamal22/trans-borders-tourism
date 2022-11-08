@@ -57,11 +57,28 @@ export const CreatePassport = () => {
     }
 
     if (isSuccess) {
+      //Set message To Suucess Message
       setMsg(message);
+
+      //Set Passport Message To Default
+      setPassportDetails({
+        name: "",
+        nationality: "",
+        state: "accepted",
+        service: "30days",
+        passportId: "",
+        paymentDate: "",
+        servicePrice: 0,
+        taxable: 53,
+        taxRate: 2.65,
+        total: 0,
+        sales: 0,
+        profit: 0,
+      });
     }
   }, [isError, isSuccess, message, info, msg]);
 
-  const handleSubmit = async (e: React.SyntheticEvent) => {
+  const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
     //set msg to none first
     setMsg("");
