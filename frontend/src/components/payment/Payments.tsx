@@ -314,7 +314,10 @@ export const Payments = () => {
         <PaginationTable
           tableRow={tableRow}
           tableHeader={tableHeader}
-          tableBodyData={[...filteredPayments].reverse()}
+          tableBodyData={[...filteredPayments].sort(
+            (a: any, b: any) =>
+              dayjs(b.date).valueOf() - dayjs(a.date).valueOf()
+          )}
           rowsPerPage={10}
         />
       )}

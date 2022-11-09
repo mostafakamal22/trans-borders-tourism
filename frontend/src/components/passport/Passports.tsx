@@ -699,7 +699,11 @@ export const Passports = () => {
           <PaginationTable
             tableRow={tableRow}
             tableHeader={tableHeader}
-            tableBodyData={[...filteredPassports].reverse()}
+            tableBodyData={[...filteredPassports].sort(
+              (a: any, b: any) =>
+                dayjs(b.payment_date).valueOf() -
+                dayjs(a.payment_date).valueOf()
+            )}
             rowsPerPage={10}
           />
         )}

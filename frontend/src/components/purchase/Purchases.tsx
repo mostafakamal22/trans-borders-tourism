@@ -420,7 +420,10 @@ export const Purchases = () => {
         <PaginationTable
           tableRow={tableRow}
           tableHeader={tableHeader}
-          tableBodyData={[...filteredPurchases].reverse()}
+          tableBodyData={[...filteredPurchases].sort(
+            (a: any, b: any) =>
+              dayjs(b.date).valueOf() - dayjs(a.date).valueOf()
+          )}
           rowsPerPage={10}
         />
       )}
