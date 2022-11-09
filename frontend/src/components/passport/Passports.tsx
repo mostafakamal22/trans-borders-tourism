@@ -158,6 +158,14 @@ export const Passports = () => {
         })
       : passportsList;
 
+  const sortedPassports = [...filteredPassports].sort((a: any, b: any) => {
+    if (dayjs(b.payment_date).valueOf() === dayjs(a.payment_date).valueOf()) {
+      return dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf();
+    }
+
+    return dayjs(b.payment_date).valueOf() - dayjs(a.payment_date).valueOf();
+  });
+
   const { totals, servicePrices, taxRates, taxables, profits, sales } =
     passportsCalculations(filteredPassports);
 
@@ -438,9 +446,7 @@ export const Passports = () => {
           scope="row"
           className="p-1  text-gray-90 border-x text-center border-x-black"
         >
-          {[...filteredPassports]
-            .reverse()
-            .findIndex((p: any) => p._id === passport._id) + 1}
+          {sortedPassports.findIndex((p: any) => p._id === passport._id) + 1}
         </th>
       </tr>
     );
@@ -699,11 +705,7 @@ export const Passports = () => {
           <PaginationTable
             tableRow={tableRow}
             tableHeader={tableHeader}
-            tableBodyData={[...filteredPassports].sort(
-              (a: any, b: any) =>
-                dayjs(b.payment_date).valueOf() -
-                dayjs(a.payment_date).valueOf()
-            )}
+            tableBodyData={sortedPassports}
             rowsPerPage={10}
           />
         )}

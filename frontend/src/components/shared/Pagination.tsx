@@ -8,13 +8,13 @@ const Pagination = ({ range, setPage, page, slice }: any) => {
   }, [slice, page, setPage]);
   return (
     <nav className="mx-auto my-5 text-center">
-      <ul className="inline-flex items-center flex-wrap -space-x-px">
+      <ul className="inline-flex items-center gap-1 flex-wrap mx-2">
         {range.map((el: any, index: number) => (
           <li key={index} onClick={() => setPage(el)}>
             <button
               className={`${
-                el === page && "bg-blue-100"
-              } py-2 px-3 leading-tight text-blue-900 border border-blue-300 hover:bg-blue-100 hover:text-gray-700`}
+                el === page && "bg-red-100"
+              } min-w-[40px] p-2 leading-tight text-red-900 border border-red-300 rounded hover:bg-red-100 hover:text-black`}
             >
               {el}
             </button>

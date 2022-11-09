@@ -113,6 +113,14 @@ export const Visas = () => {
         })
       : visasList;
 
+  const sortedVisas = [...filteredVisas].sort((a: any, b: any) => {
+    if (dayjs(b.payment_date).valueOf() === dayjs(a.payment_date).valueOf()) {
+      return dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf();
+    }
+
+    return dayjs(b.payment_date).valueOf() - dayjs(a.payment_date).valueOf();
+  });
+
   const { isLoading, isError, isSuccess, message } = useAppSelector(
     (state) => state.visasData
   );
@@ -362,9 +370,7 @@ export const Visas = () => {
           scope="row"
           className="p-1  text-gray-90 border-x text-center border-x-black"
         >
-          {[...filteredVisas]
-            .reverse()
-            .findIndex((p: any) => p._id === visa._id) + 1}
+          {sortedVisas.findIndex((p: any) => p._id === visa._id) + 1}
         </th>
       </tr>
     );
@@ -564,10 +570,7 @@ export const Visas = () => {
         <PaginationTable
           tableRow={tableRow}
           tableHeader={tableHeader}
-          tableBodyData={[...filteredVisas].sort(
-            (a: any, b: any) =>
-              dayjs(b.payment_date).valueOf() - dayjs(a.payment_date).valueOf()
-          )}
+          tableBodyData={sortedVisas}
           rowsPerPage={10}
         />
       )}

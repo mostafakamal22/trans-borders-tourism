@@ -67,6 +67,14 @@ export const Payments = () => {
         })
       : paymentsList;
 
+  const sortedPayments = [...filteredPayments].sort((a: any, b: any) => {
+    if (dayjs(b.date).valueOf() === dayjs(a.date).valueOf()) {
+      return dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf();
+    }
+
+    return dayjs(b.date).valueOf() - dayjs(a.date).valueOf();
+  });
+
   const { isLoading, isError, isSuccess, message } = useAppSelector(
     (state) => state.paymentsData
   );
@@ -202,9 +210,7 @@ export const Payments = () => {
           scope="row"
           className="p-1  text-gray-90 border-x text-center border-x-black"
         >
-          {[...filteredPayments]
-            .reverse()
-            .findIndex((p: any) => p._id === payment._id) + 1}
+          {sortedPayments.findIndex((p: any) => p._id === payment._id) + 1}
         </th>
       </tr>
     );
@@ -314,10 +320,7 @@ export const Payments = () => {
         <PaginationTable
           tableRow={tableRow}
           tableHeader={tableHeader}
-          tableBodyData={[...filteredPayments].sort(
-            (a: any, b: any) =>
-              dayjs(b.date).valueOf() - dayjs(a.date).valueOf()
-          )}
+          tableBodyData={sortedPayments}
           rowsPerPage={10}
         />
       )}

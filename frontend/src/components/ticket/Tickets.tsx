@@ -112,6 +112,14 @@ export const Tickets = () => {
         })
       : ticketsList;
 
+  const sortedTickets = [...filteredTickets].sort((a: any, b: any) => {
+    if (dayjs(b.payment_date).valueOf() === dayjs(a.payment_date).valueOf()) {
+      return dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf();
+    }
+
+    return dayjs(b.payment_date).valueOf() - dayjs(a.payment_date).valueOf();
+  });
+
   const { costs, profits, sales } = ticketsCalculations(filteredTickets);
 
   const { isLoading, isError, isSuccess, message } = useAppSelector(
@@ -225,9 +233,7 @@ export const Tickets = () => {
           scope="row"
           className="p-1  text-gray-90 border-x text-center border-x-black"
         >
-          {[...filteredTickets]
-            .reverse()
-            .findIndex((t: any) => t._id === ticket._id) + 1}
+          {sortedTickets.findIndex((t: any) => t._id === ticket._id) + 1}
         </th>
 
         {/*Customer Name*/}
@@ -562,10 +568,7 @@ export const Tickets = () => {
         <PaginationTable
           tableRow={tableRow}
           tableHeader={tableHeader}
-          tableBodyData={[...filteredTickets].sort(
-            (a: any, b: any) =>
-              dayjs(b.payment_date).valueOf() - dayjs(a.payment_date).valueOf()
-          )}
+          tableBodyData={sortedTickets}
           rowsPerPage={10}
         />
       )}
