@@ -26,12 +26,15 @@ const createTicket = async (req, res) => {
       sales: req.body?.sales,
       profit: req.body?.profit,
       payment_date: req.body?.paymentDate,
+      paid_amount: req.body?.paidAmount,
+      remaining_amount: req.body?.remainingAmount,
+      payment_method: req.body?.paymentMethod,
     });
     res.status(201).json(ticket);
   } catch (error) {
     if (
       error.message.match(
-        /(customer_name|booking|payment_date|profit|sales|cost|type|supplier|employee)/gi
+        /(customer_name|booking|payment_date|profit|sales|cost|type|supplier|employee|paid_amount|remaining_amount|payment_method)/gi
       )
     ) {
       return res.status(400).send(error.message);
@@ -58,6 +61,9 @@ const updateTicket = async (req, res) => {
     ticket.sales = req.body?.sales;
     ticket.profit = req.body?.profit;
     ticket.payment_date = req.body?.paymentDate;
+    ticket.paid_amount = req.body?.paidAmount;
+    ticket.remaining_amount = req.body?.remainingAmount;
+    ticket.payment_method = req.body?.paymentMethod;
     //get updated tickets info & send it back
     const updatedTicket = await ticket.save();
 
@@ -65,7 +71,7 @@ const updateTicket = async (req, res) => {
   } catch (error) {
     if (
       error.message.match(
-        /(customer_name|booking|payment_date|profit|sales|cost|type|supplier|employee)/gi
+        /(customer_name|booking|payment_date|profit|sales|cost|type|supplier|employee|paid_amount|remaining_amount|payment_method)/gi
       )
     ) {
       return res.status(400).send(error.message);

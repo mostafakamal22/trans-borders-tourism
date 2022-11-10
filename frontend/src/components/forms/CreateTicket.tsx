@@ -17,6 +17,7 @@ import MessagesContainer from "../shared/MessagesContainer";
 import { inputClassNamesStyles, lableClassNamesStyles } from "./CreateInvoice";
 import logo from "../../assets/imgs/trans-logo.png";
 import { ticketsTableHeaderTitles } from "../ticket/Tickets";
+import { PaymentMethods, paymentMethods } from "./CreatePayment";
 
 export const CreateTicket = () => {
   //state for Ticket Details
@@ -26,9 +27,12 @@ export const CreateTicket = () => {
     employee: "",
     supplier: "",
     paymentDate: "",
+    paymentMethod: "cash",
     cost: 0,
     sales: 0,
     profit: 0,
+    paidAmount: 0,
+    remainingAmount: 0,
   });
 
   //state for alert messages
@@ -66,6 +70,9 @@ export const CreateTicket = () => {
       sales: ticketsDetails.sales,
       profit: ticketsDetails.profit,
       paymentDate: ticketsDetails.paymentDate,
+      paymentMethod: ticketsDetails.paymentMethod,
+      paidAmount: ticketsDetails.paidAmount,
+      remainingAmount: ticketsDetails.remainingAmount,
     };
 
     dispatch(createTicket(ticketData));
@@ -147,7 +154,7 @@ export const CreateTicket = () => {
             name="cost"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
-            type="nmuber"
+            type="number"
             value={ticketsDetails.cost}
             onChange={(e) =>
               setTicketsDetails({
@@ -165,7 +172,7 @@ export const CreateTicket = () => {
             name="sales"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
-            type="nmuber"
+            type="number"
             value={ticketsDetails.sales}
             onChange={(e) =>
               setTicketsDetails({
@@ -183,7 +190,7 @@ export const CreateTicket = () => {
             name="profit"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
-            type="nmuber"
+            type="number"
             value={ticketsDetails.profit}
             onChange={(e) =>
               setTicketsDetails({
@@ -194,6 +201,65 @@ export const CreateTicket = () => {
             min={0}
             step={0.01}
           />
+
+          <FormInput
+            label={"Paid Amount"}
+            name="paidAmount"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
+            type="number"
+            value={ticketsDetails.paidAmount}
+            onChange={(e) =>
+              setTicketsDetails({
+                ...ticketsDetails,
+                paidAmount: +e.target.value,
+                remainingAmount: ticketsDetails.sales - +e.target.value,
+              })
+            }
+            min={0}
+            step={0.01}
+          />
+
+          <FormInput
+            label={"Remaining Amount"}
+            name="remainingAmount"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
+            type="number"
+            value={ticketsDetails.remainingAmount}
+            onChange={(e) =>
+              setTicketsDetails({
+                ...ticketsDetails,
+                remainingAmount: +e.target.value,
+              })
+            }
+            min={0}
+            step={0.01}
+          />
+
+          <label
+            htmlFor="paymentMethod"
+            className={lableClassNamesStyles.default}
+          >
+            {"Payment Method"}
+          </label>
+          <select
+            name="paymentMethod"
+            className={inputClassNamesStyles.default}
+            value={ticketsDetails.paymentMethod}
+            onChange={(e) =>
+              setTicketsDetails({
+                ...ticketsDetails,
+                paymentMethod: e.target.value,
+              })
+            }
+          >
+            {Object.keys(paymentMethods).map((method: string) => (
+              <option key={method} value={method}>
+                {paymentMethods[method as keyof PaymentMethods]}
+              </option>
+            ))}
+          </select>
 
           <FormInput
             label={ticketsTableHeaderTitles[6]}

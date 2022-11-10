@@ -41,11 +41,18 @@ const createInvoice = async (req, res) => {
       tax_due: req.body?.taxDue,
       tax_rate: req.body?.taxRate,
       taxable: req.body?.taxable,
+      paid_amount: req.body?.paidAmount,
+      remaining_amount: req.body?.remainingAmount,
+      payment_method: req.body?.paymentMethod,
       other: req.body?.other,
     });
     res.status(201).json(invoice);
   } catch (error) {
-    if (error.message.match(/(date|details|customer|subtotal|total|ID)/gi)) {
+    if (
+      error.message.match(
+        /(date|details|customer|subtotal|total|ID|tax_due|tax_rate|taxable|paid_amount|remaining_amount|payment_method)/gi
+      )
+    ) {
       return res.status(400).send(error.message);
     }
 

@@ -149,13 +149,7 @@ export const Tickets = () => {
   };
 
   // handle Creating invoice
-  const handleAddInvoice = (
-    e: any,
-    customerName: string,
-    passport_service: string,
-    paymentDate: string,
-    passportSales: number
-  ) => {
+  const handleAddInvoice = (e: React.SyntheticEvent, ticket: any) => {
     e.preventDefault();
 
     //set msg to none first
@@ -165,20 +159,19 @@ export const Tickets = () => {
 
     const invoiceData = {
       token: info.token,
-      customer: { name: customerName },
+      customer: { name: ticket.customer_name },
       details: [
         {
-          name: passport_service,
+          name: ticket.type,
           quantity: 1,
-          price: passportSales,
+          price: ticket.sales,
         },
       ],
-      total: passportSales,
-      subtotal: 0,
-      date: paymentDate,
-      taxDue: 0,
-      taxRate: 0,
-      taxable: 0,
+      total: ticket.sales,
+      date: ticket.payment_date,
+      paidAmount: ticket.paid_amount,
+      remainingAmount: ticket.remaining_amount,
+      paymentMethod: ticket.payment_method,
     };
 
     dispatch(createInvoice(invoiceData));
@@ -326,20 +319,11 @@ export const Tickets = () => {
         >
           <form
             className="max-w-[50px] m-auto"
-            onSubmit={(event) =>
-              handleAddInvoice(
-                event,
-                ticket.customer_name,
-                ticket.type,
-                ticket.payment_date,
-                ticket.sales
-              )
-            }
+            onSubmit={(event) => handleAddInvoice(event, ticket)}
           >
             <FormButton
-              text={{ default: "إضافة", loading: " " }}
+              text={{ default: "إضافة" }}
               bgColor={["bg-orange-600", "bg-orange-700", "bg-orange-800"]}
-              isLoading={invoiceData.isLoading}
               icon={<TiEdit className="mb-[-2px]" size={25} />}
             />
           </form>

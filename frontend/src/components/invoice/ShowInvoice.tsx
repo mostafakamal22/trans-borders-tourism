@@ -6,7 +6,7 @@ import ReactToPrint from "react-to-print";
 import { useRef, useEffect } from "react";
 import { AiFillPrinter } from "react-icons/ai";
 
-const tableHeaderTitles = ["Description", "Quantity", "Price"];
+const tableHeaderTitles = ["NO.", "Description", "Quantity", "Price", "Total"];
 
 export const ShowInvoice = () => {
   const { invoiceList } = useAppSelector((state) => state.invoiceData);
@@ -46,6 +46,14 @@ export const ShowInvoice = () => {
           index % 2 === 0 ? "bg-white" : "bg-red-100"
         } border-b border-b-black`}
       >
+        {/*Detail NO*/}
+        <th
+          scope="row"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x  border-x-black text-center"
+        >
+          {index + 1}
+        </th>
+
         {/*Description*/}
         <th
           scope="row"
@@ -63,6 +71,14 @@ export const ShowInvoice = () => {
         </th>
 
         {/*Price*/}
+        <th
+          scope="row"
+          className="p-2  text-gray-900 whitespace-nowrap  border-x  border-x-black text-center"
+        >
+          {detail.price}
+        </th>
+
+        {/*Total*/}
         <th
           scope="row"
           className="p-2  text-gray-900 whitespace-nowrap  border-x  border-x-black text-center"
@@ -183,50 +199,32 @@ export const ShowInvoice = () => {
           </div>
         </div>
 
-        <div className=" text-left font-semibold">
-          <p className="my-1">
-            Subtotal
+        <div className="flex justify-center items-center gap-3 my-10 text-left font-semibold">
+          <p className="mx-1">
+            Paid Amount
             <span
               style={{ printColorAdjust: "exact" }}
-              className="ml-4 px-2 bg-red-100 rounded-sm"
+              className="ml-4 py-2 px-4 bg-red-100 rounded"
             >
-              {invoice.subtotal}
+              {invoice.paid_amount ? invoice.paid_amount : invoice.total}
             </span>
           </p>
-          <p className="my-1">
-            Taxable
+          <p className="mx-1">
+            Remaining Amount
             <span
               style={{ printColorAdjust: "exact" }}
-              className="ml-4 px-2 bg-red-100 rounded-sm"
+              className="ml-4 py-2 px-4 bg-red-100 rounded"
             >
-              {invoice.taxable}
+              {invoice.remaining_amount ? invoice.remaining_amount : 0}
             </span>
           </p>
-          <p className="my-1">
-            Tax rate
+          <p className="mx-1">
+            Payment Method
             <span
               style={{ printColorAdjust: "exact" }}
-              className="ml-4 px-2 bg-red-100 rounded-sm"
+              className="ml-4 py-2 px-4 bg-red-100 rounded"
             >
-              {invoice.tax_rate}
-            </span>
-          </p>
-          <p className="my-1">
-            Tax due
-            <span
-              style={{ printColorAdjust: "exact" }}
-              className="ml-4 px-2 bg-red-100 rounded-sm"
-            >
-              {invoice.tax_due}
-            </span>
-          </p>
-          <p className="my-1">
-            Total
-            <span
-              style={{ printColorAdjust: "exact" }}
-              className="ml-4 px-2 bg-red-100 rounded-sm"
-            >
-              {invoice.total}
+              {invoice.payment_method ? invoice.payment_method : "-"}
             </span>
           </p>
         </div>

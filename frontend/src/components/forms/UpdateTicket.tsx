@@ -19,6 +19,7 @@ import MessagesContainer from "../shared/MessagesContainer";
 import FormButton from "../shared/FormButton";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { AiFillCloseCircle } from "react-icons/ai";
+import { PaymentMethods, paymentMethods } from "./CreatePayment";
 
 export const UpdateTicket = ({
   id,
@@ -40,9 +41,12 @@ export const UpdateTicket = ({
     paymentDate: ticket.payment_date
       ? dayjs(ticket?.payment_date).format("YYYY-MM-DD")
       : "",
+    paymentMethod: ticket.payment_method,
     cost: ticket.cost,
     sales: ticket.sales,
     profit: ticket.profit,
+    paidAmount: ticket.paid_amount,
+    remainingAmount: ticket.remaining_amount,
   });
 
   //state for alert messages
@@ -81,6 +85,9 @@ export const UpdateTicket = ({
       sales: ticketsDetails.sales,
       profit: ticketsDetails.profit,
       paymentDate: ticketsDetails.paymentDate,
+      paymentMethod: ticketsDetails.paymentMethod,
+      paidAmount: ticketsDetails.paidAmount,
+      remainingAmount: ticketsDetails.remainingAmount,
     };
 
     dispatch(updateTicket(ticketData));
@@ -173,7 +180,7 @@ export const UpdateTicket = ({
               name="cost"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
-              type="nmuber"
+              type="number"
               value={ticketsDetails.cost}
               onChange={(e) =>
                 setTicketsDetails({
@@ -191,7 +198,7 @@ export const UpdateTicket = ({
               name="sales"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
-              type="nmuber"
+              type="number"
               value={ticketsDetails.sales}
               onChange={(e) =>
                 setTicketsDetails({
@@ -209,7 +216,7 @@ export const UpdateTicket = ({
               name="profit"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
-              type="nmuber"
+              type="number"
               value={ticketsDetails.profit}
               onChange={(e) =>
                 setTicketsDetails({
@@ -220,6 +227,65 @@ export const UpdateTicket = ({
               min={0}
               step={0.01}
             />
+
+            <FormInput
+              label={"Paid Amount"}
+              name="paidAmount"
+              labeClassNames={lableClassNamesStyles.default}
+              className={inputClassNamesStyles.default}
+              type="number"
+              value={ticketsDetails.paidAmount}
+              onChange={(e) =>
+                setTicketsDetails({
+                  ...ticketsDetails,
+                  paidAmount: +e.target.value,
+                  remainingAmount: ticketsDetails.sales - +e.target.value,
+                })
+              }
+              min={0}
+              step={0.01}
+            />
+
+            <FormInput
+              label={"Remaining Amount"}
+              name="remainingAmount"
+              labeClassNames={lableClassNamesStyles.default}
+              className={inputClassNamesStyles.default}
+              type="number"
+              value={ticketsDetails.remainingAmount}
+              onChange={(e) =>
+                setTicketsDetails({
+                  ...ticketsDetails,
+                  remainingAmount: +e.target.value,
+                })
+              }
+              min={0}
+              step={0.01}
+            />
+
+            <label
+              htmlFor="paymentMethod"
+              className={lableClassNamesStyles.default}
+            >
+              {"Payment Method"}
+            </label>
+            <select
+              name="paymentMethod"
+              className={inputClassNamesStyles.default}
+              value={ticketsDetails.paymentMethod}
+              onChange={(e) =>
+                setTicketsDetails({
+                  ...ticketsDetails,
+                  paymentMethod: e.target.value,
+                })
+              }
+            >
+              {Object.keys(paymentMethods).map((method: string) => (
+                <option key={method} value={method}>
+                  {paymentMethods[method as keyof PaymentMethods]}
+                </option>
+              ))}
+            </select>
 
             <FormInput
               label={ticketsTableHeaderTitles[6]}
