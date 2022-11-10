@@ -19,6 +19,7 @@ import { visaTableHeaderTitles } from "../visa/Visas";
 import { inputClassNamesStyles, lableClassNamesStyles } from "./CreateInvoice";
 import logo from "../../assets/imgs/trans-logo.png";
 import dayjs from "dayjs";
+import { PaymentMethods, paymentMethods } from "./CreatePayment";
 
 export const UpdateVisa = ({
   id,
@@ -39,9 +40,12 @@ export const UpdateVisa = ({
     paymentDate: visa.payment_date
       ? dayjs(visa?.payment_date).format("YYYY-MM-DD")
       : "",
+    paymentMethod: visa.payment_method,
     netFare: visa.net_fare,
     sales: visa.sales,
     profit: visa.profit,
+    paidAmount: visa.paid_amount,
+    remainingAmount: visa.remaining_amount,
   });
 
   //state for alert messages
@@ -80,6 +84,9 @@ export const UpdateVisa = ({
       netFare: visaDetails.netFare,
       sales: visaDetails.sales,
       profit: visaDetails.profit,
+      paymentMethod: visaDetails.paymentMethod,
+      paidAmount: visaDetails.paidAmount,
+      remainingAmount: visaDetails.remainingAmount,
     };
 
     dispatch(updateVisa(visaData));
@@ -241,6 +248,65 @@ export const UpdateVisa = ({
               min={0}
               step={0.01}
             />
+
+            <FormInput
+              label={"Paid Amount"}
+              name="paidAmount"
+              labeClassNames={lableClassNamesStyles.default}
+              className={inputClassNamesStyles.default}
+              type="number"
+              value={visaDetails.paidAmount}
+              onChange={(e) =>
+                setVisaDetails({
+                  ...visaDetails,
+                  paidAmount: +e.target.value,
+                  remainingAmount: visaDetails.sales - +e.target.value,
+                })
+              }
+              min={0}
+              step={0.01}
+            />
+
+            <FormInput
+              label={"Remaining Amount"}
+              name="remainingAmount"
+              labeClassNames={lableClassNamesStyles.default}
+              className={inputClassNamesStyles.default}
+              type="number"
+              value={visaDetails.remainingAmount}
+              onChange={(e) =>
+                setVisaDetails({
+                  ...visaDetails,
+                  remainingAmount: +e.target.value,
+                })
+              }
+              min={0}
+              step={0.01}
+            />
+
+            <label
+              htmlFor="paymentMethod"
+              className={lableClassNamesStyles.default}
+            >
+              {"Payment Method"}
+            </label>
+            <select
+              name="paymentMethod"
+              className={inputClassNamesStyles.default}
+              value={visaDetails.paymentMethod}
+              onChange={(e) =>
+                setVisaDetails({
+                  ...visaDetails,
+                  paymentMethod: e.target.value,
+                })
+              }
+            >
+              {Object.keys(paymentMethods).map((method: string) => (
+                <option key={method} value={method}>
+                  {paymentMethods[method as keyof PaymentMethods]}
+                </option>
+              ))}
+            </select>
 
             <FormInput
               label={visaTableHeaderTitles[11]}

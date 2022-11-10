@@ -206,7 +206,9 @@ export const ShowInvoice = () => {
               style={{ printColorAdjust: "exact" }}
               className="ml-4 py-2 px-4 bg-red-100 rounded"
             >
-              {invoice.paid_amount ? invoice.paid_amount : invoice.total}
+              {invoice.paid_amount || invoice.paid_amount === 0
+                ? invoice.paid_amount
+                : invoice.total}
             </span>
           </p>
           <p className="mx-1">

@@ -34,6 +34,19 @@ const visaSchema = new mongoose.Schema(
       default: 0,
       min: [0, "Visa Profit Can Not Be less than 0"],
     },
+    paid_amount: {
+      type: Number,
+      default: 0,
+      min: [0, "Paid Amount Can NOT Be Less Than 0"],
+    },
+    remaining_amount: {
+      type: Number,
+      default: 0,
+      min: [0, "Remaining Amount Can NOT Be Less Than 0"],
+    },
+    payment_method: {
+      type: String,
+    },
     payment_date: {
       type: Date,
     },

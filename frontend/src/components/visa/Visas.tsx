@@ -27,6 +27,7 @@ import {
 } from "../../state/features/invoice/invoiceSlice";
 import { visaCalculations } from "../helpers/visaCalculations";
 import { UpdateVisa } from "../forms/UpdateVisa";
+import { PaymentMethods, paymentMethods } from "../forms/CreatePayment";
 
 export const visaTableHeaderTitles = [
   "مسح",
@@ -151,14 +152,7 @@ export const Visas = () => {
   };
 
   // handle Creating invoice
-  const handleAddInvoice = (
-    e: React.SyntheticEvent,
-    customerName: string,
-    passportId: string,
-    visaType: string,
-    paymentDate: string,
-    visaSales: number
-  ) => {
+  const handleAddInvoice = (e: React.SyntheticEvent, visa: any) => {
     e.preventDefault();
 
     //set msg to none first
@@ -167,21 +161,21 @@ export const Visas = () => {
 
     const invoiceData = {
       token: info.token,
-      ID: passportId,
-      customer: { name: customerName },
+      ID: visa.passport_id,
+      customer: { name: visa.customer_name },
       details: [
         {
-          name: visaType,
+          name: visa.type,
           quantity: 1,
-          price: visaSales,
+          price: visa.sales,
         },
       ],
-      total: visaSales,
-      subtotal: 0,
-      date: paymentDate,
-      taxDue: 0,
-      taxRate: 0,
-      taxable: 0,
+      total: visa.sales,
+      date: visa.payment_date,
+      paidAmount: visa.paid_amount,
+      remainingAmount: visa.remaining_amount,
+      paymentMethod:
+        paymentMethods[visa.payment_method as keyof PaymentMethods],
     };
 
     dispatch(createInvoice(invoiceData));
@@ -255,16 +249,7 @@ export const Visas = () => {
         >
           <form
             className="max-w-[150px] m-auto"
-            onSubmit={(event) =>
-              handleAddInvoice(
-                event,
-                visa.customer_name,
-                visa.passport_id,
-                visa.type,
-                visa.payment_date,
-                visa.sales
-              )
-            }
+            onSubmit={(event) => handleAddInvoice(event, visa)}
           >
             <FormButton
               text={{ default: "إضافة" }}

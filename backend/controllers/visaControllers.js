@@ -27,12 +27,15 @@ const createVisa = async (req, res) => {
       sales: req.body.sales,
       profit: req.body.profit,
       payment_date: req.body.paymentDate,
+      paid_amount: req.body?.paidAmount,
+      remaining_amount: req.body?.remainingAmount,
+      payment_method: req.body?.paymentMethod,
     });
     res.status(201).json(visa);
   } catch (error) {
     if (
       error.message.match(
-        /(provider|passport_id|version|customer_name|customer_number|type|employee|net_fare|sales|profit|payment_date)/gi
+        /(provider|passport_id|version|customer_name|customer_number|type|employee|net_fare|sales|profit|payment_date|paid_amount|remaining_amount|payment_method)/gi
       )
     ) {
       return res.status(400).send(error.message);
@@ -60,6 +63,9 @@ const updateVisa = async (req, res) => {
     visa.sales = req.body.sales;
     visa.profit = req.body.profit;
     visa.payment_date = req.body.paymentDate;
+    visa.paid_amount = req.body?.paidAmount;
+    visa.remaining_amount = req.body?.remainingAmount;
+    visa.payment_method = req.body?.paymentMethod;
     //get updated Visa info & send it back
     const updatedVisa = await visa.save();
 
@@ -67,7 +73,7 @@ const updateVisa = async (req, res) => {
   } catch (error) {
     if (
       error.message.match(
-        /(provider|passport_id|version|customer_name|customer_number|type|employee|net_fare|sales|profit|payment_date)/gi
+        /(provider|passport_id|version|customer_name|customer_number|type|employee|net_fare|sales|profit|payment_date|paid_amount|remaining_amount|payment_method)/gi
       )
     ) {
       return res.status(400).send(error.message);

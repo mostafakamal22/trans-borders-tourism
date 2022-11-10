@@ -17,6 +17,7 @@ import logo from "../../assets/imgs/trans-logo.png";
 import MessagesContainer from "../shared/MessagesContainer";
 import FormButton from "../shared/FormButton";
 import { RiSendPlaneFill } from "react-icons/ri";
+import { PaymentMethods, paymentMethods } from "./CreatePayment";
 
 export const CreateVisa = () => {
   //state for Visa Details
@@ -27,9 +28,12 @@ export const CreateVisa = () => {
     employee: "",
     passportId: "",
     paymentDate: "",
+    paymentMethod: "cash",
     netFare: 0,
     sales: 0,
     profit: 0,
+    paidAmount: 0,
+    remainingAmount: 0,
   });
 
   //state for alert messages
@@ -68,6 +72,9 @@ export const CreateVisa = () => {
       netFare: visaDetails.netFare,
       sales: visaDetails.sales,
       profit: visaDetails.profit,
+      paymentMethod: visaDetails.paymentMethod,
+      paidAmount: visaDetails.paidAmount,
+      remainingAmount: visaDetails.remainingAmount,
     };
 
     dispatch(createVisa(visaData));
@@ -218,6 +225,65 @@ export const CreateVisa = () => {
             min={0}
             step={0.01}
           />
+
+          <FormInput
+            label={"Paid Amount"}
+            name="paidAmount"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
+            type="number"
+            value={visaDetails.paidAmount}
+            onChange={(e) =>
+              setVisaDetails({
+                ...visaDetails,
+                paidAmount: +e.target.value,
+                remainingAmount: visaDetails.sales - +e.target.value,
+              })
+            }
+            min={0}
+            step={0.01}
+          />
+
+          <FormInput
+            label={"Remaining Amount"}
+            name="remainingAmount"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
+            type="number"
+            value={visaDetails.remainingAmount}
+            onChange={(e) =>
+              setVisaDetails({
+                ...visaDetails,
+                remainingAmount: +e.target.value,
+              })
+            }
+            min={0}
+            step={0.01}
+          />
+
+          <label
+            htmlFor="paymentMethod"
+            className={lableClassNamesStyles.default}
+          >
+            {"Payment Method"}
+          </label>
+          <select
+            name="paymentMethod"
+            className={inputClassNamesStyles.default}
+            value={visaDetails.paymentMethod}
+            onChange={(e) =>
+              setVisaDetails({
+                ...visaDetails,
+                paymentMethod: e.target.value,
+              })
+            }
+          >
+            {Object.keys(paymentMethods).map((method: string) => (
+              <option key={method} value={method}>
+                {paymentMethods[method as keyof PaymentMethods]}
+              </option>
+            ))}
+          </select>
 
           <FormInput
             label={visaTableHeaderTitles[11]}

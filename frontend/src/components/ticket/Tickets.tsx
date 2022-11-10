@@ -27,6 +27,7 @@ import { PaginationTable } from "../shared/PaginationTable";
 import logo from "../../assets/imgs/trans-logo.png";
 import { ticketsCalculations } from "../helpers/ticketCalculations";
 import { UpdateTicket } from "../forms/UpdateTicket";
+import { PaymentMethods, paymentMethods } from "../forms/CreatePayment";
 
 export const ticketsTableHeaderTitles = [
   "Customer Name",
@@ -171,7 +172,8 @@ export const Tickets = () => {
       date: ticket.payment_date,
       paidAmount: ticket.paid_amount,
       remainingAmount: ticket.remaining_amount,
-      paymentMethod: ticket.payment_method,
+      paymentMethod:
+        paymentMethods[ticket.payment_method as keyof PaymentMethods],
     };
 
     dispatch(createInvoice(invoiceData));
