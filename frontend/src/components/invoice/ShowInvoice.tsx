@@ -111,7 +111,7 @@ export const ShowInvoice = () => {
       />
       <div
         ref={componentRef}
-        className="max-w-6xl min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30 print:shadow-none print:my-0"
+        className="max-w-6xl min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30 print:shadow-none print:min-h-screen print:my-0 print:flex print:flex-col print:justify-between"
       >
         <div className="flex items-center">
           <div className="max-w-[300px] text-left">
@@ -119,16 +119,16 @@ export const ShowInvoice = () => {
               TRANS BORDERS TOURISM L.L.C
             </p>
             <p>DUBAI-DEIRA-ABU HAIL</p>
-            <p>TEL/045782747</p>
-            <p>MOB/971556620879</p>
-            <p>MOB/971507597677</p>
+            <p>TEL:- 045782747</p>
+            <p>MOB:- +971556620879</p>
+            <p>MOB:- +971507597677</p>
             <p className="underline text-blue-700">
               EMAIL/SAMEHDU2009@YAHOO.COM
             </p>
             <p className="underline text-blue-700">
               WEBSITE:-{" "}
               <a href="http://tbtourism.com/" target={"_blank"}>
-                http://tbttourism.com/
+                http://tbtourism.com/
               </a>
             </p>
           </div>
@@ -168,7 +168,7 @@ export const ShowInvoice = () => {
         <div className=" mt-5">
           <h2
             style={{ printColorAdjust: "exact" }}
-            className="text-white font-bold text-xl p-1 bg-red-800 print:!bg-red-800 mb-4"
+            className="font-bold text-xl p-1 bg-red-100 mb-4"
           >
             Bill To
           </h2>
@@ -234,13 +234,13 @@ export const ShowInvoice = () => {
         <div className=" mt-5">
           <h3
             style={{ printColorAdjust: "exact" }}
-            className="text-white font-bold text-xl p-1 bg-red-800 mb-4"
+            className="font-bold text-xl p-1 bg-red-100 mb-4"
           >
             Other Comments
           </h3>
 
           <p className="text-left">
-            {!invoice.other ? "No Comment" : invoice.other}
+            {!invoice.other ? "No Comment." : invoice.other}
           </p>
         </div>
 

@@ -151,16 +151,16 @@ export const PaymentVoucher = () => {
             <p
               style={{ printColorAdjust: "exact" }}
               className="w-[200px] h-[40px] mx-auto text-xl  bg-slate-50 p-2 rounded"
-            >
-              {purchase.purchase_types[0].reference_number}
-            </p>
+            ></p>
             <p>نقدا / شيك رقم</p>
 
             <p className="text-left font-semibold">Bank</p>
             <p
               style={{ printColorAdjust: "exact" }}
               className="w-[200px] h-[40px] mx-auto text-xl  bg-slate-50 p-2 rounded"
-            ></p>
+            >
+              {purchase.purchase_types[0].reference_number}
+            </p>
             <p>بنك</p>
 
             <p className="text-left">Date</p>

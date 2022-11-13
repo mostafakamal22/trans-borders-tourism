@@ -270,8 +270,7 @@ export const Purchases = () => {
                 key={index}
                 className="flex flex-row-reverse justify-center items-center gap-1 my-1 p-1 bg-amber-400 rounded"
               >
-                <span>{type.name}</span>
-                <span>{type.total + " <== "}</span>
+                {type.name}
               </span>
             )
           )}
