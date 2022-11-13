@@ -45,6 +45,7 @@ export const UpdatePurchase = ({
         name: item.name,
         description: item.description,
         supplier: item.supplier,
+        reference_number: item.reference_number,
         cost: item.cost,
         tax: item.tax,
         total: item.total,
@@ -92,6 +93,7 @@ export const UpdatePurchase = ({
               name: "",
               description: "",
               supplier: "",
+              reference_number: "",
               cost: 0,
               tax: 0,
               total: 0,
@@ -177,6 +179,20 @@ export const UpdatePurchase = ({
                 onChange={(e) => {
                   const newArr = [...purchaseTypesDetails];
                   newArr[index].supplier = e.target.value;
+                  setPurchaseTypesDetails(newArr);
+                }}
+              />
+
+              <FormInput
+                label="Reference Number"
+                name="itemReferenceNumber"
+                labeClassNames={lableClassNamesStyles.default}
+                className={inputClassNamesStyles.default}
+                type="text"
+                value={item.reference_number}
+                onChange={(e) => {
+                  const newArr = [...purchaseTypesDetails];
+                  newArr[index].reference_number = e.target.value;
                   setPurchaseTypesDetails(newArr);
                 }}
               />

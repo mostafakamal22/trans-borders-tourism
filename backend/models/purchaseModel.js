@@ -12,6 +12,9 @@ const purchaseTypeSchema = new mongoose.Schema({
   supplier: {
     type: String,
   },
+  reference_number: {
+    type: String || Number,
+  },
   cost: {
     type: Number,
     required: [true, "Please Purchase Type Cost!"],

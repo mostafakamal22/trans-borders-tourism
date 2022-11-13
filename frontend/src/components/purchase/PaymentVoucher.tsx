@@ -44,7 +44,7 @@ export const PaymentVoucher = () => {
       />
       <div
         ref={componentRef}
-        className="max-w-6xl min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30 print:shadow-none print:my-0"
+        className="max-w-6xl min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30 print:shadow-none print:min-h-screen print:my-0 print:flex print:flex-col print:justify-between"
       >
         <div className="flex items-center">
           <div className="max-w-[300px] text-left">
@@ -122,49 +122,51 @@ export const PaymentVoucher = () => {
 
         <div
           style={{ printColorAdjust: "exact" }}
-          className="bg-red-700 p-2 mt-5 text-white  font-semibold underline underline-offset-2 rounded"
+          className="bg-red-200 p-2 mt-5  font-semibold underline underline-offset-4 rounded"
         >
           <div className="flex items-center p-2 my-5">
             <p className="text-left">Paid To Mr or M/s</p>
             <p
               style={{ printColorAdjust: "exact" }}
-              className="w-[60%] mx-auto text-xl text-black bg-red-200 p-2 rounded"
+              className="w-[60%] mx-auto text-xl  bg-slate-50 p-2 rounded"
             >
               {purchase.purchase_types[0].supplier}
             </p>
             <p>يصرف إلى السيد /السادة</p>
           </div>
 
-          <div className="flex items-center p-2 my-5">
+          <div className="flex items-center  p-2 my-5">
             <p className="text-left">The Sum of Dhs</p>
             <p
               style={{ printColorAdjust: "exact" }}
-              className="mx-auto text-xl text-black bg-red-200 p-2 rounded"
+              className="mx-auto text-xl  bg-slate-50 p-2 rounded"
             >
               {purchase.total.toFixed(2)}
             </p>
             <p>مبلغ وقدرة درهم</p>
           </div>
 
-          <div className="flex items-center p-2 my-5">
+          <div className="flex items-center gap-1 p-2 my-5">
             <p className="text-left">Cash / Cheque NO</p>
             <p
               style={{ printColorAdjust: "exact" }}
-              className="w-[200px] h-[40px] mx-auto text-xl text-black bg-red-200 p-2 rounded"
-            ></p>
+              className="w-[200px] h-[40px] mx-auto text-xl  bg-slate-50 p-2 rounded"
+            >
+              {purchase.purchase_types[0].reference_number}
+            </p>
             <p>نقدا / شيك رقم</p>
 
             <p className="text-left font-semibold">Bank</p>
             <p
               style={{ printColorAdjust: "exact" }}
-              className="w-[200px] h-[40px] mx-auto text-xl text-black bg-red-200 p-2 rounded"
+              className="w-[200px] h-[40px] mx-auto text-xl  bg-slate-50 p-2 rounded"
             ></p>
             <p>بنك</p>
 
             <p className="text-left">Date</p>
             <p
               style={{ printColorAdjust: "exact" }}
-              className="mx-auto text-xl text-black bg-red-200 p-2 rounded"
+              className="mx-auto text-xl  bg-slate-50 p-2 rounded"
             >
               {purchase.date ? dayjs(purchase.date).format("DD/MM/YYYY") : "-"}
             </p>
@@ -173,7 +175,7 @@ export const PaymentVoucher = () => {
 
           <div className="flex items-center p-2 my-5">
             <p className="text-left">Being</p>
-            <p className="w-[70%] h-[40px] mx-auto text-xl text-black bg-red-200 p-2 rounded"></p>
+            <p className="w-[70%] h-[40px] mx-auto text-xl  bg-slate-50 p-2 rounded"></p>
             <p>وذلك عن</p>
           </div>
         </div>

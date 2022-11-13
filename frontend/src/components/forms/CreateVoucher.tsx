@@ -27,7 +27,7 @@ export const CreateVoucher = () => {
       />
       <div
         ref={componentRef}
-        className="max-w-6xl min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30 print:shadow-none print:my-0"
+        className="max-w-6xl min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30 print:shadow-none print:min-h-screen print:my-0 print:flex print:flex-col print:justify-between"
       >
         <div className="flex items-center">
           <div className="max-w-[300px] text-left">
@@ -66,16 +66,15 @@ export const CreateVoucher = () => {
             <p>+975 556620879 موبيل</p>
             <p>+975 507597677 موبيل </p>
 
-            <p className="flex flex-col justify-center items-end text-xl mt-5">
+            <p className="flex flex-col justify-center items-end  mt-5">
               <span>
                 No. <span>[{"   "}]</span>
               </span>
 
               <span>
-                {" "}
                 DATE
-                <span className=" p-1 rounded-sm">
-                  <input className="text-center" type="text" />
+                <span className="p-1 text-sm rounded-sm">
+                  <input className="max-w-[90px] text-center" type="text" />
                 </span>
                 التاريخ
               </span>
@@ -85,12 +84,12 @@ export const CreateVoucher = () => {
 
         <div
           style={{ printColorAdjust: "exact" }}
-          className="bg-red-700 p-2 mt-5 text-white  font-semibold underline underline-offset-2 rounded"
+          className="bg-red-200 p-2 mt-5  font-semibold underline underline-offset-4 rounded"
         >
           <div className="flex items-center my-5">
             <p className="text-left">Paid To Mr or M/s</p>
             <input
-              className="mx-auto w-[60%] text-xl text-black bg-red-200 p-2 text-center rounded"
+              className="mx-auto w-[60%] text-xl bg-slate-50 p-2 text-center rounded"
               type="text"
             />
             <p>يصرف إلى السيد /السادة</p>
@@ -99,41 +98,41 @@ export const CreateVoucher = () => {
           <div className="flex items-center my-5">
             <p className="text-left">The Sum of Dhs</p>
             <input
-              className="mx-auto text-xl text-black text-center bg-red-200 p-2 rounded"
+              className="mx-auto text-xl text-center bg-slate-50 p-2 rounded"
               type="text"
             />
             <p>مبلغ وقدرة درهم</p>
           </div>
 
-          <div className="flex items-center my-5">
-            <p className="text-left">Cash / Cheque NO</p>
+          <div className="flex gap-1 items-center my-5">
+            <p className="text-left print:text-sm">Cash / Cheque NO</p>
 
             <input
-              className="w-[200px] h-[40px] mx-auto text-xl text-black text-center bg-red-200 p-2 rounded"
+              className="w-[170px] h-[40px] mx-auto text-sm text-center bg-slate-50 p-2 rounded"
               type="text"
             />
 
-            <p>نقدا / شيك رقم</p>
+            <p className="print:text-sm">نقدا / شيك رقم</p>
 
-            <p className="text-left">Bank</p>
+            <p className="text-left print:text-sm">Bank</p>
             <input
-              className="w-[200px] h-[40px] mx-auto text-xl text-black text-center bg-red-200 p-2 rounded"
+              className="w-[170px] h-[40px] mx-auto text-sm text-center bg-slate-50 p-2 rounded"
               type="text"
             />
-            <p>بنك</p>
+            <p className="print:text-sm">بنك</p>
 
-            <p className="text-left">Date</p>
+            <p className="text-left print:text-sm">Date</p>
             <input
-              className="w-[200px] h-[40px] mx-auto text-xl text-black text-center bg-red-200 p-2 rounded"
+              className="w-[150px] h-[40px] mx-auto text-sm text-center bg-slate-50 p-2 rounded"
               type="text"
             />
-            <p>التاريخ</p>
+            <p className="print:text-sm">التاريخ</p>
           </div>
 
           <div className="flex items-center my-5">
             <p className="text-left">Being</p>
             <input
-              className="mx-auto w-[70%] text-xl text-black bg-red-200 p-2 text-center rounded"
+              className="mx-auto w-[70%] text-xl text-center bg-slate-50 p-2 rounded"
               type="text"
             />
             <p>وذلك عن</p>
