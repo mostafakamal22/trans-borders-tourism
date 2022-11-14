@@ -198,11 +198,13 @@ export const UpdatePassport = ({
                     +e.target.value +
                     passportDetails.taxable +
                     passportDetails.taxRate,
-                  profit:
-                    passportDetails.sales -
-                    +e.target.value -
-                    passportDetails.taxable -
-                    passportDetails.taxRate,
+                  sales:
+                    passportDetails.service === "change_situation"
+                      ? +e.target.value +
+                        passportDetails.taxRate +
+                        passportDetails.taxable
+                      : 0,
+                  profit: 0,
                 });
               }}
               min={0}
