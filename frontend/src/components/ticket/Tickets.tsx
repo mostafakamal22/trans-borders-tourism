@@ -43,6 +43,12 @@ export const ticketsTableHeaderTitles = [
   "مسح التذكرة",
 ];
 
+const creditStates: string[] = [
+  "Paid Amount",
+  "Remaining Amount",
+  "Payment Method",
+];
+
 export const Tickets = () => {
   const { info } = useAppSelector((state) => state.adminAuth);
   const { ticketsList } = useAppSelector((state) => state.ticketsData);
@@ -203,7 +209,27 @@ export const Tickets = () => {
       <th scope="col" className="p-1 text-center border-x border-x-black">
         NO.
       </th>
-      {[...ticketsTableHeaderTitles].map((title) => (
+      {[...ticketsTableHeaderTitles].slice(0, 6).map((title) => (
+        <th
+          key={title}
+          scope="col"
+          className="max-w-[100px] p-1 text-center border-x border-x-black"
+        >
+          {title}
+        </th>
+      ))}
+
+      {[...creditStates].map((title) => (
+        <th
+          key={title}
+          scope="col"
+          className="max-w-[100px] p-1 text-center border-x border-x-black"
+        >
+          {title}
+        </th>
+      ))}
+
+      {[...ticketsTableHeaderTitles].slice(6).map((title) => (
         <th
           key={title}
           scope="col"
@@ -279,12 +305,38 @@ export const Tickets = () => {
           {ticket.profit}
         </th>
 
+        {/*Paid Amount*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-900  border-x text-center border-x-black"
+        >
+          {ticket.paid_amount}
+        </th>
+
+        {/*Remaining Amount*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-900  border-x text-center border-x-black"
+        >
+          {ticket.remaining_amount}
+        </th>
+
+        {/*Payment Method*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-900  border-x text-center border-x-black"
+        >
+          {ticket.payment_method
+            ? paymentMethods[ticket.payment_method as keyof PaymentMethods]
+            : "-"}
+        </th>
+
         {/*Supplier*/}
         <th
           scope="row"
           className="p-1  text-gray-900  border-x text-center border-x-black"
         >
-          {ticket.supplier}
+          {ticket.supplier ? ticket.supplier : "-"}
         </th>
 
         {/*Payment Date*/}
