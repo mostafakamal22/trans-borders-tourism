@@ -24,6 +24,7 @@ import { MainSpinner } from "../shared/MainSpinner";
 import { UpdatePayment } from "../forms/UpdatePayment";
 import { paymentsCalculations } from "../helpers/paymentCalculations";
 import { PaymentTypes, paymentTypes } from "../forms/CreatePayment";
+import { AiFillEdit } from "react-icons/ai";
 
 export const paymentTableHeaderTitles = [
   "مسح المصروف",
@@ -147,7 +148,6 @@ export const Payments = () => {
             onSubmit={(event) => handleRemoving(event, payment._id)}
           >
             <FormButton
-              text={{ default: "مسح المصــروف" }}
               bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}
               icon={<TiDelete className="mb-[-2px]" size={25} />}
             />
@@ -160,14 +160,14 @@ export const Payments = () => {
           className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           <button
-            className="inline-flex font-bold text-xs bg-blue-800 text-white hover:bg-white px-2 py-2 border-transparent hover:text-blue-800 border hover:border-blue-800 items-center rounded
-           transition-all ease-in-out duration-300"
+            className="max-w-[150px] mx-auto w-full flex justify-center items-center font-bold text-xs bg-blue-800 text-white hover:bg-white px-3 py-2.5 border-transparent hover:text-blue-800 border hover:border-blue-800 rounded
+            transition-all ease-in-out duration-300"
             onClick={() => {
               setId(payment._id);
               setIsOpen(true);
             }}
           >
-            تعديل
+            <AiFillEdit size={20} />
           </button>
         </th>
 

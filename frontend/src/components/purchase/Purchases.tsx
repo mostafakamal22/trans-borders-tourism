@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { AiFillEdit } from "react-icons/ai";
 import { FcSalesPerformance } from "react-icons/fc";
 import { TiDelete } from "react-icons/ti";
 import { Link } from "react-router-dom";
@@ -179,9 +180,8 @@ export const Purchases = () => {
             onSubmit={(event) => handleRemoving(event, purchase._id)}
           >
             <FormButton
-              text={{ default: "مسح المشتـرى" }}
               bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}
-              icon={<TiDelete className="mb-[-2px]" size={25} />}
+              icon={<TiDelete size={20} />}
             />
           </form>
         </th>
@@ -206,14 +206,14 @@ export const Purchases = () => {
           className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           <button
-            className="inline-flex font-bold text-xs bg-blue-800 text-white hover:bg-white px-2 py-2 border-transparent hover:text-blue-800 border hover:border-blue-800 items-center rounded
-             transition-all ease-in-out duration-300"
+            className="w-full flex justify-center items-center font-bold text-xs bg-blue-800 text-white hover:bg-white px-3 py-2.5 border-transparent hover:text-blue-800 border hover:border-blue-800 rounded
+            transition-all ease-in-out duration-300"
             onClick={() => {
               setId(purchase._id);
               setIsOpen(true);
             }}
           >
-            تعديل
+            <AiFillEdit size={20} />
           </button>
         </th>
 

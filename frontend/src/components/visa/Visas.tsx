@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { FcCurrencyExchange } from "react-icons/fc";
-import { TiDelete, TiEdit } from "react-icons/ti";
+import { TiDelete } from "react-icons/ti";
 import { UseResetStatus } from "../../hooks/UseResetStatus";
 import { resetAdminAuthStatus } from "../../state/features/admin/auth/adminAuthSlice";
 import {
@@ -28,9 +28,11 @@ import {
 import { visaCalculations } from "../helpers/visaCalculations";
 import { UpdateVisa } from "../forms/UpdateVisa";
 import { PaymentMethods, paymentMethods } from "../forms/CreatePayment";
+import { creditStates } from "../ticket/Tickets";
+import { AiFillEdit, AiFillFileAdd } from "react-icons/ai";
 
 export const visaTableHeaderTitles = [
-  "مسح",
+  "مسح التأشيرة",
   "إضافة فاتورة",
   "تعديل التأشيرات",
   "اسم الموظف",
@@ -40,6 +42,7 @@ export const visaTableHeaderTitles = [
   "Sales",
   "Cost",
   "Type",
+  "Sponsor",
   "Supplier",
   "Date",
 ];
@@ -202,11 +205,30 @@ export const Visas = () => {
   //Define table data
   const tableHeader = (
     <tr className="border-b border-b-black">
-      {visaTableHeaderTitles.map((title) => (
+      {[...visaTableHeaderTitles].slice(0, 9).map((title) => (
         <th
           key={title}
           scope="col"
-          className="py-3 px-3 text-center border-x border-x-black"
+          className="max-w-[100px] p-1 text-center border-x border-x-black"
+        >
+          {title}
+        </th>
+      ))}
+
+      {[...creditStates].map((title) => (
+        <th
+          key={title}
+          scope="col"
+          className="max-w-[100px] p-1 text-center border-x border-x-black"
+        >
+          {title}
+        </th>
+      ))}
+      {[...visaTableHeaderTitles].slice(9).map((title) => (
+        <th
+          key={title}
+          scope="col"
+          className="max-w-[100px] p-1 text-center border-x border-x-black"
         >
           {title}
         </th>
@@ -235,9 +257,8 @@ export const Visas = () => {
             onSubmit={(event) => handleRemoving(event, visa._id)}
           >
             <FormButton
-              text={{ default: "مسح" }}
               bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}
-              icon={<TiDelete className="mb-[-2px]" size={25} />}
+              icon={<TiDelete size={20} />}
             />
           </form>
         </th>
@@ -252,9 +273,8 @@ export const Visas = () => {
             onSubmit={(event) => handleAddInvoice(event, visa)}
           >
             <FormButton
-              text={{ default: "إضافة" }}
               bgColor={["bg-orange-600", "bg-orange-700", "bg-orange-800"]}
-              icon={<TiEdit className="mr-1 mb-1" size={25} />}
+              icon={<AiFillFileAdd size={20} />}
             />
           </form>
         </th>
@@ -265,14 +285,14 @@ export const Visas = () => {
           className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           <button
-            className="inline-flex font-bold text-xs bg-blue-800 text-white hover:bg-white px-2 py-2 border-transparent hover:text-blue-800 border hover:border-blue-800 items-center rounded
+            className="w-full flex justify-center items-center font-bold text-xs bg-blue-800 text-white hover:bg-white px-3 py-2.5 border-transparent hover:text-blue-800 border hover:border-blue-800 rounded
              transition-all ease-in-out duration-300"
             onClick={() => {
               setId(visa._id);
               setIsOpen(true);
             }}
           >
-            تعديل
+            <AiFillEdit size={20} />
           </button>
         </th>
 
@@ -324,12 +344,46 @@ export const Visas = () => {
           {visa.net_fare}
         </th>
 
+        {/*Paid Amount*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-900  border-x text-center border-x-black"
+        >
+          {visa.paid_amount}
+        </th>
+
+        {/*Remaining Amount*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-900  border-x text-center border-x-black"
+        >
+          {visa.remaining_amount}
+        </th>
+
+        {/*Payment Method*/}
+        <th
+          scope="row"
+          className="p-1  text-gray-900  border-x text-center border-x-black"
+        >
+          {visa.payment_method
+            ? paymentMethods[visa.payment_method as keyof PaymentMethods]
+            : "-"}
+        </th>
+
         {/*Visa Type*/}
         <th
           scope="row"
           className="p-2  text-gray-900  border-x text-center border-x-black"
         >
           {visa.type ? visa.type : "-"}
+        </th>
+
+        {/*Visa Sponsor*/}
+        <th
+          scope="row"
+          className="p-2  text-gray-900  border-x text-center border-x-black"
+        >
+          {visa.sponsor ? visa.sponsor : "-"}
         </th>
 
         {/*Visa Provider*/}
@@ -381,7 +435,7 @@ export const Visas = () => {
   });
 
   return (
-    <div className="max-w-7xl min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
+    <div className="min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <img className="mx-auto" src={logo} alt="logo" />
 
       <div className="flex justify-center items-center flex-wrap gap-4 my-5 p-4 bg-red-700 rounded-md">

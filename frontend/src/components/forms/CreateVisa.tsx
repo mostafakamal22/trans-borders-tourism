@@ -24,6 +24,7 @@ export const CreateVisa = () => {
   const [visaDetails, setVisaDetails] = useState({
     name: "",
     provider: "",
+    sponsor: "",
     type: "",
     employee: "",
     passportId: "",
@@ -65,6 +66,7 @@ export const CreateVisa = () => {
       token: info.token,
       name: visaDetails.name,
       provider: visaDetails.provider,
+      sponsor: visaDetails.sponsor,
       type: visaDetails.type,
       employee: visaDetails.employee,
       passportId: visaDetails.passportId,
@@ -101,7 +103,7 @@ export const CreateVisa = () => {
     <div className="max-w-6xl w-full mx-auto my-20 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <h3 className="flex justify-center items-center text-xl text-center font-bold px-2 py-4 mb-10 bg-red-200 border-b-4 border-red-800 rounded shadow ">
         <FcDebt className="mr-1" size={50} />
-        <span>إضافة مبيعات جديدة</span>
+        <span>إضافة تأشيرة جديدة</span>
       </h3>
 
       <img className="mx-auto" src={logo} alt="logo" />
@@ -138,7 +140,7 @@ export const CreateVisa = () => {
           />
 
           <FormInput
-            label={visaTableHeaderTitles[10]}
+            label={visaTableHeaderTitles[11]}
             name="VisaProvider"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -146,6 +148,18 @@ export const CreateVisa = () => {
             value={visaDetails.provider}
             onChange={(e) =>
               setVisaDetails({ ...visaDetails, provider: e.target.value })
+            }
+          />
+
+          <FormInput
+            label={visaTableHeaderTitles[10]}
+            name="VisaSponsor"
+            labeClassNames={lableClassNamesStyles.default}
+            className={inputClassNamesStyles.default}
+            type="text"
+            value={visaDetails.sponsor}
+            onChange={(e) =>
+              setVisaDetails({ ...visaDetails, sponsor: e.target.value })
             }
           />
 
@@ -286,7 +300,7 @@ export const CreateVisa = () => {
           </select>
 
           <FormInput
-            label={visaTableHeaderTitles[11]}
+            label={visaTableHeaderTitles[12]}
             name="paymentDate"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -312,7 +326,7 @@ export const CreateVisa = () => {
 
         {/*form button */}
         <FormButton
-          text={{ default: "حفظ المبيعات", loading: "جارى الحفظ" }}
+          text={{ default: "حفظ التأشيرة", loading: "جارى الحفظ" }}
           isLoading={isLoading}
           icon={<RiSendPlaneFill className="ml-1" size={25} />}
         />

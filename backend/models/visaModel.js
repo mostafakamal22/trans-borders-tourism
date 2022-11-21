@@ -13,6 +13,9 @@ const visaSchema = new mongoose.Schema(
     provider: {
       type: String,
     },
+    sponsor: {
+      type: String,
+    },
     type: {
       type: String,
     },

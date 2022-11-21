@@ -21,6 +21,7 @@ const createVisa = async (req, res) => {
       customer_name: req.body.name,
       passport_id: req.body.passportId,
       provider: req.body.provider,
+      sponsor: req.body.sponsor,
       type: req.body.type,
       employee: req.body.employee,
       net_fare: req.body.netFare,
@@ -35,7 +36,7 @@ const createVisa = async (req, res) => {
   } catch (error) {
     if (
       error.message.match(
-        /(provider|passport_id|version|customer_name|customer_number|type|employee|net_fare|sales|profit|payment_date|paid_amount|remaining_amount|payment_method)/gi
+        /(provider|passport_id|version|customer_name|customer_number|sponsor|type|employee|net_fare|sales|profit|payment_date|paid_amount|remaining_amount|payment_method)/gi
       )
     ) {
       return res.status(400).send(error.message);
@@ -59,6 +60,7 @@ const updateVisa = async (req, res) => {
     visa.provider = req.body.provider;
     visa.type = req.body.type;
     visa.employee = req.body.employee;
+    visa.sponsor = req.body.sponsor;
     visa.net_fare = req.body.netFare;
     visa.sales = req.body.sales;
     visa.profit = req.body.profit;
@@ -73,7 +75,7 @@ const updateVisa = async (req, res) => {
   } catch (error) {
     if (
       error.message.match(
-        /(provider|passport_id|version|customer_name|customer_number|type|employee|net_fare|sales|profit|payment_date|paid_amount|remaining_amount|payment_method)/gi
+        /(provider|passport_id|version|customer_name|customer_number|type|sponsor|employee|net_fare|sales|profit|payment_date|paid_amount|remaining_amount|payment_method)/gi
       )
     ) {
       return res.status(400).send(error.message);

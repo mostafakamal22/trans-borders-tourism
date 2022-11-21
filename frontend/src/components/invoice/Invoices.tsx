@@ -176,7 +176,6 @@ export const InvoiceListControl = () => {
             onSubmit={(event) => handleRemoving(event, invoice._id)}
           >
             <FormButton
-              text={{ default: "مسح الفاتورة" }}
               bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}
               icon={<TiDelete className="mb-[-2px]" size={25} />}
             />

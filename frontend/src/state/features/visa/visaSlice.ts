@@ -120,7 +120,7 @@ export const visaSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.message = "تم حذف المبيعات بنجاح";
+        state.message = "تم حذف التأشيرة بنجاح";
         state.visasList = state.visasList.filter(
           (invoice: any) => invoice._id !== action.payload.id
         );
@@ -141,7 +141,7 @@ export const visaSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.message = "تم حفظ المبيعات بنجاح";
+        state.message = "تم حفظ التأشيرة بنجاح";
         state.visasList = [...state.visasList, action.payload];
       })
       .addCase(createVisa.rejected, (state, action) => {
@@ -160,7 +160,7 @@ export const visaSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.message = "تم تعديل المبيعات بنجــاح";
+        state.message = "تم تعديل التأشيرة بنجــاح";
         state.visasList = state.visasList.map((visa: any) => {
           if (visa._id === action.payload._id) {
             return action.payload;

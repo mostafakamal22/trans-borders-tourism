@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { useState, useEffect } from "react";
 import { FcTrademark } from "react-icons/fc";
-import { TiDelete, TiEdit } from "react-icons/ti";
+import { TiDelete } from "react-icons/ti";
 import { UseResetStatus } from "../../hooks/UseResetStatus";
 import { resetAdminAuthStatus } from "../../state/features/admin/auth/adminAuthSlice";
 import {
@@ -28,6 +28,7 @@ import logo from "../../assets/imgs/trans-logo.png";
 import { ticketsCalculations } from "../helpers/ticketCalculations";
 import { UpdateTicket } from "../forms/UpdateTicket";
 import { PaymentMethods, paymentMethods } from "../forms/CreatePayment";
+import { AiFillEdit, AiFillFileAdd } from "react-icons/ai";
 
 export const ticketsTableHeaderTitles = [
   "Customer Name",
@@ -43,7 +44,7 @@ export const ticketsTableHeaderTitles = [
   "مسح التذكرة",
 ];
 
-const creditStates: string[] = [
+export const creditStates: string[] = [
   "Paid Amount",
   "Remaining Amount",
   "Payment Method",
@@ -355,14 +356,14 @@ export const Tickets = () => {
           className="p-1 text-gray-900 border-x text-center border-x-black"
         >
           <button
-            className="inline-flex font-bold text-xs bg-blue-800 text-white hover:bg-white px-2 py-2 border-transparent hover:text-blue-800 border hover:border-blue-800 items-center rounded
-             transition-all ease-in-out duration-300"
+            className="w-full flex justify-center items-center font-bold text-xs bg-blue-800 text-white hover:bg-white px-3 py-2.5 border-transparent hover:text-blue-800 border hover:border-blue-800 rounded
+            transition-all ease-in-out duration-300"
             onClick={() => {
               setId(ticket._id);
               setIsOpen(true);
             }}
           >
-            تعديل
+            <AiFillEdit size={20} />
           </button>
         </th>
 
@@ -372,13 +373,12 @@ export const Tickets = () => {
           className="p-1 text-gray-900 border-x text-center border-x-black"
         >
           <form
-            className="max-w-[50px] m-auto"
+            className="max-w-[150px] m-auto"
             onSubmit={(event) => handleAddInvoice(event, ticket)}
           >
             <FormButton
-              text={{ default: "إضافة" }}
               bgColor={["bg-orange-600", "bg-orange-700", "bg-orange-800"]}
-              icon={<TiEdit className="mb-[-2px]" size={25} />}
+              icon={<AiFillFileAdd size={20} />}
             />
           </form>
         </th>
@@ -389,13 +389,12 @@ export const Tickets = () => {
           className="p-1 text-gray-900 border-x text-center border-x-black"
         >
           <form
-            className="max-w-[50px] m-auto"
+            className="max-w-[150px] m-auto"
             onSubmit={(event) => handleRemoving(event, ticket._id)}
           >
             <FormButton
-              text={{ default: "حذف" }}
               bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}
-              icon={<TiDelete className="mb-[-2px]" size={25} />}
+              icon={<TiDelete size={20} />}
             />
           </form>
         </th>
@@ -423,7 +422,7 @@ export const Tickets = () => {
   });
 
   return (
-    <div className="max-w-[1300px] min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
+    <div className="min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
       <img className="mx-auto" src={logo} alt="logo" />
 
       <div className="flex  justify-center items-center flex-wrap gap-4 my-5 p-4 bg-red-700 rounded-md ">
