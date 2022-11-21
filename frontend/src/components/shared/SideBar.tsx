@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   AiFillAccountBook,
   AiFillBell,
@@ -40,6 +40,7 @@ const navbarLinks: NavbarLinks = [
 ];
 
 const SideBar = () => {
+  const navbarRef = useRef<HTMLElement>(null);
   const dispatch = useAppDispatch();
 
   const handleLogout = () => {
@@ -52,8 +53,36 @@ const SideBar = () => {
     dispatch(purchasesLogout());
   };
 
+  useEffect(() => {
+    let lastScrollTop =
+      window.pageYOffset || document.documentElement.scrollTop;
+
+    const detectScroll = () => {
+      let st = window.pageYOffset || document.documentElement.scrollTop;
+      if (st > lastScrollTop) {
+        if (!navbarRef.current?.classList.contains("translate-y-[-100%]")) {
+          navbarRef.current?.classList.add("translate-y-[-100%]");
+        }
+      } else {
+        if (navbarRef.current?.classList.contains("translate-y-[-100%]")) {
+          navbarRef.current?.classList.remove("translate-y-[-100%]");
+        }
+      }
+      lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+    };
+
+    window.addEventListener("scroll", detectScroll, false);
+
+    return () => {
+      window.removeEventListener("scroll", detectScroll);
+    };
+  }, []);
+
   return (
-    <nav className="bg-slate-50 px-2 sm:px-4 py-2.5 sticky w-full z-20 top-0 left-0 flex justify-center  items-center gap-4 flex-wrap text-xs shadow-md transition-all duration-300 ease-in-out">
+    <nav
+      ref={navbarRef}
+      className="sticky z-20 top-0 left-0 w-full  flex justify-center items-center bg-slate-50 px-2 sm:px-4 py-2.5 gap-4 flex-wrap text-xs shadow-md transition-all duration-300 ease-in-out"
+    >
       <SideBarIcon
         link={navbarLinks[0][1]}
         text={navbarLinks[0][0]}
