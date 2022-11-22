@@ -175,7 +175,7 @@ export const UpdateVisa = ({
             />
 
             <FormInput
-              label={visaTableHeaderTitles[11]}
+              label={visaTableHeaderTitles[10]}
               name="VisaSponsor"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
