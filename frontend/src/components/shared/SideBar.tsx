@@ -130,13 +130,10 @@ const SideBarIcon = ({
     <div className="sidebar-icon group">
       <NavLink
         to={link}
-        className={({ isActive }) =>
-          isActive ? "realtive text-black" : "relative"
-        }
+        className={({ isActive }) => (isActive ? "text-black" : "")}
         end
       >
         {icon}
-        {/* sidebar-tooltip group-hover:scale-100 */}
       </NavLink>
     </div>
     <span className="font-semibold">{text}</span>

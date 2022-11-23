@@ -40,7 +40,7 @@ const Pagination = ({ range, setPage, page, slice }: PaginationProps) => {
           </li>
 
           {/* More Previous Pages To Show && First Page Button */}
-          {range.length > 5 && page > 5 && (
+          {range.length > 5 && page > 3 && (
             <>
               <li onClick={() => setPage(range[0])}>
                 <button
@@ -76,8 +76,8 @@ const Pagination = ({ range, setPage, page, slice }: PaginationProps) => {
           {range.length > 5 &&
             range
               .slice(
-                page < range.length - 4 ? page - 1 : page - 5,
-                page < range.length - 4 ? page + 4 : page
+                page > 2 ? page - 3 : 0,
+                page < range.length - 2 ? page + 2 : page + 1
               )
               .map((pageNumber: number) => (
                 <li key={pageNumber} onClick={() => setPage(pageNumber)}>
@@ -93,7 +93,7 @@ const Pagination = ({ range, setPage, page, slice }: PaginationProps) => {
               ))}
 
           {/* More Next Pages To Show && Last Page Button */}
-          {range.length > 5 && page < range.length && (
+          {range.length > 5 && page < range.length - 1 && (
             <>
               <li className="min-w-[40px] flex justify-center items-center p-2 ml-1 leading-tight font-bold text-red-900 border border-red-300 rounded hover:bg-red-100 hover:text-black">
                 {"...."}

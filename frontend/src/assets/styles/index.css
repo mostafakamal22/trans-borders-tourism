@@ -38,18 +38,11 @@
   .sidebar-icon {
     @apply relative  flex items-center justify-center 
     h-10 w-10 mt-2 mb-2 mx-auto 
-  bg-red-700 hover:bg-green-600  
+  bg-red-700 hover:bg-blue-600  
   text-white hover:text-black
     hover:rounded-xl rounded-3xl
     transition-all duration-300 ease-linear
     cursor-pointer shadow-lg;
-  }
-
-  .sidebar-tooltip {
-    @apply absolute w-auto p-2  min-w-max right-[-100%] top-10 z-[100]  rounded-md shadow-md
-    text-white bg-gray-900 
-    text-xs font-bold 
-    transition-all duration-100 scale-0;
   }
 
   .sidebar-hr {
@@ -59,11 +52,3 @@
 }
 
 @tailwind utilities;
-
-::-webkit-scrollbar {
-  background-color: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-gray-500 dark:bg-green-400;
-}
