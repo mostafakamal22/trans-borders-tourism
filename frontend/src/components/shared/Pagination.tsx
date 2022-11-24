@@ -3,7 +3,7 @@ import { TiChevronLeft, TiChevronRight } from "react-icons/ti";
 
 type PaginationProps = {
   range: number[];
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+  setPage: any;
   page: number;
   slice: any;
 };
@@ -11,11 +11,12 @@ type PaginationProps = {
 const Pagination = ({ range, setPage, page, slice }: PaginationProps) => {
   const [pageQuery, setPageQuery] = useState<number>(1);
 
-  useEffect(() => {
-    if (slice.length < 1 && page !== 1) {
-      setPage(page - 1);
-    }
-  }, [slice, page, setPage]);
+  // useEffect(() => {
+  //   if (slice.length < 1 && page !== 1) {
+  //     console.log(slice.length);
+  //     setPage({ page: page - 1 });
+  //   }
+  // }, [slice, page, setPage]);
 
   return (
     <div className="flex items-center justify-center flex-wrap gap-4 my-10">
@@ -31,7 +32,7 @@ const Pagination = ({ range, setPage, page, slice }: PaginationProps) => {
           <li>
             <button
               title={`${page !== 1 ? "Previous Page" : ""}`}
-              onClick={() => setPage(page - 1)}
+              onClick={() => setPage({ page: page - 1 })}
               disabled={page === 1}
               className="flex justify-center items-center min-w-[40px] p-2 leading-tight text-red-900 border border-red-300 rounded hover:bg-red-100 hover:text-black disabled:cursor-not-allowed disabled:bg-gray-200 disabled:border-gray-500 disabled:text-black"
             >
@@ -42,7 +43,7 @@ const Pagination = ({ range, setPage, page, slice }: PaginationProps) => {
           {/* More Previous Pages To Show && First Page Button */}
           {range.length > 5 && page > 3 && (
             <>
-              <li onClick={() => setPage(range[0])}>
+              <li onClick={() => setPage({ page: range[0] })}>
                 <button
                   title={`Go First Page`}
                   className="p-2 leading-tight text-sm text-red-900 font-semibold border border-red-300 rounded hover:bg-red-100 hover:text-black"
@@ -60,7 +61,10 @@ const Pagination = ({ range, setPage, page, slice }: PaginationProps) => {
           {/* Case OF Table Pages <= 5 Pages*/}
           {range.length <= 5 &&
             range.map((pageNumber: number) => (
-              <li key={pageNumber} onClick={() => setPage(pageNumber)}>
+              <li
+                key={pageNumber}
+                onClick={() => setPage({ page: pageNumber })}
+              >
                 <button
                   title={`Go Page ${pageNumber}`}
                   className={`${
@@ -80,7 +84,10 @@ const Pagination = ({ range, setPage, page, slice }: PaginationProps) => {
                 page < range.length - 2 ? page + 2 : page + 1
               )
               .map((pageNumber: number) => (
-                <li key={pageNumber} onClick={() => setPage(pageNumber)}>
+                <li
+                  key={pageNumber}
+                  onClick={() => setPage({ page: pageNumber })}
+                >
                   <button
                     title={`Go Page ${pageNumber}`}
                     className={`${
@@ -99,7 +106,7 @@ const Pagination = ({ range, setPage, page, slice }: PaginationProps) => {
                 {"...."}
               </li>
 
-              <li onClick={() => setPage(range.length)}>
+              <li onClick={() => setPage({ page: range.length })}>
                 <button
                   title={`Go Last Page`}
                   className="p-2 leading-tight text-sm text-red-900 font-semibold border border-red-300 rounded hover:bg-red-100 hover:text-black"
@@ -114,7 +121,7 @@ const Pagination = ({ range, setPage, page, slice }: PaginationProps) => {
           <li>
             <button
               title={`${page !== range.length ? "Next Page" : ""}`}
-              onClick={() => setPage(page + 1)}
+              onClick={() => setPage({ page: page + 1 })}
               disabled={page === range.length}
               className="flex justify-center items-center min-w-[40px] p-2 leading-tight text-red-900 border border-red-300 rounded hover:bg-red-100 hover:text-black disabled:cursor-not-allowed disabled:bg-gray-200 disabled:border-gray-500 disabled:text-black"
             >
@@ -144,7 +151,7 @@ const Pagination = ({ range, setPage, page, slice }: PaginationProps) => {
             type="button"
             onClick={() => {
               if (range.includes(pageQuery) && page !== pageQuery) {
-                setPage(pageQuery);
+                setPage({ page: pageQuery });
               }
             }}
           >
