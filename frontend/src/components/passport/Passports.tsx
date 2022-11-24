@@ -28,6 +28,7 @@ import {
   resetInvoicesStatus,
 } from "../../state/features/invoice/invoiceSlice";
 import { AiFillEdit, AiFillFileAdd } from "react-icons/ai";
+import { useSearchParams } from "react-router-dom";
 
 export const tableHeaderTitles = [
   "إسم العميل",
@@ -107,6 +108,10 @@ export const Passports = () => {
 
   //PassportID to Update
   const [id, setId] = useState("");
+
+  //Table Row/Page State
+  const [tableRows, setTableRows] = useState(50);
+  const [rowPerPage, setRowPerPage] = useState(50);
 
   const { year, month, day, state, service, nationality } = searchQuery;
 
@@ -696,6 +701,35 @@ export const Passports = () => {
           />
         ))}
 
+      {/* Show Table Row/Page Control */}
+      {!isLoading && !invoiceData.isLoading && filteredPassports?.length > 0 && (
+        <div className="max-w-sm flex flex-row-reverse justify-center items-center flex-wrap my-10 mx-auto gap-2 text-sm font-semibold">
+          <label htmlFor="rowPerPage">عدد صفوف الجدول</label>
+          <input
+            className="max-w-[80px] p-2 bg-red-100 border border-red-500 text-center rounded focus:outline-none focus:border-blue-700"
+            type={"number"}
+            name="rowPerPage"
+            min={1}
+            max={filteredPassports.length}
+            value={tableRows}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setTableRows(+e.target.value);
+            }}
+          />
+
+          <button
+            className="bg-blue-800 px-4 py-2 text-white font-semibold border rounded hover:border-blue-700 hover:bg-white hover:text-blue-700 transition-all duration-75 ease-in-out"
+            type="button"
+            onClick={() => {
+              if (tableRows === 0) return;
+              setRowPerPage(tableRows);
+            }}
+          >
+            تم
+          </button>
+        </div>
+      )}
+
       {/*Display Table All Data Needed*/}
       {!isLoading &&
         !invoiceData.isLoading &&
@@ -704,7 +738,7 @@ export const Passports = () => {
             tableRow={tableRow}
             tableHeader={tableHeader}
             tableBodyData={sortedPassports}
-            rowsPerPage={10}
+            rowsPerPage={rowPerPage}
           />
         )}
 

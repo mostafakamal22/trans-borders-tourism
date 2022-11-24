@@ -30,6 +30,7 @@ import { UpdateVisa } from "../forms/UpdateVisa";
 import { PaymentMethods, paymentMethods } from "../forms/CreatePayment";
 import { creditStates } from "../ticket/Tickets";
 import { AiFillEdit, AiFillFileAdd } from "react-icons/ai";
+import { useSearchParams } from "react-router-dom";
 
 export const visaTableHeaderTitles = [
   "مسح التأشيرة",
@@ -60,8 +61,13 @@ export const Visas = () => {
   //PurchaseID to Update
   const [id, setId] = useState("");
 
+  //Table Row/Page State
+  const [tableRows, setTableRows] = useState(50);
+  const [rowPerPage, setRowPerPage] = useState(50);
+
   //search Params
   const [searchQuery, setSearchQuery] = useState({
+    day: "",
     year: "",
     month: "",
     employee: "",
@@ -69,9 +75,10 @@ export const Visas = () => {
     supplier: "",
   });
 
-  const { year, month, employee, type, supplier } = searchQuery;
+  const { year, day, month, employee, type, supplier } = searchQuery;
 
   type SearchQueries = {
+    day: string | number;
     year: string;
     month: string | number;
     employee: string;
@@ -82,6 +89,7 @@ export const Visas = () => {
   let availableSearchQueries: SearchQueries = {
     ...searchQuery,
     month: +month,
+    day: +day,
   };
 
   for (const key in availableSearchQueries) {
@@ -92,7 +100,7 @@ export const Visas = () => {
 
   //filtered Visas
   const filteredVisas: [] =
-    month || year || supplier || type || employee
+    day || month || year || supplier || type || employee
       ? visasList.filter((visa: any) => {
           const paymentDate = dayjs(visa.payment_date)
             .format("DD/MM/YYYY")
@@ -101,6 +109,7 @@ export const Visas = () => {
           const visaData: SearchQueries = {
             year: paymentDate[2],
             month: +paymentDate[1],
+            day: +paymentDate[0],
             type: visa.type,
             employee: visa.employee,
             supplier: visa.provider,
@@ -480,6 +489,24 @@ export const Visas = () => {
           </div>
 
           <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="day">
+              اليوم
+            </label>
+            <input
+              type="number"
+              name="day"
+              className={inputClassNamesStyles.default}
+              value={day}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  day: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          <div className="flex justify-center items-center flex-col gap-2">
             <label className={lableClassNamesStyles.default} htmlFor="supplier">
               Supplier
             </label>
@@ -545,6 +572,11 @@ export const Visas = () => {
               {" عن شهر " + month}
             </span>
           )}
+          {day && (
+            <span className="bg-rose-500 p-1 rounded-md text-white mx-1">
+              {" يوم " + day}
+            </span>
+          )}
           {year && (
             <span className="bg-amber-500 p-1 rounded-md text-white mx-1">
               {" سنة " + year}
@@ -604,19 +636,49 @@ export const Visas = () => {
           />
         ))}
 
+      {/* Show Table Row/Page Control */}
+      {!isLoading && !invoiceData.isLoading && filteredVisas?.length > 0 && (
+        <div className="max-w-sm flex flex-row-reverse justify-center items-center flex-wrap my-10 mx-auto gap-2 text-sm font-semibold">
+          <label htmlFor="rowPerPage">عدد صفوف الجدول</label>
+          <input
+            className="max-w-[80px] p-2 bg-red-100 border border-red-500 text-center rounded focus:outline-none focus:border-blue-700"
+            type={"number"}
+            name="rowPerPage"
+            min={1}
+            max={filteredVisas.length}
+            value={tableRows}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setTableRows(+e.target.value);
+            }}
+          />
+
+          <button
+            className="bg-blue-800 px-4 py-2 text-white font-semibold border rounded hover:border-blue-700 hover:bg-white hover:text-blue-700 transition-all duration-75 ease-in-out"
+            type="button"
+            onClick={() => {
+              if (tableRows === 0) return;
+              setRowPerPage(tableRows);
+            }}
+          >
+            تم
+          </button>
+        </div>
+      )}
+
       {/*Display Table All Data Needed*/}
       {!isLoading && !invoiceData.isLoading && filteredVisas?.length > 0 && (
         <PaginationTable
           tableRow={tableRow}
           tableHeader={tableHeader}
           tableBodyData={sortedVisas}
-          rowsPerPage={10}
+          rowsPerPage={rowPerPage}
         />
       )}
 
       {/* if there is No Visas Records */}
       {!year &&
         !month &&
+        !day &&
         !supplier &&
         !employee &&
         !type &&
@@ -629,7 +691,7 @@ export const Visas = () => {
         )}
 
       {/* if there is search query no Visa matches >>> No Search Found*/}
-      {(year || month || supplier || type || employee) &&
+      {(year || month || day || supplier || type || employee) &&
         filteredVisas?.length === 0 &&
         !isLoading &&
         !invoiceData.isLoading && (
