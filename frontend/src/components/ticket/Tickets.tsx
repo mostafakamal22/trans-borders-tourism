@@ -58,13 +58,14 @@ export const Tickets = () => {
   const dispatch = useAppDispatch();
 
   //search Params
-  const [searchQuery, setSearchQuery] = useState({
+  const [searchQuery, setSearchQuery] = useState<SearchQueries>({
     day: "",
     year: "",
     month: "",
     name: "",
     supplier: "",
     employee: "",
+    type: "",
   });
 
   //Is modal open
@@ -77,19 +78,24 @@ export const Tickets = () => {
   const [tableRows, setTableRows] = useState(50);
   const [rowPerPage, setRowPerPage] = useState(50);
 
-  const { year, month, day, supplier, employee, name } = searchQuery;
+  const { year, month, day, supplier, employee, name, type } = searchQuery;
 
   type SearchQueries = {
     day: string | number;
-    year: string;
+    year: string | number;
     month: string | number;
     supplier: string;
     employee: string;
     name: string;
+    type: string;
   };
 
   let availableSearchQueries: SearchQueries = {
-    ...searchQuery,
+    supplier: supplier.trim().toLowerCase(),
+    employee: employee.trim().toLowerCase(),
+    name: name.trim().toLowerCase(),
+    type: type.trim().toLowerCase(),
+    year: +year,
     month: +month,
     day: +day,
   };
@@ -102,26 +108,34 @@ export const Tickets = () => {
 
   //filtered Tickets
   const filteredTickets: [] =
-    day || month || year || supplier || employee || name
+    day || month || year || supplier || employee || name || type
       ? ticketsList.filter((ticket: any) => {
           const ticketDate = dayjs(ticket.payment_date)
             .format("DD/MM/YYYY")
             .split("/");
 
           const ticketData: SearchQueries = {
-            year: ticketDate[2],
+            year: +ticketDate[2],
             month: +ticketDate[1],
             day: +ticketDate[0],
-            supplier: ticket.supplier,
-            employee: ticket.employee,
-            name: ticket.customer_name,
+            supplier: ticket.supplier?.trim().toLowerCase(),
+            employee: ticket.employee?.trim().toLowerCase(),
+            name: ticket.customer_name?.trim().toLowerCase(),
+            type: ticket.type?.trim().toLowerCase(),
           };
 
           if (
-            Object.keys(availableSearchQueries).every(
-              (key) =>
-                ticketData[key as keyof SearchQueries] ===
-                availableSearchQueries[key as keyof SearchQueries]
+            Object.keys(availableSearchQueries).every((key) =>
+              typeof ticketData[key as keyof SearchQueries] === "string"
+                ? ticketData[key as keyof SearchQueries]
+                    ?.toString()
+                    .includes(
+                      availableSearchQueries[
+                        key as keyof SearchQueries
+                      ] as string
+                    )
+                : ticketData[key as keyof SearchQueries] ===
+                  availableSearchQueries[key as keyof SearchQueries]
             )
           )
             return ticket;
@@ -548,6 +562,24 @@ export const Tickets = () => {
               }
             />
           </div>
+
+          <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="type">
+              Type
+            </label>
+            <input
+              type="text"
+              name="type"
+              className={inputClassNamesStyles.default}
+              value={type}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  type: e.target.value,
+                })
+              }
+            />
+          </div>
         </form>
 
         <h3 className="basis-full flex justify-center items-center flex-row-reverse flex-wrap text-2xl my-5 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
@@ -587,6 +619,11 @@ export const Tickets = () => {
           {supplier && (
             <span className="bg-pink-500 p-1 rounded-md text-white mx-1">
               {" Supplier:- " + supplier}
+            </span>
+          )}
+          {type && (
+            <span className="bg-pink-500 p-1 rounded-md text-white mx-1">
+              {" Type:- " + type}
             </span>
           )}
           <span>({filteredTickets.length})</span>
@@ -676,6 +713,7 @@ export const Tickets = () => {
         !name &&
         !supplier &&
         !employee &&
+        !type &&
         filteredTickets?.length === 0 &&
         !isLoading &&
         !invoiceData.isLoading && (
@@ -685,7 +723,7 @@ export const Tickets = () => {
         )}
 
       {/* if there is search query no Tickets matches >>> No Search Found*/}
-      {(year || month || day || employee || name || supplier) &&
+      {(year || month || day || employee || name || supplier || type) &&
         filteredTickets?.length === 0 &&
         !isLoading &&
         !invoiceData.isLoading && (

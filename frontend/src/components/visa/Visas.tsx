@@ -66,30 +66,36 @@ export const Visas = () => {
   const [rowPerPage, setRowPerPage] = useState(50);
 
   //search Params
-  const [searchQuery, setSearchQuery] = useState({
+  const [searchQuery, setSearchQuery] = useState<SearchQueries>({
     day: "",
     year: "",
     month: "",
     employee: "",
     type: "",
     supplier: "",
+    sponsor: "",
   });
 
-  const { year, day, month, employee, type, supplier } = searchQuery;
+  const { year, day, month, employee, type, supplier, sponsor } = searchQuery;
 
   type SearchQueries = {
     day: string | number;
-    year: string;
+    year: string | number;
     month: string | number;
     employee: string;
     type: string;
     supplier: string;
+    sponsor: string;
   };
 
   let availableSearchQueries: SearchQueries = {
-    ...searchQuery,
+    year: +year,
     month: +month,
     day: +day,
+    employee: employee.trim().toLowerCase(),
+    type: type.trim().toLowerCase(),
+    supplier: supplier.trim().toLowerCase(),
+    sponsor: sponsor.trim().toLowerCase(),
   };
 
   for (const key in availableSearchQueries) {
@@ -100,26 +106,34 @@ export const Visas = () => {
 
   //filtered Visas
   const filteredVisas: [] =
-    day || month || year || supplier || type || employee
+    day || month || year || supplier || type || employee || sponsor
       ? visasList.filter((visa: any) => {
           const paymentDate = dayjs(visa.payment_date)
             .format("DD/MM/YYYY")
             .split("/");
 
           const visaData: SearchQueries = {
-            year: paymentDate[2],
+            year: +paymentDate[2],
             month: +paymentDate[1],
             day: +paymentDate[0],
-            type: visa.type,
-            employee: visa.employee,
-            supplier: visa.provider,
+            type: visa.type?.trim().toLowerCase(),
+            employee: visa.employee?.trim().toLowerCase(),
+            supplier: visa.provider?.trim().toLowerCase(),
+            sponsor: visa.sponsor?.trim().toLowerCase(),
           };
 
           if (
-            Object.keys(availableSearchQueries).every(
-              (key) =>
-                visaData[key as keyof SearchQueries] ===
-                availableSearchQueries[key as keyof SearchQueries]
+            Object.keys(availableSearchQueries).every((key) =>
+              typeof visaData[key as keyof SearchQueries] === "string"
+                ? visaData[key as keyof SearchQueries]
+                    ?.toString()
+                    .includes(
+                      availableSearchQueries[
+                        key as keyof SearchQueries
+                      ] as string
+                    )
+                : visaData[key as keyof SearchQueries] ===
+                  (availableSearchQueries[key as keyof SearchQueries] as string)
             )
           )
             return visa;
@@ -559,6 +573,24 @@ export const Visas = () => {
               }
             />
           </div>
+
+          <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="sponsor">
+              Sponsor
+            </label>
+            <input
+              type="text"
+              name="sponsor"
+              className={inputClassNamesStyles.default}
+              defaultValue={sponsor}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  sponsor: e.target.value,
+                })
+              }
+            />
+          </div>
         </form>
         <h3 className="basis-full flex justify-center items-center flex-row-reverse text-2xl my-10 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
           <span>{" التأشيرات المحفوظة"}</span>
@@ -601,6 +633,11 @@ export const Visas = () => {
             </span>
           )}
 
+          {sponsor && (
+            <span className="bg-purple-500 p-1 rounded-md text-white mx-1">
+              {" Sponsor:- " + sponsor}
+            </span>
+          )}
           <span>({filteredVisas.length})</span>
           <span className="flex justify-center items-center mr-2">
             <FcCurrencyExchange size={50} />
@@ -682,6 +719,7 @@ export const Visas = () => {
         !supplier &&
         !employee &&
         !type &&
+        !sponsor &&
         filteredVisas?.length === 0 &&
         !isLoading &&
         !invoiceData.isLoading && (
@@ -691,7 +729,7 @@ export const Visas = () => {
         )}
 
       {/* if there is search query no Visa matches >>> No Search Found*/}
-      {(year || month || day || supplier || type || employee) &&
+      {(year || month || day || supplier || type || employee || sponsor) &&
         filteredVisas?.length === 0 &&
         !isLoading &&
         !invoiceData.isLoading && (

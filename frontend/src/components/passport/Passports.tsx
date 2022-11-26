@@ -94,7 +94,7 @@ export const Passports = () => {
   const dispatch = useAppDispatch();
 
   //search Params
-  const [searchQuery, setSearchQuery] = useState({
+  const [searchQuery, setSearchQuery] = useState<SearchQueries>({
     year: "",
     month: "",
     day: "",
@@ -116,9 +116,9 @@ export const Passports = () => {
   const { year, month, day, state, service, nationality } = searchQuery;
 
   type SearchQueries = {
-    year: string;
-    month: string | number;
-    day: string | number;
+    year: number | string;
+    month: number | string;
+    day: number | string;
     state: string;
     service: string;
     nationality: string;
@@ -126,8 +126,10 @@ export const Passports = () => {
 
   let availableSearchQueries: SearchQueries = {
     ...searchQuery,
+    year: +year,
     month: +month,
     day: +day,
+    nationality: nationality.trim().toLowerCase(),
   };
 
   for (const key in availableSearchQueries) {
@@ -145,19 +147,26 @@ export const Passports = () => {
             .split("/");
 
           const passportData: SearchQueries = {
-            year: paymentDate[2],
+            year: +paymentDate[2],
             month: +paymentDate[1],
             day: +paymentDate[0],
             state: passport.state,
             service: passport.service,
-            nationality: passport.customer_nationality,
+            nationality: passport.customer_nationality.trim().toLowerCase(),
           };
-
+          console.log(passportData);
           if (
-            Object.keys(availableSearchQueries).every(
-              (key) =>
-                passportData[key as keyof SearchQueries] ===
-                availableSearchQueries[key as keyof SearchQueries]
+            Object.keys(availableSearchQueries).every((key) =>
+              typeof passportData[key as keyof SearchQueries] === "string"
+                ? passportData[key as keyof SearchQueries]
+                    ?.toString()
+                    .includes(
+                      availableSearchQueries[
+                        key as keyof SearchQueries
+                      ] as string
+                    )
+                : passportData[key as keyof SearchQueries] ===
+                  availableSearchQueries[key as keyof SearchQueries]
             )
           )
             return passport;

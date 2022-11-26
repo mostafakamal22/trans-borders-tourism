@@ -49,26 +49,30 @@ export const Purchases = () => {
   const [rowPerPage, setRowPerPage] = useState(50);
 
   //search Params
-  const [searchQuery, setSearchQuery] = useState({
+  const [searchQuery, setSearchQuery] = useState<SearchQueries>({
     day: "",
     year: "",
     month: "",
     supplier: "",
+    type: "",
   });
 
-  const { year, month, day, supplier } = searchQuery;
+  const { year, month, day, supplier, type } = searchQuery;
 
   type SearchQueries = {
     day: string | number;
-    year: string;
+    year: string | number;
     month: string | number;
     supplier: string;
+    type: string;
   };
 
   let availableSearchQueries: SearchQueries = {
-    ...searchQuery,
+    year: +year,
     month: +month,
     day: +day,
+    supplier: supplier.trim().toLowerCase(),
+    type: type.trim().toLowerCase(),
   };
 
   for (const key in availableSearchQueries) {
@@ -85,24 +89,34 @@ export const Purchases = () => {
 
   //filtered Purchases
   const filteredPurchases: [] =
-    day || month || year || supplier
+    day || month || year || supplier || type
       ? purchasesList.filter((purchase: any) => {
           const purchaseDate = dayjs(purchase.date)
             .format("DD/MM/YYYY")
             .split("/");
 
           const purchaseData: SearchQueries = {
-            year: purchaseDate[2],
+            year: +purchaseDate[2],
             month: +purchaseDate[1],
             day: +purchaseDate[0],
-            supplier: purchase.purchase_types[0].supplier,
+            supplier: purchase?.purchase_types[0]?.supplier
+              ?.trim()
+              .toLowerCase(),
+            type: purchase?.purchase_types[0]?.name?.trim().toLowerCase(),
           };
 
           if (
-            Object.keys(availableSearchQueries).every(
-              (key) =>
-                purchaseData[key as keyof SearchQueries] ===
-                availableSearchQueries[key as keyof SearchQueries]
+            Object.keys(availableSearchQueries).every((key) =>
+              typeof purchaseData[key as keyof SearchQueries] === "string"
+                ? purchaseData[key as keyof SearchQueries]
+                    ?.toString()
+                    .includes(
+                      availableSearchQueries[
+                        key as keyof SearchQueries
+                      ] as string
+                    )
+                : purchaseData[key as keyof SearchQueries] ===
+                  availableSearchQueries[key as keyof SearchQueries]
             )
           ) {
             return purchase;
@@ -407,6 +421,24 @@ export const Purchases = () => {
               }
             />
           </div>
+
+          <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="type">
+              Type
+            </label>
+            <input
+              type="text"
+              name="type"
+              className={inputClassNamesStyles.default}
+              value={type}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  type: e.target.value,
+                })
+              }
+            />
+          </div>
         </form>
 
         <h3 className="basis-full flex justify-center items-center flex-row-reverse flex-wrap text-2xl my-5 p-3 text-center font-bold bg-red-200 text-gray-900 border-b-4 border-red-800 rounded shadow">
@@ -436,7 +468,11 @@ export const Purchases = () => {
               {" Supplier:- " + supplier}
             </span>
           )}
-
+          {type && (
+            <span className="bg-amber-500 p-1 rounded-md text-white mx-1">
+              {" Type:- " + type}
+            </span>
+          )}
           <span>({filteredPurchases.length})</span>
           <span className="flex justify-center items-center mr-2">
             <FcSalesPerformance size={50} />
@@ -499,6 +535,7 @@ export const Purchases = () => {
         !month &&
         !day &&
         !supplier &&
+        !type &&
         filteredPurchases?.length === 0 &&
         !isLoading && (
           <div className="bg-yellow-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-yellow-600 rounded">
@@ -507,7 +544,7 @@ export const Purchases = () => {
         )}
 
       {/* if there is search query no Purchase matches >>> No Search Found*/}
-      {(year || month || day || supplier) &&
+      {(year || month || day || supplier || type) &&
         filteredPurchases?.length === 0 &&
         !isLoading && (
           <div className="bg-red-200 text-gray-800 text-center font-bold my-4 py-4 px-2 border-l-4 border-red-600 rounded">
