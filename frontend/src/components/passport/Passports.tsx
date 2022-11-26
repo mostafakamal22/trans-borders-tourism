@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { FcBusiness } from "react-icons/fc";
 import { TiDelete } from "react-icons/ti";
 import { UseResetStatus } from "../../hooks/UseResetStatus";
@@ -28,7 +28,6 @@ import {
   resetInvoicesStatus,
 } from "../../state/features/invoice/invoiceSlice";
 import { AiFillEdit, AiFillFileAdd } from "react-icons/ai";
-import { useSearchParams } from "react-router-dom";
 
 export const tableHeaderTitles = [
   "إسم العميل",
@@ -98,9 +97,24 @@ export const Passports = () => {
     year: "",
     month: "",
     day: "",
-    state: "",
-    service: "",
     nationality: "",
+    state: [
+      { value: "accepted", checked: false },
+      { value: "rejected", checked: false },
+      { value: "refunded", checked: false },
+      { value: "delivered", checked: false },
+    ],
+    service: [
+      { value: "30days", checked: false },
+      { value: "90days", checked: false },
+      { value: "extend_permission", checked: false },
+      { value: "cancel_permission", checked: false },
+      { value: "report_request", checked: false },
+      { value: "renew_resedency", checked: false },
+      { value: "cancel_resedency", checked: false },
+      { value: "temp_shutdown_with_escape", checked: false },
+      { value: "change_situation", checked: false },
+    ],
   });
 
   //Is modal open
@@ -119,18 +133,28 @@ export const Passports = () => {
     year: number | string;
     month: number | string;
     day: number | string;
-    state: string;
-    service: string;
+    state?: { value: string; checked: boolean }[];
+    service?: { value: string; checked: boolean }[];
     nationality: string;
   };
 
   let availableSearchQueries: SearchQueries = {
-    ...searchQuery,
     year: +year,
     month: +month,
     day: +day,
     nationality: nationality.trim().toLowerCase(),
   };
+
+  const stateArr: string[] = [];
+  const serviceArr: string[] = [];
+
+  state?.map((s: { value: string; checked: boolean }) => {
+    s.checked && stateArr.push(s.value);
+  });
+
+  service?.map((s: { value: string; checked: boolean }) => {
+    s.checked && serviceArr.push(s.value);
+  });
 
   for (const key in availableSearchQueries) {
     if (!availableSearchQueries[key as keyof SearchQueries]) {
@@ -154,20 +178,34 @@ export const Passports = () => {
             service: passport.service,
             nationality: passport.customer_nationality.trim().toLowerCase(),
           };
-          console.log(passportData);
+
+          const comparedQueriesWithPassport = Object.keys(
+            availableSearchQueries
+          ).every((key) =>
+            typeof passportData[key as keyof SearchQueries] === "string"
+              ? passportData[key as keyof SearchQueries]
+                  ?.toString()
+                  .includes(
+                    availableSearchQueries[key as keyof SearchQueries] as string
+                  )
+              : passportData[key as keyof SearchQueries] ===
+                availableSearchQueries[key as keyof SearchQueries]
+          );
+
           if (
-            Object.keys(availableSearchQueries).every((key) =>
-              typeof passportData[key as keyof SearchQueries] === "string"
-                ? passportData[key as keyof SearchQueries]
-                    ?.toString()
-                    .includes(
-                      availableSearchQueries[
-                        key as keyof SearchQueries
-                      ] as string
-                    )
-                : passportData[key as keyof SearchQueries] ===
-                  availableSearchQueries[key as keyof SearchQueries]
-            )
+            comparedQueriesWithPassport &&
+            (stateArr
+              ?.join(" ")
+              ?.includes(
+                passportData["state" as keyof SearchQueries] as string
+              ) ||
+              stateArr.join() === "") &&
+            (serviceArr
+              ?.join(" ")
+              ?.includes(
+                passportData["service" as keyof SearchQueries] as string
+              ) ||
+              serviceArr.join() === "")
           )
             return passport;
         })
@@ -567,53 +605,86 @@ export const Passports = () => {
             />
           </div>
 
-          <div className="flex justify-center items-center flex-col gap-2">
-            <label className={lableClassNamesStyles.default} htmlFor="state">
-              الوضعية
-            </label>
-            <select
-              name="state"
-              className="p-2 rounded text-right"
-              value={state}
-              onChange={(e) =>
-                setSearchQuery({ ...searchQuery, state: e.target.value })
-              }
-            >
-              <option className="bg-red-200 text-right" value={""}>
-                كــل الوضعيات
-              </option>
-              <option value={"accepted"}>تمت الموافقة</option>
-              <option value={"rejected"}>مرفوض</option>
-              <option value={"refunded"}>تم استرداد الرسوم</option>
-              <option value={"delivered"}>تم التسليم للعميل</option>
-            </select>
+          <div className="basis-full flex justify-center items-center flex-col gap-2">
+            <p className={lableClassNamesStyles.default}>الوضعية</p>
+
+            <div className="flex flex-row-reverse items-center justify-center flex-wrap gap-2">
+              {state?.map(
+                (item: { value: string; checked: boolean }, index: number) => (
+                  <Fragment key={item.value}>
+                    <label className="text-white" htmlFor={item.value}>
+                      {passportState[item.value as keyof PassportState][0]}
+                    </label>
+
+                    <input
+                      type="checkbox"
+                      id={item.value}
+                      name={item.value}
+                      value={item.value}
+                      checked={item.checked}
+                      onChange={() =>
+                        setSearchQuery({
+                          ...searchQuery,
+                          state: state.map(
+                            (
+                              i: { value: string; checked: boolean },
+                              indx: number
+                            ) => {
+                              return {
+                                value: i.value,
+                                checked:
+                                  index === indx ? !i.checked : i.checked,
+                              };
+                            }
+                          ),
+                        })
+                      }
+                    />
+                  </Fragment>
+                )
+              )}
+            </div>
           </div>
 
-          <div className="flex justify-center items-center flex-col gap-2">
-            <label htmlFor="service" className={lableClassNamesStyles.default}>
-              الخدمة
-            </label>
-            <select
-              name="service"
-              className="p-2 rounded text-right"
-              value={service}
-              onChange={(e) =>
-                setSearchQuery({
-                  ...searchQuery,
-                  service: e.target.value,
-                })
-              }
-            >
-              <option className="bg-red-200 text-right" value={""}>
-                كــل الخدمات
-              </option>
+          <div className="basis-full flex justify-center items-center flex-col gap-2">
+            <p className={lableClassNamesStyles.default}>الخدمة</p>
 
-              {Object.keys(passportService).map((name: string) => (
-                <option key={name} value={name}>
-                  {passportService[name as keyof PassportService]}
-                </option>
-              ))}
-            </select>
+            <div className="flex flex-row-reverse items-center justify-center flex-wrap gap-2">
+              {service?.map(
+                (item: { value: string; checked: boolean }, index: number) => (
+                  <Fragment key={item.value}>
+                    <label className="text-white" htmlFor={item.value}>
+                      {passportService[item.value as keyof PassportService]}
+                    </label>
+
+                    <input
+                      type="checkbox"
+                      id={item.value}
+                      name={item.value}
+                      value={item.value}
+                      checked={item.checked}
+                      onChange={() =>
+                        setSearchQuery({
+                          ...searchQuery,
+                          service: service.map(
+                            (
+                              i: { value: string; checked: boolean },
+                              indx: number
+                            ) => {
+                              return {
+                                value: i.value,
+                                checked:
+                                  index === indx ? !i.checked : i.checked,
+                              };
+                            }
+                          ),
+                        })
+                      }
+                    />
+                  </Fragment>
+                )
+              )}
+            </div>
           </div>
         </form>
 
@@ -641,13 +712,25 @@ export const Passports = () => {
           )}
           {state && (
             <span className="bg-emerald-500 p-1 rounded-md text-white mx-1">
-              {" والوضعية " + passportState[state as keyof PassportState][0]}
+              {" والوضعية " +
+                (stateArr.join() === ""
+                  ? "[كــل الوضعيات]"
+                  : stateArr.map(
+                      (state: string) =>
+                        ` ${passportState[state as keyof PassportState][0]} `
+                    ))}
             </span>
           )}
 
           {service && (
             <span className="bg-purple-500 p-1 rounded-md text-white mx-1">
-              {" و الخدمة " + passportService[service as keyof PassportService]}
+              {" و الخدمة " +
+                (serviceArr.join() === ""
+                  ? "[كــل الخدمـات]"
+                  : serviceArr.map(
+                      (state: string) =>
+                        ` ${passportService[state as keyof PassportService]} `
+                    ))}
             </span>
           )}
 
@@ -755,9 +838,9 @@ export const Passports = () => {
       {!year &&
         !month &&
         !day &&
-        !state &&
+        state?.length === 0 &&
+        service?.length === 0 &&
         !nationality &&
-        !service &&
         filteredPassports?.length === 0 &&
         !isLoading &&
         !invoiceData.isLoading && (

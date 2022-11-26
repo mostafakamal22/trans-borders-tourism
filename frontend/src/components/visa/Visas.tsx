@@ -74,9 +74,11 @@ export const Visas = () => {
     type: "",
     supplier: "",
     sponsor: "",
+    name: "",
   });
 
-  const { year, day, month, employee, type, supplier, sponsor } = searchQuery;
+  const { year, day, month, employee, type, supplier, sponsor, name } =
+    searchQuery;
 
   type SearchQueries = {
     day: string | number;
@@ -86,6 +88,7 @@ export const Visas = () => {
     type: string;
     supplier: string;
     sponsor: string;
+    name: string;
   };
 
   let availableSearchQueries: SearchQueries = {
@@ -96,6 +99,7 @@ export const Visas = () => {
     type: type.trim().toLowerCase(),
     supplier: supplier.trim().toLowerCase(),
     sponsor: sponsor.trim().toLowerCase(),
+    name: name.trim().toLowerCase(),
   };
 
   for (const key in availableSearchQueries) {
@@ -106,7 +110,7 @@ export const Visas = () => {
 
   //filtered Visas
   const filteredVisas: [] =
-    day || month || year || supplier || type || employee || sponsor
+    day || month || year || supplier || type || employee || sponsor || name
       ? visasList.filter((visa: any) => {
           const paymentDate = dayjs(visa.payment_date)
             .format("DD/MM/YYYY")
@@ -120,6 +124,7 @@ export const Visas = () => {
             employee: visa.employee?.trim().toLowerCase(),
             supplier: visa.provider?.trim().toLowerCase(),
             sponsor: visa.sponsor?.trim().toLowerCase(),
+            name: visa.customer_name?.trim().toLowerCase(),
           };
 
           if (
@@ -521,6 +526,24 @@ export const Visas = () => {
           </div>
 
           <div className="flex justify-center items-center flex-col gap-2">
+            <label className={lableClassNamesStyles.default} htmlFor="name">
+              إسم العميل
+            </label>
+            <input
+              type="text"
+              name="name"
+              className={inputClassNamesStyles.default}
+              value={name}
+              onChange={(e) =>
+                setSearchQuery({
+                  ...searchQuery,
+                  name: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          <div className="flex justify-center items-center flex-col gap-2">
             <label className={lableClassNamesStyles.default} htmlFor="supplier">
               Supplier
             </label>
@@ -614,7 +637,11 @@ export const Visas = () => {
               {" سنة " + year}
             </span>
           )}
-
+          {name && (
+            <span className="bg-gray-500 p-1 rounded-md text-white mx-1">
+              {name + " إسم العميل "}
+            </span>
+          )}
           {supplier && (
             <span className="bg-emerald-500 p-1 rounded-md text-white mx-1">
               {" Supplier:- " + supplier}
@@ -632,7 +659,6 @@ export const Visas = () => {
               {" Emplyee:- " + employee}
             </span>
           )}
-
           {sponsor && (
             <span className="bg-purple-500 p-1 rounded-md text-white mx-1">
               {" Sponsor:- " + sponsor}
@@ -720,6 +746,7 @@ export const Visas = () => {
         !employee &&
         !type &&
         !sponsor &&
+        !name &&
         filteredVisas?.length === 0 &&
         !isLoading &&
         !invoiceData.isLoading && (
@@ -729,7 +756,14 @@ export const Visas = () => {
         )}
 
       {/* if there is search query no Visa matches >>> No Search Found*/}
-      {(year || month || day || supplier || type || employee || sponsor) &&
+      {(year ||
+        month ||
+        day ||
+        supplier ||
+        type ||
+        employee ||
+        sponsor ||
+        name) &&
         filteredVisas?.length === 0 &&
         !isLoading &&
         !invoiceData.isLoading && (
