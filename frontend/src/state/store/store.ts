@@ -17,7 +17,7 @@ const persistConfig = {
   //encrypting state being stored in localstorage
   transforms: [
     encryptTransform({
-      secretKey: "transborderstourism20222",
+      secretKey: import.meta.env.VITE_REDUX_PERSIST_KEY,
       onError: function (error) {
         // Handle the error.
         console.log(error);

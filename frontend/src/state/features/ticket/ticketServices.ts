@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL =
   process.env.NODE_ENV === "production"
-    ? "https://cute-gold-bison-tie.cyclic.app/api/tickets/"
+    ? import.meta.env.VITE_CORS_DOMAINS + "/api/tickets/"
     : "http://localhost:5000/api/tickets/";
 
 //Get All Tickest

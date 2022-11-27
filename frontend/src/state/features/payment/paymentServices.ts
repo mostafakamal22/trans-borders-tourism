@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL =
   process.env.NODE_ENV === "production"
-    ? "https://cute-gold-bison-tie.cyclic.app/api/payments/"
+    ? import.meta.env.VITE_CORS_DOMAINS + "/api/payments/"
     : "http://localhost:5000/api/payments/";
 
 //Get All Payment
