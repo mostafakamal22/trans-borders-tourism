@@ -28,6 +28,8 @@ import { CreatePurchase } from "./components/forms/CreatePurchase";
 import SideBar from "./components/shared/SideBar";
 import { PaymentVoucher } from "./components/purchase/PaymentVoucher";
 import { CreateVoucher } from "./components/forms/CreateVoucher";
+import { Banks } from "./components/bank/Banks";
+import { CreateBank } from "./components/forms/CreateBank";
 
 //User And Admin Paths
 const paths = [
@@ -48,6 +50,8 @@ const paths = [
   "/purchases",
   "/purchases/create",
   "/purchases/:id",
+  "/banks",
+  "/banks/create",
   "/voucher/create",
 ];
 
@@ -102,6 +106,8 @@ const App: FC = () => {
             <Route path="/purchases" element={<Purchases />} />
             <Route path="/purchases/create" element={<CreatePurchase />} />
             <Route path="/purchases/:id" element={<PaymentVoucher />} />
+            <Route path="/banks" element={<Banks />} />
+            <Route path="/banks/create" element={<CreateBank />} />
             <Route path="/voucher/create" element={<CreateVoucher />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

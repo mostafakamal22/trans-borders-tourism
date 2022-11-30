@@ -46,8 +46,7 @@
   }
 
   .sidebar-hr {
-    @apply bg-black
-    border-4 border-black  rounded-full;
+    @apply border border-red-800 h-10 mx-1;
   }
 }
 

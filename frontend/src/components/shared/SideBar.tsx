@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import {
   AiFillAccountBook,
+  AiFillBank,
   AiFillBell,
   AiFillCalendar,
   AiFillHome,
@@ -12,6 +13,7 @@ import { BsPlus, BsGearFill } from "react-icons/bs";
 import { RiLogoutBoxFill } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
 import { adminLogout } from "../../state/features/admin/auth/adminAuthSlice";
+import { BanksLogout } from "../../state/features/bank/bankSlice";
 import { useAppDispatch } from "../../state/features/hooks/StateHooks";
 import { adminsLogout } from "../../state/features/invoice/invoiceSlice";
 import { passportsLogout } from "../../state/features/passport/passportSlice";
@@ -36,6 +38,8 @@ const navbarLinks: NavbarLinks = [
   ["إضافة التذاكر", "/tickets/create", <BsPlus size={20} />],
   ["المشتريات", "/purchases", <AiFillShopping size={20} />],
   ["إضافة المشتريات", "/purchases/create", <BsPlus size={20} />],
+  ["المعاملات البنكية", "/banks", <AiFillBank size={20} />],
+  ["إضافة معاملة", "/banks/create", <BsPlus size={20} />],
   ["إضافة سند", "/voucher/create", <BsPlus size={20} />],
 ];
 
@@ -51,6 +55,7 @@ const SideBar = () => {
     dispatch(paymentsLogout());
     dispatch(ticketsLogout());
     dispatch(purchasesLogout());
+    dispatch(BanksLogout());
   };
 
   useEffect(() => {
@@ -81,7 +86,7 @@ const SideBar = () => {
   return (
     <nav
       ref={navbarRef}
-      className="sticky z-20 top-0 left-0 w-full  flex justify-center items-center bg-slate-50 px-2 sm:px-4 py-2.5 gap-4 flex-wrap text-xs shadow-md transition-all duration-300 ease-in-out"
+      className="sticky z-20 top-0 left-0 w-full  flex justify-center items-center bg-slate-50 px-2 sm:px-4 py-2.5 gap-1 flex-wrap text-xs shadow-md transition-all duration-300 ease-in-out"
     >
       <SideBarIcon
         link={navbarLinks[0][1]}

@@ -6,6 +6,8 @@ import {
   FcHome,
   FcInvite,
   FcMoneyTransfer,
+  FcPaid,
+  FcPlus,
   FcPuzzle,
   FcSalesPerformance,
   FcTemplate,
@@ -27,6 +29,7 @@ import { getAllVisas } from "../../state/features/visa/visaSlice";
 import { getAllPayments } from "../../state/features/payment/paymentSlice";
 import { getAllTickets } from "../../state/features/ticket/ticketSlice";
 import { getAllPurchases } from "../../state/features/purchase/purchaseSlice";
+import { getAllBanks } from "../../state/features/bank/bankSlice";
 
 type MainHeadings = string[];
 
@@ -59,6 +62,10 @@ const mainPageLinks: MainPagesLinks = [
     ["عرض المشتريات", "/purchases", <FcSalesPerformance size={50} />],
     ["إضافة المشتريات", "/purchases/create", <FcFeedback size={50} />],
   ],
+  [
+    ["المعاملات البنكية", "/banks", <FcPaid size={50} />],
+    ["إضافة معاملة", "/banks/create", <FcPlus size={50} />],
+  ],
 ];
 
 const mainHeadings: MainHeadings = [
@@ -68,6 +75,7 @@ const mainHeadings: MainHeadings = [
   "المصروفات",
   "التذاكـر",
   "المشتريات",
+  "المعاملات البنكية",
 ];
 
 export const Home = () => {
@@ -87,23 +95,40 @@ export const Home = () => {
     dispatch(getAllPayments({ token: info.token }));
     dispatch(getAllTickets({ token: info.token }));
     dispatch(getAllPurchases({ token: info.token }));
+    dispatch(getAllBanks({ token: info.token }));
   }, []);
 
-  const invoiceData = useAppSelector((state) => state.invoiceData);
-  const passportsData = useAppSelector((state) => state.passportsData);
-  const visasData = useAppSelector((state) => state.visasData);
-  const paymentsData = useAppSelector((state) => state.paymentsData);
-  const ticketsData = useAppSelector((state) => state.ticketsData);
-  const purchasesData = useAppSelector((state) => state.purchasesData);
+  const { isLoading: invoiceDataIsLoading } = useAppSelector(
+    (state) => state.invoiceData
+  );
+  const { isLoading: passportsDataIsLoading } = useAppSelector(
+    (state) => state.passportsData
+  );
+  const { isLoading: visasDataIsLoading } = useAppSelector(
+    (state) => state.visasData
+  );
+  const { isLoading: paymentsDataIsLoading } = useAppSelector(
+    (state) => state.paymentsData
+  );
+  const { isLoading: ticketsDataIsLoading } = useAppSelector(
+    (state) => state.ticketsData
+  );
+  const { isLoading: purchasesDataIsLoading } = useAppSelector(
+    (state) => state.purchasesData
+  );
+  const { isLoading: banksDataIsLoading } = useAppSelector(
+    (state) => state.banksData
+  );
 
   //Loading Spinner After Login Waiting Until App data is Fetched.
   if (
-    invoiceData.isLoading ||
-    passportsData.isLoading ||
-    visasData.isLoading ||
-    paymentsData.isLoading ||
-    ticketsData.isLoading ||
-    purchasesData.isLoading
+    invoiceDataIsLoading ||
+    passportsDataIsLoading ||
+    visasDataIsLoading ||
+    paymentsDataIsLoading ||
+    ticketsDataIsLoading ||
+    purchasesDataIsLoading ||
+    banksDataIsLoading
   )
     return (
       <div className="mx-5 h-min-screen">
@@ -111,12 +136,13 @@ export const Home = () => {
           <div className="flex justify-center items-center">
             <MainSpinner
               isLoading={
-                invoiceData.isLoading ||
-                passportsData.isLoading ||
-                visasData.isLoading ||
-                paymentsData.isLoading ||
-                ticketsData.isLoading ||
-                purchasesData.isLoading
+                invoiceDataIsLoading ||
+                passportsDataIsLoading ||
+                visasDataIsLoading ||
+                paymentsDataIsLoading ||
+                ticketsDataIsLoading ||
+                purchasesDataIsLoading ||
+                banksDataIsLoading
               }
             />
           </div>
