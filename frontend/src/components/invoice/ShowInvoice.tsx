@@ -2,9 +2,28 @@ import dayjs from "dayjs";
 import { Navigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../../state/features/hooks/StateHooks";
 import logo from "../../assets/imgs/trans-logo.png";
+import stamp from "../../assets/imgs/trans-border-stamp.png";
 import ReactToPrint from "react-to-print";
 import { useRef, useEffect } from "react";
 import { AiFillPrinter } from "react-icons/ai";
+
+export type CompanyInfos = {
+  name: string[];
+  address: string;
+  website: string;
+  email: string;
+  tel: string[];
+  mob: string[];
+};
+
+export const comapanyInfos: CompanyInfos = {
+  name: ["TRANS BORDERS TOURISM L.L.C"],
+  address: "DUBAI-DEIRA-ABU HAIL",
+  website: "http://tbtourism.com",
+  email: "Info@tbtourism.com",
+  tel: ["045782747"],
+  mob: ["+971556620879", "+971507597677"],
+};
 
 const tableHeaderTitles = ["NO.", "Description", "Quantity", "Price", "Total"];
 
@@ -116,19 +135,32 @@ export const ShowInvoice = () => {
         <div className="flex items-center">
           <div className="max-w-[300px] text-left">
             <p className="text-blue-700 text-xl font-bold">
-              TRANS BORDERS TOURISM L.L.C
+              {comapanyInfos.name[0]}
             </p>
-            <p>DUBAI-DEIRA-ABU HAIL</p>
-            <p>TEL:- 045782747</p>
-            <p>MOB:- +971556620879</p>
-            <p>MOB:- +971507597677</p>
-            <p className="underline text-blue-700">
-              EMAIL/SAMEHDU2009@YAHOO.COM
+            <p>{comapanyInfos.address}</p>
+
+            {comapanyInfos.tel.map((tel) => (
+              <p key={tel}>TEL:- {tel}</p>
+            ))}
+
+            {comapanyInfos.mob.map((mob) => (
+              <p key={mob}>MOB:- {mob}</p>
+            ))}
+
+            <p>
+              EMAIL:-{" "}
+              <span className="underline text-blue-700">
+                {comapanyInfos.email}
+              </span>
             </p>
-            <p className="underline text-blue-700">
+            <p>
               WEBSITE:-{" "}
-              <a href="http://tbtourism.com/" target={"_blank"}>
-                http://tbtourism.com/
+              <a
+                className="underline text-blue-700"
+                href={comapanyInfos.website}
+                target={"_blank"}
+              >
+                {comapanyInfos.website}
               </a>
             </p>
           </div>
@@ -244,12 +276,20 @@ export const ShowInvoice = () => {
           </p>
         </div>
 
-        <div className=" my-10">
-          <p>
-            If you have any questions about this invoice, please contact us.
-          </p>
+        <div className="relative min-h-[200px] flex items-center justify-center my-10">
+          <img
+            className="absolute left-10 top-5 z-10 max-h-[100%] w-[200px] print:w-[130px]  mx-auto"
+            src={stamp}
+            alt="stamp"
+          />
 
-          <p className="font-bold text-lg">Thank You For Your Business!</p>
+          <div>
+            <p>
+              If you have any questions about this invoice, please contact us.
+            </p>
+
+            <p className="font-bold text-lg">Thank You For Your Business!</p>
+          </div>
         </div>
       </div>
     </>
