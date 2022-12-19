@@ -31,7 +31,7 @@ import { CreateVoucher } from "./components/forms/CreateVoucher";
 import { Banks } from "./components/bank/Banks";
 import { CreateBank } from "./components/forms/CreateBank";
 
-//User And Admin Paths
+//App Paths
 const paths = [
   "/profile/",
   "/profile/update",

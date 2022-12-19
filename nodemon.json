@@ -1,0 +1,6 @@
+{
+  "watch": ["backend"],
+  "ext": ".ts,.js",
+  "ignore": ["frontend"],
+  "exec": "npx ts-node --files ./backend/server"
+}
