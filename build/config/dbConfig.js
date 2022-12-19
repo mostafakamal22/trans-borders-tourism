@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.connectToMongoose = void 0;
 var mongoose_1 = __importDefault(require("mongoose"));
 var connection = mongoose_1.default.connection, connect = mongoose_1.default.connect, set = mongoose_1.default.set;
-//For Warning:- Mongoose: the `strictQuery` option will be switched back to `false` by default
+//For Warning:- the `strictQuery` option will be switched back to `false` by default
 set("strictQuery", false);
 var connectToMongoose = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
@@ -74,8 +74,6 @@ var connectToMongoose = function () { return __awaiter(void 0, void 0, void 0, f
                 });
                 //Open Connection to MongoDB
                 return [4 /*yield*/, connect(process.env.MONGO_URI, {
-                        useNewUrlParser: true,
-                        useUnifiedTopology: true,
                         serverSelectionTimeoutMS: 10000,
                         connectTimeoutMS: 10000,
                     })];

@@ -40,9 +40,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.adminLogin = exports.getOneAdmin = exports.createAdmin = exports.updateAdmin = void 0;
-var adminModel_js_1 = __importDefault(require("../models/adminModel.js"));
+var adminModel_1 = __importDefault(require("../models/adminModel"));
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
-var generateAdminsToken_js_1 = require("../helpers/generateAdminsToken.js");
+var generateAdminsToken_1 = require("../helpers/generateAdminsToken");
 //@desc   >>>> Get one admin
 //@route  >>>> GET /api/admin/:id
 //@Access >>>> Public(admins)
@@ -51,16 +51,18 @@ var getOneAdmin = function (req, res) { return __awaiter(void 0, void 0, void 0,
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
-            case 0: return [4 /*yield*/, adminModel_js_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
+            case 0: return [4 /*yield*/, adminModel_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
             case 1:
                 admin = _b.sent();
-                res.status(200).json({
-                    id: admin.id,
-                    name: admin.admin_name,
-                    email: admin.email,
-                    role: admin.role,
-                    token: (0, generateAdminsToken_js_1.generateAdminsToken)(admin.id, admin.email, admin.role),
-                });
+                if (admin) {
+                    res.status(200).json({
+                        id: admin.id,
+                        name: admin.admin_name,
+                        email: admin.email,
+                        role: admin.role,
+                        token: (0, generateAdminsToken_1.generateAdminsToken)(admin.id, admin.email, admin.role),
+                    });
+                }
                 return [2 /*return*/];
         }
     });
@@ -79,7 +81,7 @@ var adminLogin = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 if (!password) {
                     throw new Error("Please provide the password!");
                 }
-                return [4 /*yield*/, adminModel_js_1.default.findOne({ email: email })];
+                return [4 /*yield*/, adminModel_1.default.findOne({ email: email })];
             case 1:
                 admin = _b.sent();
                 //Check The Admin With That Email is Actualy Existed.
@@ -96,7 +98,7 @@ var adminLogin = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                         name: admin.admin_name,
                         email: admin.email,
                         role: admin.role,
-                        token: (0, generateAdminsToken_js_1.generateAdminsToken)(admin.id, admin.email, admin.role),
+                        token: (0, generateAdminsToken_1.generateAdminsToken)(admin.id, admin.email, admin.role),
                     });
                 }
                 else {
@@ -119,7 +121,7 @@ var createAdmin = function (req, res) { return __awaiter(void 0, void 0, void 0,
             case 0: return [4 /*yield*/, bcryptjs_1.default.hash((_a = req.body) === null || _a === void 0 ? void 0 : _a.password, 10)];
             case 1:
                 hashedPassword = _b.sent();
-                return [4 /*yield*/, adminModel_js_1.default.create({
+                return [4 /*yield*/, adminModel_1.default.create({
                         admin_name: req.body.name,
                         email: req.body.email,
                         password: hashedPassword,
@@ -149,7 +151,7 @@ var updateAdmin = function (req, res) { return __awaiter(void 0, void 0, void 0,
             case 0: return [4 /*yield*/, bcryptjs_1.default.hash(req.body.password, 10)];
             case 1:
                 hashedPassword = _a.sent();
-                return [4 /*yield*/, adminModel_js_1.default.findById(req.params.id)];
+                return [4 /*yield*/, adminModel_1.default.findById(req.params.id)];
             case 2:
                 admin = _a.sent();
                 if (!!admin) return [3 /*break*/, 3];
@@ -170,7 +172,7 @@ var updateAdmin = function (req, res) { return __awaiter(void 0, void 0, void 0,
                     name: updatedAdmin.admin_name,
                     email: updatedAdmin.email,
                     role: updatedAdmin.role,
-                    token: (0, generateAdminsToken_js_1.generateAdminsToken)(admin.id, admin.email, admin.role),
+                    token: (0, generateAdminsToken_1.generateAdminsToken)(admin.id, admin.email, admin.role),
                 });
                 _a.label = 5;
             case 5: return [2 /*return*/];

@@ -102,6 +102,14 @@ const MainErrorsHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     return res.status(410).send(err.message);
   }
 
+  //Admins Requests With (NO Tokens OR Invalid Tokens)
+  if (
+    err.message === "Not Authorized without token" ||
+    err.message === "Not Authorized with invalid token"
+  ) {
+    return res.status(401).send(err.message);
+  }
+
   //Unknown Errors
   console.log(err);
   res.status(500).send("An unknown error occurred.");

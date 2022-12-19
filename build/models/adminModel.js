@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
+//Define Admin Schema
 var adminSchema = new mongoose_1.Schema({
     admin_name: {
         type: String,

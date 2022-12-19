@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateBank = exports.createBank = exports.deleteBank = exports.getBanks = void 0;
-var bankModel_js_1 = __importDefault(require("../models/bankModel.js"));
+var bankModel_1 = __importDefault(require("../models/bankModel"));
 //@desc   >>>> Get All Bank
 //@route  >>>> GET /api/banks
 //@Access >>>> public(For Admins)
@@ -48,7 +48,7 @@ var getBanks = function (_req, res) { return __awaiter(void 0, void 0, void 0, f
     var banks;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, bankModel_js_1.default.find()];
+            case 0: return [4 /*yield*/, bankModel_1.default.find()];
             case 1:
                 banks = _a.sent();
                 res.status(200).json(banks);
@@ -65,7 +65,7 @@ var createBank = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     var _a, _b, _c, _d, _e, _f;
     return __generator(this, function (_g) {
         switch (_g.label) {
-            case 0: return [4 /*yield*/, bankModel_js_1.default.create({
+            case 0: return [4 /*yield*/, bankModel_1.default.create({
                     customer_name: (_a = req.body) === null || _a === void 0 ? void 0 : _a.name,
                     account_id: (_b = req.body) === null || _b === void 0 ? void 0 : _b.accountId,
                     process_no: (_c = req.body) === null || _c === void 0 ? void 0 : _c.processNo,
@@ -89,7 +89,7 @@ var updateBank = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     var _a, _b, _c, _d, _e, _f, _g;
     return __generator(this, function (_h) {
         switch (_h.label) {
-            case 0: return [4 /*yield*/, bankModel_js_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
+            case 0: return [4 /*yield*/, bankModel_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
             case 1:
                 bank = _h.sent();
                 if (!!bank) return [3 /*break*/, 2];
@@ -123,7 +123,7 @@ var deleteBank = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
-            case 0: return [4 /*yield*/, bankModel_js_1.default.findByIdAndDelete((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
+            case 0: return [4 /*yield*/, bankModel_1.default.findByIdAndDelete((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
             case 1:
                 deletedBank = _b.sent();
                 //Check If the Document is Already Deleted Or Not.

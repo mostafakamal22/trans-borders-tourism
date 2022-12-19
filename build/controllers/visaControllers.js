@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateVisa = exports.createVisa = exports.deleteVisa = exports.getVisas = void 0;
-var visaModel_js_1 = __importDefault(require("../models/visaModel.js"));
+var visaModel_1 = __importDefault(require("../models/visaModel"));
 //@desc   >>>> Get All Visas
 //@route  >>>> GET /api/visas
 //@Access >>>> public(For Admins)
@@ -48,7 +48,7 @@ var getVisas = function (_req, res) { return __awaiter(void 0, void 0, void 0, f
     var visas;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, visaModel_js_1.default.find()];
+            case 0: return [4 /*yield*/, visaModel_1.default.find()];
             case 1:
                 visas = _a.sent();
                 res.status(200).json(visas);
@@ -65,7 +65,7 @@ var createVisa = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
     return __generator(this, function (_p) {
         switch (_p.label) {
-            case 0: return [4 /*yield*/, visaModel_js_1.default.create({
+            case 0: return [4 /*yield*/, visaModel_1.default.create({
                     customer_name: (_a = req.body) === null || _a === void 0 ? void 0 : _a.name,
                     passport_id: (_b = req.body) === null || _b === void 0 ? void 0 : _b.passportId,
                     provider: (_c = req.body) === null || _c === void 0 ? void 0 : _c.provider,
@@ -96,7 +96,7 @@ var updateVisa = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
     return __generator(this, function (_p) {
         switch (_p.label) {
-            case 0: return [4 /*yield*/, visaModel_js_1.default.findById(req.params.id)];
+            case 0: return [4 /*yield*/, visaModel_1.default.findById(req.params.id)];
             case 1:
                 visa = _p.sent();
                 if (!!visa) return [3 /*break*/, 2];
@@ -136,7 +136,7 @@ var deleteVisa = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     var deletedVisa;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, visaModel_js_1.default.findByIdAndDelete(req.params.id)];
+            case 0: return [4 /*yield*/, visaModel_1.default.findByIdAndDelete(req.params.id)];
             case 1:
                 deletedVisa = _a.sent();
                 //Check If the Document is Already Deleted Or Not.

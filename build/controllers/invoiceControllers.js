@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteInvoice = exports.createInvoice = exports.getInvoices = void 0;
-var invoiceModel_js_1 = __importDefault(require("../models/invoiceModel.js"));
+var invoiceModel_1 = __importDefault(require("../models/invoiceModel"));
 //@desc   >>>> Get All Invoices
 //@route  >>>> GET /api/invoices
 //@Access >>>> public(For Admins)
@@ -48,7 +48,7 @@ var getInvoices = function (_req, res) { return __awaiter(void 0, void 0, void 0
     var invoices;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, invoiceModel_js_1.default.find()];
+            case 0: return [4 /*yield*/, invoiceModel_1.default.find()];
             case 1:
                 invoices = _a.sent();
                 res.status(200).json(invoices);
@@ -65,7 +65,7 @@ var createInvoice = function (req, res) { return __awaiter(void 0, void 0, void 
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
     return __generator(this, function (_p) {
         switch (_p.label) {
-            case 0: return [4 /*yield*/, invoiceModel_js_1.default.create({
+            case 0: return [4 /*yield*/, invoiceModel_1.default.create({
                     customer: (_a = req.body) === null || _a === void 0 ? void 0 : _a.customer,
                     details: (_b = req.body) === null || _b === void 0 ? void 0 : _b.details,
                     date: (_c = req.body) === null || _c === void 0 ? void 0 : _c.date,
@@ -96,7 +96,7 @@ var deleteInvoice = function (req, res) { return __awaiter(void 0, void 0, void 
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
-            case 0: return [4 /*yield*/, invoiceModel_js_1.default.findByIdAndDelete((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
+            case 0: return [4 /*yield*/, invoiceModel_1.default.findByIdAndDelete((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
             case 1:
                 deletedInvoice = _b.sent();
                 //Check If the Document is Already Deleted Or Not.

@@ -29,7 +29,7 @@ var handleValidationError = function (err, res) {
     }
 };
 //Main Errors Handler function.
-exports.default = (function (err, _req, res, _next) {
+var MainErrorsHandler = function (err, _req, res, _next) {
     //MongoDB Servers Errors
     /*
       - MongooseServerSelectionError: connect ECONNREFUSED.
@@ -40,7 +40,7 @@ exports.default = (function (err, _req, res, _next) {
     if (err.name === "MongooseServerSelectionError" ||
         err.name === "MongoTimeoutError" ||
         err.name === "MongooseError" ||
-        err.namr === "MongoNetworkTimeoutError" ||
+        err.name === "MongoNetworkTimeoutError" ||
         err.name === "DisconnectedError") {
         console.log(err.name);
         return res
@@ -50,7 +50,6 @@ exports.default = (function (err, _req, res, _next) {
     //Parallel Save Errors
     //Thrown when you call save() on a document when the same document instance is already saving.
     if (err.name === "ParallelSaveError") {
-        console.log(err.name);
         return res
             .status(400)
             .send("You are tyring to modify a document that's already being modified, Try again later!");
@@ -64,13 +63,11 @@ exports.default = (function (err, _req, res, _next) {
     //ValidationError: X validation failed.
     //CastError: Cast to Number failed for value string at path x.
     if (err.name === "ValidationError" || err.name === "CastError") {
-        console.log(err.name);
         return handleValidationError(err, res);
     }
     //Schema Duplicate Keys Errors
     //E11000 duplicate key error collection
     if (err.name === "MongoServerError" && err.code && err.code == 11000) {
-        console.log(err.name);
         return handleDuplicateKeyError(err, res);
     }
     //JWT Errors
@@ -78,7 +75,6 @@ exports.default = (function (err, _req, res, _next) {
     if (err.name === "TokenExpiredError" ||
         err.name === "JsonWebTokenError" ||
         err.name === "NotBeforeError") {
-        console.log(err.name);
         return res
             .status(401)
             .send("Not Authorized with token Error:-  ".concat(err.message));
@@ -88,7 +84,13 @@ exports.default = (function (err, _req, res, _next) {
     if (err.message === "This Document Has Been Already Deleted!") {
         return res.status(410).send(err.message);
     }
+    //Admins Requests With (NO Tokens OR Invalid Tokens)
+    if (err.message === "Not Authorized without token" ||
+        err.message === "Not Authorized with invalid token") {
+        return res.status(401).send(err.message);
+    }
     //Unknown Errors
     console.log(err);
     res.status(500).send("An unknown error occurred.");
-});
+};
+exports.default = MainErrorsHandler;

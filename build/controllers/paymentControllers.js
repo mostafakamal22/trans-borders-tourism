@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updatePayment = exports.createPayment = exports.deletePayment = exports.getPayments = void 0;
-var paymentsModel_js_1 = __importDefault(require("../models/paymentsModel.js"));
+var paymentsModel_1 = __importDefault(require("../models/paymentsModel"));
 //@desc   >>>> Get All Payment
 //@route  >>>> GET /api/payments
 //@Access >>>> public(For Admins)
@@ -48,7 +48,7 @@ var getPayments = function (_req, res) { return __awaiter(void 0, void 0, void 0
     var payments;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, paymentsModel_js_1.default.find()];
+            case 0: return [4 /*yield*/, paymentsModel_1.default.find()];
             case 1:
                 payments = _a.sent();
                 res.status(200).json(payments);
@@ -65,7 +65,7 @@ var createPayment = function (req, res) { return __awaiter(void 0, void 0, void 
     var _a, _b, _c;
     return __generator(this, function (_d) {
         switch (_d.label) {
-            case 0: return [4 /*yield*/, paymentsModel_js_1.default.create({
+            case 0: return [4 /*yield*/, paymentsModel_1.default.create({
                     payment_types: (_a = req.body) === null || _a === void 0 ? void 0 : _a.paymentTypes,
                     total: (_b = req.body) === null || _b === void 0 ? void 0 : _b.total,
                     date: (_c = req.body) === null || _c === void 0 ? void 0 : _c.paymentDate,
@@ -86,7 +86,7 @@ var updatePayment = function (req, res) { return __awaiter(void 0, void 0, void 
     var _a, _b, _c, _d;
     return __generator(this, function (_e) {
         switch (_e.label) {
-            case 0: return [4 /*yield*/, paymentsModel_js_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
+            case 0: return [4 /*yield*/, paymentsModel_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
             case 1:
                 payment = _e.sent();
                 if (!!payment) return [3 /*break*/, 2];
@@ -117,7 +117,7 @@ var deletePayment = function (req, res) { return __awaiter(void 0, void 0, void 
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
-            case 0: return [4 /*yield*/, paymentsModel_js_1.default.findByIdAndDelete((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
+            case 0: return [4 /*yield*/, paymentsModel_1.default.findByIdAndDelete((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
             case 1:
                 deletedPayment = _b.sent();
                 //Check If the Document is Already Deleted Or Not.

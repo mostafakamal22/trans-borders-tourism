@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletePurchase = exports.updatePurchase = exports.createPurchase = exports.getPurchases = void 0;
-var purchaseModel_js_1 = __importDefault(require("../models/purchaseModel.js"));
+var purchaseModel_1 = __importDefault(require("../models/purchaseModel"));
 //@desc   >>>> Get All Purchases
 //@route  >>>> GET /api/Purchases
 //@Access >>>> public(For Admins)
@@ -48,7 +48,7 @@ var getPurchases = function (_req, res) { return __awaiter(void 0, void 0, void 
     var Purchases;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, purchaseModel_js_1.default.find()];
+            case 0: return [4 /*yield*/, purchaseModel_1.default.find()];
             case 1:
                 Purchases = _a.sent();
                 res.status(200).json(Purchases);
@@ -65,7 +65,7 @@ var createPurchase = function (req, res) { return __awaiter(void 0, void 0, void
     var _a, _b, _c;
     return __generator(this, function (_d) {
         switch (_d.label) {
-            case 0: return [4 /*yield*/, purchaseModel_js_1.default.create({
+            case 0: return [4 /*yield*/, purchaseModel_1.default.create({
                     purchase_types: (_a = req.body) === null || _a === void 0 ? void 0 : _a.purchaseTypes,
                     total: (_b = req.body) === null || _b === void 0 ? void 0 : _b.total,
                     date: (_c = req.body) === null || _c === void 0 ? void 0 : _c.purchaseDate,
@@ -86,7 +86,7 @@ var updatePurchase = function (req, res) { return __awaiter(void 0, void 0, void
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
-            case 0: return [4 /*yield*/, purchaseModel_js_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
+            case 0: return [4 /*yield*/, purchaseModel_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
             case 1:
                 purchase = _b.sent();
                 if (!!purchase) return [3 /*break*/, 2];
@@ -117,7 +117,7 @@ var deletePurchase = function (req, res) { return __awaiter(void 0, void 0, void
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
-            case 0: return [4 /*yield*/, purchaseModel_js_1.default.findByIdAndDelete((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
+            case 0: return [4 /*yield*/, purchaseModel_1.default.findByIdAndDelete((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
             case 1:
                 deletedPurchase = _b.sent();
                 //Check If the Document is Already Deleted Or Not.

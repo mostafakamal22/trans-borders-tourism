@@ -9,48 +9,48 @@ dotenv_1.default.config();
 var path_1 = require("path");
 var express_1 = __importDefault(require("express"));
 var cors_1 = __importDefault(require("cors"));
-var corsConfig_js_1 = require("./config/corsConfig.js");
-var errorHandling_js_1 = __importDefault(require("./utils/errorHandling.js"));
-var adminErrorHandling_js_1 = __importDefault(require("./utils/adminErrorHandling.js"));
-var adminApiLimiter_js_1 = require("./middlewares/adminMiddlewares/adminApiLimiter.js");
+var corsConfig_1 = require("./config/corsConfig");
+var errorHandling_1 = __importDefault(require("./utils/errorHandling"));
+var adminErrorHandling_1 = __importDefault(require("./utils/adminErrorHandling"));
+var adminApiLimiter_1 = require("./middlewares/adminMiddlewares/adminApiLimiter");
 var app = (0, express_1.default)();
 //connect to mongodb
-var dbConfig_js_1 = require("./config/dbConfig.js");
-(0, dbConfig_js_1.connectToMongoose)();
+var dbConfig_1 = require("./config/dbConfig");
+(0, dbConfig_1.connectToMongoose)();
 //middlewares
 //express json parser middleware
 app.use(express_1.default.json());
 //cors middleware
 if (process.env.NODE_ENV === "production") {
-    app.use((0, cors_1.default)(corsConfig_js_1.corsProOptions));
+    app.use((0, cors_1.default)(corsConfig_1.corsProOptions));
 }
 else {
-    app.use((0, cors_1.default)(corsConfig_js_1.corsDevOptions));
+    app.use((0, cors_1.default)(corsConfig_1.corsDevOptions));
 }
 //admins Router && Error Handler && API Limiter For Admins Requests.
-var adminRoutes_js_1 = __importDefault(require("./routes/adminRoutes.js"));
-app.use("/api/admins", adminApiLimiter_js_1.adminApiLimiter, adminRoutes_js_1.default, adminErrorHandling_js_1.default);
+var adminRoutes_1 = __importDefault(require("./routes/adminRoutes"));
+app.use("/api/admins", adminApiLimiter_1.adminApiLimiter, adminRoutes_1.default, adminErrorHandling_1.default);
 //invoices Router
-var invoiceRoutes_js_1 = __importDefault(require("./routes/invoiceRoutes.js"));
-app.use("/api/invoices", invoiceRoutes_js_1.default);
+var invoiceRoutes_1 = __importDefault(require("./routes/invoiceRoutes"));
+app.use("/api/invoices", invoiceRoutes_1.default);
 //passports Router
-var passportRoutes_js_1 = __importDefault(require("./routes/passportRoutes.js"));
-app.use("/api/passports", passportRoutes_js_1.default);
+var passportRoutes_1 = __importDefault(require("./routes/passportRoutes"));
+app.use("/api/passports", passportRoutes_1.default);
 //visas Router
-var visaRoutes_js_1 = __importDefault(require("./routes/visaRoutes.js"));
-app.use("/api/visas", visaRoutes_js_1.default);
+var visaRoutes_1 = __importDefault(require("./routes/visaRoutes"));
+app.use("/api/visas", visaRoutes_1.default);
 //payments Router
-var paymentRoutes_js_1 = __importDefault(require("./routes/paymentRoutes.js"));
-app.use("/api/payments", paymentRoutes_js_1.default);
+var paymentRoutes_1 = __importDefault(require("./routes/paymentRoutes"));
+app.use("/api/payments", paymentRoutes_1.default);
 //Tickets Router
-var ticketRoutes_js_1 = __importDefault(require("./routes/ticketRoutes.js"));
-app.use("/api/tickets", ticketRoutes_js_1.default);
+var ticketRoutes_1 = __importDefault(require("./routes/ticketRoutes"));
+app.use("/api/tickets", ticketRoutes_1.default);
 //Purchase Router
-var purchaseRoutes_js_1 = __importDefault(require("./routes/purchaseRoutes.js"));
-app.use("/api/purchases", purchaseRoutes_js_1.default);
+var purchaseRoutes_1 = __importDefault(require("./routes/purchaseRoutes"));
+app.use("/api/purchases", purchaseRoutes_1.default);
 //Bank Router
-var bankRoutes_js_1 = __importDefault(require("./routes/bankRoutes.js"));
-app.use("/api/banks", bankRoutes_js_1.default);
+var bankRoutes_1 = __importDefault(require("./routes/bankRoutes"));
+app.use("/api/banks", bankRoutes_1.default);
 //serve Frontend
 if (process.env.NODE_ENV === "production") {
     app.use(express_1.default.static((0, path_1.join)(__dirname, "../frontend/dist")));
@@ -59,7 +59,7 @@ if (process.env.NODE_ENV === "production") {
     });
 }
 //Main Errors Handler
-app.use(errorHandling_js_1.default);
+app.use(errorHandling_1.default);
 app.listen(process.env.PORT || 5000, function () {
     console.log("server is running");
 });

@@ -1,8 +1,8 @@
 "use strict";
-/* CORS domains configuration */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.corsProOptions = exports.corsDevOptions = void 0;
-// Devlopement CORS Configurations//
+/* CORS Domains Configuration */
+//Devlopement CORS Configurations
 var devWhitelist = ["http://127.0.0.1:5173"];
 exports.corsDevOptions = {
     origin: function (origin, callback) {
@@ -15,7 +15,7 @@ exports.corsDevOptions = {
     },
     credentials: true,
 };
-// Production CORS Configurations//
+//Production CORS Configurations
 var domainsFromEnv = process.env.CORS_DOMAINS || "";
 var productionWhitelist = domainsFromEnv
     .split(",")

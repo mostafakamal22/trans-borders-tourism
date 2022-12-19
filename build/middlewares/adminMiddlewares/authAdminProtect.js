@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authAdminProtect = void 0;
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-var adminModel_js_1 = __importDefault(require("../../models/adminModel.js"));
+var adminModel_1 = __importDefault(require("../../models/adminModel"));
 //Check Admins Authentication
 var authAdminProtect = function (req, _res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var token, decoded, admin;
@@ -53,7 +53,7 @@ var authAdminProtect = function (req, _res, next) { return __awaiter(void 0, voi
                     ((_b = req === null || req === void 0 ? void 0 : req.headers) === null || _b === void 0 ? void 0 : _b.authorization.trim().startsWith("Bearer")))) return [3 /*break*/, 2];
                 token = req.headers.authorization.split(" ")[1];
                 decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-                return [4 /*yield*/, adminModel_js_1.default.findById(decoded === null || decoded === void 0 ? void 0 : decoded.id)];
+                return [4 /*yield*/, adminModel_1.default.findById(decoded === null || decoded === void 0 ? void 0 : decoded.id)];
             case 1:
                 admin = _c.sent();
                 //IF There is no Admin With that token Id => Invalid Token

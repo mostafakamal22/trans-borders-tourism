@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPassports = exports.deletePassport = exports.createPassport = exports.updatePassport = void 0;
-var passportModel_js_1 = __importDefault(require("../models/passportModel.js"));
+var passportModel_1 = __importDefault(require("../models/passportModel"));
 //@desc   >>>> Get All Passports
 //@route  >>>> GET /api/passports
 //@Access >>>> public(For Admins)
@@ -48,7 +48,7 @@ var getPassports = function (_req, res) { return __awaiter(void 0, void 0, void 
     var passports;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, passportModel_js_1.default.find()];
+            case 0: return [4 /*yield*/, passportModel_1.default.find()];
             case 1:
                 passports = _a.sent();
                 res.status(200).json(passports);
@@ -65,7 +65,7 @@ var createPassport = function (req, res) { return __awaiter(void 0, void 0, void
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
     return __generator(this, function (_o) {
         switch (_o.label) {
-            case 0: return [4 /*yield*/, passportModel_js_1.default.create({
+            case 0: return [4 /*yield*/, passportModel_1.default.create({
                     customer_name: (_a = req.body) === null || _a === void 0 ? void 0 : _a.name,
                     customer_nationality: (_b = req.body) === null || _b === void 0 ? void 0 : _b.nationality,
                     passport_id: (_c = req.body) === null || _c === void 0 ? void 0 : _c.passportId,
@@ -95,7 +95,7 @@ var updatePassport = function (req, res) { return __awaiter(void 0, void 0, void
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
     return __generator(this, function (_p) {
         switch (_p.label) {
-            case 0: return [4 /*yield*/, passportModel_js_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
+            case 0: return [4 /*yield*/, passportModel_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
             case 1:
                 passport = _p.sent();
                 if (!!passport) return [3 /*break*/, 2];
@@ -135,7 +135,7 @@ var deletePassport = function (req, res) { return __awaiter(void 0, void 0, void
     var _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
-            case 0: return [4 /*yield*/, passportModel_js_1.default.findByIdAndDelete((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
+            case 0: return [4 /*yield*/, passportModel_1.default.findByIdAndDelete((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
             case 1:
                 deletedPassport = _b.sent();
                 //Check If the Document is Already Deleted Or Not.

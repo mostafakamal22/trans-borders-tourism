@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateTicket = exports.createTicket = exports.deleteTicket = exports.getTickets = void 0;
-var ticketModel_js_1 = __importDefault(require("../models/ticketModel.js"));
+var ticketModel_1 = __importDefault(require("../models/ticketModel"));
 //@desc   >>>> Get All Tickets
 //@route  >>>> GET /api/tickets
 //@Access >>>> public(For Admins)
@@ -48,7 +48,7 @@ var getTickets = function (_req, res) { return __awaiter(void 0, void 0, void 0,
     var tickets;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, ticketModel_js_1.default.find()];
+            case 0: return [4 /*yield*/, ticketModel_1.default.find()];
             case 1:
                 tickets = _a.sent();
                 res.status(200).json(tickets);
@@ -65,7 +65,7 @@ var createTicket = function (req, res) { return __awaiter(void 0, void 0, void 0
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
     return __generator(this, function (_m) {
         switch (_m.label) {
-            case 0: return [4 /*yield*/, ticketModel_js_1.default.create({
+            case 0: return [4 /*yield*/, ticketModel_1.default.create({
                     customer_name: (_a = req.body) === null || _a === void 0 ? void 0 : _a.name,
                     employee: (_b = req.body) === null || _b === void 0 ? void 0 : _b.employee,
                     supplier: (_c = req.body) === null || _c === void 0 ? void 0 : _c.supplier,
@@ -94,7 +94,7 @@ var updateTicket = function (req, res) { return __awaiter(void 0, void 0, void 0
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
     return __generator(this, function (_m) {
         switch (_m.label) {
-            case 0: return [4 /*yield*/, ticketModel_js_1.default.findById(req.params.id)];
+            case 0: return [4 /*yield*/, ticketModel_1.default.findById(req.params.id)];
             case 1:
                 ticket = _m.sent();
                 if (!!ticket) return [3 /*break*/, 2];
@@ -132,7 +132,7 @@ var deleteTicket = function (req, res) { return __awaiter(void 0, void 0, void 0
     var deletedTicket;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, ticketModel_js_1.default.findByIdAndDelete(req.params.id)];
+            case 0: return [4 /*yield*/, ticketModel_1.default.findByIdAndDelete(req.params.id)];
             case 1:
                 deletedTicket = _a.sent();
                 //Check If the Document is Already Deleted Or Not.
