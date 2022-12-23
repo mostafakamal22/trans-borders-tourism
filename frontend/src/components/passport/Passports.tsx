@@ -56,6 +56,7 @@ export type PassportState = {
 
 export type PassportService = {
   "30days": "٣٠يوم";
+  "60days": "٦٠يوم";
   "90days": "٩٠يوم";
   extend_permission: "تمديد إذن دخول";
   cancel_permission: "إلغاء إذن دخول";
@@ -75,6 +76,7 @@ export const passportState: PassportState = {
 
 export const passportService: PassportService = {
   "30days": "٣٠يوم",
+  "60days": "٦٠يوم",
   "90days": "٩٠يوم",
   extend_permission: "تمديد إذن دخول",
   cancel_permission: "إلغاء إذن دخول",
@@ -106,6 +108,7 @@ export const Passports = () => {
     ],
     service: [
       { value: "30days", checked: false },
+      { value: "60days", checked: false },
       { value: "90days", checked: false },
       { value: "extend_permission", checked: false },
       { value: "cancel_permission", checked: false },
@@ -271,7 +274,9 @@ export const Passports = () => {
       details: [
         {
           name:
-            passport_service === "90days" || passport_service === "30days"
+            passport_service === "90days" ||
+            passport_service === "60days" ||
+            passport_service === "30days"
               ? " فيزا " + passportService[passport_service]
               : passportService[passport_service as keyof PassportService],
           quantity: 1,
