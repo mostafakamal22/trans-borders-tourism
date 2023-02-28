@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -41,25 +52,68 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateTicket = exports.createTicket = exports.deleteTicket = exports.getTickets = void 0;
 var ticketModel_1 = __importDefault(require("../models/ticketModel"));
-//@desc   >>>> Get All Tickets
-//@route  >>>> GET /api/tickets
-//@Access >>>> public(For Admins)
-var getTickets = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var tickets;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, ticketModel_1.default.find()];
+//@Desc   >>>> Get All Tickets That Match Query Object.
+//@Route  >>>> POST /api/tickets/query
+//@Access >>>> Private(Admins Only)
+var getTickets = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, query, option, customerName, employee, supplier, type, paymentMethod, queries, options, tickets;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = req.body, query = _a.query, option = _a.option;
+                customerName = (query === null || query === void 0 ? void 0 : query.customerName) ? query.customerName : "";
+                employee = (query === null || query === void 0 ? void 0 : query.employee) ? query.employee : "";
+                supplier = (query === null || query === void 0 ? void 0 : query.supplier) ? query.supplier : "";
+                type = (query === null || query === void 0 ? void 0 : query.type) ? query.type : "";
+                paymentMethod = (query === null || query === void 0 ? void 0 : query.paymentMethod) ? query.paymentMethod : [];
+                queries = query
+                    ? {
+                        //Filter By Year, Month And Day.
+                        $expr: {
+                            $setEquals: [
+                                [
+                                    (query === null || query === void 0 ? void 0 : query.year) && {
+                                        $year: "$payment_date",
+                                    },
+                                    (query === null || query === void 0 ? void 0 : query.month) && {
+                                        $month: "$payment_date",
+                                    },
+                                    (query === null || query === void 0 ? void 0 : query.day) && {
+                                        $dayOfMonth: "$payment_date",
+                                    },
+                                ],
+                                [
+                                    (query === null || query === void 0 ? void 0 : query.year) && (query === null || query === void 0 ? void 0 : query.year),
+                                    (query === null || query === void 0 ? void 0 : query.month) && (query === null || query === void 0 ? void 0 : query.month),
+                                    (query === null || query === void 0 ? void 0 : query.day) && (query === null || query === void 0 ? void 0 : query.day),
+                                ],
+                            ],
+                        },
+                        //Filter By Ticket Type.
+                        type: new RegExp("".concat(type), "gi"),
+                        //Filter By Ticket Supplier.
+                        supplier: new RegExp("".concat(supplier), "gi"),
+                        //Filter By Ticket Customer Name.
+                        customer_name: new RegExp("".concat(customerName), "gi"),
+                        //Filter By Ticket Employee.
+                        employee: new RegExp("".concat(employee), "gi"),
+                        //Filter By Ticket Payment Method.
+                        payment_method: new RegExp("".concat(paymentMethod.join("|")), "gi"),
+                    }
+                    : {};
+                options = __assign({ pagination: query ? true : false, sort: { payment_date: "desc", createdAt: "desc" } }, option);
+                return [4 /*yield*/, ticketModel_1.default.paginate(queries, options)];
             case 1:
-                tickets = _a.sent();
+                tickets = _b.sent();
                 res.status(200).json(tickets);
                 return [2 /*return*/];
         }
     });
 }); };
 exports.getTickets = getTickets;
-//@desc   >>>> Create Ticket
-//@route  >>>> POST /api/tickets/
-//@Access >>>> public(For Admins)
+//@Desc   >>>> Create Ticket
+//@Route  >>>> POST /api/tickets/
+//@Access >>>> private(For Admins)
 var createTicket = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var ticket;
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
@@ -86,9 +140,9 @@ var createTicket = function (req, res) { return __awaiter(void 0, void 0, void 0
     });
 }); };
 exports.createTicket = createTicket;
-//@desc   >>>> UPDATE Ticket
-//@route  >>>> PUT /api/tickets/:id
-//@Access >>>> Public(for Admins)
+//@Desc   >>>> UPDATE Ticket
+//@Route  >>>> PUT /api/tickets/:id
+//@Access >>>> Private(for Admins)
 var updateTicket = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var ticket, error, updatedTicket;
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
@@ -125,9 +179,9 @@ var updateTicket = function (req, res) { return __awaiter(void 0, void 0, void 0
     });
 }); };
 exports.updateTicket = updateTicket;
-//@desc   >>>> Delete one Ticket
-//@route  >>>> DELETE /api/tickets/:id
-//@Access >>>> public(For Admins)
+//@Desc   >>>> Delete one Ticket
+//@Route  >>>> DELETE /api/tickets/:id
+//@Access >>>> private(For Admins)
 var deleteTicket = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var deletedTicket;
     return __generator(this, function (_a) {
@@ -140,6 +194,7 @@ var deleteTicket = function (req, res) { return __awaiter(void 0, void 0, void 0
                     throw new Error("This Document Has Been Already Deleted!");
                 }
                 else {
+                    //Send Deleted Ticket id Back
                     res.status(200).json({ id: deletedTicket.id });
                 }
                 return [2 /*return*/];

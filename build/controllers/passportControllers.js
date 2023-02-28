@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -41,25 +52,59 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPassports = exports.deletePassport = exports.createPassport = exports.updatePassport = void 0;
 var passportModel_1 = __importDefault(require("../models/passportModel"));
-//@desc   >>>> Get All Passports
-//@route  >>>> GET /api/passports
-//@Access >>>> public(For Admins)
-var getPassports = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var passports;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, passportModel_1.default.find()];
+//@Desc   >>>> Get All Passports That Match Query Object.
+//@Route  >>>> POST /api/passports/query
+//@Access >>>> Private(Admins Only)
+var getPassports = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, query, option, queries, options, passports;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = req.body, query = _a.query, option = _a.option;
+                queries = query
+                    ? {
+                        //Filter By Year, Month And Day.
+                        $expr: {
+                            $setEquals: [
+                                [
+                                    (query === null || query === void 0 ? void 0 : query.year) && {
+                                        $year: "$payment_date",
+                                    },
+                                    (query === null || query === void 0 ? void 0 : query.month) && {
+                                        $month: "$payment_date",
+                                    },
+                                    (query === null || query === void 0 ? void 0 : query.day) && {
+                                        $dayOfMonth: "$payment_date",
+                                    },
+                                ],
+                                [
+                                    (query === null || query === void 0 ? void 0 : query.year) && (query === null || query === void 0 ? void 0 : query.year),
+                                    (query === null || query === void 0 ? void 0 : query.month) && (query === null || query === void 0 ? void 0 : query.month),
+                                    (query === null || query === void 0 ? void 0 : query.day) && (query === null || query === void 0 ? void 0 : query.day),
+                                ],
+                            ],
+                        },
+                        //Filter By Customer Nationality.
+                        customer_nationality: new RegExp("".concat(query === null || query === void 0 ? void 0 : query.nationality), "gi"),
+                        //Filter By Passport State.
+                        state: new RegExp("".concat(query === null || query === void 0 ? void 0 : query.state.join("|"))),
+                        //Filter By Passport Service.
+                        service: new RegExp("".concat(query === null || query === void 0 ? void 0 : query.service.join("|"))),
+                    }
+                    : {};
+                options = __assign({ pagination: query ? true : false, sort: { payment_date: "desc", createdAt: "desc" } }, option);
+                return [4 /*yield*/, passportModel_1.default.paginate(queries, options)];
             case 1:
-                passports = _a.sent();
+                passports = _b.sent();
                 res.status(200).json(passports);
                 return [2 /*return*/];
         }
     });
 }); };
 exports.getPassports = getPassports;
-//@desc   >>>> Create Passport
-//@route  >>>> POST /api/passports
-//@Access >>>> public(For Admins)
+//@Desc   >>>> Create Passport
+//@Route  >>>> POST /api/passports
+//@Access >>>> Private(Admins Only)
 var createPassport = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var passport;
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
@@ -87,9 +132,9 @@ var createPassport = function (req, res) { return __awaiter(void 0, void 0, void
     });
 }); };
 exports.createPassport = createPassport;
-//@desc   >>>> UPDATE Passport
-//@route  >>>> PUT /api/passports/:id
-//@Access >>>> Public(for Admins)
+//@Desc   >>>> UPDATE Passport
+//@Route  >>>> PUT /api/passports/:id
+//@Access >>>> Private(Admins Only)
 var updatePassport = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var passport, error, updatedPassport;
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
@@ -127,9 +172,9 @@ var updatePassport = function (req, res) { return __awaiter(void 0, void 0, void
     });
 }); };
 exports.updatePassport = updatePassport;
-//@desc   >>>> Delete one Passport
-//@route  >>>> DELETE /api/passports/:id
-//@Access >>>> public(For Admins)
+//@Desc   >>>> Delete one Passport
+//@Route  >>>> DELETE /api/passports/:id
+//@Access >>>> Private(Admins Only)
 var deletePassport = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var deletedPassport;
     var _a;
@@ -143,6 +188,7 @@ var deletePassport = function (req, res) { return __awaiter(void 0, void 0, void
                     throw new Error("This Document Has Been Already Deleted!");
                 }
                 else {
+                    //Send Deleted Passport id Back.
                     res.status(200).json({ id: deletedPassport.id });
                 }
                 return [2 /*return*/];

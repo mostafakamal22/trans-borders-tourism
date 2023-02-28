@@ -44,18 +44,18 @@ var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var adminModel_1 = __importDefault(require("../../models/adminModel"));
 //Check Admins Authentication
 var authAdminProtect = function (req, _res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, decoded, admin;
-    var _a, _b;
-    return __generator(this, function (_c) {
-        switch (_c.label) {
+    var accessToken, decoded, admin;
+    var _a, _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
             case 0:
                 if (!(((_a = req === null || req === void 0 ? void 0 : req.headers) === null || _a === void 0 ? void 0 : _a.authorization) &&
                     ((_b = req === null || req === void 0 ? void 0 : req.headers) === null || _b === void 0 ? void 0 : _b.authorization.trim().startsWith("Bearer")))) return [3 /*break*/, 2];
-                token = req.headers.authorization.split(" ")[1];
-                decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-                return [4 /*yield*/, adminModel_1.default.findById(decoded === null || decoded === void 0 ? void 0 : decoded.id)];
+                accessToken = req.headers.authorization.split(" ")[1];
+                decoded = jsonwebtoken_1.default.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+                return [4 /*yield*/, adminModel_1.default.findById((_c = decoded === null || decoded === void 0 ? void 0 : decoded.AdminInfo) === null || _c === void 0 ? void 0 : _c.id)];
             case 1:
-                admin = _c.sent();
+                admin = _d.sent();
                 //IF There is no Admin With that token Id => Invalid Token
                 if (!admin) {
                     throw new Error("Not Authorized with invalid token");

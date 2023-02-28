@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
+var mongoose_paginate_v2_1 = __importDefault(require("mongoose-paginate-v2"));
 var passportSchema = new mongoose_1.Schema({
     customer_name: {
         type: String,
@@ -52,6 +56,13 @@ var passportSchema = new mongoose_1.Schema({
 }, {
     timestamps: true,
 });
+//Default Options For Paginated Data
+mongoose_paginate_v2_1.default.paginate.options = {
+    lean: true,
+    leanWithId: true,
+};
+//Paginate with plugin.
+passportSchema.plugin(mongoose_paginate_v2_1.default);
 //Define Passport Model
-var Passport = (0, mongoose_1.model)("Passport", passportSchema);
+var Passport = (0, mongoose_1.model)("Passport", passportSchema, "passports");
 exports.default = Passport;

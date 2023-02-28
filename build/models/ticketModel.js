@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
+var mongoose_paginate_v2_1 = __importDefault(require("mongoose-paginate-v2"));
 var ticketSchema = new mongoose_1.Schema({
     customer_name: {
         type: String,
@@ -49,6 +53,13 @@ var ticketSchema = new mongoose_1.Schema({
 }, {
     timestamps: true,
 });
+//Default Options For Paginated Data
+mongoose_paginate_v2_1.default.paginate.options = {
+    lean: true,
+    leanWithId: true,
+};
+//Paginate with plugin.
+ticketSchema.plugin(mongoose_paginate_v2_1.default);
 //Define Ticket Model
-var Ticket = (0, mongoose_1.model)("Ticket", ticketSchema);
+var Ticket = (0, mongoose_1.model)("Ticket", ticketSchema, "tickets");
 exports.default = Ticket;

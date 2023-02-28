@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
+var mongoose_paginate_v2_1 = __importDefault(require("mongoose-paginate-v2"));
 var visaSchema = new mongoose_1.Schema({
     customer_name: {
         type: String,
@@ -56,6 +60,13 @@ var visaSchema = new mongoose_1.Schema({
 }, {
     timestamps: true,
 });
+//Default Options For Paginated Data
+mongoose_paginate_v2_1.default.paginate.options = {
+    lean: true,
+    leanWithId: true,
+};
+//Paginate with plugin.
+visaSchema.plugin(mongoose_paginate_v2_1.default);
 //Define Visa Model
-var Visa = (0, mongoose_1.model)("Visa", visaSchema);
+var Visa = (0, mongoose_1.model)("Visa", visaSchema, "visas");
 exports.default = Visa;

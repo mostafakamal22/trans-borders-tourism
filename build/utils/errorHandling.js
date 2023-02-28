@@ -76,7 +76,7 @@ var MainErrorsHandler = function (err, _req, res, _next) {
         err.name === "JsonWebTokenError" ||
         err.name === "NotBeforeError") {
         return res
-            .status(401)
+            .status(403)
             .send("Not Authorized with token Error:-  ".concat(err.message));
     }
     //Document Deletion Error
@@ -88,6 +88,10 @@ var MainErrorsHandler = function (err, _req, res, _next) {
     if (err.message === "Not Authorized without token" ||
         err.message === "Not Authorized with invalid token") {
         return res.status(401).send(err.message);
+    }
+    //Not allowed by CORS Errors.
+    if (err.message === "Not allowed by CORS") {
+        return res.status(403).send(err.message);
     }
     //Unknown Errors
     console.log(err);

@@ -9,6 +9,8 @@ var comparePasswords_1 = require("../middlewares/adminMiddlewares/comparePasswor
 var router = (0, express_1.Router)();
 router.route("/").post(authAdminProtect_1.authAdminProtect, validatePassword_1.validatePassword, adminControllers_1.createAdmin);
 router.route("/login").post(adminControllers_1.adminLogin);
+router.route("/refresh").get(adminControllers_1.adminRefreshToken);
+router.route("/logout").get(authAdminProtect_1.authAdminProtect, adminControllers_1.AdminLogout);
 router
     .route("/:id")
     .get(authAdminProtect_1.authAdminProtect, adminControllers_1.getOneAdmin)

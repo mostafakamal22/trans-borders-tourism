@@ -2,8 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var adminErrorHandler = function (err, _req, res, next) {
     //Wrong Email or Password
-    if (err.message === "Wrong Email" || err.message === "Wrong Password") {
-        return res.status(400).send(err.message);
+    if (err.message === "Wrong Email") {
+        return res.status(400).send("Email Or Password Or Both Are NOT Correct!");
+    }
+    if (err.message === "Wrong Password") {
+        return res.status(400).send("Email or Password Or Both Are NOT Correct!");
     }
     //Weak Passwords Validation
     if (err.message === "Please provide a strong password!") {

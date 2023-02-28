@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -41,25 +52,59 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletePurchase = exports.updatePurchase = exports.createPurchase = exports.getPurchases = void 0;
 var purchaseModel_1 = __importDefault(require("../models/purchaseModel"));
-//@desc   >>>> Get All Purchases
-//@route  >>>> GET /api/Purchases
-//@Access >>>> public(For Admins)
-var getPurchases = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var Purchases;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, purchaseModel_1.default.find()];
+//@Desc   >>>> Get All Purchases That Match Query Object.
+//@Route  >>>> POST /api/purchases/query
+//@Access >>>> Private(Admins Only)
+var getPurchases = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, query, option, supplier, type, queries, options, purchases;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = req.body, query = _a.query, option = _a.option;
+                supplier = (query === null || query === void 0 ? void 0 : query.supplier) ? query.supplier : "";
+                type = (query === null || query === void 0 ? void 0 : query.type) ? query.type : "";
+                queries = query
+                    ? {
+                        //Filter By Year, Month And Day.
+                        $expr: {
+                            $setEquals: [
+                                [
+                                    (query === null || query === void 0 ? void 0 : query.year) && {
+                                        $year: "$date",
+                                    },
+                                    (query === null || query === void 0 ? void 0 : query.month) && {
+                                        $month: "$date",
+                                    },
+                                    (query === null || query === void 0 ? void 0 : query.day) && {
+                                        $dayOfMonth: "$date",
+                                    },
+                                ],
+                                [
+                                    (query === null || query === void 0 ? void 0 : query.year) && (query === null || query === void 0 ? void 0 : query.year),
+                                    (query === null || query === void 0 ? void 0 : query.month) && (query === null || query === void 0 ? void 0 : query.month),
+                                    (query === null || query === void 0 ? void 0 : query.day) && (query === null || query === void 0 ? void 0 : query.day),
+                                ],
+                            ],
+                        },
+                        //Filter By Purchase Type.
+                        "purchase_types.name": new RegExp("".concat(type), "gi"),
+                        //Filter By Purchase Supplier.
+                        "purchase_types.supplier": new RegExp("".concat(supplier), "gi"),
+                    }
+                    : {};
+                options = __assign({ pagination: query ? true : false, sort: { payment_date: "desc", createdAt: "desc" } }, option);
+                return [4 /*yield*/, purchaseModel_1.default.paginate(queries, options)];
             case 1:
-                Purchases = _a.sent();
-                res.status(200).json(Purchases);
+                purchases = _b.sent();
+                res.status(200).json(purchases);
                 return [2 /*return*/];
         }
     });
 }); };
 exports.getPurchases = getPurchases;
-//@desc   >>>> Create Purchase
-//@route  >>>> POST /api/Purchases/
-//@Access >>>> public(For Admins)
+//@Desc   >>>> Create Purchase
+//@Route  >>>> POST /api/Purchases/
+//@Access >>>> Private(Admins Only)
 var createPurchase = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var purchase;
     var _a, _b, _c;
@@ -78,17 +123,17 @@ var createPurchase = function (req, res) { return __awaiter(void 0, void 0, void
     });
 }); };
 exports.createPurchase = createPurchase;
-//@desc   >>>> UPDATE Purchase
-//@route  >>>> PUT /api/Purchases/:id
-//@Access >>>> Public(for Admins)
+//@Desc   >>>> UPDATE Purchase
+//@Route  >>>> PUT /api/Purchases/:id
+//@Access >>>> Private(Admins Only)
 var updatePurchase = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var purchase, error, updatedPurchase;
-    var _a;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var _a, _b, _c, _d;
+    return __generator(this, function (_e) {
+        switch (_e.label) {
             case 0: return [4 /*yield*/, purchaseModel_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
             case 1:
-                purchase = _b.sent();
+                purchase = _e.sent();
                 if (!!purchase) return [3 /*break*/, 2];
                 error = new Error();
                 error.name = "CastError";
@@ -96,22 +141,22 @@ var updatePurchase = function (req, res) { return __awaiter(void 0, void 0, void
                 throw error;
             case 2:
                 //Update Purchase With New Values.
-                purchase.total = req.body.total;
-                purchase.purchase_types = req.body.purchaseTypes;
-                purchase.date = req.body.purchaseDate;
+                purchase.total = (_b = req.body) === null || _b === void 0 ? void 0 : _b.total;
+                purchase.purchase_types = (_c = req.body) === null || _c === void 0 ? void 0 : _c.purchaseTypes;
+                purchase.date = (_d = req.body) === null || _d === void 0 ? void 0 : _d.purchaseDate;
                 return [4 /*yield*/, purchase.save()];
             case 3:
-                updatedPurchase = _b.sent();
+                updatedPurchase = _e.sent();
                 res.status(200).json(updatedPurchase);
-                _b.label = 4;
+                _e.label = 4;
             case 4: return [2 /*return*/];
         }
     });
 }); };
 exports.updatePurchase = updatePurchase;
-//@desc   >>>> Delete one Purchase
-//@route  >>>> DELETE /api/Purchases/:id
-//@Access >>>> public(For Admins)
+//@Desc   >>>> Delete one Purchase
+//@Route  >>>> DELETE /api/Purchases/:id
+//@Access >>>> Private(Admins Only)
 var deletePurchase = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var deletedPurchase;
     var _a;
@@ -125,6 +170,7 @@ var deletePurchase = function (req, res) { return __awaiter(void 0, void 0, void
                     throw new Error("This Document Has Been Already Deleted!");
                 }
                 else {
+                    //Send Deleted Purchase id Back
                     res.status(200).json({ id: deletedPurchase.id });
                 }
                 return [2 /*return*/];

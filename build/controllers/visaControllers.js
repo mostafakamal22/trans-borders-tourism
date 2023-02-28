@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -41,25 +52,71 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateVisa = exports.createVisa = exports.deleteVisa = exports.getVisas = void 0;
 var visaModel_1 = __importDefault(require("../models/visaModel"));
-//@desc   >>>> Get All Visas
-//@route  >>>> GET /api/visas
-//@Access >>>> public(For Admins)
-var getVisas = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var visas;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, visaModel_1.default.find()];
+//@Desc   >>>> Get All Visas That Match Query Object.
+//@Route  >>>> POST /api/visas/query
+//@Access >>>> Private(Admins Only)
+var getVisas = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, query, option, customerName, employee, supplier, sponsor, type, paymentMethod, queries, options, visas;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = req.body, query = _a.query, option = _a.option;
+                customerName = (query === null || query === void 0 ? void 0 : query.customerName) ? query.customerName : "";
+                employee = (query === null || query === void 0 ? void 0 : query.employee) ? query.employee : "";
+                supplier = (query === null || query === void 0 ? void 0 : query.supplier) ? query.supplier : "";
+                sponsor = (query === null || query === void 0 ? void 0 : query.sponsor) ? query.sponsor : "";
+                type = (query === null || query === void 0 ? void 0 : query.type) ? query.type : "";
+                paymentMethod = (query === null || query === void 0 ? void 0 : query.paymentMethod) ? query.paymentMethod : [];
+                queries = query
+                    ? {
+                        //Filter By Year, Month And Day.
+                        $expr: {
+                            $setEquals: [
+                                [
+                                    (query === null || query === void 0 ? void 0 : query.year) && {
+                                        $year: "$payment_date",
+                                    },
+                                    (query === null || query === void 0 ? void 0 : query.month) && {
+                                        $month: "$payment_date",
+                                    },
+                                    (query === null || query === void 0 ? void 0 : query.day) && {
+                                        $dayOfMonth: "$payment_date",
+                                    },
+                                ],
+                                [
+                                    (query === null || query === void 0 ? void 0 : query.year) && (query === null || query === void 0 ? void 0 : query.year),
+                                    (query === null || query === void 0 ? void 0 : query.month) && (query === null || query === void 0 ? void 0 : query.month),
+                                    (query === null || query === void 0 ? void 0 : query.day) && (query === null || query === void 0 ? void 0 : query.day),
+                                ],
+                            ],
+                        },
+                        //Filter By Visa Type.
+                        type: new RegExp("".concat(type), "gi"),
+                        //Filter By Visa Provider.
+                        provider: new RegExp("".concat(supplier), "gi"),
+                        //Filter By Visa Sponsor.
+                        sponsor: new RegExp("".concat(sponsor), "gi"),
+                        //Filter By Visa Customer Name.
+                        customer_name: new RegExp("".concat(customerName), "gi"),
+                        //Filter By Visa Employee.
+                        employee: new RegExp("".concat(employee), "gi"),
+                        //Filter By Visa Payment Method.
+                        payment_method: new RegExp("".concat(paymentMethod.join("|")), "gi"),
+                    }
+                    : {};
+                options = __assign({ pagination: query ? true : false, sort: { payment_date: "desc", createdAt: "desc" } }, option);
+                return [4 /*yield*/, visaModel_1.default.paginate(queries, options)];
             case 1:
-                visas = _a.sent();
+                visas = _b.sent();
                 res.status(200).json(visas);
                 return [2 /*return*/];
         }
     });
 }); };
 exports.getVisas = getVisas;
-//@desc   >>>> Create Visa
-//@route  >>>> POST /api/visas/
-//@Access >>>> public(For Admins)
+//@Desc   >>>> Create Visa
+//@Route  >>>> POST /api/visas/
+//@Access >>>> Private(Admins Only)
 var createVisa = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var visa;
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
@@ -88,9 +145,9 @@ var createVisa = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     });
 }); };
 exports.createVisa = createVisa;
-//@desc   >>>> UPDATE Visa
-//@route  >>>> PUT /api/visas/:id
-//@Access >>>> Public(for Admins)
+//@Desc   >>>> UPDATE Visa
+//@Route  >>>> PUT /api/visas/:id
+//@Access >>>> Private(Admins Only)
 var updateVisa = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var visa, error, updatedVisa;
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
@@ -129,9 +186,9 @@ var updateVisa = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     });
 }); };
 exports.updateVisa = updateVisa;
-//@desc   >>>> Delete one Visa
-//@route  >>>> DELETE /api/Visaa/:id
-//@Access >>>> public(For Admins)
+//@Desc   >>>> Delete one Visa
+//@Route  >>>> DELETE /api/Visaa/:id
+//@Access >>>> Private(Admins Only)
 var deleteVisa = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var deletedVisa;
     return __generator(this, function (_a) {
@@ -144,6 +201,7 @@ var deleteVisa = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                     throw new Error("This Document Has Been Already Deleted!");
                 }
                 else {
+                    //Send Deleted Visa id Back
                     res.status(200).json({ id: deletedVisa.id });
                 }
                 return [2 /*return*/];

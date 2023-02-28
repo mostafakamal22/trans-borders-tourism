@@ -45,6 +45,7 @@ var adminSchema = new mongoose_1.Schema({
             message: "{VALUE} is not supported as a Role",
         },
     },
+    refreshToken: [String],
 }, {
     timestamps: true,
     collection: "Admins",

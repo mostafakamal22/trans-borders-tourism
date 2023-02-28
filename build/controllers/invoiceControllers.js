@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -41,25 +52,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteInvoice = exports.createInvoice = exports.getInvoices = void 0;
 var invoiceModel_1 = __importDefault(require("../models/invoiceModel"));
-//@desc   >>>> Get All Invoices
-//@route  >>>> GET /api/invoices
-//@Access >>>> public(For Admins)
-var getInvoices = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var invoices;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, invoiceModel_1.default.find()];
+//@Desc   >>>> Get All Invoices That Match Query Object.
+//@Route  >>>> POST /api/invoices/query
+//@Access >>>> Private(Admins Only)
+var getInvoices = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, query, option, queries, options, invoices;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _a = req.body, query = _a.query, option = _a.option;
+                queries = query
+                    ? {
+                        //Filter By Customer Name.
+                        "customer.name": new RegExp("".concat(query === null || query === void 0 ? void 0 : query.name), "gi"),
+                    }
+                    : {};
+                options = __assign({ pagination: query ? true : false, sort: { createdAt: "desc" } }, option);
+                return [4 /*yield*/, invoiceModel_1.default.paginate(queries, options)];
             case 1:
-                invoices = _a.sent();
+                invoices = _b.sent();
                 res.status(200).json(invoices);
                 return [2 /*return*/];
         }
     });
 }); };
 exports.getInvoices = getInvoices;
-//@desc   >>>> Create Invoice
-//@route  >>>> POST /api/invoice/
-//@Access >>>> public(For Admins)
+//@Desc   >>>> Create Invoice
+//@Route  >>>> POST /api/invoices
+//@Access >>>> Private(Admins Only)
 var createInvoice = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var invoice;
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
@@ -88,9 +108,9 @@ var createInvoice = function (req, res) { return __awaiter(void 0, void 0, void 
     });
 }); };
 exports.createInvoice = createInvoice;
-//@desc   >>>> Delete one Invoice
-//@route  >>>> DELETE /api/invoice/:id
-//@Access >>>> public(For Admins)
+//@Desc   >>>> Delete one Invoice
+//@Route  >>>> DELETE /api/invoices/:id
+//@Access >>>> Private(Admins Only)
 var deleteInvoice = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var deletedInvoice;
     var _a;
@@ -104,6 +124,7 @@ var deleteInvoice = function (req, res) { return __awaiter(void 0, void 0, void 
                     throw new Error("This Document Has Been Already Deleted!");
                 }
                 else {
+                    //Send Deleted Invoice id Back.
                     res.status(200).json({ id: deletedInvoice === null || deletedInvoice === void 0 ? void 0 : deletedInvoice.id });
                 }
                 return [2 /*return*/];
