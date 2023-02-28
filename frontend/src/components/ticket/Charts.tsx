@@ -8,8 +8,12 @@ import {
   LinearScale,
   PointElement,
   RadialLinearScale,
+  PolarAreaController,
   Title,
   Tooltip,
+  PieController,
+  BarController,
+  LineController,
 } from "chart.js";
 import { Chart } from "react-chartjs-2";
 import { barOptions, labels, lineOptions } from "../invoice/Charts";
@@ -32,8 +36,12 @@ ChartJS.register(
   Tooltip,
   LinearScale,
   CategoryScale,
+  PolarAreaController,
   Legend,
   Title,
+  PieController,
+  BarController,
+  LineController,
   LineElement,
   PointElement
 );
