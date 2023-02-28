@@ -7,5 +7,5 @@ export default defineConfig({
   define: {
     "process.env": process.env,
   },
-  plugins: [svgr(), react(), splitVendorChunkPlugin()],
+  plugins: [svgr(), react()],
 });
