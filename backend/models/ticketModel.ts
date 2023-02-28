@@ -1,4 +1,11 @@
-import { Schema, model, Date } from "mongoose";
+import {
+  Schema,
+  Document,
+  model,
+  PaginateModel,
+  SchemaTimestampsConfig,
+} from "mongoose";
+import paginate from "mongoose-paginate-v2";
 
 export interface ITicket {
   customer_name: string;
@@ -66,7 +73,26 @@ const ticketSchema = new Schema<ITicket>(
   }
 );
 
+//Default Options For Paginated Data
+paginate.paginate.options = {
+  lean: true,
+  leanWithId: true,
+};
+
+//Paginate with plugin.
+ticketSchema.plugin(paginate);
+
+//Declare a mongoose document based on a Typescript interface representing Ticket schema.
+export interface ITicketDocument
+  extends Document,
+    ITicket,
+    SchemaTimestampsConfig {}
+
 //Define Ticket Model
-const Ticket = model<ITicket>("Ticket", ticketSchema);
+const Ticket = model<ITicketDocument, PaginateModel<ITicketDocument>>(
+  "Ticket",
+  ticketSchema,
+  "tickets"
+);
 
 export default Ticket;

@@ -1,30 +1,29 @@
 import { useState, useEffect } from "react";
 import { FcTemplate } from "react-icons/fc";
 import { RiSendPlaneFill } from "react-icons/ri";
-import { UseResetStatus } from "../../hooks/UseResetStatus";
-import { resetAdminAuthStatus } from "../../state/features/admin/auth/adminAuthSlice";
 import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../state/features/hooks/StateHooks";
-import {
-  resetPassportsStatus,
-  updatePassport,
-} from "../../state/features/passport/passportSlice";
-import {
-  PassportService,
   passportService,
-  PassportState,
   passportState,
-  tableHeaderTitles,
-} from "../passport/Passports";
+  passportTableHeaderTitles,
+} from "../passport/constants";
+import { PassportService, PassportState } from "../passport/types";
 import FormButton from "../shared/FormButton";
 import { FormInput } from "../shared/FormInput";
-import MessagesContainer from "../shared/MessagesContainer";
-import { inputClassNamesStyles, lableClassNamesStyles } from "./CreateInvoice";
-import logo from "../../assets/imgs/trans-logo.png";
+import {
+  inputClassNamesStyles,
+  lableClassNamesStyles,
+} from "../invoice/constants";
 import { AiFillCloseCircle } from "react-icons/ai";
 import dayjs from "dayjs";
+import {
+  useGetPassportsQuery,
+  useUpdatePassportMutation,
+} from "../../state/features/passport/passportsApiSlice";
+import { motion } from "framer-motion";
+import {
+  closeBtnAnimationsOptions,
+  modalAnimationOptions,
+} from "../helpers/animationOptions";
 
 export const UpdatePassport = ({
   id,
@@ -33,54 +32,45 @@ export const UpdatePassport = ({
   id: string;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { passportsList } = useAppSelector((state) => state.passportsData);
-  const passport = passportsList.find((passport: any) => passport._id === id);
-  //state for passport Details
-  const [passportDetails, setPassportDetails] = useState({
-    name: passport.customer_name,
-    nationality: passport.customer_nationality,
-    state: passport.state,
-    service: passport.service,
-    passportId: passport.passport_id,
-    paymentDate: passport.payment_date
-      ? dayjs(passport.payment_date).format("YYYY-MM-DD")
-      : "",
-    servicePrice: passport.service_price,
-    taxable: passport.taxable,
-    taxRate: passport.tax_rate,
-    total: passport.total,
-    sales: passport.sales,
-    profit: passport.profit,
-  });
-
-  //state for alert messages
-  const [msg, setMsg] = useState("");
-
-  const { info } = useAppSelector((state) => state.adminAuth);
-  const { isError, isSuccess, isLoading, message } = useAppSelector(
-    (state) => state.passportsData
+  const { passport } = useGetPassportsQuery(
+    {},
+    {
+      selectFromResult: ({ data }) => ({
+        passport: data?.docs.find((passport) => passport.id === id),
+      }),
+    }
   );
 
-  const dispatch = useAppDispatch();
+  if (!passport) {
+    setIsOpen(false);
+    return null;
+  }
 
-  useEffect(() => {
-    if (isError) {
-      setMsg(message);
-    }
+  //state for passport Details
+  const [passportDetails, setPassportDetails] = useState({
+    name: passport?.customer_name,
+    nationality: passport?.customer_nationality,
+    state: passport?.state,
+    service: passport?.service,
+    passportId: passport?.passport_id,
+    paymentDate: passport?.payment_date
+      ? dayjs(passport?.payment_date).format("YYYY-MM-DD")
+      : "",
+    servicePrice: passport?.service_price,
+    taxable: passport?.taxable,
+    taxRate: passport?.tax_rate,
+    total: passport?.total,
+    sales: passport?.sales,
+    profit: passport?.profit,
+  });
 
-    if (isSuccess) {
-      setMsg(message);
-    }
-  }, [isError, isSuccess, message, info, msg]);
+  const [updatePassport, { isLoading }] = useUpdatePassportMutation();
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    //set msg to none first
-    setMsg("");
 
     const passportData = {
-      token: info.token,
-      id: id,
+      id,
       name: passportDetails.name.trim(),
       nationality: passportDetails.nationality.trim(),
       state: passportDetails.state,
@@ -95,52 +85,44 @@ export const UpdatePassport = ({
       profit: passportDetails.profit,
     };
 
-    dispatch(updatePassport(passportData));
+    await updatePassport(passportData);
   };
 
-  //clean up status (when mount and unmount)
-  UseResetStatus(() => {
+  useEffect(() => {
     //scroll page back to top when component first mount
     const yOffset = window.pageYOffset;
     window.scrollBy(0, -yOffset);
-
-    dispatch(resetAdminAuthStatus());
-    dispatch(resetPassportsStatus());
-  });
-
-  UseResetStatus(() => {
-    return () => {
-      dispatch(resetAdminAuthStatus());
-      dispatch(resetPassportsStatus());
-    };
-  });
+  }, []);
 
   return (
-    <div className="h-screen bg-gray-500/50 overflow-y-auto overflow-x-hidden fixed inset-0 z-50 w-full md:inset-0">
-      <button
-        className="fixed top-5 right-[10%] inline-flex font-bold text-xs sm:text-sm bg-red-800 text-white hover:bg-white  px-2 sm:px-3 py-2 border-transparent hover:text-red-800 border hover:border-red-800 items-center rounded
-         shadow transition-all ease-in-out duration-300"
+    <div className="fixed inset-0 z-50  h-screen w-full overflow-y-auto overflow-x-hidden bg-black/75 scrollbar-thin scrollbar-track-transparent  scrollbar-thumb-gray-400 scrollbar-track-rounded-full md:inset-0">
+      <motion.button
+        {...closeBtnAnimationsOptions}
+        className="fixed top-5 right-[5%] inline-flex items-center rounded border border-transparent bg-red-800 px-2  py-2 text-xs font-bold text-white shadow transition-all duration-300 ease-in-out hover:border-red-800
+         hover:bg-white hover:text-red-800 sm:px-3 sm:text-sm"
         onClick={() => setIsOpen(false)}
         type="button"
       >
         <AiFillCloseCircle className="mr-1" size={20} />
         إغلاق
-      </button>
-      <div className="max-w-6xl w-full mx-auto my-20 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
-        <h3 className="flex justify-center items-center text-xl text-center font-bold px-2 py-4 mb-10 bg-red-200 border-b-4 border-red-800 rounded shadow ">
+      </motion.button>
+      <motion.div
+        {...modalAnimationOptions}
+        key={"modal"}
+        className="mx-auto my-5 w-full max-w-5xl rounded bg-slate-50 p-6 shadow-lg shadow-black/30"
+      >
+        <h3 className="mb-10 flex items-center justify-center rounded border-b-4 border-red-800 bg-red-200 px-2 py-4 text-center text-xl font-bold shadow ">
           <FcTemplate className="mr-1" size={50} />
           <span> تعديل بيانات الجواز</span>
         </h3>
 
-        <img className="mx-auto" src={logo} alt="logo" />
-
         <form onSubmit={handleSubmit}>
-          <p className="font-bold p-2 rounded text-lg text-white bg-red-800 my-4">
+          <p className="my-4 rounded bg-red-800 p-2 text-lg font-bold text-white">
             [ بيانات الجواز الحالية ]
           </p>
-          <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">
+          <div className="flex flex-wrap items-center justify-center gap-4 px-5 py-5 font-semibold">
             <FormInput
-              label={tableHeaderTitles[0]}
+              label={passportTableHeaderTitles[0]}
               name="customerName"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
@@ -153,7 +135,7 @@ export const UpdatePassport = ({
             />
 
             <FormInput
-              label={tableHeaderTitles[1]}
+              label={passportTableHeaderTitles[1]}
               name="customerNationality"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
@@ -168,7 +150,7 @@ export const UpdatePassport = ({
             />
 
             <FormInput
-              label={tableHeaderTitles[2]}
+              label={passportTableHeaderTitles[2]}
               name="passportId"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
@@ -184,7 +166,7 @@ export const UpdatePassport = ({
             />
 
             <FormInput
-              label={tableHeaderTitles[5]}
+              label={passportTableHeaderTitles[5]}
               name="servicePrice"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
@@ -212,7 +194,7 @@ export const UpdatePassport = ({
             />
 
             <FormInput
-              label={tableHeaderTitles[6]}
+              label={passportTableHeaderTitles[6]}
               name="taxable"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
@@ -238,7 +220,7 @@ export const UpdatePassport = ({
             />
 
             <FormInput
-              label={tableHeaderTitles[7]}
+              label={passportTableHeaderTitles[7]}
               name="taxRate"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
@@ -264,7 +246,7 @@ export const UpdatePassport = ({
             />
 
             <FormInput
-              label={tableHeaderTitles[8]}
+              label={passportTableHeaderTitles[8]}
               name="totalPayment"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
@@ -282,7 +264,7 @@ export const UpdatePassport = ({
             />
 
             <FormInput
-              label={tableHeaderTitles[9]}
+              label={passportTableHeaderTitles[9]}
               name="sales"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
@@ -300,7 +282,7 @@ export const UpdatePassport = ({
             />
 
             <FormInput
-              label={tableHeaderTitles[10]}
+              label={passportTableHeaderTitles[10]}
               name="profit"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
@@ -317,7 +299,7 @@ export const UpdatePassport = ({
             />
 
             <FormInput
-              label={tableHeaderTitles[11]}
+              label={passportTableHeaderTitles[11]}
               name="paymentDate"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
@@ -332,11 +314,9 @@ export const UpdatePassport = ({
               required
             />
 
-            <label htmlFor="state" className={lableClassNamesStyles.default}>
-              {tableHeaderTitles[3]}
-            </label>
             <select
               name="state"
+              id="state"
               className={inputClassNamesStyles.default}
               value={passportDetails.state}
               onChange={(e) =>
@@ -352,12 +332,13 @@ export const UpdatePassport = ({
                 </option>
               ))}
             </select>
-
-            <label htmlFor="service" className={lableClassNamesStyles.default}>
-              {tableHeaderTitles[4]}
+            <label htmlFor="state" className={lableClassNamesStyles.default}>
+              {passportTableHeaderTitles[3]}
             </label>
+
             <select
               name="service"
+              id="service"
               className={inputClassNamesStyles.default}
               value={passportDetails.service}
               onChange={(e) =>
@@ -373,25 +354,19 @@ export const UpdatePassport = ({
                 </option>
               ))}
             </select>
+            <label htmlFor="service" className={lableClassNamesStyles.default}>
+              {passportTableHeaderTitles[4]}
+            </label>
           </div>
 
-          {/*Request Status and Errors*/}
-          {(isError || isSuccess) && (
-            <MessagesContainer
-              msg={msg}
-              isSuccess={isSuccess}
-              isError={isError}
-            />
-          )}
-
-          {/*form button */}
+          {/*Form Button */}
           <FormButton
             text={{ default: "حفظ التعديلات", loading: "جارى الحفظ" }}
             isLoading={isLoading}
             icon={<RiSendPlaneFill className="ml-1" size={25} />}
           />
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };

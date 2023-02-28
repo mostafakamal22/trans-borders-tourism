@@ -1,98 +1,72 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FcPrivacy } from "react-icons/fc";
 import { RiLoginCircleFill } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
-import { UseResetStatus } from "../../hooks/UseResetStatus";
-import {
-  adminLogin,
-  resetAdminAuthStatus,
-} from "../../state/features/admin/auth/adminAuthSlice";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../state/features/hooks/StateHooks";
+import { useLocation, useNavigate } from "react-router-dom";
 import FormButton from "../shared/FormButton";
-import MessagesContainer from "../shared/MessagesContainer";
 import logo from "../../assets/imgs/trans-logo.png";
+import { useLoginMutation } from "../../state/features/admin/auth/authApiSlice";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 export default function AdminLogin() {
+  const [login, { isLoading, isSuccess }] = useLoginMutation();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isSessionEnded = location?.state?.isSessionEnded;
+
   const [formInputs, setFormInputs] = useState({
     email: "",
     password: "",
-    msg: "",
   });
 
-  const { email, password, msg } = formInputs;
-
-  const navigate = useNavigate();
-
-  const dispatch = useAppDispatch();
-
-  const { info, isError, isSuccess, isLoading, message } = useAppSelector(
-    (state) => state.adminAuth
-  );
-
-  useEffect(() => {
-    if (isError) {
-      setFormInputs({ ...formInputs, msg: message });
-    }
-
-    if (info) {
-      setFormInputs({ ...formInputs, msg: "Login Succesfully" });
-      navigate("/");
-    }
-  }, [isError, message, info, msg]);
+  const { email, password } = formInputs;
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    //set msg to none first
-    setFormInputs({ ...formInputs, msg: "" });
 
-    const adminData = JSON.stringify({
-      email: email.trim(),
-      password,
-    });
-    dispatch(adminLogin(adminData));
+    await login({ email, password });
   };
 
-  //clean up status (when mount and unmount)
-  UseResetStatus(() => {
-    //scroll page back to top when component first mount
-    const yOffset = window.pageYOffset;
-    window.scrollBy(0, -yOffset);
+  useEffect(() => {
+    if (isSuccess) {
+      location?.state?.from
+        ? navigate(`${location?.state?.from}`, { replace: true })
+        : navigate("/home", { replace: true });
+    }
+  }, [isSuccess]);
 
-    dispatch(resetAdminAuthStatus());
-  });
-
-  UseResetStatus(() => {
-    return () => {
-      dispatch(resetAdminAuthStatus());
-    };
-  });
+  useDocumentTitle("تسجيل دخول الأدمن");
 
   return (
-    <div className="block p-6 rounded shadow-lg shadow-black/20 bg-slate-50 max-w-md w-full m-auto">
-      {/* <Logo /> */}
-      <h3 className="flex justify-center items-center text-2xl text-red-800 font-bold text-center p-2 my-4 rounded shadow bg-red-200 border-x-4 border-red-800 select-none">
+    <div className="m-auto block w-full max-w-md rounded bg-slate-50 p-6 shadow-lg shadow-black/20">
+      <img className="mx-auto" src={logo} alt="logo" />
+
+      <h3 className="my-4 flex select-none items-center justify-center rounded border-x-4 border-red-800 bg-red-200 p-2 text-center text-2xl font-bold text-red-800 shadow">
         <FcPrivacy size={45} />
         <span>تسجيل دخول الأدمن</span>
       </h3>
 
-      <img className="mx-auto" src={logo} alt="logo" />
+      {/* Session Ended Message */}
+      {isSessionEnded && (
+        <div className="flex flex-col items-center justify-center gap-2 rounded  border-x-4 border-red-800 bg-green-200 p-4 text-center font-semibold text-slate-700">
+          <h2>!عفواً, برجاء تسجيل الدخول</h2>
+        </div>
+      )}
 
-      <form className="mt-10" onSubmit={handleSubmit}>
+      <form className="mt-10 " onSubmit={handleSubmit}>
         <div className="mb-6">
           <label
             htmlFor="email"
-            className="w-full inline-block font-semibold mb-4 p-2 text-white rounded shadow bg-red-800"
+            className="mb-4 inline-block w-full rounded bg-red-800 p-2 font-semibold text-white shadow"
           >
             عنوان البريد الإلكترونى
           </label>
           <input
             type="email"
             name="email"
-            className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
-            defaultValue={email}
+            id="email"
+            className="m-0 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out placeholder:text-right focus:border-red-800 focus:bg-white focus:text-gray-700 focus:outline-none"
+            value={email}
             onChange={(e) =>
               setFormInputs({ ...formInputs, email: e.target.value })
             }
@@ -103,15 +77,16 @@ export default function AdminLogin() {
         <div className="mb-6">
           <label
             htmlFor="password"
-            className="w-full inline-block font-semibold mb-4 p-2 text-white rounded shadow bg-red-800"
+            className="mb-4 inline-block w-full rounded bg-red-800 p-2 font-semibold text-white shadow"
           >
             كلمة السر
           </label>
           <input
             type="password"
             name="password"
-            className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
-            defaultValue={password}
+            id="password"
+            className="m-0 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out placeholder:text-right focus:border-red-800 focus:bg-white focus:text-gray-700 focus:outline-none"
+            value={password}
             onChange={(e) =>
               setFormInputs({ ...formInputs, password: e.target.value })
             }
@@ -120,16 +95,7 @@ export default function AdminLogin() {
           />
         </div>
 
-        {/*Request Status and Errors*/}
-        {(isError || isSuccess) && (
-          <MessagesContainer
-            msg={msg}
-            isSuccess={isSuccess}
-            isError={isError}
-          />
-        )}
-
-        {/*form button */}
+        {/*Form Button */}
         <FormButton
           text={{ loading: "جارى تسجيل الدخول", default: "تسجيل الدخول" }}
           isLoading={isLoading}

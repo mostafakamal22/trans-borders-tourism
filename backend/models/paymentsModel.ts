@@ -1,6 +1,13 @@
-import { Schema, model, Date } from "mongoose";
+import {
+  Schema,
+  Document,
+  model,
+  PaginateModel,
+  SchemaTimestampsConfig,
+} from "mongoose";
+import paginate from "mongoose-paginate-v2";
 
-interface IPaymentType {
+export interface IPaymentType {
   name: string;
   total: number;
   description?: string;
@@ -54,7 +61,26 @@ const paymentSchema = new Schema<IPayment>(
   }
 );
 
+//Default Options For Paginated Data
+paginate.paginate.options = {
+  lean: true,
+  leanWithId: true,
+};
+
+//Paginate with plugin.
+paymentSchema.plugin(paginate);
+
+//Declare a mongoose document based on a Typescript interface representing Payment schema.
+export interface IPaymentDocument
+  extends Document,
+    IPayment,
+    SchemaTimestampsConfig {}
+
 //Define Payment Model
-const Payment = model<IPayment>("Payment", paymentSchema);
+const Payment = model<IPaymentDocument, PaginateModel<IPaymentDocument>>(
+  "Payment",
+  paymentSchema,
+  "payments"
+);
 
 export default Payment;

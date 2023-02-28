@@ -8,10 +8,9 @@ import {
 
 const router = Router();
 
-router
-  .route("/")
-  .post(authAdminProtect, createInvoice)
-  .get(authAdminProtect, getInvoices);
+router.route("/").post(authAdminProtect, createInvoice);
+
+router.route("/query").post(authAdminProtect, getInvoices);
 
 router.route("/:id").delete(authAdminProtect, deleteInvoice);
 

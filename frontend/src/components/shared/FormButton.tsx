@@ -1,7 +1,7 @@
 import SmallSpinner from "./SmallSpinner";
 
 type FormButtonProps = {
-  icon: any;
+  icon: React.ReactElement;
   text?: { loading?: string; default?: string };
   isLoading?: boolean;
   bgColor?: string[];
@@ -18,7 +18,7 @@ export default function FormButton({
       disabled={isLoading}
       className={
         `${bgColor[0]} hover:${bgColor[1]} focus:${bgColor[1]}  active:${bgColor[2]}` +
-        " w-full flex items-center justify-center px-3 py-2.5 text-white font-bold text-md leading-tight rounded shadow-md hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0  active:shadow-lg disabled:cursor-not-allowed transition duration-150 ease-in-out"
+        " text-md flex min-h-[2.5rem] w-full items-center justify-center rounded px-3 py-2.5 font-bold leading-tight text-white shadow-md transition duration-150 ease-in-out focus:shadow-lg  focus:outline-none focus:ring-0 disabled:cursor-not-allowed hover:shadow-lg active:shadow-lg"
       }
     >
       {!isLoading && icon}

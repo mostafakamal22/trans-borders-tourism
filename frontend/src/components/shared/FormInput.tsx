@@ -14,11 +14,11 @@ export const FormInput: FC<FormInputProps> = ({
 }) => {
   return (
     <>
+      <input name={name} id={name} {...rest} />
+
       <label className={labeClassNames} htmlFor={name}>
         {label}
       </label>
-
-      <input name={name} {...rest} />
     </>
   );
 };

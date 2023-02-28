@@ -1,9 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-
 import Admin from "../../models/adminModel";
 
-interface JwtPayload {
+export interface AccessJwtPayload {
+  AdminInfo: { id: string; role: string };
+}
+
+export interface RefreshJwtPayload {
   id: string;
 }
 
@@ -17,14 +20,17 @@ export const authAdminProtect = async (
     req?.headers?.authorization &&
     req?.headers?.authorization.trim().startsWith("Bearer")
   ) {
-    //Get Token from header
-    const token = req.headers.authorization.split(" ")[1];
+    //Get Access Token From Header
+    const accessToken = req.headers.authorization.split(" ")[1];
 
     //Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    const decoded = jwt.verify(
+      accessToken,
+      process.env.ACCESS_TOKEN_SECRET!
+    ) as AccessJwtPayload;
 
     //Get Admin from Token
-    const admin = await Admin.findById(decoded?.id);
+    const admin = await Admin.findById(decoded?.AdminInfo?.id);
 
     //IF There is no Admin With that token Id => Invalid Token
     if (!admin) {

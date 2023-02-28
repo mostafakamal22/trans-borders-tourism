@@ -4,6 +4,8 @@ import {
   createAdmin,
   adminLogin,
   getOneAdmin,
+  adminRefreshToken,
+  AdminLogout,
 } from "../controllers/adminControllers";
 import { validatePassword } from "../middlewares/adminMiddlewares/validatePassword";
 import { authAdminProtect } from "../middlewares/adminMiddlewares/authAdminProtect";
@@ -15,6 +17,10 @@ const router = Router();
 router.route("/").post(authAdminProtect, validatePassword, createAdmin);
 
 router.route("/login").post(adminLogin);
+
+router.route("/refresh").get(adminRefreshToken);
+
+router.route("/logout").get(authAdminProtect, AdminLogout);
 
 router
   .route("/:id")

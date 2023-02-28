@@ -2,38 +2,23 @@ import { useState, useEffect } from "react";
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
 import { FcDocument } from "react-icons/fc";
 import { RiSendPlaneFill } from "react-icons/ri";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../state/features/hooks/StateHooks";
-import {
-  createInvoice,
-  resetInvoicesStatus,
-} from "../../state/features/invoice/invoiceSlice";
 import FormButton from "../shared/FormButton";
-import MessagesContainer from "../shared/MessagesContainer";
-import logo from "../../assets/imgs/trans-logo.png";
-import { resetAdminAuthStatus } from "../../state/features/admin/auth/adminAuthSlice";
-import { UseResetStatus } from "../../hooks/UseResetStatus";
 import { FormInput } from "../shared/FormInput";
-
-export const lableClassNamesStyles: { default: string; threeCol: string } = {
-  default:
-    "basis-full sm:basis-[50%] text-md  my-2 sm:my-0 mx-2 p-2  rounded shadow bg-red-200 border-red-800",
-  threeCol:
-    "text-md  my-2 sm:my-0 mx-2 p-2  rounded shadow bg-red-200 border-red-800",
-};
-
-export const inputClassNamesStyles: { default: string; threeCol: string } = {
-  default:
-    "basis-full  sm:basis-1/3  px-3 py-1.5 mx-4 text-base font-normal text-gray-700 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none",
-  threeCol:
-    "px-2 py-1.5 mx-2 text-base font-normal text-gray-700 bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out  focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none",
-};
+import {
+  InvoiceData,
+  useCreateInvoiceMutation,
+} from "../../state/features/invoice/invoiceApiSlice";
+import {
+  inputClassNamesStyles,
+  lableClassNamesStyles,
+} from "../invoice/constants";
+import { useScroll } from "../../hooks/useScroll";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
+import { ICustomer, IProduct } from "../../../../backend/models/invoiceModel";
 
 export const CreateInvoice = () => {
   //state for Customer Details
-  const [customerDetails, setCustomerDetails] = useState({
+  const [customerDetails, setCustomerDetails] = useState<ICustomer>({
     name: "",
     number: "",
   });
@@ -51,36 +36,18 @@ export const CreateInvoice = () => {
   });
 
   //state for items Details
-  const [itemsDetails, setItemsDetails] = useState([
+  const [itemsDetails, setItemsDetails] = useState<IProduct[]>([
     {
       name: "",
       price: 0,
-      quantity: 0,
+      quantity: 1,
     },
   ]);
 
   //state for items
   const [itemsCount, setItemsCount] = useState(1);
 
-  //state for alert messages
-  const [msg, setMsg] = useState("");
-
-  const { info } = useAppSelector((state) => state.adminAuth);
-  const { isError, isSuccess, isLoading, message } = useAppSelector(
-    (state) => state.invoiceData
-  );
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (isError) {
-      setMsg(message);
-    }
-
-    if (isSuccess) {
-      setMsg(message);
-    }
-  }, [isError, isSuccess, message, info, msg]);
+  const [createInvoice, { isLoading, isSuccess }] = useCreateInvoiceMutation();
 
   const handleItemCount = async (num: number) => {
     if (num < 0 && itemsCount === 1) return;
@@ -94,7 +61,7 @@ export const CreateInvoice = () => {
             {
               name: "",
               price: 0,
-              quantity: 0,
+              quantity: 1,
             },
           ]
         : itemsDetails.splice(0, itemsDetails.length - 1);
@@ -104,11 +71,8 @@ export const CreateInvoice = () => {
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    //set msg to none first
-    setMsg("");
 
-    const invoiceData = {
-      token: info.token,
+    const invoiceData: InvoiceData = {
       ID: invoiceDetails.ID,
       customer: { ...customerDetails },
       details: [...itemsDetails],
@@ -121,80 +85,92 @@ export const CreateInvoice = () => {
       other: invoiceDetails.other,
     };
 
-    dispatch(createInvoice(invoiceData));
+    await createInvoice(invoiceData);
   };
 
-  //clean up status (when mount and unmount)
-  UseResetStatus(() => {
-    //scroll page back to top when component first mount
-    const yOffset = window.pageYOffset;
-    window.scrollBy(0, -yOffset);
+  useEffect(() => {
+    if (isSuccess) {
+      setCustomerDetails({
+        name: "",
+        number: "",
+      });
 
-    dispatch(resetAdminAuthStatus());
-    dispatch(resetInvoicesStatus());
-  });
+      setInvoieceDetails({
+        ID: "",
+        date: "",
+        subtotal: 0,
+        total: 0,
+        taxRate: 0,
+        taxDue: 0,
+        taxable: 0,
+        other: "",
+      });
 
-  UseResetStatus(() => {
-    return () => {
-      dispatch(resetAdminAuthStatus());
-      dispatch(resetInvoicesStatus());
-    };
-  });
+      setItemsDetails([
+        {
+          name: "",
+          price: 0,
+          quantity: 1,
+        },
+      ]);
+    }
+  }, [isSuccess]);
+
+  useScroll("createInvoice");
+  useDocumentTitle("إضافة فاتورة جديدة");
 
   return (
-    <div className="max-w-6xl w-full mx-auto my-20 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
-      <h3 className="flex justify-center items-center text-xl text-center font-bold px-2 py-4 mb-10 bg-red-200 border-b-4 border-red-800 rounded shadow ">
+    <section id="createInvoice" className="w-full">
+      <h3 className="mb-10 flex items-center justify-center rounded border-b-4 border-red-800 bg-red-200 px-2 py-4 text-center text-xl font-bold shadow ">
         <FcDocument className="mr-1" size={50} />
         <span>إضافة فاتورة جديدة</span>
       </h3>
 
-      <img className="mx-auto" src={logo} alt="logo" />
-
       <form onSubmit={handleSubmit}>
-        <p className="font-bold p-2 rounded text-lg text-white bg-red-800 my-4">
-          [ Customer Details ]
+        <p className="my-4 rounded bg-red-800 p-2 text-lg font-bold text-white">
+          [ بيانات العميل ]
         </p>
-        <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">
+        <div className="flex flex-wrap items-center justify-center gap-4 px-5 py-5 font-semibold">
           <FormInput
-            label="Customer Name"
+            label="إسم العميل"
             name="customerName"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            defaultValue={customerDetails.name}
+            value={customerDetails.name}
             onChange={(e) =>
               setCustomerDetails({ ...customerDetails, name: e.target.value })
             }
           />
 
           <FormInput
-            label="Customer Mobile"
+            label="رقم العميل"
             name="customerMobile"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            defaultValue={customerDetails.number}
+            value={customerDetails.number}
             onChange={(e) =>
               setCustomerDetails({ ...customerDetails, number: e.target.value })
             }
           />
         </div>
 
-        <p className="font-bold p-2 rounded text-lg text-white bg-red-800 my-4">
-          [ Items Details ]
+        <p className="my-4 rounded bg-red-800 p-2 text-lg font-bold text-white">
+          [ تفاصيل الفاتورة ]
         </p>
         {itemsDetails.map((item, index) => (
           <div
             key={index}
-            className="flex flex-wrap md:flex-nowrap items-center font-semibold  gap-4 px-5 py-5"
+            className="flex flex-wrap items-center justify-center gap-4 px-5 py-5  font-semibold"
           >
             <FormInput
-              label="Item Name"
-              name="itemName"
-              labeClassNames={lableClassNamesStyles.threeCol}
-              className={inputClassNamesStyles.threeCol}
+              label="نوع الخدمة"
+              name={`itemName${index}`}
+              labeClassNames={lableClassNamesStyles.default}
+              className={inputClassNamesStyles.default}
               type="text"
-              defaultValue={item.name}
+              value={item.name}
               onChange={(e) => {
                 const newArr = [...itemsDetails];
                 newArr[index].name = e.target.value;
@@ -203,34 +179,62 @@ export const CreateInvoice = () => {
             />
 
             <FormInput
-              label="Item Price"
-              name="itemPrice"
-              labeClassNames={lableClassNamesStyles.threeCol}
-              className={inputClassNamesStyles.threeCol}
+              label="الكمية"
+              name={`itemQuantity${index}`}
+              labeClassNames={lableClassNamesStyles.default}
+              className={inputClassNamesStyles.default}
               type="number"
-              defaultValue={item.price}
-              onChange={(e) => {
-                const newArr = [...itemsDetails];
-                newArr[index].price = +e.target.value;
-                setItemsDetails(newArr);
-              }}
-              min={0}
-              required
-            />
-
-            <FormInput
-              label="Item Quantity"
-              name="itemQuantity"
-              labeClassNames={lableClassNamesStyles.threeCol}
-              className={inputClassNamesStyles.threeCol}
-              type="number"
-              defaultValue={item.quantity}
+              value={item.quantity}
               onChange={(e) => {
                 const newArr = [...itemsDetails];
                 newArr[index].quantity = +e.target.value;
                 setItemsDetails(newArr);
+
+                const newSubTotal = itemsDetails.reduce(
+                  (prev, curr) => prev + curr.price * curr.quantity,
+                  0
+                );
+                setInvoieceDetails({
+                  ...invoiceDetails,
+                  subtotal: +newSubTotal.toFixed(2),
+                  total:
+                    +newSubTotal.toFixed(2) +
+                    +invoiceDetails.taxDue.toFixed(2) +
+                    +invoiceDetails.taxRate.toFixed(2) +
+                    +invoiceDetails.taxable.toFixed(2),
+                });
+              }}
+              min={1}
+              required
+            />
+            <FormInput
+              label="سعر الخدمة"
+              name={`itemPrice${index}`}
+              labeClassNames={lableClassNamesStyles.default}
+              className={inputClassNamesStyles.default}
+              type="number"
+              value={item.price}
+              onChange={(e) => {
+                const newArr = [...itemsDetails];
+                newArr[index].price = +e.target.value;
+                setItemsDetails(newArr);
+
+                const newSubTotal = itemsDetails.reduce(
+                  (prev, curr) => prev + curr.price * curr.quantity,
+                  0
+                );
+                setInvoieceDetails({
+                  ...invoiceDetails,
+                  subtotal: +newSubTotal.toFixed(2),
+                  total:
+                    +newSubTotal.toFixed(2) +
+                    +invoiceDetails.taxDue.toFixed(2) +
+                    +invoiceDetails.taxRate.toFixed(2) +
+                    +invoiceDetails.taxable.toFixed(2),
+                });
               }}
               min={0}
+              step={0.01}
               required
             />
           </div>
@@ -238,66 +242,71 @@ export const CreateInvoice = () => {
 
         <div className="flex justify-around">
           <button
-            className="inline-flex font-bold text-xs sm:text-sm bg-blue-800 text-white hover:bg-white my-5 px-2 sm:px-3 py-2 hover:text-blue-800 border hover:border-blue-800 items-center rounded
-         shadow transition-all ease-in-out duration-300"
+            className="my-5 flex items-center rounded border bg-blue-800 px-2 py-2 text-xs font-bold text-white shadow transition-all duration-300 ease-in-out hover:border-blue-800
+         hover:bg-white hover:text-blue-800 sm:px-3 sm:text-sm"
             onClick={() => handleItemCount(1)}
             type="button"
           >
-            Add Item
-            <AiFillPlusCircle className="ml-1" size={20} />
+            <AiFillPlusCircle className="mr-1" size={20} />
+            إضافة نوع
           </button>
 
           <button
-            className="inline-flex font-bold text-xs sm:text-sm bg-red-800 text-white hover:bg-white my-5 px-2 sm:px-3 py-2 hover:text-red-800 border hover:border-red-800 items-center rounded
-         shadow transition-all ease-in-out duration-300"
+            className="my-5 flex items-center rounded border bg-red-800 px-2 py-2 text-xs font-bold text-white shadow transition-all duration-300 ease-in-out hover:border-red-800
+         hover:bg-white hover:text-red-800 sm:px-3 sm:text-sm"
             onClick={() => handleItemCount(-1)}
             type="button"
           >
-            Remove Item
-            <AiFillMinusCircle className="ml-1" size={20} />
+            <AiFillMinusCircle className="mr-1" size={20} />
+            حذف نوع
           </button>
         </div>
 
-        <p className="font-bold p-2 rounded text-lg text-white bg-red-800 my-4">
-          [ Invoice Details ]
+        <p className="my-4 rounded bg-red-800 p-2 text-lg font-bold text-white">
+          [ بيانات الفاتورة ]
         </p>
-        <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">
+        <div className="flex flex-wrap items-center justify-center gap-4 px-5 py-5 font-semibold">
           <FormInput
-            label="Passport ID"
+            label="رقم الجواز"
             name="PassportID"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            defaultValue={invoiceDetails.ID}
+            value={invoiceDetails.ID}
             onChange={(e) =>
               setInvoieceDetails({ ...invoiceDetails, ID: e.target.value })
             }
           />
 
           <FormInput
-            label="Date"
+            label="تاريخ الفاتورة"
             name="invoiceDate"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="date"
-            defaultValue={invoiceDetails.date}
+            value={invoiceDetails.date}
             onChange={(e) =>
               setInvoieceDetails({ ...invoiceDetails, date: e.target.value })
             }
           />
         </div>
-        <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">
+        <div className="flex flex-wrap items-center justify-center gap-4 px-5 py-5 font-semibold">
           <FormInput
             label="SubTotal"
             name="invoiceSubTotal"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="number"
-            defaultValue={invoiceDetails.subtotal}
+            value={invoiceDetails.subtotal}
             onChange={(e) =>
               setInvoieceDetails({
                 ...invoiceDetails,
                 subtotal: +e.target.value,
+                total:
+                  +e.target.value +
+                  +invoiceDetails.taxDue.toFixed(2) +
+                  +invoiceDetails.taxRate.toFixed(2) +
+                  +invoiceDetails.taxable.toFixed(2),
               })
             }
             step="0.01"
@@ -311,11 +320,16 @@ export const CreateInvoice = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="number"
-            defaultValue={invoiceDetails.taxable}
+            value={invoiceDetails.taxable}
             onChange={(e) =>
               setInvoieceDetails({
                 ...invoiceDetails,
                 taxable: +e.target.value,
+                total:
+                  +e.target.value +
+                  +invoiceDetails.taxDue.toFixed(2) +
+                  +invoiceDetails.taxRate.toFixed(2) +
+                  +invoiceDetails.subtotal.toFixed(2),
               })
             }
             step="0.01"
@@ -329,11 +343,16 @@ export const CreateInvoice = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="number"
-            defaultValue={invoiceDetails.taxRate}
+            value={invoiceDetails.taxRate}
             onChange={(e) =>
               setInvoieceDetails({
                 ...invoiceDetails,
                 taxRate: +e.target.value,
+                total:
+                  +e.target.value +
+                  +invoiceDetails.taxDue.toFixed(2) +
+                  +invoiceDetails.subtotal.toFixed(2) +
+                  +invoiceDetails.taxable.toFixed(2),
               })
             }
             step="0.01"
@@ -347,9 +366,17 @@ export const CreateInvoice = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="number"
-            defaultValue={invoiceDetails.taxDue}
+            value={invoiceDetails.taxDue}
             onChange={(e) =>
-              setInvoieceDetails({ ...invoiceDetails, taxDue: +e.target.value })
+              setInvoieceDetails({
+                ...invoiceDetails,
+                taxDue: +e.target.value,
+                total:
+                  +e.target.value +
+                  +invoiceDetails.subtotal.toFixed(2) +
+                  +invoiceDetails.taxRate.toFixed(2) +
+                  +invoiceDetails.taxable.toFixed(2),
+              })
             }
             step="0.01"
             min={0}
@@ -362,7 +389,7 @@ export const CreateInvoice = () => {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="number"
-            defaultValue={invoiceDetails.total}
+            value={invoiceDetails.total}
             onChange={(e) =>
               setInvoieceDetails({ ...invoiceDetails, total: +e.target.value })
             }
@@ -371,28 +398,19 @@ export const CreateInvoice = () => {
             required
           />
 
-          <label className={lableClassNamesStyles.default} htmlFor="other">
-            Other Comments
-          </label>
-
           <textarea
             className={inputClassNamesStyles.default}
             name="other"
-            defaultValue={invoiceDetails.other}
+            id="other"
+            value={invoiceDetails.other}
             onChange={(e) =>
               setInvoieceDetails({ ...invoiceDetails, other: e.target.value })
             }
           />
+          <label className={lableClassNamesStyles.default} htmlFor="other">
+            Other Comments
+          </label>
         </div>
-
-        {/*Request Status and Errors*/}
-        {(isError || isSuccess) && (
-          <MessagesContainer
-            msg={msg}
-            isSuccess={isSuccess}
-            isError={isError}
-          />
-        )}
 
         {/*form button */}
         <FormButton
@@ -401,6 +419,6 @@ export const CreateInvoice = () => {
           icon={<RiSendPlaneFill className="ml-1" size={25} />}
         />
       </form>
-    </div>
+    </section>
   );
 };

@@ -11,21 +11,13 @@ import {
 } from "react-icons/ai";
 import { BsPlus, BsGearFill } from "react-icons/bs";
 import { RiLogoutBoxFill } from "react-icons/ri";
-import { NavLink } from "react-router-dom";
-import { adminLogout } from "../../state/features/admin/auth/adminAuthSlice";
-import { BanksLogout } from "../../state/features/bank/bankSlice";
-import { useAppDispatch } from "../../state/features/hooks/StateHooks";
-import { adminsLogout } from "../../state/features/invoice/invoiceSlice";
-import { passportsLogout } from "../../state/features/passport/passportSlice";
-import { paymentsLogout } from "../../state/features/payment/paymentSlice";
-import { purchasesLogout } from "../../state/features/purchase/purchaseSlice";
-import { ticketsLogout } from "../../state/features/ticket/ticketSlice";
-import { visasLogout } from "../../state/features/visa/visaSlice";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useSendLogoutMutation } from "../../state/features/admin/auth/authApiSlice";
 
 type NavbarLinks = [string, string, React.ReactElement][];
 
 const navbarLinks: NavbarLinks = [
-  ["الرئيسية", "/", <AiFillHome size={20} />],
+  ["الرئيسية", "/home", <AiFillHome size={20} />],
   ["الفواتير", "/invoices", <AiFillBell size={20} />],
   ["إضافة فاتورة", "/invoices/create", <BsPlus size={20} />],
   ["الجوازات", "/passports", <AiFillProject size={20} />],
@@ -44,19 +36,11 @@ const navbarLinks: NavbarLinks = [
 ];
 
 const SideBar = () => {
+  const [sendLogout, { isLoading, isSuccess, isError, error }] =
+    useSendLogoutMutation();
   const navbarRef = useRef<HTMLElement>(null);
-  const dispatch = useAppDispatch();
-
-  const handleLogout = () => {
-    dispatch(adminsLogout());
-    dispatch(adminLogout());
-    dispatch(passportsLogout());
-    dispatch(visasLogout());
-    dispatch(paymentsLogout());
-    dispatch(ticketsLogout());
-    dispatch(purchasesLogout());
-    dispatch(BanksLogout());
-  };
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     let lastScrollTop =
@@ -82,6 +66,10 @@ const SideBar = () => {
       window.removeEventListener("scroll", detectScroll);
     };
   }, []);
+
+  useEffect(() => {
+    if (isSuccess) navigate("/login", { state: { from: location.pathname } });
+  }, [isSuccess, navigate]);
 
   return (
     <nav
@@ -113,10 +101,10 @@ const SideBar = () => {
         icon={<BsGearFill size={20} />}
       />
       <div className="max-w-[50px] flex flex-col justify-center items-center">
-        <button onClick={handleLogout} className="sidebar-icon group">
+        <button onClick={() => sendLogout()} className="sidebar-icon group">
           <RiLogoutBoxFill size={20} />
         </button>
-        <span className="font-semibold">تسجيل الخروج</span>
+        <span className="font-semibold">{"تسجيل الخروج"}</span>
       </div>
     </nav>
   );

@@ -9,10 +9,9 @@ import {
 
 const router = Router();
 
-router
-  .route("/")
-  .post(authAdminProtect, createPassport)
-  .get(authAdminProtect, getPassports);
+router.route("/").post(authAdminProtect, createPassport);
+
+router.route("/query").post(authAdminProtect, getPassports);
 
 router
   .route("/:id")

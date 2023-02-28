@@ -9,10 +9,9 @@ import { authAdminProtect } from "../middlewares/adminMiddlewares/authAdminProte
 
 const router = Router();
 
-router
-  .route("/")
-  .post(authAdminProtect, createPurchase)
-  .get(authAdminProtect, getPurchases);
+router.route("/").post(authAdminProtect, createPurchase);
+
+router.route("/query").post(authAdminProtect, getPurchases);
 
 router
   .route("/:id")

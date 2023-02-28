@@ -92,7 +92,7 @@ const MainErrorsHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     err.name === "NotBeforeError"
   ) {
     return res
-      .status(401)
+      .status(403)
       .send(`Not Authorized with token Error:-  ${err.message}`);
   }
 
@@ -108,6 +108,11 @@ const MainErrorsHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     err.message === "Not Authorized with invalid token"
   ) {
     return res.status(401).send(err.message);
+  }
+
+  //Not allowed by CORS Errors.
+  if (err.message === "Not allowed by CORS") {
+    return res.status(403).send(err.message);
   }
 
   //Unknown Errors

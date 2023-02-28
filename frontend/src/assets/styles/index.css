@@ -2,7 +2,6 @@
   text-align: center;
   font-family: "Tajawal", sans-serif;
   font-size: 16px;
-  overflow-x: hidden;
   color: rgba(0, 0, 0, 0.87);
   background: rgb(153, 27, 30);
   background: -moz-linear-gradient(
@@ -12,7 +11,7 @@
   );
   background: -webkit-linear-gradient(
     43deg,
-    rgba(153, 27, 30, 1) 0%,
+    rgb(153, 27, 30) 0%,
     rgba(2, 80, 145, 1) 100%
   );
   background: linear-gradient(
@@ -33,21 +32,4 @@
 
 @tailwind base;
 @tailwind components;
-
-@layer components {
-  .sidebar-icon {
-    @apply relative  flex items-center justify-center 
-    h-10 w-10 mt-2 mb-2 mx-auto 
-  bg-red-700 hover:bg-blue-600  
-  text-white hover:text-black
-    hover:rounded-xl rounded-3xl
-    transition-all duration-300 ease-linear
-    cursor-pointer shadow-lg;
-  }
-
-  .sidebar-hr {
-    @apply border border-red-800 h-10 mx-1;
-  }
-}
-
 @tailwind utilities;

@@ -1,28 +1,21 @@
 import { useEffect, useState } from "react";
-import { UseResetStatus } from "../../hooks/UseResetStatus";
-import { resetAdminAuthStatus } from "../../state/features/admin/auth/adminAuthSlice";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../state/features/hooks/StateHooks";
-import {
-  createPassport,
-  resetPassportsStatus,
-} from "../../state/features/passport/passportSlice";
 import FormButton from "../shared/FormButton";
-import MessagesContainer from "../shared/MessagesContainer";
-import { inputClassNamesStyles, lableClassNamesStyles } from "./CreateInvoice";
-import logo from "../../assets/imgs/trans-logo.png";
+import {
+  inputClassNamesStyles,
+  lableClassNamesStyles,
+} from "../invoice/constants";
 import { FcTemplate } from "react-icons/fc";
 import { FormInput } from "../shared/FormInput";
 import { RiSendPlaneFill } from "react-icons/ri";
 import {
-  PassportService,
   passportService,
-  PassportState,
   passportState,
-  tableHeaderTitles,
-} from "../passport/Passports";
+  passportTableHeaderTitles,
+} from "../passport/constants";
+import { PassportService, PassportState } from "../passport/types";
+import { useCreatePassportMutation } from "../../state/features/passport/passportsApiSlice";
+import { useScroll } from "../../hooks/useScroll";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 export const CreatePassport = () => {
   //state for passport Details
@@ -41,25 +34,32 @@ export const CreatePassport = () => {
     profit: 0,
   });
 
-  //state for alert messages
-  const [msg, setMsg] = useState("");
+  const [createPassport, { isSuccess, isLoading }] =
+    useCreatePassportMutation();
 
-  const { info } = useAppSelector((state) => state.adminAuth);
-  const { isError, isSuccess, isLoading, message } = useAppSelector(
-    (state) => state.passportsData
-  );
+  const handleSubmit = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
 
-  const dispatch = useAppDispatch();
+    const passportData = {
+      name: passportDetails.name,
+      nationality: passportDetails.nationality.trim(),
+      state: passportDetails.state,
+      service: passportDetails.service,
+      passportId: passportDetails.passportId,
+      paymentDate: passportDetails.paymentDate,
+      servicePrice: passportDetails.servicePrice,
+      taxable: passportDetails.taxable,
+      taxRate: passportDetails.taxRate,
+      total: passportDetails.total,
+      sales: passportDetails.sales,
+      profit: passportDetails.profit,
+    };
+
+    await createPassport(passportData);
+  };
 
   useEffect(() => {
-    if (isError) {
-      setMsg(message);
-    }
-
     if (isSuccess) {
-      //Set message To Suucess Message
-      setMsg(message);
-
       //Set Passport Inputs To Default
       setPassportDetails({
         name: "",
@@ -76,65 +76,25 @@ export const CreatePassport = () => {
         profit: 0,
       });
     }
-  }, [isError, isSuccess, message, info, msg]);
+  }, [isSuccess]);
 
-  const handleSubmit = (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    //set msg to none first
-    setMsg("");
-
-    const passportData = {
-      token: info.token,
-      name: passportDetails.name,
-      nationality: passportDetails.nationality.trim(),
-      state: passportDetails.state,
-      service: passportDetails.service,
-      passportId: passportDetails.passportId,
-      paymentDate: passportDetails.paymentDate,
-      servicePrice: passportDetails.servicePrice,
-      taxable: passportDetails.taxable,
-      taxRate: passportDetails.taxRate,
-      total: passportDetails.total,
-      sales: passportDetails.sales,
-      profit: passportDetails.profit,
-    };
-
-    dispatch(createPassport(passportData));
-  };
-
-  //clean up status (when mount and unmount)
-  UseResetStatus(() => {
-    //scroll page back to top when component first mount
-    const yOffset = window.pageYOffset;
-    window.scrollBy(0, -yOffset);
-
-    dispatch(resetAdminAuthStatus());
-    dispatch(resetPassportsStatus());
-  });
-
-  UseResetStatus(() => {
-    return () => {
-      dispatch(resetAdminAuthStatus());
-      dispatch(resetPassportsStatus());
-    };
-  });
+  useScroll("createPassport");
+  useDocumentTitle("إضافة جواز جديد");
 
   return (
-    <div className="max-w-6xl w-full mx-auto my-20 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
-      <h3 className="flex justify-center items-center text-xl text-center font-bold px-2 py-4 mb-10 bg-red-200 border-b-4 border-red-800 rounded shadow ">
+    <section id="createPassport" className="w-full">
+      <h3 className="mb-10 flex items-center justify-center rounded border-b-4 border-red-800 bg-red-200 px-2 py-4 text-center text-xl font-bold shadow ">
         <FcTemplate className="mr-1" size={50} />
         <span>إضافة جواز جديد</span>
       </h3>
 
-      <img className="mx-auto" src={logo} alt="logo" />
-
       <form onSubmit={handleSubmit}>
-        <p className="font-bold p-2 rounded text-lg text-white bg-red-800 my-4">
+        <p className="my-4 rounded bg-red-800 p-2 text-lg font-bold text-white">
           [ بيانات الجواز ]
         </p>
-        <div className="flex justify-center items-center font-semibold flex-wrap gap-4 px-5 py-5">
+        <div className="flex flex-wrap items-center justify-center gap-4 px-5 py-5 font-semibold">
           <FormInput
-            label={tableHeaderTitles[0]}
+            label={passportTableHeaderTitles[0]}
             name="customerName"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -147,7 +107,7 @@ export const CreatePassport = () => {
           />
 
           <FormInput
-            label={tableHeaderTitles[1]}
+            label={passportTableHeaderTitles[1]}
             name="customerNationality"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -162,7 +122,7 @@ export const CreatePassport = () => {
           />
 
           <FormInput
-            label={tableHeaderTitles[2]}
+            label={passportTableHeaderTitles[2]}
             name="passportId"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -178,7 +138,7 @@ export const CreatePassport = () => {
           />
 
           <FormInput
-            label={tableHeaderTitles[5]}
+            label={passportTableHeaderTitles[5]}
             name="servicePrice"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -206,7 +166,7 @@ export const CreatePassport = () => {
           />
 
           <FormInput
-            label={tableHeaderTitles[6]}
+            label={passportTableHeaderTitles[6]}
             name="taxable"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -235,7 +195,7 @@ export const CreatePassport = () => {
           />
 
           <FormInput
-            label={tableHeaderTitles[7]}
+            label={passportTableHeaderTitles[7]}
             name="taxRate"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -263,7 +223,7 @@ export const CreatePassport = () => {
           />
 
           <FormInput
-            label={tableHeaderTitles[8]}
+            label={passportTableHeaderTitles[8]}
             name="totalPayment"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -281,7 +241,7 @@ export const CreatePassport = () => {
           />
 
           <FormInput
-            label={tableHeaderTitles[9]}
+            label={passportTableHeaderTitles[9]}
             name="sales"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -299,7 +259,7 @@ export const CreatePassport = () => {
           />
 
           <FormInput
-            label={tableHeaderTitles[10]}
+            label={passportTableHeaderTitles[10]}
             name="profit"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -316,7 +276,7 @@ export const CreatePassport = () => {
           />
 
           <FormInput
-            label={tableHeaderTitles[11]}
+            label={passportTableHeaderTitles[11]}
             name="paymentDate"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -330,11 +290,9 @@ export const CreatePassport = () => {
             }
           />
 
-          <label htmlFor="state" className={lableClassNamesStyles.default}>
-            {tableHeaderTitles[3]}
-          </label>
           <select
             name="state"
+            id="state"
             className={inputClassNamesStyles.default}
             value={passportDetails.state}
             onChange={(e) =>
@@ -348,11 +306,13 @@ export const CreatePassport = () => {
             ))}
           </select>
 
-          <label htmlFor="service" className={lableClassNamesStyles.default}>
-            {tableHeaderTitles[4]}
+          <label htmlFor="state" className={lableClassNamesStyles.default}>
+            {passportTableHeaderTitles[3]}
           </label>
+
           <select
             name="service"
+            id="service"
             className={inputClassNamesStyles.default}
             value={passportDetails.service}
             onChange={(e) =>
@@ -368,24 +328,18 @@ export const CreatePassport = () => {
               </option>
             ))}
           </select>
+          <label htmlFor="service" className={lableClassNamesStyles.default}>
+            {passportTableHeaderTitles[4]}
+          </label>
         </div>
 
-        {/*Request Status and Errors*/}
-        {(isError || isSuccess) && (
-          <MessagesContainer
-            msg={msg}
-            isSuccess={isSuccess}
-            isError={isError}
-          />
-        )}
-
-        {/*form button */}
+        {/*Form Button */}
         <FormButton
           text={{ default: "حفظ الجواز", loading: "جارى الحفظ" }}
           isLoading={isLoading}
           icon={<RiSendPlaneFill className="ml-1" size={25} />}
         />
       </form>
-    </div>
+    </section>
   );
 };

@@ -1,57 +1,83 @@
-import { useEffect } from "react";
 import { FcVip } from "react-icons/fc";
-import { RiArrowRightLine } from "react-icons/ri";
+import { RiArrowLeftLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../state/features/hooks/StateHooks";
 import logo from "../../assets/imgs/trans-logo.png";
+import { useGetAdminQuery } from "../../state/features/admin/auth/authApiSlice";
+import jwt_decode, { JwtPayload } from "jwt-decode";
+import { selectCurrentToken } from "../../state/features/admin/auth/authSlice";
+import { MainSpinner } from "../shared/MainSpinner";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
+
+export interface JWTPaylaod extends JwtPayload {
+  AdminInfo: { id: string; role: string };
+}
 
 export default function AdminProfile() {
-  const { info } = useAppSelector((state) => state.adminAuth);
+  const token = useAppSelector(selectCurrentToken) as string;
 
-  useEffect(() => {
-    //scroll page back to top when component first mount
-    const yOffset = window.pageYOffset;
-    window.scrollBy(0, -yOffset);
-  }, []);
+  const { AdminInfo } = jwt_decode(token) as JWTPaylaod;
+  const { id, role } = AdminInfo;
+
+  const { data, isLoading } = useGetAdminQuery(id);
+
+  useDocumentTitle("بيانات الحساب");
+
+  if (isLoading) {
+    return (
+      <div className="mx-auto flex h-full w-full max-w-5xl items-center justify-center">
+        <div className="w-full">
+          <MainSpinner isLoading={isLoading} />
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-5xl w-full min-h-[75vh] mx-auto my-20 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
-      <h3 className="flex items-center text-gray-800 mb-4 text-2xl font-bold px-2 py-4 my-4 rounded shadow bg-red-200 border-b-4 border-red-800">
-        <span className="flex justify-center items-center mr-2">
-          <FcVip size={50} />
-        </span>
-        {info.name}
+    <section className="w-full">
+      <h3 className="mb-5 flex items-center justify-center rounded border-b-4 border-red-800 bg-red-200 px-2 py-4 text-center text-2xl font-bold italic shadow">
+        <FcVip className="ml-1" size={50} />
+        <span>بيانات الحساب</span>
       </h3>
 
-      <img className="mx-auto" src={logo} alt="logo" />
+      <img className="mx-auto max-h-40" src={logo} alt="logo" />
 
-      <ul className="w-full max-w-[550px] py-2 px-3 mt-3 rounded">
-        <li className="flex items-center p-3 mb-2  border-r-4 border-red-800 rounded shadow bg-red-200">
-          <span className="font-semibold">المنصب</span>
-          <span className="ml-auto">
-            <span className="bg-green-500 py-1 px-2 rounded text-white text-sm">
-              {info.role}
+      <ul className="mt-3 ml-auto w-full max-w-[550px] rounded py-2 px-3">
+        <li className="mb-2 flex items-center rounded  border-r-4 border-red-800 bg-red-200 p-3 shadow">
+          <span className="mr-auto">
+            <span className="rounded bg-pink-500 py-1 px-2 text-sm text-white">
+              {data?.name}
             </span>
           </span>
+          <span className="font-semibold">الاسم</span>
         </li>
-        <li className="flex items-center p-3 mb-2  border-r-4 border-red-800 rounded shadow bg-red-200">
-          <span className="font-semibold">الايميل الخاص</span>
-          <span className="ml-auto hover:underline hover:text-yellow-800">
-            {info.email}
+
+        <li className="mb-2 flex items-center rounded  border-r-4 border-red-800 bg-red-200 p-3 shadow">
+          <span className="mr-auto">
+            <span className="rounded bg-green-500 py-1 px-2 text-sm text-white">
+              {role}
+            </span>
           </span>
+          <span className="font-semibold">المنصب</span>
+        </li>
+        <li className="mb-2 flex items-center rounded  border-r-4 border-red-800 bg-red-200 p-3 shadow">
+          <span className="mr-auto hover:text-yellow-800 hover:underline">
+            {data?.email}
+          </span>
+          <span className="font-semibold">الايميل الخاص</span>
         </li>
       </ul>
 
-      <div className="flex justify-end items-center mt-6">
+      <div className="mt-6 flex items-center">
         <Link
           to={`/profile/update`}
-          className="inline-flex font-bold text-xs sm:text-sm bg-blue-700 text-white hover:bg-white px-2 sm:px-3 py-2 hover:text-blue-600 border hover:border-blue-800 items-center rounded
-         shadow transition-all ease-in-out duration-300"
+          className="flex items-center rounded border bg-blue-700 px-2 py-2 text-xs font-bold text-white shadow transition-all duration-300 ease-in-out hover:border-blue-800
+         hover:bg-white hover:text-blue-600 sm:px-3 sm:text-sm"
         >
+          <RiArrowLeftLine className="mb-[-4px] mr-1" size={15} />
           تعديل الحساب
-          <RiArrowRightLine className="mb-[-4px] ml-1 font-bold" size={15} />
         </Link>
       </div>
-    </div>
+    </section>
   );
 }

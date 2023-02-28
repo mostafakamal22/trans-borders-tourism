@@ -1,108 +1,98 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { AiFillSlackCircle } from "react-icons/ai";
 import { FcDoughnutChart, FcInfo } from "react-icons/fc";
-import {
-  resetAdminAuthStatus,
-  updateAdmin,
-} from "../../state/features/admin/auth/adminAuthSlice";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../state/features/hooks/StateHooks";
+import { useAppSelector } from "../../state/features/hooks/StateHooks";
 import FormButton from "../shared/FormButton";
-import MessagesContainer from "../shared/MessagesContainer";
-import logo from "../../assets/imgs/trans-logo.png";
-import { UseResetStatus } from "../../hooks/UseResetStatus";
-import { resetInvoicesStatus } from "../../state/features/invoice/invoiceSlice";
+import { selectCurrentToken } from "../../state/features/admin/auth/authSlice";
+import { JWTPaylaod } from "../profile/AdminProfile";
+import {
+  useGetAdminQuery,
+  useUpdateAdminMutation,
+} from "../../state/features/admin/auth/authApiSlice";
+import jwt_decode from "jwt-decode";
+import { MainSpinner } from "../shared/MainSpinner";
+import { useScroll } from "../../hooks/useScroll";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 export default function UpdateAdmin() {
-  const dispatch = useAppDispatch();
-  const { info, isError, isSuccess, isLoading, message } = useAppSelector(
-    (state) => state.adminAuth
-  );
+  const token = useAppSelector(selectCurrentToken) as string;
+
+  const { AdminInfo } = jwt_decode(token) as JWTPaylaod;
+  const { id } = AdminInfo;
+
+  const { data, isLoading, isFetching } = useGetAdminQuery(id);
+
+  const [updateAdmin, { isLoading: isUpdating }] = useUpdateAdminMutation();
 
   const [formInputs, setFormInputs] = useState({
-    email: info && info.email,
+    email: "",
     oldPassword: "",
     password: "",
     repeatedPassword: "",
-    msg: "",
   });
 
-  const { email, oldPassword, repeatedPassword, password, msg } = formInputs;
-
-  useEffect(() => {
-    if (isError) {
-      setFormInputs({ ...formInputs, msg: message });
-    }
-
-    if (isSuccess) {
-      setFormInputs({
-        ...formInputs,
-        msg: message,
-      });
-    }
-  }, [isError, message, msg, isSuccess]);
+  const { email, oldPassword, repeatedPassword, password } = formInputs;
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    //set msg to none first
-    setFormInputs({ ...formInputs, msg: "" });
 
     const adminData = {
-      email: email.trim(),
-      token: info.token,
-      id: info.id,
+      email: email.trim() as string,
+      id,
       password,
       repeatedPassword,
       oldPassword,
     };
-    dispatch(updateAdmin(adminData));
+    await updateAdmin(adminData);
   };
 
-  //clean up status (when mount and unmount)
-  UseResetStatus(() => {
-    //scroll page back to top when component first mount
-    const yOffset = window.pageYOffset;
-    window.scrollBy(0, -yOffset);
+  useEffect(() => {
+    if (data) {
+      setFormInputs({
+        ...formInputs,
+        email: data.email,
+      });
+    }
+  }, [data]);
 
-    dispatch(resetAdminAuthStatus());
-    dispatch(resetInvoicesStatus());
-  });
+  useScroll("updateAdmin");
+  useDocumentTitle("تعديل بيانات الحساب");
 
-  UseResetStatus(() => {
-    return () => {
-      dispatch(resetAdminAuthStatus());
-      dispatch(resetInvoicesStatus());
-    };
-  });
+  if (isLoading || isFetching) {
+    return (
+      <div className="mx-auto flex h-full w-full max-w-5xl items-center justify-center">
+        <div className="w-full">
+          <MainSpinner isLoading={isLoading} />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-5xl w-full mx-auto my-20 p-6 bg-slate-50 rounded shadow-lg shadow-black/30 ">
-      <h3 className="flex justify-center items-center text-2xl italic font-bold text-center px-2 py-4 mb-10 rounded shadow bg-red-200 border-b-4 border-red-800">
+    <section id="updateAdmin" className="w-full">
+      <h3 className="mb-10 flex items-center justify-center rounded border-b-4 border-red-800 bg-red-200 px-2 py-4 text-center text-2xl font-bold italic shadow">
         <FcDoughnutChart className="ml-1" size={50} />
         <span>تعديل بيانات الحساب</span>
       </h3>
-
-      <img className="mx-auto" src={logo} alt="logo" />
 
       <form onSubmit={handleSubmit}>
         <div className="mb-6">
           <label
             htmlFor="email"
-            className="w-full inline-block font-semibold mb-4 p-2 text-white rounded shadow bg-red-800"
+            className="mb-4 inline-block w-full rounded bg-red-800 p-2 font-semibold text-white shadow"
           >
-            Email address
+            البريد الإلكترونى
           </label>
           <input
             type="email"
             name="email"
-            className="block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
-            defaultValue={email}
+            id="email"
+            className="m-0 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out placeholder:text-right focus:border-red-800 focus:bg-white focus:text-gray-700 focus:outline-none"
+            value={email}
             onChange={(e) =>
               setFormInputs({ ...formInputs, email: e.target.value })
             }
-            placeholder="Enter your email"
+            placeholder="البريد الإلكترونى"
             required
           />
         </div>
@@ -110,11 +100,11 @@ export default function UpdateAdmin() {
         <div className="mb-6">
           <label
             htmlFor="oldPassword"
-            className="w-full inline-block font-semibold mb-4 p-2 text-white rounded shadow bg-red-800"
+            className="mb-4 inline-block w-full rounded bg-red-800 p-2 font-semibold text-white shadow"
           >
-            Old Password
+            كلمة السر القديمة
           </label>
-          <span className="flex items-center flex-col md:flex-row gap-2 text-sm md:text-base  text-blue-700 mb-2 font-medium">
+          <span className="mb-2 flex flex-col items-center gap-2 text-sm font-medium  text-blue-700 md:flex-row-reverse md:text-base">
             <FcInfo size={27} />
             <span>
               إذا لم ترغب فى تغيير كلمة السر القديمة ,فعليك بتكرارها فى الثلاث
@@ -124,12 +114,13 @@ export default function UpdateAdmin() {
           <input
             type="password"
             name="oldPassword"
-            className="block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
-            defaultValue={oldPassword}
+            id="oldPassword"
+            className="m-0 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out placeholder:text-right focus:border-red-800 focus:bg-white focus:text-gray-700 focus:outline-none"
+            value={oldPassword}
             onChange={(e) =>
               setFormInputs({ ...formInputs, oldPassword: e.target.value })
             }
-            placeholder="Enter your old Password"
+            placeholder="كلمة السر القديمة"
             required
           />
         </div>
@@ -137,19 +128,20 @@ export default function UpdateAdmin() {
         <div className="mb-6">
           <label
             htmlFor="password"
-            className="w-full inline-block font-semibold mb-4 p-2 text-white rounded shadow bg-red-800"
+            className="mb-4 inline-block w-full rounded bg-red-800 p-2 font-semibold text-white shadow"
           >
-            New Password
+            كلمة السر الجديدة
           </label>
           <input
             type="password"
             name="password"
-            className="block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
-            defaultValue={password}
+            id="password"
+            className="m-0 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out placeholder:text-right focus:border-red-800 focus:bg-white focus:text-gray-700 focus:outline-none"
+            value={password}
             onChange={(e) =>
               setFormInputs({ ...formInputs, password: e.target.value })
             }
-            placeholder="Enter New Password"
+            placeholder="كلمة السر الجديدة"
             required
           />
         </div>
@@ -157,42 +149,34 @@ export default function UpdateAdmin() {
         <div className="mb-6">
           <label
             htmlFor="repeatedPassword"
-            className="w-full inline-block font-semibold mb-4 p-2 text-white rounded shadow bg-red-800"
+            className="mb-4 inline-block w-full rounded bg-red-800 p-2 font-semibold text-white shadow"
           >
-            Repeat New Password
+            تأكيد كلمة السر الجديدة
           </label>
           <input
             type="password"
             name="repeatedPassword"
-            className="block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-red-800 focus:outline-none"
-            defaultValue={repeatedPassword}
+            id="repeatedPassword"
+            className="m-0 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out placeholder:text-right focus:border-red-800 focus:bg-white focus:text-gray-700 focus:outline-none"
+            value={repeatedPassword}
             onChange={(e) =>
               setFormInputs({
                 ...formInputs,
                 repeatedPassword: e.target.value,
               })
             }
-            placeholder="Repeat New Password"
+            placeholder="تأكيد كلمة السر الجديدة"
             required
           />
         </div>
 
-        {/*Request Status and Errors*/}
-        {(isError || isSuccess) && msg && (
-          <MessagesContainer
-            msg={msg}
-            isSuccess={isSuccess}
-            isError={isError}
-          />
-        )}
-
-        {/*form button */}
+        {/*Form Button */}
         <FormButton
           text={{ loading: "جارى التعديل", default: "تعديل البيانات" }}
-          isLoading={isLoading}
+          isLoading={isUpdating}
           icon={<AiFillSlackCircle className="ml-1" size={25} />}
         />
       </form>
-    </div>
+    </section>
   );
 }

@@ -2,18 +2,65 @@ import { Request, Response } from "express";
 import Payment from "../models/paymentsModel";
 import { ErrnoException } from "./adminControllers";
 
-//@desc   >>>> Get All Payment
-//@route  >>>> GET /api/payments
-//@Access >>>> public(For Admins)
-const getPayments = async (_req: Request, res: Response) => {
-  //Get All Payments Data & Send it Back.
-  const payments = await Payment.find();
+//@Desc   >>>> Get All Payments That Match Query Object.
+//@Route  >>>> POST /api/payments/query
+//@Access >>>> Private(Admins Only)
+const getPayments = async (req: Request, res: Response) => {
+  //Get Query & Option Objects From Req.
+  const { query, option } = req.body;
+
+  const method = query?.method ? query.method : "";
+  const type = query?.type ? query.type : "";
+
+  //Prepare Queries for Mongoose Query.
+  const queries = query
+    ? {
+        //Filter By Year, Month And Day.
+        $expr: {
+          $setEquals: [
+            [
+              query?.year && {
+                $year: "$date",
+              },
+              query?.month && {
+                $month: "$date",
+              },
+              query?.day && {
+                $dayOfMonth: "$date",
+              },
+            ],
+
+            [
+              query?.year && query?.year,
+              query?.month && query?.month,
+              query?.day && query?.day,
+            ],
+          ],
+        },
+
+        //Filter By Payment Type.
+        "payment_types.name": new RegExp(`${type}`, "gi"),
+
+        // //Filter By Payment Method.
+        "payment_types.method": new RegExp(`${method}`, "gi"),
+      }
+    : {};
+
+  //Define Query Option
+  const options = {
+    pagination: query ? true : false,
+    sort: { payment_date: "desc", createdAt: "desc" },
+    ...option,
+  };
+
+  //Get All Payments Data That Match Query & Send it Back.
+  const payments = await Payment.paginate(queries, options);
   res.status(200).json(payments);
 };
 
-//@desc   >>>> Create Payment
-//@route  >>>> POST /api/payments/
-//@Access >>>> public(For Admins)
+//@Desc   >>>> Create Payment
+//@Route  >>>> POST /api/payments
+//@Access >>>> Private(Admins Only)
 const createPayment = async (req: Request, res: Response) => {
   //Create New Payment With Request Data & Send Created Payment Back.
   const payment = await Payment.create({
@@ -24,9 +71,9 @@ const createPayment = async (req: Request, res: Response) => {
   res.status(201).json(payment);
 };
 
-//@desc   >>>> UPDATE Payment
-//@route  >>>> PUT /api/payments/:id
-//@Access >>>> Public(for Admins)
+//@Desc   >>>> UPDATE Payment
+//@Route  >>>> PUT /api/payments/:id
+//@Access >>>> Private(Admins Only)
 const updatePayment = async (req: Request, res: Response) => {
   //Get Payment Wanted For Updating.
   const payment = await Payment.findById(req.params?.id);
@@ -50,16 +97,17 @@ const updatePayment = async (req: Request, res: Response) => {
 };
 
 //@desc   >>>> Delete one Payment
-//@route  >>>> DELETE /api/payments/:id
+//@Route  >>>> DELETE /api/payments/:id
 //@Access >>>> public(For Admins)
 const deletePayment = async (req: Request, res: Response) => {
-  //Get Payment Wanted For Deleting & Send Deleted Payment id Back.
+  //Get Payment Wanted For Deleting.
   const deletedPayment = await Payment.findByIdAndDelete(req.params?.id);
 
   //Check If the Document is Already Deleted Or Not.
   if (!deletedPayment?.id) {
     throw new Error("This Document Has Been Already Deleted!");
   } else {
+    //Send Deleted Payment id Back
     res.status(200).json({ id: deletedPayment.id });
   }
 };

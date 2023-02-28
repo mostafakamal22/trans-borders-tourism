@@ -2,18 +2,77 @@ import { Request, Response } from "express";
 import Ticket from "../models/ticketModel";
 import { ErrnoException } from "./adminControllers";
 
-//@desc   >>>> Get All Tickets
-//@route  >>>> GET /api/tickets
-//@Access >>>> public(For Admins)
-const getTickets = async (_req: Request, res: Response) => {
-  //Get All Tickets Data & Send it Back.
-  const tickets = await Ticket.find();
+//@Desc   >>>> Get All Tickets That Match Query Object.
+//@Route  >>>> POST /api/tickets/query
+//@Access >>>> Private(Admins Only)
+const getTickets = async (req: Request, res: Response) => {
+  //Get Query & Option Objects From Req.
+  const { query, option } = req.body;
+
+  const customerName = query?.customerName ? query.customerName : "";
+  const employee = query?.employee ? query.employee : "";
+  const supplier = query?.supplier ? query.supplier : "";
+  const type = query?.type ? query.type : "";
+  const paymentMethod = query?.paymentMethod ? query.paymentMethod : [];
+
+  //Prepare Queries for Mongoose Query.
+  const queries = query
+    ? {
+        //Filter By Year, Month And Day.
+        $expr: {
+          $setEquals: [
+            [
+              query?.year && {
+                $year: "$payment_date",
+              },
+              query?.month && {
+                $month: "$payment_date",
+              },
+              query?.day && {
+                $dayOfMonth: "$payment_date",
+              },
+            ],
+
+            [
+              query?.year && query?.year,
+              query?.month && query?.month,
+              query?.day && query?.day,
+            ],
+          ],
+        },
+
+        //Filter By Ticket Type.
+        type: new RegExp(`${type}`, "gi"),
+
+        //Filter By Ticket Supplier.
+        supplier: new RegExp(`${supplier}`, "gi"),
+
+        //Filter By Ticket Customer Name.
+        customer_name: new RegExp(`${customerName}`, "gi"),
+
+        //Filter By Ticket Employee.
+        employee: new RegExp(`${employee}`, "gi"),
+
+        //Filter By Ticket Payment Method.
+        payment_method: new RegExp(`${paymentMethod.join("|")}`, "gi"),
+      }
+    : {};
+
+  //Define Query Option
+  const options = {
+    pagination: query ? true : false,
+    sort: { payment_date: "desc", createdAt: "desc" },
+    ...option,
+  };
+
+  //Get All Tickets Data That Match Query & Send it Back.
+  const tickets = await Ticket.paginate(queries, options);
   res.status(200).json(tickets);
 };
 
-//@desc   >>>> Create Ticket
-//@route  >>>> POST /api/tickets/
-//@Access >>>> public(For Admins)
+//@Desc   >>>> Create Ticket
+//@Route  >>>> POST /api/tickets/
+//@Access >>>> private(For Admins)
 const createTicket = async (req: Request, res: Response) => {
   //Create New Ticket With Request Data & Send Created Ticket Back.
   const ticket = await Ticket.create({
@@ -32,9 +91,9 @@ const createTicket = async (req: Request, res: Response) => {
   res.status(201).json(ticket);
 };
 
-//@desc   >>>> UPDATE Ticket
-//@route  >>>> PUT /api/tickets/:id
-//@Access >>>> Public(for Admins)
+//@Desc   >>>> UPDATE Ticket
+//@Route  >>>> PUT /api/tickets/:id
+//@Access >>>> Private(for Admins)
 const updateTicket = async (req: Request, res: Response) => {
   //Get Ticket Wanted For Updating.
   const ticket = await Ticket.findById(req.params.id);
@@ -65,17 +124,18 @@ const updateTicket = async (req: Request, res: Response) => {
   }
 };
 
-//@desc   >>>> Delete one Ticket
-//@route  >>>> DELETE /api/tickets/:id
-//@Access >>>> public(For Admins)
+//@Desc   >>>> Delete one Ticket
+//@Route  >>>> DELETE /api/tickets/:id
+//@Access >>>> private(For Admins)
 const deleteTicket = async (req: Request, res: Response) => {
-  //Get Ticket Wanted For Deleting & Send Deleted Ticket id Back.
+  //Get Ticket Wanted For Deleting.
   const deletedTicket = await Ticket.findByIdAndDelete(req.params.id);
 
   //Check If the Document is Already Deleted Or Not.
   if (!deletedTicket?.id) {
     throw new Error("This Document Has Been Already Deleted!");
   } else {
+    //Send Deleted Ticket id Back
     res.status(200).json({ id: deletedTicket.id });
   }
 };

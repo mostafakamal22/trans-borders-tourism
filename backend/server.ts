@@ -4,6 +4,7 @@ dotenv.config();
 import { join, resolve } from "path";
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { corsDevOptions, corsProOptions } from "./config/corsConfig";
 import errorHandler from "./utils/errorHandling";
 import adminErrorHandler from "./utils/adminErrorHandling";
@@ -11,38 +12,41 @@ import { adminApiLimiter } from "./middlewares/adminMiddlewares/adminApiLimiter"
 
 const app = express();
 
-//connect to mongodb
+//Connect to mongodb
 import { connectToMongoose } from "./config/dbConfig";
 connectToMongoose();
 
-//middlewares
-//express json parser middleware
+//Middlewares
+//Express json parser middleware
 app.use(express.json());
 
-//cors middleware
+//Cors middleware
 if (process.env.NODE_ENV === "production") {
   app.use(cors(corsProOptions));
 } else {
   app.use(cors(corsDevOptions));
 }
 
-//admins Router && Error Handler && API Limiter For Admins Requests.
+//Middleware for cookies
+app.use(cookieParser());
+
+//Admins Router && Error Handler && API Limiter For Admins Requests.
 import adminsRoute from "./routes/adminRoutes";
 app.use("/api/admins", adminApiLimiter, adminsRoute, adminErrorHandler);
 
-//invoices Router
+//Invoices Router
 import invoicesRoute from "./routes/invoiceRoutes";
 app.use("/api/invoices", invoicesRoute);
 
-//passports Router
+//Passports Router
 import passportsRoute from "./routes/passportRoutes";
 app.use("/api/passports", passportsRoute);
 
-//visas Router
+//Visas Router
 import visasRoute from "./routes/visaRoutes";
 app.use("/api/visas", visasRoute);
 
-//payments Router
+//Payments Router
 import paymentsRoute from "./routes/paymentRoutes";
 app.use("/api/payments", paymentsRoute);
 

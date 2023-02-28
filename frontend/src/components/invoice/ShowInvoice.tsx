@@ -1,126 +1,34 @@
 import dayjs from "dayjs";
-import { Navigate, useParams } from "react-router-dom";
-import { useAppSelector } from "../../state/features/hooks/StateHooks";
+import { Navigate, useLocation } from "react-router-dom";
 import logo from "../../assets/imgs/trans-logo.png";
 import stamp from "../../assets/imgs/trans-border-stamp.png";
 import ReactToPrint from "react-to-print";
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { AiFillPrinter } from "react-icons/ai";
-
-export type CompanyInfos = {
-  name: string[];
-  address: string;
-  website: string;
-  email: string;
-  tel: string[];
-  mob: string[];
-};
-
-export const comapanyInfos: CompanyInfos = {
-  name: ["TRANS BORDERS TOURISM L.L.C"],
-  address: "DUBAI-DEIRA-ABU HAIL",
-  website: "http://tbtourism.com",
-  email: "Info@tbtourism.com",
-  tel: ["045782747"],
-  mob: ["+971556620879", "+971507597677"],
-};
-
-const tableHeaderTitles = ["NO.", "Description", "Quantity", "Price", "Total"];
+import { comapanyInfos } from "./constants";
+import { invoiceTableHeader, invoiceTableRow } from "./Table";
+import { IProduct } from "../../../../backend/models/invoiceModel";
+import { useScroll } from "../../hooks/useScroll";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 export const ShowInvoice = () => {
-  const { invoiceList } = useAppSelector((state) => state.invoiceData);
-  const invoiceID = useParams().id;
-  const invoice = invoiceList.find((invoice: any) => invoice._id === invoiceID);
+  const location = useLocation();
+  const invoice = location?.state?.invoice;
 
   const componentRef = useRef<HTMLDivElement>(null);
 
-  if (!invoice)
-    return (
-      <>
-        <Navigate to={"not-found"} />
-      </>
-    );
+  useScroll("showInvoice");
+  useDocumentTitle("عرض فاتورة");
 
-  //Define table data
-  const tableHeader = (
-    <tr className="border-b border-b-black">
-      {tableHeaderTitles.map((title: string) => (
-        <th
-          key={title}
-          scope="col"
-          className="py-3 px-3 text-center border-x border-x-black"
-        >
-          {title}
-        </th>
-      ))}
-    </tr>
-  );
-
-  const tableRow = (detail: any, index: number) => {
-    return (
-      <tr
-        key={detail._id}
-        style={{ printColorAdjust: "exact" }}
-        className={`${
-          index % 2 === 0 ? "bg-white" : "bg-red-100"
-        } border-b border-b-black`}
-      >
-        {/*Detail NO*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x  border-x-black text-center"
-        >
-          {index + 1}
-        </th>
-
-        {/*Description*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x  border-x-black text-center"
-        >
-          {detail.name ? detail.name : "-"}
-        </th>
-
-        {/*Quantity*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x  border-x-black text-center"
-        >
-          {detail.quantity}
-        </th>
-
-        {/*Price*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x  border-x-black text-center"
-        >
-          {detail.price}
-        </th>
-
-        {/*Total*/}
-        <th
-          scope="row"
-          className="p-2  text-gray-900 whitespace-nowrap  border-x  border-x-black text-center"
-        >
-          {detail.price}
-        </th>
-      </tr>
-    );
-  };
-
-  //scroll page back to top when component first mount
-  useEffect(() => {
-    const yOffset = window.pageYOffset;
-    window.scrollBy(0, -yOffset);
-  }, []);
+  if (!invoice) return <Navigate to={"/not-found"} replace />;
 
   return (
     <>
       <ReactToPrint
         trigger={() => (
           <button
-            className="print:hidden fixed top-[50vh] right-2 z-10 inline-flex font-bold text-xs sm:text-sm bg-red-800 text-white hover:bg-white my-5 px-2 sm:px-3 py-2 hover:text-red-800 border hover:border-red-800 items-center rounded
-            shadow transition-all ease-in-out duration-300"
+            className="fixed top-[15vh] left-4 z-10 my-5 inline-flex items-center rounded border bg-red-200 px-2 py-2 text-xs font-bold text-red-800 shadow transition-all duration-300 ease-in-out hover:border-red-800 hover:bg-white
+            hover:text-red-800 print:hidden sm:px-3 sm:text-sm"
           >
             <AiFillPrinter className="mr-1" size={20} />
             طباعة الفاتورة
@@ -129,12 +37,13 @@ export const ShowInvoice = () => {
         content={() => componentRef.current}
       />
       <div
+        id="showInvoice"
         ref={componentRef}
-        className="max-w-6xl min-h-[75vh] w-full mx-auto my-20 overflow-x-auto  p-6 bg-slate-50 rounded shadow-lg shadow-black/30 print:shadow-none print:min-h-screen print:my-0 print:flex print:flex-col print:justify-between"
+        className="mx-auto my-10 min-h-[75vh] w-full max-w-5xl overflow-x-auto rounded border border-black bg-slate-50 p-10 print:my-0 print:flex print:min-h-screen print:flex-col print:justify-between print:border-none print:shadow-none"
       >
         <div className="flex items-center">
           <div className="max-w-[300px] text-left">
-            <p className="text-blue-700 text-xl font-bold">
+            <p className="text-xl font-bold text-blue-700">
               {comapanyInfos.name[0]}
             </p>
             <p>{comapanyInfos.address}</p>
@@ -149,14 +58,14 @@ export const ShowInvoice = () => {
 
             <p>
               EMAIL:-{" "}
-              <span className="underline text-blue-700">
+              <span className="text-blue-700 underline">
                 {comapanyInfos.email}
               </span>
             </p>
             <p>
               WEBSITE:-{" "}
               <a
-                className="underline text-blue-700"
+                className="text-blue-700 underline"
                 href={comapanyInfos.website}
                 target={"_blank"}
               >
@@ -166,31 +75,36 @@ export const ShowInvoice = () => {
           </div>
 
           <img
-            className="max-h-[100%] w-[300px]  mx-auto"
+            className="mx-auto max-h-[100%]  w-[300px]"
             src={logo}
             alt="logo"
           />
 
-          <div className="self-start w-[300px] text-right">
-            <p className="text-blue-400 text-3xl font-bold">INVOICE</p>
+          <div className="w-[300px] self-start text-right">
+            <p className="text-3xl font-bold text-blue-400">INVOICE</p>
             <p>
               DATE{" "}
               <span
                 style={{ printColorAdjust: "exact" }}
-                className="bg-red-100 p-1 rounded-sm"
+                className="rounded-sm bg-red-100 p-1"
               >
-                {invoice.date ? dayjs(invoice.date).format("DD/MM/YYYY") : "-"}
+                {invoice?.date ? dayjs(invoice.date).format("DD/MM/YYYY") : "-"}
               </span>
             </p>
             <p>
               INVOICE #{" "}
               <span
                 style={{ printColorAdjust: "exact" }}
-                className="bg-red-100 p-1 rounded-sm"
+                className="rounded-sm bg-red-100 p-1"
               >
                 [
-                {"000" +
-                  [...invoiceList].findIndex((p: any) => p._id === invoice._id)}
+                {invoice?.date
+                  ? dayjs(invoice?.date).format(
+                      `YYYYMMDD-${dayjs(invoice?.createdAt as string).hour()}`
+                    )
+                  : dayjs(invoice?.createdAt as string).format(
+                      `YYYYMMDD-${dayjs(invoice?.createdAt as string).hour()}`
+                    )}
                 ]
               </span>
             </p>
@@ -200,65 +114,65 @@ export const ShowInvoice = () => {
         <div className=" mt-5">
           <h2
             style={{ printColorAdjust: "exact" }}
-            className="font-bold text-xl p-1 bg-red-100 mb-4"
+            className="mb-4 bg-red-100 p-1 text-xl font-bold"
           >
             Bill To
           </h2>
 
           <p className="text-left">
-            Name:- {invoice.customer.name ? invoice.customer.name : "-"}
+            Name:- {invoice?.customer?.name ? invoice.customer.name : "-"}
           </p>
           <p className="text-left">
-            Mobile:- {invoice.customer.number ? invoice.customer.number : "-"}
+            Mobile:- {invoice?.customer?.number ? invoice.customer.number : "-"}
           </p>
         </div>
 
         <div>
-          <div className="overflow-x-auto relative shadow-md sm:rounded-lg my-10 border-y-4 border-red-800 rounded">
+          <div className="relative my-10 overflow-x-auto rounded border-y-4 border-red-800 shadow-md sm:rounded-lg">
             <table className="w-full text-sm font-bold text-gray-500 ">
               <thead
                 style={{ printColorAdjust: "exact" }}
-                className="text-gray-900 uppercase bg-red-100"
+                className="bg-red-100 uppercase text-gray-900"
               >
-                {tableHeader}
+                {invoiceTableHeader}
               </thead>
               <tbody>
-                {invoice.details.map((detail: any, index: number) =>
-                  tableRow(detail, index)
+                {invoice.details.map((detail: IProduct, index: number) =>
+                  invoiceTableRow(detail, index)
                 )}
               </tbody>
             </table>
           </div>
         </div>
 
-        <div className="flex justify-center items-center gap-3 my-10 text-left font-semibold">
+        <div className="my-10 flex items-center justify-center gap-3 text-left font-semibold">
           <p className="mx-1">
             Paid Amount
             <span
               style={{ printColorAdjust: "exact" }}
-              className="ml-4 py-2 px-4 bg-red-100 rounded"
+              className="ml-4 rounded bg-red-100 py-2 px-4"
             >
-              {invoice.paid_amount || invoice.paid_amount === 0
+              {invoice?.paid_amount || invoice?.paid_amount === 0
                 ? invoice.paid_amount
-                : invoice.total}
+                : invoice?.total}
             </span>
           </p>
           <p className="mx-1">
             Remaining Amount
             <span
               style={{ printColorAdjust: "exact" }}
-              className="ml-4 py-2 px-4 bg-red-100 rounded"
+              className="ml-4 rounded bg-red-100 py-2 px-4"
             >
-              {invoice.remaining_amount ? invoice.remaining_amount : 0}
+              {invoice?.remaining_amount ? invoice.remaining_amount : 0}
             </span>
           </p>
           <p className="mx-1">
             Payment Method
             <span
               style={{ printColorAdjust: "exact" }}
-              className="ml-4 py-2 px-4 bg-red-100 rounded"
+              className="ml-4 rounded bg-red-100 py-2 px-4"
             >
-              {invoice.payment_method ? invoice.payment_method : "-"}
+              {invoice?.payment_method ? invoice.payment_method : "-"}
             </span>
           </p>
         </div>
@@ -266,19 +180,19 @@ export const ShowInvoice = () => {
         <div className=" mt-5">
           <h3
             style={{ printColorAdjust: "exact" }}
-            className="font-bold text-xl p-1 bg-red-100 mb-4"
+            className="mb-4 bg-red-100 p-1 text-xl font-bold"
           >
             Other Comments
           </h3>
 
           <p className="text-left">
-            {!invoice.other ? "No Comment." : invoice.other}
+            {!invoice?.other ? "No Comment." : invoice.other}
           </p>
         </div>
 
-        <div className="relative min-h-[200px] flex items-center justify-center my-10">
+        <div className="relative my-10 flex min-h-[200px] items-center justify-center">
           <img
-            className="absolute left-10 top-5 z-10 max-h-[100%] w-[200px] print:w-[130px]  mx-auto"
+            className="absolute left-10 top-5 z-10 mx-auto max-h-[100%] w-[200px]  print:w-[130px]"
             src={stamp}
             alt="stamp"
           />
@@ -288,7 +202,7 @@ export const ShowInvoice = () => {
               If you have any questions about this invoice, please contact us.
             </p>
 
-            <p className="font-bold text-lg">Thank You For Your Business!</p>
+            <p className="text-lg font-bold">Thank You For Your Business!</p>
           </div>
         </div>
       </div>

@@ -1,4 +1,11 @@
-import { Schema, model, Date } from "mongoose";
+import {
+  Schema,
+  Document,
+  model,
+  PaginateModel,
+  SchemaTimestampsConfig,
+} from "mongoose";
+import paginate from "mongoose-paginate-v2";
 
 export interface IVisa {
   customer_name: string;
@@ -75,7 +82,26 @@ const visaSchema = new Schema<IVisa>(
   }
 );
 
+//Default Options For Paginated Data
+paginate.paginate.options = {
+  lean: true,
+  leanWithId: true,
+};
+
+//Paginate with plugin.
+visaSchema.plugin(paginate);
+
+//Declare a mongoose document based on a Typescript interface representing Visa schema.
+export interface IVisaDocument
+  extends Document,
+    IVisa,
+    SchemaTimestampsConfig {}
+
 //Define Visa Model
-const Visa = model<IVisa>("Visa", visaSchema);
+const Visa = model<IVisaDocument, PaginateModel<IVisaDocument>>(
+  "Visa",
+  visaSchema,
+  "visas"
+);
 
 export default Visa;

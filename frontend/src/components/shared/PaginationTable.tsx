@@ -1,31 +1,84 @@
 import { useSearchParams } from "react-router-dom";
 import Pagination from "./Pagination";
-import useTable from "./useTable";
+import { FC, ReactNode } from "react";
+import { ListResponse } from "../../state/features/passport/passportsApiSlice";
+import { Document } from "mongoose";
 
-export const PaginationTable = ({
+export type TableRowProps<T> = {
+  basicOptions: {
+    item: T;
+    index: number;
+    tableBodyData: T[];
+  };
+  extraOptions: {
+    handleRemoving: (...args: any) => void;
+    handleAddInvoice?: (...args: any) => void;
+    setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+    setId?: React.Dispatch<React.SetStateAction<string>>;
+    isDeleting?: boolean;
+    isCreatingInvoice?: boolean;
+  };
+};
+export interface PaginationTable {
+  tableHeader: ReactNode;
+  tableRow: (props: TableRowProps<any>) => JSX.Element;
+  tableBodyData: Document[];
+  options: ListResponse<Document>;
+  handleRemoving: (...args: any) => void;
+  handleAddInvoice?: (...args: any) => void;
+  setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  setId?: React.Dispatch<React.SetStateAction<string>>;
+  isDeleting?: boolean;
+  isCreatingInvoice?: boolean;
+}
+
+export const PaginationTable: FC<PaginationTable> = ({
   tableHeader,
   tableBodyData,
   tableRow,
-  rowsPerPage,
-}: any) => {
-  const [searchParams, setSearchParams] = useSearchParams({ page: "1" });
-  const page = +searchParams.get("page")!;
+  options,
+  handleRemoving,
+  handleAddInvoice,
+  setIsOpen,
+  setId,
+  isDeleting,
+  isCreatingInvoice,
+}) => {
+  const [_, setSearchParams] = useSearchParams({ page: "1" });
+  // const page = +searchParams.get("page")!;
 
-  const { slice, range } = useTable(tableBodyData, page, rowsPerPage);
+  // const { slice, range } = useTable(tableBodyData, page, rowsPerPage);
+
   return (
-    <div className="overflow-x-auto relative shadow-md sm:rounded-lg my-10 border-y-4 border-red-800 rounded">
-      <table className="w-full text-sm font-bold text-gray-500 ">
-        <thead className="text-gray-900 uppercase bg-blue-300">
+    <div
+      id="table"
+      className="my-5 overflow-x-auto rounded border-y-4 border-red-800 py-5 shadow-md scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-400 scrollbar-corner-slate-700 scrollbar-track-rounded-full sm:rounded-lg"
+    >
+      <table className="w-full text-xs text-gray-500">
+        <thead className="bg-blue-300 uppercase text-gray-900">
           {tableHeader}
         </thead>
-        <tbody>{slice.map((item, index) => tableRow(item, index))}</tbody>
+        <tbody>
+          {tableBodyData.map((item, index) =>
+            tableRow({
+              basicOptions: { item, index, tableBodyData },
+              extraOptions: {
+                handleRemoving,
+                isDeleting,
+                handleAddInvoice,
+                setIsOpen,
+                setId,
+                isCreatingInvoice,
+              },
+            })
+          )}
+        </tbody>
       </table>
 
       <Pagination
-        range={range}
-        slice={slice}
-        setPage={setSearchParams}
-        page={page}
+        options={options}
+        slice={tableBodyData}
+        setPage={setSearchParams as () => void}
       />
     </div>
   );

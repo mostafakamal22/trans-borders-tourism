@@ -1,6 +1,13 @@
-import { Schema, model, Date } from "mongoose";
+import {
+  Schema,
+  Document,
+  model,
+  PaginateModel,
+  SchemaTimestampsConfig,
+} from "mongoose";
+import paginate from "mongoose-paginate-v2";
 
-interface IPurchaseType {
+export interface IPurchaseType {
   name: string;
   cost: number;
   tax: number;
@@ -70,7 +77,26 @@ const purchaseSchema = new Schema<IPurchase>(
   }
 );
 
+//Default Options For Paginated Data
+paginate.paginate.options = {
+  lean: true,
+  leanWithId: true,
+};
+
+//Paginate with plugin.
+purchaseSchema.plugin(paginate);
+
+//Declare a mongoose document based on a Typescript interface representing Purchase schema.
+export interface IPurchaseDocument
+  extends Document,
+    IPurchase,
+    SchemaTimestampsConfig {}
+
 //Define Purchase Model
-const Purchase = model<IPurchase>("Purchase", purchaseSchema);
+const Purchase = model<IPurchaseDocument, PaginateModel<IPurchaseDocument>>(
+  "Purchase",
+  purchaseSchema,
+  "purchases"
+);
 
 export default Purchase;

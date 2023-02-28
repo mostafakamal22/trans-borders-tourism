@@ -1,194 +1,65 @@
-import {
-  FcBusiness,
-  FcCurrencyExchange,
-  FcDebt,
-  FcFeedback,
-  FcHome,
-  FcInvite,
-  FcMoneyTransfer,
-  FcPaid,
-  FcPlus,
-  FcPuzzle,
-  FcSalesPerformance,
-  FcTemplate,
-  FcTrademark,
-} from "react-icons/fc";
-import { Link } from "react-router-dom";
-import { FcFile, FcBookmark } from "react-icons/fc";
+import { InvoiceCharts } from "../invoice/Charts";
+import { useScroll } from "../../hooks/useScroll";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 import logo from "../../assets/imgs/trans-logo.png";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../state/features/hooks/StateHooks";
-import { getAllInvoices } from "../../state/features/invoice/invoiceSlice";
+import { PassportCharts } from "../passport/Charts";
+import { TicketCharts } from "../ticket/Charts";
 
-import { ReactElement, useEffect } from "react";
-import { MainSpinner } from "../shared/MainSpinner";
-import { getAllPassports } from "../../state/features/passport/passportSlice";
-import { getAllVisas } from "../../state/features/visa/visaSlice";
-import { getAllPayments } from "../../state/features/payment/paymentSlice";
-import { getAllTickets } from "../../state/features/ticket/ticketSlice";
-import { getAllPurchases } from "../../state/features/purchase/purchaseSlice";
-import { getAllBanks } from "../../state/features/bank/bankSlice";
-
-type MainHeadings = string[];
-
-type MainPagesLinks = [string, string, ReactElement][][];
-
-const mainPageLinks: MainPagesLinks = [
-  [
-    ["عرض الفواتير", "/invoices", <FcBookmark size={50} />],
-    ["إضافة فاتورة", "/invoices/create", <FcFile size={50} />],
-  ],
-
-  [
-    ["عرض  التأشيرات", "/visas", <FcCurrencyExchange size={50} />],
-    ["إضافة التأشيرات", "/visas/create", <FcDebt size={50} />],
-  ],
-  [
-    ["عرض الجوازات", "/passports", <FcBusiness size={50} />],
-    ["إضافة الجوازات", "/passports/create", <FcTemplate size={50} />],
-  ],
-  [
-    ["عرض المصروفات", "/payments", <FcMoneyTransfer size={50} />],
-    ["إضافة المصروفات", "/payments/create", <FcInvite size={50} />],
-  ],
-
-  [
-    ["عرض التذاكـر", "/tickets", <FcTrademark size={50} />],
-    ["إضافة التذاكـر", "/tickets/create", <FcPuzzle size={50} />],
-  ],
-  [
-    ["عرض المشتريات", "/purchases", <FcSalesPerformance size={50} />],
-    ["إضافة المشتريات", "/purchases/create", <FcFeedback size={50} />],
-  ],
-  [
-    ["المعاملات البنكية", "/banks", <FcPaid size={50} />],
-    ["إضافة معاملة", "/banks/create", <FcPlus size={50} />],
-  ],
-];
-
-const mainHeadings: MainHeadings = [
+const mainHeadings: string[] = [
   "الفواتير",
-  "التأشيرات",
   "الجوازات",
-  "المصروفات",
   "التذاكـر",
+  "التأشيرات",
+  "المصروفات",
   "المشتريات",
   "المعاملات البنكية",
 ];
 
 export const Home = () => {
-  const { info } = useAppSelector((state) => state.adminAuth);
-
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    //scroll page back to top when component first mount
-    const yOffset = window.pageYOffset;
-    window.scrollBy(0, -yOffset);
-
-    //Then Fetch App Data
-    dispatch(getAllInvoices({ token: info.token }));
-    dispatch(getAllPassports({ token: info.token }));
-    dispatch(getAllVisas({ token: info.token }));
-    dispatch(getAllPayments({ token: info.token }));
-    dispatch(getAllTickets({ token: info.token }));
-    dispatch(getAllPurchases({ token: info.token }));
-    dispatch(getAllBanks({ token: info.token }));
-  }, []);
-
-  const { isLoading: invoiceDataIsLoading } = useAppSelector(
-    (state) => state.invoiceData
-  );
-  const { isLoading: passportsDataIsLoading } = useAppSelector(
-    (state) => state.passportsData
-  );
-  const { isLoading: visasDataIsLoading } = useAppSelector(
-    (state) => state.visasData
-  );
-  const { isLoading: paymentsDataIsLoading } = useAppSelector(
-    (state) => state.paymentsData
-  );
-  const { isLoading: ticketsDataIsLoading } = useAppSelector(
-    (state) => state.ticketsData
-  );
-  const { isLoading: purchasesDataIsLoading } = useAppSelector(
-    (state) => state.purchasesData
-  );
-  const { isLoading: banksDataIsLoading } = useAppSelector(
-    (state) => state.banksData
-  );
-
-  //Loading Spinner After Login Waiting Until App data is Fetched.
-  if (
-    invoiceDataIsLoading ||
-    passportsDataIsLoading ||
-    visasDataIsLoading ||
-    paymentsDataIsLoading ||
-    ticketsDataIsLoading ||
-    purchasesDataIsLoading ||
-    banksDataIsLoading
-  )
-    return (
-      <div className="mx-5 h-min-screen">
-        <div className="max-w-5xl w-full h-full flex justify-center items-center mx-auto my-10 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
-          <div className="flex justify-center items-center">
-            <MainSpinner
-              isLoading={
-                invoiceDataIsLoading ||
-                passportsDataIsLoading ||
-                visasDataIsLoading ||
-                paymentsDataIsLoading ||
-                ticketsDataIsLoading ||
-                purchasesDataIsLoading ||
-                banksDataIsLoading
-              }
-            />
-          </div>
-        </div>
-      </div>
-    );
+  useDocumentTitle("الصفحة الرئيسية");
+  useScroll("main");
 
   return (
-    <div className="max-w-5xl w-full min-h-[75vh] mx-auto overflow-x-auto my-20 p-6 bg-slate-50 rounded shadow-lg shadow-black/30">
-      <h2 className="flex justify-center items-center text-gray-800 mb-4 text-2xl font-bold px-2 py-4 my-4 rounded shadow bg-red-200 border-b-4 border-red-800">
-        <span className="flex justify-center items-center mr-2">
-          <FcHome size={50} />
-        </span>
-        الصفحة الرئيسية
-      </h2>
+    <main id="main" className="w-full">
+      <header className="my-4 flex items-center justify-center rounded bg-gradient-to-r from-cyan-400 to-blue-500 bg-fixed p-3 shadow md:max-h-[12rem]">
+        <img className="max-h-full w-[70%] max-w-full" src={logo} alt="logo" />
+      </header>
 
-      <img className="mx-auto" src={logo} alt="logo" />
+      {/* Invoices Section */}
+      <section
+        id="invoices"
+        className="my-10 flex flex-col items-center justify-center gap-10 font-semibold md:flex-row md:flex-wrap"
+      >
+        <h2 className="mb-2 w-full basis-full rounded bg-red-800 p-2 text-2xl text-white">
+          {mainHeadings[0]}
+        </h2>
 
-      <div className="flex flex-col md:flex-row md:flex-wrap justify-center items-center gap-16 p-3 font-semibold">
-        {mainPageLinks.map((link: any, index: number) => (
-          <div
-            key={index}
-            className="basis-full flex justify-center items-center flex-wrap gap-3"
-          >
-            <h1 className="basis-full p-2 mb-2 bg-red-800 text-white text-2xl rounded">
-              {mainHeadings[index]}
-            </h1>
+        <InvoiceCharts />
+      </section>
 
-            <Link
-              className="min-w-[250px] flex justify-center items-center flex-col px-3 py-6 gap-4 rounded shadow-md shadow-black/30 hover:bg-red-200 transition-all duration-100 ease-in-out"
-              to={link[0][1]}
-            >
-              <span>{link[0][0]}</span>
-              {link[0][2]}
-            </Link>
+      {/* Passports Section */}
+      <section
+        id="passports"
+        className="my-10 flex flex-col items-center justify-center gap-10 font-semibold md:flex-row md:flex-wrap"
+      >
+        <h2 className="mb-2 w-full basis-full rounded bg-red-800 p-2 text-2xl text-white">
+          {mainHeadings[1]}
+        </h2>
 
-            <Link
-              className="min-w-[250px] flex justify-center items-center flex-col px-3 py-6 gap-4 rounded shadow-md shadow-black/30 hover:bg-red-200 transition-all duration-100 ease-in-out"
-              to={link[1][1]}
-            >
-              <span>{link[1][0]}</span>
-              {link[1][2]}
-            </Link>
-          </div>
-        ))}
-      </div>
-    </div>
+        <PassportCharts />
+      </section>
+
+      {/* Tickets Section */}
+      <section
+        id="Tickets"
+        className="my-10 flex flex-col items-center justify-center gap-10 font-semibold md:flex-row md:flex-wrap"
+      >
+        <h2 className="mb-2 w-full basis-full rounded bg-red-800 p-2 text-2xl text-white">
+          {mainHeadings[2]}
+        </h2>
+
+        <TicketCharts />
+      </section>
+    </main>
   );
 };

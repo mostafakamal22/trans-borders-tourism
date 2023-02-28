@@ -1,4 +1,11 @@
-import { Schema, model, Date } from "mongoose";
+import {
+  Schema,
+  Document,
+  model,
+  PaginateModel,
+  SchemaTimestampsConfig,
+} from "mongoose";
+import paginate from "mongoose-paginate-v2";
 
 export interface IBank {
   customer_name: string;
@@ -40,7 +47,26 @@ const bankSchema = new Schema<IBank>(
   }
 );
 
+//Default Options For Paginated Data
+paginate.paginate.options = {
+  lean: true,
+  leanWithId: true,
+};
+
+//Paginate with plugin.
+bankSchema.plugin(paginate);
+
+//Declare a mongoose document based on a Typescript interface representing Bank schema.
+export interface IBankDocument
+  extends Document,
+    IBank,
+    SchemaTimestampsConfig {}
+
 //Define Bank Model
-const Bank = model<IBank>("Bank", bankSchema);
+const Bank = model<IBankDocument, PaginateModel<IBankDocument>>(
+  "Bank",
+  bankSchema,
+  "banks"
+);
 
 export default Bank;

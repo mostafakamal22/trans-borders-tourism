@@ -1,11 +1,19 @@
-import { Schema, model, Date } from "mongoose";
+import {
+  Schema,
+  model,
+  Document,
+  PaginateModel,
+  SchemaTimestampsConfig,
+} from "mongoose";
+import paginate from "mongoose-paginate-v2";
+// import { autoIncrement } from "mongoose-plugin-autoinc";
 
-interface ICustomer {
+export interface ICustomer {
   name?: string;
   number?: string | number;
 }
 
-interface IProduct {
+export interface IProduct {
   name: string;
   price: number;
   quantity: number;
@@ -116,7 +124,34 @@ const invoiceSchema = new Schema<IInvoice>(
   }
 );
 
+//Default Options For Paginated Data
+paginate.paginate.options = {
+  lean: true,
+  leanWithId: true,
+};
+
+//Paginate with plugin.
+invoiceSchema.plugin(paginate);
+
+//Auto Increament Invoice Number Plugin
+// invoiceSchema.plugin(autoIncrement, {
+//   model: "Invoice",
+//   field: "invoice_number",
+//   startAt: 1,
+//   incrementBy: 1,
+// });
+
+//Declare a mongoose document based on a Typescript interface representing Invoice schema.
+export interface IInvoiceDocument
+  extends Document,
+    IInvoice,
+    SchemaTimestampsConfig {}
+
 //Define Invoice Model
-const Invoice = model<IInvoice>("Invoice", invoiceSchema);
+const Invoice = model<IInvoiceDocument, PaginateModel<IInvoiceDocument>>(
+  "Invoice",
+  invoiceSchema,
+  "invoices"
+);
 
 export default Invoice;

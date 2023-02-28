@@ -2,18 +2,64 @@ import { Request, Response } from "express";
 import Passport from "../models/passportModel";
 import { ErrnoException } from "./adminControllers";
 
-//@desc   >>>> Get All Passports
-//@route  >>>> GET /api/passports
-//@Access >>>> public(For Admins)
-const getPassports = async (_req: Request, res: Response) => {
-  //Get All Passports Data & Send it Back.
-  const passports = await Passport.find();
+//@Desc   >>>> Get All Passports That Match Query Object.
+//@Route  >>>> POST /api/passports/query
+//@Access >>>> Private(Admins Only)
+const getPassports = async (req: Request, res: Response) => {
+  //Get Query & Option Objects From Req.
+  const { query, option } = req.body;
+
+  //Prepare Queries for Mongoose Query.
+  const queries = query
+    ? {
+        //Filter By Year, Month And Day.
+        $expr: {
+          $setEquals: [
+            [
+              query?.year && {
+                $year: "$payment_date",
+              },
+              query?.month && {
+                $month: "$payment_date",
+              },
+              query?.day && {
+                $dayOfMonth: "$payment_date",
+              },
+            ],
+
+            [
+              query?.year && query?.year,
+              query?.month && query?.month,
+              query?.day && query?.day,
+            ],
+          ],
+        },
+        //Filter By Customer Nationality.
+        customer_nationality: new RegExp(`${query?.nationality}`, "gi"),
+
+        //Filter By Passport State.
+        state: new RegExp(`${query?.state.join("|")}`),
+
+        //Filter By Passport Service.
+        service: new RegExp(`${query?.service.join("|")}`),
+      }
+    : {};
+
+  //Define Query Option
+  const options = {
+    pagination: query ? true : false,
+    sort: { payment_date: "desc", createdAt: "desc" },
+    ...option,
+  };
+
+  //Get All Passports Data That Match Query & Send it Back.
+  const passports = await Passport.paginate(queries, options);
   res.status(200).json(passports);
 };
 
-//@desc   >>>> Create Passport
-//@route  >>>> POST /api/passports
-//@Access >>>> public(For Admins)
+//@Desc   >>>> Create Passport
+//@Route  >>>> POST /api/passports
+//@Access >>>> Private(Admins Only)
 const createPassport = async (req: Request, res: Response) => {
   //Create New Passport With Request Data & Send Created Passport Back.
   const passport = await Passport.create({
@@ -33,9 +79,9 @@ const createPassport = async (req: Request, res: Response) => {
   res.status(201).json(passport);
 };
 
-//@desc   >>>> UPDATE Passport
-//@route  >>>> PUT /api/passports/:id
-//@Access >>>> Public(for Admins)
+//@Desc   >>>> UPDATE Passport
+//@Route  >>>> PUT /api/passports/:id
+//@Access >>>> Private(Admins Only)
 const updatePassport = async (req: Request, res: Response) => {
   //Get Passport Wanted For Updating.
   const passport = await Passport.findById(req.params?.id);
@@ -67,17 +113,18 @@ const updatePassport = async (req: Request, res: Response) => {
   }
 };
 
-//@desc   >>>> Delete one Passport
-//@route  >>>> DELETE /api/passports/:id
-//@Access >>>> public(For Admins)
+//@Desc   >>>> Delete one Passport
+//@Route  >>>> DELETE /api/passports/:id
+//@Access >>>> Private(Admins Only)
 const deletePassport = async (req: Request, res: Response) => {
-  //Get Passport Wanted For Deleting & Send Deleted Passport id Back.
+  //Get Passport Wanted For Deleting.
   const deletedPassport = await Passport.findByIdAndDelete(req.params?.id);
 
   //Check If the Document is Already Deleted Or Not.
   if (!deletedPassport?.id) {
     throw new Error("This Document Has Been Already Deleted!");
   } else {
+    //Send Deleted Passport id Back.
     res.status(200).json({ id: deletedPassport.id });
   }
 };

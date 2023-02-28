@@ -1,10 +1,11 @@
-import { Schema, model } from "mongoose";
+import { Document, Schema, model } from "mongoose";
 
 export interface IAdmin {
   admin_name: string;
   email: string;
   password: string;
   role: string;
+  refreshToken: string[];
 }
 
 //Define Admin Schema
@@ -53,6 +54,7 @@ const adminSchema = new Schema<IAdmin>(
         message: "{VALUE} is not supported as a Role",
       },
     },
+    refreshToken: [String],
   },
   {
     timestamps: true,
@@ -60,7 +62,10 @@ const adminSchema = new Schema<IAdmin>(
   }
 );
 
+//Declare a mongoose document based on a Typescript interface representing Admin schema.
+export interface IAdminDocument extends Document, IAdmin {}
+
 //Define Admin Model
-const Admin = model<IAdmin>("Admin", adminSchema);
+const Admin = model<IAdminDocument>("Admin", adminSchema);
 
 export default Admin;

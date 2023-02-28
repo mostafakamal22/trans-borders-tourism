@@ -5,15 +5,13 @@ import {
   updateBank,
   deleteBank,
 } from "../controllers/bankControllers";
+import { authAdminProtect } from "../middlewares/adminMiddlewares/authAdminProtect";
 
 const router = Router();
 
-import { authAdminProtect } from "../middlewares/adminMiddlewares/authAdminProtect";
+router.route("/").post(authAdminProtect, createBank);
 
-router
-  .route("/")
-  .post(authAdminProtect, createBank)
-  .get(authAdminProtect, getBanks);
+router.route("/query").post(authAdminProtect, getBanks);
 
 router
   .route("/:id")
