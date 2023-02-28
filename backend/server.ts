@@ -9,12 +9,9 @@ import { corsDevOptions, corsProOptions } from "./config/corsConfig";
 import errorHandler from "./utils/errorHandling";
 import adminErrorHandler from "./utils/adminErrorHandling";
 import { adminApiLimiter } from "./middlewares/adminMiddlewares/adminApiLimiter";
+import { connectToMongoose } from "./config/dbConfig";
 
 const app = express();
-
-//Connect to mongodb
-import { connectToMongoose } from "./config/dbConfig";
-connectToMongoose();
 
 //Middlewares
 //Express json parser middleware
@@ -74,6 +71,9 @@ if (process.env.NODE_ENV === "production") {
 //Main Errors Handler
 app.use(errorHandler);
 
-app.listen(process.env.PORT || 5000, () => {
-  console.log("server is running");
+//Connect to mongodb
+connectToMongoose().then(() => {
+  app.listen(process.env.PORT || 5000, () => {
+    console.log("server is running");
+  });
 });

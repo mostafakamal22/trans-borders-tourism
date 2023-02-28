@@ -1,4 +1,16 @@
-import { ChartData, ChartOptions } from "chart.js";
+import {
+  BarElement,
+  CategoryScale,
+  ChartData,
+  ChartOptions,
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  RadialLinearScale,
+  Title,
+  Tooltip,
+} from "chart.js";
 import { Chart } from "react-chartjs-2";
 import { barOptions, labels, lineOptions } from "../invoice/Charts";
 import dayjs from "dayjs";
@@ -11,6 +23,20 @@ import { HiArrowNarrowDown, HiArrowNarrowUp } from "react-icons/hi";
 import { AiFillPieChart } from "react-icons/ai";
 import { pieOptions, polarOptions } from "../passport/Charts";
 import { paymentMethods } from "../payment/constants";
+import { Chart as ChartJS, ArcElement } from "chart.js";
+
+ChartJS.register(
+  ArcElement,
+  RadialLinearScale,
+  BarElement,
+  Tooltip,
+  LinearScale,
+  CategoryScale,
+  Legend,
+  Title,
+  LineElement,
+  PointElement
+);
 
 const tBarOptions: ChartOptions = {
   ...barOptions,

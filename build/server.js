@@ -14,10 +14,8 @@ var corsConfig_1 = require("./config/corsConfig");
 var errorHandling_1 = __importDefault(require("./utils/errorHandling"));
 var adminErrorHandling_1 = __importDefault(require("./utils/adminErrorHandling"));
 var adminApiLimiter_1 = require("./middlewares/adminMiddlewares/adminApiLimiter");
-var app = (0, express_1.default)();
-//Connect to mongodb
 var dbConfig_1 = require("./config/dbConfig");
-(0, dbConfig_1.connectToMongoose)();
+var app = (0, express_1.default)();
 //Middlewares
 //Express json parser middleware
 app.use(express_1.default.json());
@@ -63,6 +61,9 @@ if (process.env.NODE_ENV === "production") {
 }
 //Main Errors Handler
 app.use(errorHandling_1.default);
-app.listen(process.env.PORT || 5000, function () {
-    console.log("server is running");
+//Connect to mongodb
+(0, dbConfig_1.connectToMongoose)().then(function () {
+    app.listen(process.env.PORT || 5000, function () {
+        console.log("server is running");
+    });
 });

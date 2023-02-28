@@ -1,5 +1,17 @@
 import { useMemo } from "react";
-import { ChartData, ChartOptions, RadialLinearScale } from "chart.js";
+import {
+  BarElement,
+  CategoryScale,
+  ChartData,
+  ChartOptions,
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  RadialLinearScale,
+  Title,
+  Tooltip,
+} from "chart.js";
 import { barOptions, labels, lineOptions } from "../invoice/Charts";
 import { useGetPassportsQuery } from "../../state/features/passport/passportsApiSlice";
 import dayjs from "dayjs";
@@ -12,7 +24,18 @@ import { AiFillPieChart } from "react-icons/ai";
 import { HiArrowNarrowDown, HiArrowNarrowUp } from "react-icons/hi";
 import { TotalMonthValues } from "../invoice/calculations";
 
-ChartJS.register(ArcElement, RadialLinearScale);
+ChartJS.register(
+  ArcElement,
+  RadialLinearScale,
+  BarElement,
+  Tooltip,
+  LinearScale,
+  CategoryScale,
+  Legend,
+  Title,
+  LineElement,
+  PointElement
+);
 
 const PBarOptions: ChartOptions = {
   ...barOptions,
