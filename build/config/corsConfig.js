@@ -22,7 +22,7 @@ var productionWhitelist = domainsFromEnv
     .map(function (item) { return item.trim(); });
 exports.corsProOptions = {
     origin: function (origin, callback) {
-        if (origin && productionWhitelist.indexOf(origin) !== -1) {
+        if (!origin || productionWhitelist.indexOf(origin) !== -1) {
             callback(null, true);
         }
         else {
