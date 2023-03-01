@@ -83,8 +83,8 @@ export const CreatePassport = () => {
 
   return (
     <section id="createPassport" className="w-full">
-      <h3 className="mb-10 flex items-center justify-center rounded border-b-4 border-red-800 bg-red-200 px-2 py-4 text-center text-xl font-bold shadow ">
-        <FcTemplate className="mr-1" size={50} />
+      <h3 className="mb-10 flex items-center justify-center rounded bg-red-800 px-2 py-4 text-center text-xl font-bold text-white shadow ">
+        <FcTemplate className="mr-1 drop-shadow" size={50} />
         <span>إضافة جواز جديد</span>
       </h3>
 
@@ -92,7 +92,7 @@ export const CreatePassport = () => {
         <p className="my-4 rounded bg-red-800 p-2 text-lg font-bold text-white">
           [ بيانات الجواز ]
         </p>
-        <div className="flex flex-wrap items-center justify-center gap-4 px-5 py-5 font-semibold">
+        <div className="mb-10 flex flex-wrap items-center justify-center gap-4 px-5 py-5 font-semibold">
           <FormInput
             label={passportTableHeaderTitles[0]}
             name="customerName"

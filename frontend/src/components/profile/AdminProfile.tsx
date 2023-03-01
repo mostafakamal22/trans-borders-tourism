@@ -35,8 +35,8 @@ export default function AdminProfile() {
 
   return (
     <section className="w-full">
-      <h3 className="mb-5 flex items-center justify-center rounded border-b-4 border-red-800 bg-red-200 px-2 py-4 text-center text-2xl font-bold italic shadow">
-        <FcVip className="ml-1" size={50} />
+      <h3 className="mb-5 flex items-center justify-center rounded bg-red-800 px-2 py-4 text-center text-2xl font-bold italic text-white shadow">
+        <FcVip className="ml-1 drop-shadow" size={50} />
         <span>بيانات الحساب</span>
       </h3>
 

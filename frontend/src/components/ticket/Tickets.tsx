@@ -167,9 +167,9 @@ export const Tickets = () => {
 
   return (
     <section className="w-full">
-      <h2 className="my-4 mb-10 flex items-center justify-center rounded border-b-4 border-red-800 bg-red-200 px-2 py-4 text-3xl font-bold text-gray-800 shadow">
+      <h2 className="my-4 mb-10 flex items-center justify-center rounded bg-red-700 px-2 py-4 text-3xl font-bold text-white shadow">
         <span className="mr-2 flex items-center justify-center">
-          <FcTrademark size={50} />
+          <FcTrademark className="drop-shadow" size={50} />
         </span>
         التذاكــر
       </h2>

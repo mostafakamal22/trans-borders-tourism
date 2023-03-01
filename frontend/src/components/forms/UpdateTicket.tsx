@@ -106,8 +106,8 @@ export const UpdateTicket = ({
         key={"modal"}
         className="mx-auto my-5 w-full max-w-5xl rounded bg-slate-50 p-6 shadow-lg shadow-black/30"
       >
-        <h3 className="mb-10 flex items-center justify-center rounded border-b-4 border-red-800 bg-red-200 px-2 py-4 text-center text-xl font-bold shadow ">
-          <FcTrademark className="mr-1" size={50} />
+        <h3 className="mb-10 flex items-center justify-center rounded bg-red-800 px-2 py-4 text-center text-xl font-bold text-white shadow ">
+          <FcTrademark className="mr-1 drop-shadow" size={50} />
           <span>تعديل التذكرة</span>
         </h3>
 
@@ -115,7 +115,7 @@ export const UpdateTicket = ({
           <p className="my-4 rounded bg-red-800 p-2 text-lg font-bold text-white">
             [ بيانات التذكرة الحالية ]
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 px-5 py-5 font-semibold">
+          <div className="mb-10 flex flex-wrap items-center justify-center gap-4 px-5 py-5 font-semibold">
             <FormInput
               label={ticketsTableHeaderTitles[0]}
               name="customerNameUpdate"

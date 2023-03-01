@@ -70,8 +70,8 @@ export default function UpdateAdmin() {
 
   return (
     <section id="updateAdmin" className="w-full">
-      <h3 className="mb-10 flex items-center justify-center rounded border-b-4 border-red-800 bg-red-200 px-2 py-4 text-center text-2xl font-bold italic shadow">
-        <FcDoughnutChart className="ml-1" size={50} />
+      <h3 className="mb-10 flex items-center justify-center rounded bg-red-800 px-2 py-4 text-center text-2xl font-bold italic text-white shadow">
+        <FcDoughnutChart className="ml-1 drop-shadow" size={50} />
         <span>تعديل بيانات الحساب</span>
       </h3>
 
@@ -146,7 +146,7 @@ export default function UpdateAdmin() {
           />
         </div>
 
-        <div className="mb-6">
+        <div className="mb-10">
           <label
             htmlFor="repeatedPassword"
             className="mb-4 inline-block w-full rounded bg-red-800 p-2 font-semibold text-white shadow"

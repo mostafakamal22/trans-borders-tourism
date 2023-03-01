@@ -1,5 +1,11 @@
 import { useMemo } from "react";
-import { CategoryScale, ChartData, ChartOptions } from "chart.js";
+import {
+  BarController,
+  CategoryScale,
+  ChartData,
+  ChartOptions,
+  LineController,
+} from "chart.js";
 import {
   Chart as ChartJS,
   BarElement,
@@ -18,13 +24,15 @@ import { MainSpinner } from "../shared/MainSpinner";
 
 ChartJS.register(
   BarElement,
-  Tooltip,
+  LineElement,
+  PointElement,
   LinearScale,
   CategoryScale,
+  BarController,
+  LineController,
+  Tooltip,
   Legend,
-  Title,
-  LineElement,
-  PointElement
+  Title
 );
 
 export const barOptions: ChartOptions = {
