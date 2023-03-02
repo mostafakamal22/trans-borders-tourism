@@ -26,14 +26,6 @@ const toastMessages = {
       <p>يرجى التأكد من المدخلات وحاول مجدداً</p>
     </div>
   ),
-  //Not Logged IN Error
-  401: (
-    <div className="flex flex-col items-center justify-center gap-2 font-Tajawal">
-      <h3 className="text-base font-semibold   md:text-xl">
-        برجاء تسجيل الدخول!
-      </h3>
-    </div>
-  ),
   //Too Many Requests Error
   429: (
     <div className="flex flex-col items-center justify-center gap-2 font-Tajawal">
@@ -77,8 +69,11 @@ export const toastHandlingMiddlware: Middleware =
           toastId,
         });
       } else if (action?.payload?.originalStatus === 401) {
-        //Not Logged IN Error
-        toast(toastMessages[401], {
+        //Cookie Expired While Logged IN Error.
+        //Session Ended
+        //Go To Login
+        message = <SessionExpireMsg />;
+        toast(message, {
           type: toast.TYPE.ERROR,
           toastId,
         });
@@ -141,7 +136,7 @@ export const toastHandlingMiddlware: Middleware =
     return next(action);
   };
 
-// //Custom Message For Session Expiration Toast
+//Custom Message For Session Expiration Toast
 const SessionExpireMsg = () => {
   const location = useLocation();
   const naviagate = useNavigate();
