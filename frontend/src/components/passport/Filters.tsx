@@ -7,7 +7,7 @@ import {
   PassportState,
 } from "./types";
 import { passportService, passportState } from "./constants";
-import { FcBusiness, FcFilledFilter } from "react-icons/fc";
+import { FcFilledFilter } from "react-icons/fc";
 import { useSearchParams } from "react-router-dom";
 import { AiFillCloseCircle } from "react-icons/ai";
 
@@ -348,9 +348,9 @@ export const FiltersSummary = ({
         )}
         {state && (
           <span className="mx-1 rounded-md bg-emerald-500 p-1 text-white">
-            {" والوضعية " +
+            {" والوضعية :- " +
               (stateArr.join() === ""
-                ? "[كــل الوضعيات]"
+                ? " [كــل الوضعيات] "
                 : stateArr.map(
                     (state: string) =>
                       ` ${passportState[state as keyof PassportState][0]} `
@@ -360,9 +360,9 @@ export const FiltersSummary = ({
 
         {service && (
           <span className="mx-1 rounded-md bg-purple-500 p-1 text-white">
-            {" و الخدمة " +
+            {" والخدمة :- " +
               (serviceArr.join() === ""
-                ? "[كــل الخدمـات]"
+                ? " [كــل الخدمـات] "
                 : serviceArr.map(
                     (state: string) =>
                       ` ${passportService[state as keyof PassportService]} `
@@ -376,10 +376,6 @@ export const FiltersSummary = ({
           </span>
         )}
         <span>({count})</span>
-
-        <span className="mr-2 flex items-center justify-center">
-          <FcBusiness className="drop-shadow" size={50} />
-        </span>
       </h3>
     </>
   );

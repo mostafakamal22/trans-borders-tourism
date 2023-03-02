@@ -12,7 +12,6 @@ import {
   useGetPassportsQuery,
 } from "../../state/features/passport/passportsApiSlice";
 import { useSearchParams } from "react-router-dom";
-import { FcBusiness } from "react-icons/fc";
 import {
   InvoiceData,
   useCreateInvoiceMutation,
@@ -24,6 +23,7 @@ import { AnimatePresence } from "framer-motion";
 import { NoSearchResult } from "../shared/NoSearchResult";
 import { NoSavedRecords } from "../shared/NoSavedRecords";
 import { FetchingMessage } from "../shared/FetchingMessage";
+import { ReactComponent as PassportMain } from "../../assets/icons/passport-main.svg";
 
 export const Passports = () => {
   //Search Queries
@@ -166,7 +166,7 @@ export const Passports = () => {
     <section className="w-full">
       <h2 className="my-4 mb-10 flex items-center justify-center rounded bg-red-700 px-2 py-4 text-3xl font-bold text-white shadow">
         <span className="mr-2 flex items-center justify-center">
-          <FcBusiness className="drop-shadow" size={50} />
+          <PassportMain className="h-20 w-20" />
         </span>
         الجـــوازات
       </h2>

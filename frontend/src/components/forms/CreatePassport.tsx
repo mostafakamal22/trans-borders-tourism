@@ -4,7 +4,7 @@ import {
   inputClassNamesStyles,
   lableClassNamesStyles,
 } from "../invoice/constants";
-import { FcTemplate } from "react-icons/fc";
+import { ReactComponent as PassportAlt } from "../../assets/icons/passport-alt.svg";
 import { FormInput } from "../shared/FormInput";
 import { RiSendPlaneFill } from "react-icons/ri";
 import {
@@ -84,7 +84,7 @@ export const CreatePassport = () => {
   return (
     <section id="createPassport" className="w-full">
       <h3 className="mb-10 flex items-center justify-center rounded bg-red-800 px-2 py-4 text-center text-xl font-bold text-white shadow ">
-        <FcTemplate className="mr-1 drop-shadow" size={50} />
+        <PassportAlt className="mr-1 h-16 w-16" />
         <span>إضافة جواز جديد</span>
       </h3>
 
