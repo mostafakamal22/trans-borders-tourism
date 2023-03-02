@@ -9,7 +9,7 @@ type SalesProps = {
 
 export const Sales = ({ salesThisMonth, salesThisYear }: SalesProps) => {
   return (
-    <div className="flex basis-full flex-wrap items-center justify-center gap-4 rounded bg-gradient-to-r from-cyan-600 to-cyan-400 py-4 px-16 text-white shadow-md">
+    <div className="flex basis-full flex-wrap items-center justify-center gap-4 rounded bg-gradient-to-r from-cyan-600 to-cyan-400 p-4 text-white shadow-md">
       <div className="flex flex-grow basis-60 flex-col items-center justify-center rounded bg-white/30 p-4 shadow backdrop-blur-lg">
         <p className="my-2 flex items-center justify-center text-2xl">
           {new Intl.NumberFormat("ar", {
