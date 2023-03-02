@@ -40,9 +40,12 @@ const PersistLogin = () => {
   let content = null;
   if (isLoading) {
     content = (
-      <div className="mx-auto flex min-h-screen w-full max-w-5xl items-center justify-center ">
+      <div className="mx-auto flex h-full max-h-screen w-full items-center justify-center p-2">
         <div className="h-full w-full bg-slate-50">
-          <MainSpinner isLoading={isLoading} />
+          <MainSpinner
+            spinnerHeight="calc(100vh - 16px)"
+            isLoading={isLoading}
+          />
         </div>
       </div>
     );
