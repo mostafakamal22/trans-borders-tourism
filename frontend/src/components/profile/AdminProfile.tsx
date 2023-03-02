@@ -1,4 +1,4 @@
-import { FcVip } from "react-icons/fc";
+import { ReactComponent as AccountMain } from "../../assets/icons/account-main.svg";
 import { RiArrowLeftLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../state/features/hooks/StateHooks";
@@ -36,11 +36,15 @@ export default function AdminProfile() {
   return (
     <section className="w-full">
       <h3 className="mb-5 flex items-center justify-center rounded bg-red-800 px-2 py-4 text-center text-2xl font-bold italic text-white shadow">
-        <FcVip className="ml-1 drop-shadow" size={50} />
+        <AccountMain className="mr-1 h-20 w-20 drop-shadow" />
         <span>بيانات الحساب</span>
       </h3>
 
-      <img className="mx-auto max-h-40" src={logo} alt="logo" />
+      <img
+        className="mx-auto max-h-40 rounded border border-red-800 shadow"
+        src={logo}
+        alt="logo"
+      />
 
       <ul className="mt-3 ml-auto w-full max-w-[550px] rounded py-2 px-3">
         <li className="mb-2 flex items-center rounded  border-r-4 border-red-800 bg-red-200 p-3 shadow">

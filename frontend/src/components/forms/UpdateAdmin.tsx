@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { AiFillSlackCircle } from "react-icons/ai";
-import { FcDoughnutChart, FcInfo } from "react-icons/fc";
+import { FcInfo } from "react-icons/fc";
+import { ReactComponent as AccountAlt } from "../../assets/icons/account-alt.svg";
 import { useAppSelector } from "../../state/features/hooks/StateHooks";
 import FormButton from "../shared/FormButton";
 import { selectCurrentToken } from "../../state/features/admin/auth/authSlice";
@@ -71,7 +72,7 @@ export default function UpdateAdmin() {
   return (
     <section id="updateAdmin" className="w-full">
       <h3 className="mb-10 flex items-center justify-center rounded bg-red-800 px-2 py-4 text-center text-2xl font-bold italic text-white shadow">
-        <FcDoughnutChart className="ml-1 drop-shadow" size={50} />
+        <AccountAlt className="mr-1 h-16 w-16 drop-shadow" />
         <span>تعديل بيانات الحساب</span>
       </h3>
 
