@@ -1,5 +1,5 @@
 import { useState, useEffect, useDeferredValue, useRef } from "react";
-import { FcTrademark } from "react-icons/fc";
+import { ReactComponent as TicketMain } from "../../assets/icons/ticket-main.svg";
 import { MainSpinner } from "../shared/MainSpinner";
 import { PaginationTable } from "../shared/PaginationTable";
 import { UpdateTicket } from "../forms/UpdateTicket";
@@ -169,7 +169,7 @@ export const Tickets = () => {
     <section className="w-full">
       <h2 className="my-4 mb-10 flex items-center justify-center rounded bg-red-700 px-2 py-4 text-3xl font-bold text-white shadow">
         <span className="mr-2 flex items-center justify-center">
-          <FcTrademark className="drop-shadow" size={50} />
+          <TicketMain className="mr-1 h-20 w-20" />
         </span>
         التذاكــر
       </h2>

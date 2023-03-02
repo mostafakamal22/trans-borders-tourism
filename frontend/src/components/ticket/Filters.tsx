@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FilterProps, FilterSummaryProps } from "./types";
-import { FcFilledFilter, FcTrademark } from "react-icons/fc";
+import { FcFilledFilter } from "react-icons/fc";
 import { inputClassNamesStyles } from "../invoice/constants";
 import { paymentMethods } from "../payment/constants";
 import { PaymentMethods } from "../payment/types";
@@ -427,9 +427,9 @@ export const FiltersSummary = ({
 
       {paymentMethod && (
         <span className="mx-1 rounded-md bg-emerald-500 p-1 text-white">
-          {" Payment Method " +
+          {" Payment Method:- " +
             (paymentMethodArr.join() === ""
-              ? "[All Methods]"
+              ? " [All Methods] "
               : paymentMethodArr.map(
                   (method: string) =>
                     ` ${paymentMethods[method as keyof PaymentMethods]} `
@@ -438,10 +438,6 @@ export const FiltersSummary = ({
       )}
 
       <span>({count})</span>
-
-      <span className="mr-2 flex items-center justify-center">
-        <FcTrademark size={50} />
-      </span>
     </h3>
   );
 };
