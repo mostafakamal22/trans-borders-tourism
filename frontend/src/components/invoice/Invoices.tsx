@@ -1,5 +1,5 @@
 import { useState, useDeferredValue, useEffect, useRef } from "react";
-import { FcBarChart } from "react-icons/fc";
+import { ReactComponent as InvoiceMain } from "../../assets/icons/invoice-main.svg";
 import { PaginationTable } from "../shared/PaginationTable";
 import { useSearchParams } from "react-router-dom";
 import { MainSpinner } from "../shared/MainSpinner";
@@ -73,9 +73,9 @@ export const Invoices = () => {
     <section className="w-full">
       <h2 className="my-4 mb-10 flex items-center justify-center rounded bg-red-700 px-2 py-4 text-3xl font-bold text-white shadow">
         <span className="mr-2 flex items-center justify-center">
-          <FcBarChart className="drop-shadow" size={50} />
+          <InvoiceMain className="h-20 w-20 drop-shadow" />
         </span>
-        ({data?.totalDocs}) الفواتير
+        الفواتير
       </h2>
 
       {/*search Invoices with name*/}
@@ -83,6 +83,7 @@ export const Invoices = () => {
         searchQuery={searchQuery}
         setIsFilterOpen={setIsFilterOpen}
         isFilterOpen={isFilterOpen}
+        count={data?.totalDocs ? data.totalDocs : 0}
       />
 
       <Filters

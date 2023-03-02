@@ -13,6 +13,7 @@ export type FilterSummaryProps = {
   searchQuery: InvoiceSearchQueries;
   setIsFilterOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isFilterOpen: boolean;
+  count: number;
 };
 
 export type CompanyInfos = {

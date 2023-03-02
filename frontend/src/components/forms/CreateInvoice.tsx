@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
-import { FcDocument } from "react-icons/fc";
+import { ReactComponent as InvoiceAlt } from "../../assets/icons/invoice-alt.svg";
 import { RiSendPlaneFill } from "react-icons/ri";
 import FormButton from "../shared/FormButton";
 import { FormInput } from "../shared/FormInput";
@@ -122,7 +122,7 @@ export const CreateInvoice = () => {
   return (
     <section id="createInvoice" className="w-full">
       <h3 className="mb-10 flex items-center justify-center rounded bg-red-800 px-2 py-4 text-center text-xl font-bold text-white shadow ">
-        <FcDocument className="mr-1 drop-shadow" size={50} />
+        <InvoiceAlt className="mr-1 h-16 w-16 drop-shadow" />
         <span>إضافة فاتورة جديدة</span>
       </h3>
 

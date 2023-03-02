@@ -1,4 +1,4 @@
-import { FcBarChart, FcFilledFilter } from "react-icons/fc";
+import { FcFilledFilter } from "react-icons/fc";
 import { FilterProps, FilterSummaryProps } from "./types";
 import { inputClassNamesStyles } from "../invoice/constants";
 import { useSearchParams } from "react-router-dom";
@@ -94,6 +94,7 @@ export const FiltersSummary = ({
   searchQuery,
   isFilterOpen,
   setIsFilterOpen,
+  count,
 }: FilterSummaryProps) => {
   return (
     <h3
@@ -124,9 +125,7 @@ export const FiltersSummary = ({
         </span>
       )}
 
-      <span className="mr-2 flex items-center justify-center">
-        <FcBarChart className="drop-shadow" size={30} />
-      </span>
+      <span>({count})</span>
     </h3>
   );
 };

@@ -169,7 +169,7 @@ export const Tickets = () => {
     <section className="w-full">
       <h2 className="my-4 mb-10 flex items-center justify-center rounded bg-red-700 px-2 py-4 text-3xl font-bold text-white shadow">
         <span className="mr-2 flex items-center justify-center">
-          <TicketMain className="mr-1 h-20 w-20" />
+          <TicketMain className="mr-1 h-20 w-20 drop-shadow" />
         </span>
         التذاكــر
       </h2>
