@@ -1,7 +1,11 @@
 import { useState, useEffect, useDeferredValue, useRef } from "react";
 import { PaginationTable } from "../shared/PaginationTable";
 import { MainSpinner } from "../shared/MainSpinner";
-import { PaymentMethods, PaymentSearchQueries } from "../payment/types";
+import {
+  PaymentMethods,
+  PaymentSearchQueries,
+  PaymentTypes,
+} from "../payment/types";
 import { useSearchParams } from "react-router-dom";
 import {
   PaymentSearchQuery,
@@ -19,7 +23,7 @@ import { tableHeader, tableRow } from "./Table";
 import { Filters, FiltersSummary } from "./Filters";
 import { Totals } from "./Totals";
 import { UpdatePayment } from "../forms/UpdatePayment";
-import { paymentMethods } from "./constants";
+import { paymentMethods, paymentTypes } from "./constants";
 
 export const Payments = () => {
   //Search Params
@@ -46,15 +50,19 @@ export const Payments = () => {
   const pageNumber: number = URLSearchParams.get("page")
     ? +URLSearchParams.get("page")!
     : 1;
-  console.log(paymentMethods[deferredMethod as keyof PaymentMethods]);
+
   //Create Search Object To Pass As Query Option
   let searchObj: PaymentSearchQuery = {
     query: {
       day: +day,
       month: +month,
       year: +year,
-      type: deferredType,
-      method: paymentMethods[deferredMethod as keyof PaymentMethods],
+      type: Object.keys(paymentTypes).find(
+        (key) => paymentTypes[key as keyof PaymentTypes] === deferredType
+      ),
+      method: Object.keys(paymentMethods).find(
+        (key) => paymentMethods[key as keyof PaymentMethods] === deferredMethod
+      ),
     },
     option: {
       limit: tableRows,
