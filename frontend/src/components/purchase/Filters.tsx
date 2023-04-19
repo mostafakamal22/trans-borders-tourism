@@ -220,7 +220,7 @@ export const Filters = ({
             className="w-full rounded bg-red-700 p-2 text-white"
             htmlFor="type"
           >
-            Type
+            نوع المشترى
           </label>
           <input
             type="text"
@@ -228,7 +228,7 @@ export const Filters = ({
             id="type"
             className={inputClassNamesStyles.default}
             value={type}
-            placeholder="Type"
+            placeholder="نوع المشترى"
             onChange={(e) => {
               if (pageNumber && +pageNumber > 1) {
                 SetURLSearchParams({ page: "1" });
@@ -300,7 +300,7 @@ export const FiltersSummary = ({
       )}
       {type && (
         <span className="mx-1 rounded-md bg-pink-500 p-1 text-white">
-          {" Type:- " + type}
+          {" نوع المشترى:- " + type}
         </span>
       )}
 
