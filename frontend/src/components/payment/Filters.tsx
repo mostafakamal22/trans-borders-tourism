@@ -186,7 +186,7 @@ export const Filters = ({
             className="w-full rounded bg-red-700 p-2 text-white"
             htmlFor="method"
           >
-            Method
+            طريقة دفع المصـروف
           </label>
           <input
             type="text"
@@ -194,7 +194,7 @@ export const Filters = ({
             id="method"
             className={inputClassNamesStyles.default}
             value={method}
-            placeholder="Method"
+            placeholder="طريقة دفع المصـروف"
             onChange={(e) => {
               if (pageNumber && +pageNumber > 1) {
                 SetURLSearchParams({ page: "1" });
@@ -213,7 +213,7 @@ export const Filters = ({
             className="w-full rounded bg-red-700 p-2 text-white"
             htmlFor="type"
           >
-            Type
+            نوع المصروف
           </label>
           <input
             type="text"
@@ -221,7 +221,7 @@ export const Filters = ({
             id="type"
             className={inputClassNamesStyles.default}
             value={type}
-            placeholder="Type"
+            placeholder="نوع المصروف"
             onChange={(e) => {
               if (pageNumber && +pageNumber > 1) {
                 SetURLSearchParams({ page: "1" });
@@ -262,9 +262,9 @@ export const FiltersSummary = ({
       </button>
 
       <p className="mb-5 basis-full text-2xl underline decoration-sky-500 decoration-wavy decoration-2 underline-offset-8">
-        فلتــرة المشتــريات
+        فلتــرة المصروفات
       </p>
-      <span>{" المشتــريات المحفوظة"}</span>
+      <span>{" المصروفات المحفوظة"}</span>
       {!month && !year && (
         <span className="mx-1 rounded-md bg-blue-500 p-1 text-white">
           {" الكلية "}
@@ -288,12 +288,12 @@ export const FiltersSummary = ({
 
       {method && (
         <span className="mx-1 rounded-md bg-pink-500 p-1 text-white">
-          {" Method:- " + method}
+          {" طريقة دفع المصـروف:- " + method}
         </span>
       )}
       {type && (
         <span className="mx-1 rounded-md bg-pink-500 p-1 text-white">
-          {" Type:- " + type}
+          {" نوع المصروف:- " + type}
         </span>
       )}
 
