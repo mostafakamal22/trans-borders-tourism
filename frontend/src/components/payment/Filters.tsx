@@ -16,14 +16,7 @@ export const Filters = ({
   const [URLSearchParams, SetURLSearchParams] = useSearchParams();
   const pageNumber: string | null = URLSearchParams.get("page");
 
-  const {
-    year,
-    month,
-    day,
-    type,
-
-    supplier,
-  } = searchQuery;
+  const { year, month, day, type, method } = searchQuery;
 
   let yearRange: number[] = [];
   for (let i = 2010; i <= 2060; i++) {
@@ -191,17 +184,17 @@ export const Filters = ({
         <div className="flex flex-col items-center justify-center gap-2">
           <label
             className="w-full rounded bg-red-700 p-2 text-white"
-            htmlFor="supplier"
+            htmlFor="method"
           >
-            Supplier
+            Method
           </label>
           <input
             type="text"
-            name="supplier"
-            id="supplier"
+            name="method"
+            id="method"
             className={inputClassNamesStyles.default}
-            value={supplier}
-            placeholder="Supplier"
+            value={method}
+            placeholder="Method"
             onChange={(e) => {
               if (pageNumber && +pageNumber > 1) {
                 SetURLSearchParams({ page: "1" });
@@ -209,7 +202,7 @@ export const Filters = ({
 
               setSearchQuery({
                 ...searchQuery,
-                supplier: e.target.value,
+                method: e.target.value,
               });
             }}
           />
@@ -252,7 +245,7 @@ export const FiltersSummary = ({
   setIsFilterOpen,
   isFilterOpen,
 }: FilterSummaryProps) => {
-  const { year, month, day, type, supplier } = searchQuery;
+  const { year, month, day, type, method } = searchQuery;
 
   return (
     <h3
@@ -293,9 +286,9 @@ export const FiltersSummary = ({
         </span>
       )}
 
-      {supplier && (
+      {method && (
         <span className="mx-1 rounded-md bg-pink-500 p-1 text-white">
-          {" Supplier:- " + supplier}
+          {" Method:- " + method}
         </span>
       )}
       {type && (

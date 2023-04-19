@@ -1,19 +1,15 @@
 import { useEffect, useState } from "react";
-import { HiMenu, HiMenuAlt3 } from "react-icons/hi";
+import { HiMenu } from "react-icons/hi";
 import { MdDashboard } from "react-icons/md";
-import { RiLogoutBoxFill, RiSettings4Line } from "react-icons/ri";
-import { TbReportAnalytics } from "react-icons/tb";
+import { RiLogoutBoxFill } from "react-icons/ri";
 import {
-  AiOutlineUser,
-  AiOutlineHeart,
-  AiFillDashboard,
   AiFillProject,
   AiFillBell,
   AiFillSchedule,
   AiFillShopping,
+  AiFillAccountBook,
 } from "react-icons/ai";
-import { FiMessageSquare, FiFolder, FiShoppingCart } from "react-icons/fi";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useSendLogoutMutation } from "../../state/features/admin/auth/authApiSlice";
 import SmallSpinner from "./SmallSpinner";
 import { BsGearFill, BsPlus } from "react-icons/bs";
@@ -84,7 +80,21 @@ const menus: MenuType<MenuItem> = [
     link: "/purchases/create/voucher",
     icon: <BsPlus size={20} />,
   },
+  {
+    name: "المصروفات",
+    link: "/payments",
+    icon: <AiFillAccountBook size={20} />,
+    margin: true,
+  },
 
+  {
+    name: "إضافة المصروفات",
+    link: "/payments/create",
+    icon: <BsPlus size={20} />,
+  },
+
+  // ["المعاملات البنكية", "/banks", <AiFillBank size={20} />],
+  // ["إضافة معاملة", "/banks/create", <BsPlus size={20} />],
   // { name: "File Manager", link: "/", icon: FiFolder },
   // { name: "Cart", link: "/", icon: FiShoppingCart },
   // { name: "Saved", link: "/", icon: AiOutlineHeart, margin: true },

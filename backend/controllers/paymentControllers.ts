@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Payment from "../models/paymentsModel";
+import Payment from "../models/paymentModel";
 import { ErrnoException } from "./adminControllers";
 
 //@Desc   >>>> Get All Payments That Match Query Object.

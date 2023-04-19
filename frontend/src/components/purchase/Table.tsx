@@ -36,13 +36,7 @@ export const tableRow = ({
   extraOptions,
 }: TableRowProps<IPurchaseDocument>) => {
   const { item: purchase, index, tableBodyData } = basicOptions;
-  const {
-    handleRemoving,
-
-    isDeleting,
-    setId,
-    setIsOpen,
-  } = extraOptions;
+  const { handleRemoving, isDeleting, setId, setIsOpen } = extraOptions;
 
   return (
     <tr

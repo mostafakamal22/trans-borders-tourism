@@ -8,7 +8,6 @@ import {
   useDeletePurchaseMutation,
   useGetPurchasesQuery,
 } from "../../state/features/purchase/purchaseApiSlice";
-import { useCreateInvoiceMutation } from "../../state/features/invoice/invoiceApiSlice";
 import { scrollToTable, useScroll } from "../../hooks/useScroll";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { AnimatePresence } from "framer-motion";

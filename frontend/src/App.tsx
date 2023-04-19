@@ -22,6 +22,8 @@ import { Purchases } from "./components/purchase/Purchases";
 import { CreatePurchase } from "./components/forms/CreatePurchase";
 import { PaymentVoucher } from "./components/purchase/PaymentVoucher";
 import { CreateVoucher } from "./components/forms/CreateVoucher";
+import { Payments } from "./components/payment/Payments";
+import { CreatePayment } from "./components/forms/CreatePayment";
 
 const App = () => {
   return (
@@ -67,6 +69,11 @@ const App = () => {
                     <Route path="create" element={<CreatePurchase />} />
                     <Route path="create/voucher" element={<CreateVoucher />} />
                     <Route path=":id" element={<PaymentVoucher />} />
+                  </Route>
+                  {/* Payments Routes */}
+                  <Route path="/payments">
+                    <Route index element={<Payments />} />
+                    <Route path="create" element={<CreatePayment />} />
                   </Route>
                 </Route>
               </Route>

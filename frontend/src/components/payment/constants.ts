@@ -1,5 +1,15 @@
 import { PaymentMethods, PaymentTypes } from "./types";
 
+export const paymentTableHeaderTitles = [
+  "مسح المصروف",
+  "تعديل المصروف",
+  "المبلغ الكلى",
+  "شرح المصـروف",
+  "طريقة دفع المصـروف",
+  "نوع المصروف",
+  "تاريخ المصروف",
+];
+
 export const paymentTypes: PaymentTypes = {
   bank_payments: "مصاريف بنكية",
   papers: "مصاريف أدوات مكتبية",
