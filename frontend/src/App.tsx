@@ -18,6 +18,8 @@ import { PublicLayout } from "./components/shared/PublicLayout";
 import { MainLayout } from "./components/shared/MainLayout";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import { Purchases } from "./components/purchase/Purchases";
+import { CreatePurchase } from "./components/forms/CreatePurchase";
 
 const App = () => {
   return (
@@ -56,6 +58,11 @@ const App = () => {
                   <Route path="/tickets">
                     <Route index element={<Tickets />} />
                     <Route path="create" element={<CreateTicket />} />
+                  </Route>
+                  {/* Purchases Routes */}
+                  <Route path="/purchases">
+                    <Route index element={<Purchases />} />
+                    <Route path="create" element={<CreatePurchase />} />
                   </Route>
                 </Route>
               </Route>

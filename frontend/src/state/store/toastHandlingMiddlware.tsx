@@ -15,6 +15,7 @@ const toastBlackList: string[] = [
   "getPassports",
   "getInvoices",
   "getTickets",
+  "getPurchases",
 ];
 
 //Toast Messages

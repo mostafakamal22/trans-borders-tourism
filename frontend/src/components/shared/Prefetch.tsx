@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { usePrefetch as useTicketsPrefetch } from "../../state/features/ticket/ticketsApiSlice";
 import { usePrefetch as useInvoicesPrefetch } from "../../state/features/invoice/invoiceApiSlice";
+import { usePrefetch as usePurchasesPrefetch } from "../../state/features/purchase/purchaseApiSlice";
 
 const Prefetch = () => {
   const prefetchPassports = usePassportsPrefetch("getPassports", {
@@ -10,11 +11,15 @@ const Prefetch = () => {
   });
   const prefetchInvoices = useInvoicesPrefetch("getInvoices", { force: true });
   const prefetchTickets = useTicketsPrefetch("getTickets", { force: true });
+  const prefetchPurchases = usePurchasesPrefetch("getPurchases", {
+    force: true,
+  });
 
   useEffect(() => {
     prefetchPassports({});
     prefetchInvoices({});
     prefetchTickets({});
+    prefetchPurchases({});
   }, []);
 
   return <Outlet />;

@@ -53,23 +53,21 @@ export type PurchaseSearchQueries = {
 
 // export type PurchaseServiceQueries = (typeof purchaseServiceQueries)[number];
 
-// export type FilterProps = {
-//   setIsFilterOpen: React.Dispatch<React.SetStateAction<boolean>>;
-//   isFilterOpen: boolean;
-//   setSearchQuery: React.Dispatch<React.SetStateAction<PurchaseSearchQueries>>;
-//   searchQuery: PurchaseSearchQueries;
-//   setTableRows: React.Dispatch<React.SetStateAction<number>>;
-//   tableRows: number;
-// };
+export type FilterProps = {
+  setIsFilterOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isFilterOpen: boolean;
+  setSearchQuery: React.Dispatch<React.SetStateAction<PurchaseSearchQueries>>;
+  searchQuery: PurchaseSearchQueries;
+  setTableRows: React.Dispatch<React.SetStateAction<number>>;
+  tableRows: number;
+};
 
-// export type FilterSummaryProps = {
-//   searchQuery: PurchaseSearchQueries;
-//   stateArr: string[];
-//   serviceArr: string[];
-//   count: number;
-//   setIsFilterOpen: React.Dispatch<React.SetStateAction<boolean>>;
-//   isFilterOpen: boolean;
-// };
+export type FilterSummaryProps = {
+  searchQuery: PurchaseSearchQueries;
+  count: number;
+  setIsFilterOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isFilterOpen: boolean;
+};
 
 // export type PurchasesChartsCalculations = (purchases: IPurchaseDocument[]) => {
 //   totalMonthValues: number[];

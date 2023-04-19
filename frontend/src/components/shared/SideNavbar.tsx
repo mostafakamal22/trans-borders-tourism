@@ -10,6 +10,7 @@ import {
   AiFillProject,
   AiFillBell,
   AiFillSchedule,
+  AiFillShopping,
 } from "react-icons/ai";
 import { FiMessageSquare, FiFolder, FiShoppingCart } from "react-icons/fi";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -63,6 +64,18 @@ const menus: MenuType<MenuItem> = [
   {
     name: "إضافة التذاكر",
     link: "/tickets/create",
+    icon: <BsPlus size={20} />,
+  },
+
+  {
+    name: "المشتريات",
+    link: "/purchases",
+    icon: <AiFillShopping size={20} />,
+  },
+
+  {
+    name: "إضافة المشتريات",
+    link: "/purchases/create",
     icon: <BsPlus size={20} />,
   },
 
