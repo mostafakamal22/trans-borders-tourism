@@ -79,6 +79,11 @@ const menus: MenuType<MenuItem> = [
     link: "/purchases/create",
     icon: <BsPlus size={20} />,
   },
+  {
+    name: "إضافة سند",
+    link: "/purchases/create/voucher",
+    icon: <BsPlus size={20} />,
+  },
 
   // { name: "File Manager", link: "/", icon: FiFolder },
   // { name: "Cart", link: "/", icon: FiShoppingCart },
@@ -140,7 +145,7 @@ export const SideNavbar = () => {
             flex flex-row-reverse items-center   rounded-md  bg-red-200 p-2 text-xs  hover:bg-red-200`
                 : `${menu?.margin && "mt-2"}  ${!open && "justify-center"} 
               
-             flex flex-row-reverse items-center    rounded-md p-2 text-xs  hover:bg-red-200`
+             flex flex-row-reverse items-center truncate rounded-md p-2 text-xs  hover:bg-red-200`
             }
             title={menu?.name}
             end

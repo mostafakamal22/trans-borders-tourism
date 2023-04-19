@@ -113,7 +113,10 @@ export const tableRow = ({
         className="border-x border-x-black p-1 text-center text-gray-900"
       >
         {purchase.purchase_types.map((type: IPurchaseType, index: number) => (
-          <span key={index}>
+          <span
+            key={index}
+            className="my-1 flex flex-row-reverse items-center justify-center gap-1 rounded"
+          >
             <span>{type?.tax ? type.tax : "-"}</span>
           </span>
         ))}
@@ -125,7 +128,10 @@ export const tableRow = ({
         className="border-x border-x-black p-1 text-center text-gray-900"
       >
         {purchase.purchase_types.map((type: IPurchaseType, index: number) => (
-          <span key={index}>
+          <span
+            key={index}
+            className="my-1 flex flex-row-reverse items-center justify-center gap-1 rounded"
+          >
             <span>{type?.total ? type?.total : "-"}</span>
           </span>
         ))}
@@ -139,7 +145,7 @@ export const tableRow = ({
         {purchase.purchase_types.map((type: IPurchaseType, index: number) => (
           <span
             key={index}
-            className="my-1 flex flex-row-reverse items-center justify-center gap-1 rounded bg-purple-400 p-1"
+            className="my-1 flex flex-row-reverse items-center justify-center gap-1 rounded"
           >
             <span>{type?.supplier ? type.supplier : "-"}</span>
           </span>

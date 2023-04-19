@@ -11,6 +11,22 @@ export const purchaseTableHeaderTitles: string[] = [
   "تاريخ المشترى",
 ];
 
+export const paymentVoucherCompanyInfos: {
+  name: string[];
+  postal: string[];
+  address: string[];
+  tel: string[];
+  mobile_1: string[];
+  mobile_2: string[];
+} = {
+  name: ["TRANS BORDERS TOURISM L.L.C", "عبر الحدود للسياحة ش.ذ.م.م"],
+  postal: ["P.O.Box: 171511", "171511 ص.ب.أ "],
+  address: ["DUBAI U.A.E", "دبى أ.ع.م"],
+  tel: ["Tel: 045782747", "045782747 تليفون"],
+  mobile_1: ["Mobile: +971 556620879", "+975 556620879 موبيل"],
+  mobile_2: ["Mobile: +971 507597677", "+975 507597677 موبيل"],
+};
+
 // export type PurchaseTypes = {
 //   tickets: string;
 //   assets: string;

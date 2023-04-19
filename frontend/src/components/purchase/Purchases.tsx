@@ -70,9 +70,6 @@ export const Purchases = () => {
   const [deletePurchase, { isLoading: isDeleting }] =
     useDeletePurchaseMutation();
 
-  const [createInvoice, { isLoading: isCreatingInvoice }] =
-    useCreateInvoiceMutation();
-
   //Is modal open
   const [isOpen, setIsOpen] = useState(false);
 
@@ -148,7 +145,6 @@ export const Purchases = () => {
           setIsOpen={setIsOpen}
           setId={setId}
           isDeleting={isDeleting}
-          isCreatingInvoice={isCreatingInvoice}
         />
       )}
 
