@@ -71,6 +71,7 @@ const menus: MenuType<MenuItem> = [
     name: "المشتريات",
     link: "/purchases",
     icon: <AiFillShopping size={20} />,
+    margin: true,
   },
 
   {

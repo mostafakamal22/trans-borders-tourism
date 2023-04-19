@@ -3,7 +3,7 @@ import { CorsOptions } from "cors";
 /* CORS Domains Configuration */
 
 //Devlopement CORS Configurations
-const devWhitelist = ["http://127.0.0.1:5173"];
+const devWhitelist = ["http://localhost:5173"];
 
 export const corsDevOptions: CorsOptions = {
   origin: function (origin, callback) {

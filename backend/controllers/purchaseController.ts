@@ -49,7 +49,7 @@ const getPurchases = async (req: Request, res: Response) => {
   //Define Query Option
   const options = {
     pagination: query ? true : false,
-    sort: { payment_date: "desc", createdAt: "desc" },
+    sort: { date: "desc", createdAt: "desc" },
     ...option,
   };
 

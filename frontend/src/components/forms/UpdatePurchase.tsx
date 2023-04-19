@@ -297,8 +297,8 @@ export const UpdatePurchase = ({
             </button>
 
             <button
-              className="my-5 flex items-center rounded border bg-blue-800 px-2 py-2 text-xs font-bold text-white shadow transition-all duration-300 ease-in-out hover:border-blue-800
-             hover:bg-white hover:text-blue-800 sm:px-3 sm:text-sm"
+              className="my-5 flex items-center rounded border bg-red-800 px-2 py-2 text-xs font-bold text-white shadow transition-all duration-300 ease-in-out hover:border-red-800
+             hover:bg-white hover:text-red-800 sm:px-3 sm:text-sm"
               onClick={() => handleItemCount(-1)}
               type="button"
             >

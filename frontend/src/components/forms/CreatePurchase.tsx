@@ -103,7 +103,7 @@ export const CreatePurchase = () => {
   useDocumentTitle("إضافة مشترى جديدة");
 
   return (
-    <section id="createTicket" className="w-full">
+    <section id="createPurchase" className="w-full">
       <h3 className="mb-10 flex items-center justify-center rounded bg-red-800 px-2 py-4 text-center text-xl font-bold text-white shadow ">
         <PurchaseAlt className="mr-2 h-16 w-16 drop-shadow" />
         <span>إضافة مشترى جديدة</span>
@@ -265,8 +265,8 @@ export const CreatePurchase = () => {
           </button>
 
           <button
-            className="my-5 flex items-center rounded border bg-blue-800 px-2 py-2 text-xs font-bold text-white shadow transition-all duration-300 ease-in-out hover:border-blue-800
-             hover:bg-white hover:text-blue-800 sm:px-3 sm:text-sm"
+            className="my-5 flex items-center rounded border bg-red-800 px-2 py-2 text-xs font-bold text-white shadow transition-all duration-300 ease-in-out hover:border-red-800
+             hover:bg-white hover:text-red-800 sm:px-3 sm:text-sm"
             onClick={() => handleItemCount(-1)}
             type="button"
           >

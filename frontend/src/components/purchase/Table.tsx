@@ -107,6 +107,30 @@ export const tableRow = ({
         {purchase?.total}
       </th>
 
+      {/*Purchase Tax*/}
+      <th
+        scope="row"
+        className="border-x border-x-black p-1 text-center text-gray-900"
+      >
+        {purchase.purchase_types.map((type: IPurchaseType, index: number) => (
+          <span key={index}>
+            <span>{type?.tax ? type.tax : "-"}</span>
+          </span>
+        ))}
+      </th>
+
+      {/*Purchase Subtotal*/}
+      <th
+        scope="row"
+        className="border-x border-x-black p-1 text-center text-gray-900"
+      >
+        {purchase.purchase_types.map((type: IPurchaseType, index: number) => (
+          <span key={index}>
+            <span>{type?.total ? type?.total : "-"}</span>
+          </span>
+        ))}
+      </th>
+
       {/*Purchase Supplier*/}
       <th
         scope="row"
