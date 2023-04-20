@@ -15,6 +15,7 @@ import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { FetchingMessage } from "../shared/FetchingMessage";
 import { NoSavedRecords } from "../shared/NoSavedRecords";
 import { NoSearchResult } from "../shared/NoSearchResult";
+import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 
 export const Invoices = () => {
   //Search Query State
@@ -68,6 +69,7 @@ export const Invoices = () => {
 
   useScroll("filterHeader");
   useDocumentTitle("الفواتير");
+  useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
 
   return (
     <section className="w-full">

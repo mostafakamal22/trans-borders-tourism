@@ -24,6 +24,7 @@ import { NoSearchResult } from "../shared/NoSearchResult";
 import { NoSavedRecords } from "../shared/NoSavedRecords";
 import { FetchingMessage } from "../shared/FetchingMessage";
 import { ReactComponent as PassportMain } from "../../assets/icons/passport-main.svg";
+import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 
 export const Passports = () => {
   //Search Queries
@@ -161,6 +162,7 @@ export const Passports = () => {
 
   useScroll("filterHeader");
   useDocumentTitle("الجـــوازات");
+  useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
 
   return (
     <section className="w-full">

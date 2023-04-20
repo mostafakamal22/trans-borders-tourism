@@ -1,26 +1,25 @@
 import { useEffect } from "react";
 
 type UseDetectClickOutsideProps = {
-  element: HTMLDivElement;
-  cb: React.Dispatch<React.SetStateAction<boolean>>;
-  isOpen: boolean;
+  setIsFilterOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isFilterOpen: boolean;
 };
 
 export const useDetectClickOutside = ({
-  element,
-  cb,
-  isOpen,
+  setIsFilterOpen,
+  isFilterOpen,
 }: UseDetectClickOutsideProps): void => {
   useEffect(() => {
     const outsideClickListener = (event: MouseEvent) => {
-      const openFilterBtn = document.getElementById("openFilter")!;
+      const openFilterBtn = document.getElementById("openFilters")!;
+      const filtersBar = document.getElementById("filters")!;
+
       if (
-        !element?.contains(event.target as Node) &&
-        isOpen &&
+        isFilterOpen &&
+        !filtersBar?.contains(event.target as Node) &&
         !openFilterBtn?.contains(event.target as Node)
       ) {
-        console.log("first");
-        cb(false);
+        setIsFilterOpen(false);
       }
     };
     document.addEventListener("click", outsideClickListener);
@@ -28,5 +27,5 @@ export const useDetectClickOutside = ({
     return () => {
       document.removeEventListener("click", outsideClickListener);
     };
-  }, []);
+  }, [isFilterOpen]);
 };

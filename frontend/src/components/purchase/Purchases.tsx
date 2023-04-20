@@ -19,6 +19,7 @@ import { Totals } from "./Totals";
 import { Filters, FiltersSummary } from "./Filters";
 import { ReactComponent as PurchaseMain } from "../../assets/icons/purchase-main.svg";
 import { UpdatePurchase } from "../forms/UpdatePurchase";
+import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 
 export const Purchases = () => {
   //Search Params
@@ -98,6 +99,7 @@ export const Purchases = () => {
 
   useScroll("filterHeader");
   useDocumentTitle("المشتــريات");
+  useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
 
   return (
     <section className="w-full">

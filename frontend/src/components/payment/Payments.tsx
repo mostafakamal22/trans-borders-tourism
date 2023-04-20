@@ -24,6 +24,7 @@ import { Filters, FiltersSummary } from "./Filters";
 import { Totals } from "./Totals";
 import { UpdatePayment } from "../forms/UpdatePayment";
 import { paymentMethods, paymentTypes } from "./constants";
+import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 
 export const Payments = () => {
   //Search Params
@@ -106,6 +107,7 @@ export const Payments = () => {
 
   useScroll("filterHeader");
   useDocumentTitle("المصــروفات");
+  useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
 
   return (
     <section className="w-full">

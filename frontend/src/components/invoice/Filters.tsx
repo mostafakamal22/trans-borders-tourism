@@ -23,6 +23,7 @@ export const Filters = ({
 
   return (
     <div
+      id="filters"
       className={`${
         isFilterOpen ? "translate-x-0" : "-translate-x-60"
       } duration-350 absolute left-0 top-0 flex h-screen w-60 flex-wrap items-start justify-center gap-4  overflow-x-hidden overflow-y-scroll bg-slate-50 px-4 py-8 text-xs shadow-md transition-all ease-in-out scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-400 scrollbar-corner-slate-700 scrollbar-track-rounded-full scrollbar-w-0`}
@@ -102,6 +103,7 @@ export const FiltersSummary = ({
       className="relative flex basis-full flex-row-reverse flex-wrap items-center justify-center rounded  bg-red-700 p-3 text-center font-bold text-white shadow"
     >
       <button
+        id="openFilters"
         className="absolute top-2 right-2 flex items-center justify-center rounded bg-slate-50 p-2 text-xs font-semibold text-gray-600 shadow sm:text-sm"
         onClick={() => setIsFilterOpen(!isFilterOpen)}
         type="button"

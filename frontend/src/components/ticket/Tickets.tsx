@@ -26,6 +26,7 @@ import { AnimatePresence } from "framer-motion";
 import { FetchingMessage } from "../shared/FetchingMessage";
 import { NoSavedRecords } from "../shared/NoSavedRecords";
 import { NoSearchResult } from "../shared/NoSearchResult";
+import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 
 export const Tickets = () => {
   //Search Params
@@ -164,6 +165,7 @@ export const Tickets = () => {
 
   useScroll("filterHeader");
   useDocumentTitle("التذاكــر");
+  useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
 
   return (
     <section className="w-full">
