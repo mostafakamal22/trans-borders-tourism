@@ -171,7 +171,7 @@ export const tableRow = ({
             key={index}
             className="my-1 flex flex-row-reverse items-center justify-center gap-1 rounded bg-amber-400 p-1"
           >
-            {type?.name}
+            {type?.name ? type.name : "-"}
           </span>
         ))}
       </th>
