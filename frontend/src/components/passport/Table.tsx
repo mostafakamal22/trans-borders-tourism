@@ -14,15 +14,30 @@ import { TableRowProps } from "../shared/PaginationTable";
 //Define table data
 export const tableHeader = (
   <tr className="border-y border-y-black">
-    {[...passportTableHeaderTitles].reverse().map((title) => (
-      <th
-        key={title}
-        scope="col"
-        className="max-w-[100px] border-x border-x-black p-1 text-center"
-      >
-        {title}
-      </th>
-    ))}
+    {[...passportTableHeaderTitles]
+      .reverse()
+      .slice(0, 11)
+      .map((title) => (
+        <th
+          key={title}
+          scope="col"
+          className="max-w-[100px] border-x border-x-black p-1 text-center"
+        >
+          {title}
+        </th>
+      ))}
+    {[...passportTableHeaderTitles]
+      .reverse()
+      .slice(12)
+      .map((title) => (
+        <th
+          key={title}
+          scope="col"
+          className="max-w-[100px] border-x border-x-black p-1 text-center"
+        >
+          {title}
+        </th>
+      ))}
     <th scope="col" className="border-x border-x-black p-1 text-center">
       م
     </th>
@@ -175,14 +190,14 @@ export const tableRow = ({
       </th>
 
       {/*passport State*/}
-      <th
+      {/* <th
         scope="row"
         className={`${
           passportState[passport.state as keyof PassportState][1]
         } border-x border-x-black  p-1 text-center text-gray-900`}
       >
         {passportState[passport.state as keyof PassportState][0]}
-      </th>
+      </th> */}
 
       {/*passport ID*/}
       <th
