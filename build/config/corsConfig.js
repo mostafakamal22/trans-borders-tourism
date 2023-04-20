@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.corsProOptions = exports.corsDevOptions = void 0;
 /* CORS Domains Configuration */
 //Devlopement CORS Configurations
-var devWhitelist = ["http://127.0.0.1:5173"];
+var devWhitelist = ["http://localhost:5173"];
 exports.corsDevOptions = {
     origin: function (origin, callback) {
         if (!origin || devWhitelist.indexOf(origin) !== -1) {

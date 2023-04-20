@@ -92,7 +92,7 @@ var getPurchases = function (req, res) { return __awaiter(void 0, void 0, void 0
                         "purchase_types.supplier": new RegExp("".concat(supplier), "gi"),
                     }
                     : {};
-                options = __assign({ pagination: query ? true : false, sort: { payment_date: "desc", createdAt: "desc" } }, option);
+                options = __assign({ pagination: query ? true : false, sort: { date: "desc", createdAt: "desc" } }, option);
                 return [4 /*yield*/, purchaseModel_1.default.paginate(queries, options)];
             case 1:
                 purchases = _b.sent();
