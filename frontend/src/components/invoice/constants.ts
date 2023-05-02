@@ -25,6 +25,7 @@ export const tableHeaderTitles: string[] = [
 
 export const comapanyInfos: CompanyInfos = {
   name: ["TRANS BORDERS TOURISM L.L.C"],
+  TRN: 104047808100003,
   address: "DUBAI-DEIRA-ABU HAIL",
   website: "https://tbtourism.com",
   email: "Info@tbtourism.com",
@@ -38,4 +39,15 @@ export const invoiceHeaderTitles = [
   "Quantity",
   "Price",
   "Total",
+];
+
+export const invoicePassportHeaderTitles = [
+  "NO.",
+  "Description",
+  "Quantity",
+  "Government Fee",
+  "Service Fee",
+  "Total Before Add. VAT",
+  "Add. VAT(5% on Service Fee)",
+  "Total With Add. VAT",
 ];

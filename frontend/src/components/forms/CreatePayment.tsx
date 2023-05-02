@@ -13,6 +13,7 @@ import {
 } from "../invoice/constants";
 import { paymentMethods, paymentTypes } from "../payment/constants";
 import { PaymentMethods, PaymentTypes } from "../payment/types";
+import { IPaymentType } from "../../../../backend/models/paymentModel";
 
 export const CreatePayment = () => {
   //state for payment Details
@@ -22,11 +23,15 @@ export const CreatePayment = () => {
   });
 
   //state for paymentTypes Details
-  const [paymentTypesDetails, setPaymentTypesDetails] = useState([
+  const [paymentTypesDetails, setPaymentTypesDetails] = useState<
+    IPaymentType[]
+  >([
     {
       name: "bank_payments",
       description: "",
       method: "bank",
+      cost: 0,
+      tax: 0,
       total: 0,
     },
   ]);
@@ -47,6 +52,8 @@ export const CreatePayment = () => {
               name: "bank_payments",
               description: "",
               method: "bank",
+              cost: 0,
+              tax: 0,
               total: 0,
             },
           ]
@@ -74,7 +81,7 @@ export const CreatePayment = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      //Set Purchase Inputs To Default
+      //Set Payment Inputs To Default
       setPaymentDetails({
         date: "",
         total: 0,
@@ -85,6 +92,8 @@ export const CreatePayment = () => {
           name: "bank_payments",
           description: "",
           method: "bank",
+          cost: 0,
+          tax: 0,
           total: 0,
         },
       ]);
@@ -163,17 +172,17 @@ export const CreatePayment = () => {
                 setPaymentTypesDetails(newArr);
               }}
             />
-
             <FormInput
-              label="المبلـغ"
+              label="المبلغ قبل الضريبة"
               name="itemTotal"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
               type="number"
-              value={item.total}
+              value={item.cost}
               onChange={(e) => {
                 const newArr = [...paymentTypesDetails];
-                newArr[index].total = +e.target.value;
+                newArr[index].cost = +e.target.value;
+                newArr[index].total = +e.target.value + newArr[index].tax;
                 setPaymentTypesDetails(newArr);
 
                 const newTotal = paymentTypesDetails.reduce(
@@ -187,7 +196,44 @@ export const CreatePayment = () => {
               }}
               min={0}
               step={0.01}
-              required
+            />
+
+            <FormInput
+              label="الضريبة"
+              name="itemTotal"
+              labeClassNames={lableClassNamesStyles.default}
+              className={inputClassNamesStyles.default}
+              type="number"
+              value={item.tax}
+              onChange={(e) => {
+                const newArr = [...paymentTypesDetails];
+                newArr[index].tax = +e.target.value;
+                newArr[index].total = newArr[index].cost + +e.target.value;
+                setPaymentTypesDetails(newArr);
+
+                const newTotal = paymentTypesDetails.reduce(
+                  (prev, curr) => prev + curr.total,
+                  0
+                );
+                setPaymentDetails({
+                  ...paymentDetails,
+                  total: +newTotal.toFixed(2),
+                });
+              }}
+              min={0}
+              step={0.01}
+            />
+
+            <FormInput
+              label="الاجمالى بعد الضريبة"
+              name="itemTotal"
+              labeClassNames={lableClassNamesStyles.default}
+              className={`${inputClassNamesStyles.default} bg-slate-200`}
+              type="number"
+              value={item.total}
+              disabled
+              min={0}
+              step={0.01}
             />
           </div>
         ))}
@@ -222,12 +268,10 @@ export const CreatePayment = () => {
             label="المبلغ الكــلى"
             name="totalPayment"
             labeClassNames={lableClassNamesStyles.default}
-            className={inputClassNamesStyles.default}
+            className={`${inputClassNamesStyles.default} bg-slate-200`}
             type="number"
             value={paymentDetails.total}
-            onChange={(e) =>
-              setPaymentDetails({ ...paymentDetails, total: +e.target.value })
-            }
+            disabled
             min={0}
             step={0.01}
             required

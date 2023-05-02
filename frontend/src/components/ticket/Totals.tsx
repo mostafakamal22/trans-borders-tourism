@@ -7,9 +7,9 @@ export const Totals = ({ tickets }: { tickets: ITicketDocument[] }) => {
   const { costs, profits, sales } = ticketsCalculations(tickets);
 
   const tableBody: string[][] = [
-    ["إجمالى  تكلفة التذاكر", costs.toFixed(2)],
+    ["تكلفة التذاكر", costs.toFixed(2)],
     ["سعر البيع", sales.toFixed(2)],
-    ["إجمالى الربح", profits.toFixed(2)],
+    ["الربح", profits.toFixed(2)],
   ];
 
   //Define table data

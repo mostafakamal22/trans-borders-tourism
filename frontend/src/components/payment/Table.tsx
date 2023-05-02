@@ -91,6 +91,36 @@ export const tableRow = ({
         {payment?.total}
       </th>
 
+      {/*Payment Tax*/}
+      <th
+        scope="row"
+        className="border-x border-x-black p-1 text-center text-gray-900"
+      >
+        {payment.payment_types.map((type: IPaymentType, index: number) => (
+          <span
+            key={index}
+            className="my-1 flex flex-row-reverse items-center justify-center gap-1 rounded"
+          >
+            <span>{type?.tax ? type.tax : "-"}</span>
+          </span>
+        ))}
+      </th>
+
+      {/*Payment Subtotal*/}
+      <th
+        scope="row"
+        className="border-x border-x-black p-1 text-center text-gray-900"
+      >
+        {payment.payment_types.map((type: IPaymentType, index: number) => (
+          <span
+            key={index}
+            className="my-1 flex flex-row-reverse items-center justify-center gap-1 rounded"
+          >
+            <span>{type?.cost ? type?.cost : "-"}</span>
+          </span>
+        ))}
+      </th>
+
       {/*Payment Description*/}
       <th
         scope="row"
@@ -101,7 +131,7 @@ export const tableRow = ({
             key={index}
             className="my-1 flex flex-row-reverse items-center justify-center gap-1 p-1"
           >
-            <span>{type?.description}</span>
+            <span>{type?.description ? type.description : "-"}</span>
           </span>
         ))}
       </th>

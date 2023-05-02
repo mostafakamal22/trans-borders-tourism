@@ -6,7 +6,7 @@ import {
   SchemaTimestampsConfig,
 } from "mongoose";
 import paginate from "mongoose-paginate-v2";
-// import { autoIncrement } from "mongoose-plugin-autoinc";
+import { autoIncrement } from "mongoose-plugin-autoinc";
 
 export interface ICustomer {
   name?: string;
@@ -134,18 +134,20 @@ paginate.paginate.options = {
 invoiceSchema.plugin(paginate);
 
 //Auto Increament Invoice Number Plugin
-// invoiceSchema.plugin(autoIncrement, {
-//   model: "Invoice",
-//   field: "invoice_number",
-//   startAt: 1,
-//   incrementBy: 1,
-// });
+invoiceSchema.plugin(autoIncrement, {
+  model: "Invoice",
+  field: "no",
+  startAt: 1,
+  incrementBy: 1,
+});
 
 //Declare a mongoose document based on a Typescript interface representing Invoice schema.
 export interface IInvoiceDocument
   extends Document,
     IInvoice,
-    SchemaTimestampsConfig {}
+    SchemaTimestampsConfig {
+  no: number;
+}
 
 //Define Invoice Model
 const Invoice = model<IInvoiceDocument, PaginateModel<IInvoiceDocument>>(

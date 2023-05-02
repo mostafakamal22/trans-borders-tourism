@@ -123,7 +123,8 @@ export const Passports = () => {
     customerName: string,
     passport_service: string,
     paymentDate: Date,
-    passportSales: number
+    passportSales: number,
+    passportSpecialKey: string
   ) => {
     e.preventDefault();
 
@@ -141,6 +142,7 @@ export const Passports = () => {
           price: passportSales,
         },
       ],
+      ID: passportSpecialKey,
       total: passportSales,
       subtotal: 0,
       date: paymentDate,

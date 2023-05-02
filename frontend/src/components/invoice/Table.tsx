@@ -2,7 +2,7 @@ import { TiDelete } from "react-icons/ti";
 import FormButton from "../shared/FormButton";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
-import { tableHeaderTitles } from "./constants";
+import { invoicePassportHeaderTitles, tableHeaderTitles } from "./constants";
 import { IInvoiceDocument } from "../../../../backend/models/invoiceModel";
 import { TableRowProps } from "../shared/PaginationTable";
 import { invoiceHeaderTitles } from "../invoice/constants";
@@ -20,7 +20,7 @@ export const tableHeader = (
         {title}
       </th>
     ))}
-    <th scope="col" className="border-x border-x-black p-1 text-center">
+    <th scope="col" className="border-x border-x-black p-2 text-center">
       م
     </th>
   </tr>
@@ -32,6 +32,16 @@ export const tableRow = ({
 }: TableRowProps<IInvoiceDocument>) => {
   const { item: invoice, index, tableBodyData } = basicOptions;
   const { isDeleting, handleRemoving } = extraOptions;
+
+  const invoiceNo = invoice?.no
+    ? invoice?.no
+    : invoice?.date
+    ? dayjs(invoice?.date).format(
+        `YYYYMMDD-${dayjs(invoice?.createdAt as string).hour()}`
+      )
+    : dayjs(invoice?.createdAt as string).format(
+        `YYYYMMDD-${dayjs(invoice?.createdAt as string).hour()}`
+      );
   return (
     <tr
       key={invoice?.id}
@@ -42,7 +52,7 @@ export const tableRow = ({
       {/* Delete Invoice */}
       <th
         scope="row"
-        className="whitespace-nowrap border-x border-x-black  p-2 text-center text-gray-900"
+        className="whitespace-nowrap border-x   border-x-black p-2 text-center  text-gray-900"
       >
         <form
           className="m-auto max-w-[150px]"
@@ -59,7 +69,7 @@ export const tableRow = ({
       {/* Show Invoice */}
       <th
         scope="row"
-        className="whitespace-nowrap border-x border-x-black  p-2 text-center text-gray-900"
+        className="whitespace-nowrap border-x  border-x-black p-2 text-center  text-gray-900"
       >
         <Link
           to={`/invoices/${invoice?.id}`}
@@ -73,7 +83,7 @@ export const tableRow = ({
       {/*Invoice Date*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black  p-2 text-center text-gray-900"
+        className="whitespace-nowrap border-x  border-x-black p-2 text-center  text-gray-900 "
       >
         {invoice?.date ? dayjs(invoice?.date).format("DD/MM/YYYY") : "-"}
       </th>
@@ -81,7 +91,7 @@ export const tableRow = ({
       {/*Invoice Total*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black  p-2 text-center text-gray-900"
+        className="whitespace-nowrap border-x  border-x-black p-2 text-center  text-gray-900"
       >
         {invoice?.total ? invoice.total : invoice?.details?.[0]?.price}
       </th>
@@ -89,21 +99,15 @@ export const tableRow = ({
       {/*Invoice ID*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black  p-2 text-center text-gray-900"
+        className="whitespace-nowrap border-x  border-x-black p-2 text-center  text-gray-900"
       >
-        {invoice?.date
-          ? dayjs(invoice?.date).format(
-              `YYYYMMDD-${dayjs(invoice?.createdAt as string).hour()}`
-            )
-          : dayjs(invoice?.createdAt as string).format(
-              `YYYYMMDD-${dayjs(invoice?.createdAt as string).hour()}`
-            )}
+        {invoiceNo}
       </th>
 
       {/*Customer Name*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black  p-2 text-center text-gray-900"
+        className="whitespace-nowrap border-x  border-x-black p-2 text-center  text-gray-900"
       >
         {invoice?.customer?.name ? invoice.customer.name : "-"}
       </th>
@@ -111,7 +115,7 @@ export const tableRow = ({
       {/*Invoice NO*/}
       <th
         scope="row"
-        className="text-gray-90  border-x border-x-black p-1 text-center"
+        className="text-gray-90  border-x border-x-black p-2 text-center"
       >
         {tableBodyData?.findIndex(
           (p: IInvoiceDocument) => p.id === invoice?.id
@@ -136,6 +140,20 @@ export const invoiceTableHeader = (
   </tr>
 );
 
+export const invoicePassportTableHeader = (
+  <tr className="border-b border-b-black">
+    {invoicePassportHeaderTitles.map((title: string) => (
+      <th
+        key={title}
+        scope="col"
+        className="border-x border-x-black p-2 text-center text-sm print:border-x print:border-x-black"
+      >
+        {title}
+      </th>
+    ))}
+  </tr>
+);
+
 export const invoiceTableRow = (detail: IProduct, index: number) => {
   return (
     <tr
@@ -148,7 +166,7 @@ export const invoiceTableRow = (detail: IProduct, index: number) => {
       {/*Detail NO*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black  p-2  text-center text-gray-900"
+        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
       >
         {index + 1}
       </th>
@@ -156,7 +174,7 @@ export const invoiceTableRow = (detail: IProduct, index: number) => {
       {/*Description*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black  p-2  text-center text-gray-900"
+        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
       >
         {detail.name ? detail.name : "-"}
       </th>
@@ -164,7 +182,7 @@ export const invoiceTableRow = (detail: IProduct, index: number) => {
       {/*Quantity*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black  p-2  text-center text-gray-900"
+        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
       >
         {detail.quantity}
       </th>
@@ -172,7 +190,7 @@ export const invoiceTableRow = (detail: IProduct, index: number) => {
       {/*Price*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black  p-2  text-center text-gray-900"
+        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
       >
         {detail.price}
       </th>
@@ -180,9 +198,95 @@ export const invoiceTableRow = (detail: IProduct, index: number) => {
       {/*Total*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black  p-2  text-center text-gray-900"
+        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
       >
         {detail.price * detail.quantity}
+      </th>
+    </tr>
+  );
+};
+
+export const invoicePassportTableRow = (
+  detail: IProduct,
+  passportSpecialKey: string,
+  index: number
+) => {
+  const sales = detail?.price;
+  const service_price = Number(passportSpecialKey.split(" ")[1]);
+  const total = ((sales - service_price) * 100) / 105;
+  const tax = sales - service_price - total;
+  const taxable = total + service_price;
+
+  return (
+    <tr
+      key={`${passportSpecialKey}+${index}`}
+      style={{ printColorAdjust: "exact" }}
+      className={`${
+        index % 2 === 0 ? "bg-white" : "bg-red-100"
+      } border-b border-b-black`}
+    >
+      {/*Detail NO*/}
+      <th
+        scope="row"
+        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {index + 1}
+      </th>
+
+      {/*Description*/}
+      <th
+        scope="row"
+        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {detail?.name ? detail?.name : "-"}
+      </th>
+
+      {/*Quantity*/}
+      <th
+        scope="row"
+        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {detail?.quantity}
+      </th>
+
+      {/*Service Price*/}
+      <th
+        scope="row"
+        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {service_price}
+      </th>
+
+      {/*Total Payment*/}
+      <th
+        scope="row"
+        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {total?.toFixed(2)}
+      </th>
+
+      {/*Total Taxable*/}
+      <th
+        scope="row"
+        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {taxable?.toFixed(2)}
+      </th>
+
+      {/*Tax*/}
+      <th
+        scope="row"
+        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {tax?.toFixed(2)}
+      </th>
+
+      {/*Sales*/}
+      <th
+        scope="row"
+        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {sales}
       </th>
     </tr>
   );

@@ -1,10 +1,6 @@
 import dayjs from "dayjs";
-import {
-  passportService,
-  passportState,
-  passportTableHeaderTitles,
-} from "./constants";
-import { PassportService, PassportState } from "./types";
+import { passportService, passportTableHeaderTitles } from "./constants";
+import { PassportService } from "./types";
 import { AiFillEdit, AiFillFileAdd } from "react-icons/ai";
 import FormButton from "../shared/FormButton";
 import { TiDelete } from "react-icons/ti";
@@ -16,7 +12,7 @@ export const tableHeader = (
   <tr className="border-y border-y-black">
     {[...passportTableHeaderTitles]
       .reverse()
-      .slice(0, 11)
+      .slice(0, 9)
       .map((title) => (
         <th
           key={title}
@@ -26,6 +22,20 @@ export const tableHeader = (
           {title}
         </th>
       ))}
+
+    {[...passportTableHeaderTitles]
+      .reverse()
+      .slice(10, 11)
+      .map((title) => (
+        <th
+          key={title}
+          scope="col"
+          className="max-w-[100px] border-x border-x-black p-1 text-center"
+        >
+          {title}
+        </th>
+      ))}
+
     {[...passportTableHeaderTitles]
       .reverse()
       .slice(12)
@@ -57,6 +67,15 @@ export const tableRow = ({
     setId,
     setIsOpen,
   } = extraOptions;
+
+  const tax = calculateTax(passport);
+
+  const cutoffDate = dayjs("2023-05-01");
+
+  const isInvoiceBefore1May2023 = dayjs(passport?.payment_date).isBefore(
+    cutoffDate
+  );
+
   return (
     <tr
       key={passport?.id}
@@ -94,7 +113,8 @@ export const tableRow = ({
               passport?.customer_name,
               passport?.service,
               passport?.payment_date!,
-              passport?.sales
+              passport?.sales,
+              `After-30-4 ${passport?.service_price}`
             )
           }
         >
@@ -149,20 +169,20 @@ export const tableRow = ({
         {passport?.sales}
       </th>
 
+      {/*Tax*/}
+      <th
+        scope="row"
+        className="border-x  border-x-black  p-1 text-center text-gray-900"
+      >
+        {isInvoiceBefore1May2023 ? "-" : tax}
+      </th>
+
       {/*Total Payment*/}
       <th
         scope="row"
         className="border-x  border-x-black  p-1 text-center text-gray-900"
       >
         {passport?.total}
-      </th>
-
-      {/*Service Tax Rate*/}
-      <th
-        scope="row"
-        className="border-x  border-x-black  p-1 text-center text-gray-900"
-      >
-        {passport?.tax_rate}
       </th>
 
       {/*Service Taxable*/}
@@ -234,4 +254,10 @@ export const tableRow = ({
       </th>
     </tr>
   );
+};
+
+export const calculateTax = (passport: IPassportDocument): string => {
+  const tax = passport?.sales - passport?.total;
+
+  return tax.toFixed(2);
 };

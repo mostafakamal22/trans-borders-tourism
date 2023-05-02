@@ -20,12 +20,10 @@ export const CreateInvoice = () => {
   //state for Customer Details
   const [customerDetails, setCustomerDetails] = useState<ICustomer>({
     name: "",
-    number: "",
   });
 
   //state for invoice Details
   const [invoiceDetails, setInvoieceDetails] = useState({
-    ID: "",
     date: "",
     subtotal: 0,
     total: 0,
@@ -73,7 +71,7 @@ export const CreateInvoice = () => {
     e.preventDefault();
 
     const invoiceData: InvoiceData = {
-      ID: invoiceDetails.ID,
+      // ID: invoiceDetails.ID,
       customer: { ...customerDetails },
       details: [...itemsDetails],
       total: invoiceDetails.total,
@@ -92,11 +90,11 @@ export const CreateInvoice = () => {
     if (isSuccess) {
       setCustomerDetails({
         name: "",
-        number: "",
+        // number: "",
       });
 
       setInvoieceDetails({
-        ID: "",
+        // ID: "",
         date: "",
         subtotal: 0,
         total: 0,
@@ -143,7 +141,7 @@ export const CreateInvoice = () => {
             }
           />
 
-          <FormInput
+          {/* <FormInput
             label="رقم العميل"
             name="customerMobile"
             labeClassNames={lableClassNamesStyles.default}
@@ -153,7 +151,7 @@ export const CreateInvoice = () => {
             onChange={(e) =>
               setCustomerDetails({ ...customerDetails, number: e.target.value })
             }
-          />
+          /> */}
         </div>
 
         <p className="my-4 rounded bg-red-800 p-2 text-lg font-bold text-white">
@@ -266,7 +264,7 @@ export const CreateInvoice = () => {
           [ بيانات الفاتورة ]
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4 px-5 py-5 font-semibold">
-          <FormInput
+          {/* <FormInput
             label="رقم الجواز"
             name="PassportID"
             labeClassNames={lableClassNamesStyles.default}
@@ -276,7 +274,7 @@ export const CreateInvoice = () => {
             onChange={(e) =>
               setInvoieceDetails({ ...invoiceDetails, ID: e.target.value })
             }
-          />
+          /> */}
 
           <FormInput
             label="تاريخ الفاتورة"
@@ -387,12 +385,10 @@ export const CreateInvoice = () => {
             label="Total"
             name="invoiceTotal"
             labeClassNames={lableClassNamesStyles.default}
-            className={inputClassNamesStyles.default}
+            className={`${inputClassNamesStyles.default} bg-slate-200`}
             type="number"
             value={invoiceDetails.total}
-            onChange={(e) =>
-              setInvoieceDetails({ ...invoiceDetails, total: +e.target.value })
-            }
+            disabled
             step="0.01"
             min={0}
             required

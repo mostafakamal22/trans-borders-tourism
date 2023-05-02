@@ -115,7 +115,7 @@ export const UpdatePurchase = ({
 
   useEffect(() => {
     //scroll page back to top when component first mount
-    const yOffset = window.pageYOffset;
+    const yOffset = window.scrollY;
     window.scrollBy(0, -yOffset);
   }, []);
 
@@ -262,23 +262,10 @@ export const UpdatePurchase = ({
                 label="الاجمالى بعد الضريبة"
                 name="itemTotal"
                 labeClassNames={lableClassNamesStyles.default}
-                className={inputClassNamesStyles.default}
+                className={`${inputClassNamesStyles.default} bg-slate-200`}
                 type="number"
                 value={item.total}
-                onChange={(e) => {
-                  const newArr = [...purchaseTypesDetails];
-                  newArr[index].total = +e.target.value;
-                  setPurchaseTypesDetails(newArr);
-
-                  const newTotal = purchaseTypesDetails.reduce(
-                    (prev, curr) => prev + curr.total,
-                    0
-                  );
-                  setPurchaseDetails({
-                    ...purchaseDetails,
-                    total: +newTotal.toFixed(2),
-                  });
-                }}
+                disabled
                 min={0}
                 step={0.01}
               />
@@ -315,15 +302,10 @@ export const UpdatePurchase = ({
               label="المبلغ الكــلى"
               name="totalPayment"
               labeClassNames={lableClassNamesStyles.default}
-              className={inputClassNamesStyles.default}
+              className={`${inputClassNamesStyles.default} bg-slate-200`}
               type="number"
               value={purchaseDetails.total}
-              onChange={(e) =>
-                setPurchaseDetails({
-                  ...purchaseDetails,
-                  total: +e.target.value,
-                })
-              }
+              disabled
               min={0}
               step={0.01}
               required

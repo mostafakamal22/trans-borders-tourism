@@ -6,14 +6,22 @@ import ReactToPrint from "react-to-print";
 import { useRef } from "react";
 import { AiFillPrinter } from "react-icons/ai";
 import { comapanyInfos } from "./constants";
-import { invoiceTableHeader, invoiceTableRow } from "./Table";
-import { IProduct } from "../../../../backend/models/invoiceModel";
+import {
+  invoicePassportTableHeader,
+  invoicePassportTableRow,
+  invoiceTableHeader,
+  invoiceTableRow,
+} from "./Table";
+import {
+  IInvoiceDocument,
+  IProduct,
+} from "../../../../backend/models/invoiceModel";
 import { useScroll } from "../../hooks/useScroll";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 export const ShowInvoice = () => {
   const location = useLocation();
-  const invoice = location?.state?.invoice;
+  const invoice: IInvoiceDocument = location?.state?.invoice;
 
   const componentRef = useRef<HTMLDivElement>(null);
 
@@ -21,6 +29,26 @@ export const ShowInvoice = () => {
   useDocumentTitle("عرض فاتورة");
 
   if (!invoice) return <Navigate to={"/not-found"} replace />;
+
+  //Check if invoice date is before 30/4/2023 or not
+  const invoiceDate = invoice?.date;
+  const cutoffDate = dayjs("2023-05-01");
+
+  const isInvoiceBefore1May2023 = dayjs(invoiceDate).isBefore(cutoffDate);
+
+  //check if invoice.ID contains a string starts with  "After-30-4" >> Passport Invoice
+  const isPassportInvoice = invoice?.ID && invoice.ID.startsWith("After-30-4");
+
+  //Invoice Number
+  const invoiceNo = invoice?.no
+    ? invoice?.no
+    : invoice?.date
+    ? dayjs(invoice?.date).format(
+        `YYYYMMDD-${dayjs(invoice?.createdAt as string).hour()}`
+      )
+    : dayjs(invoice?.createdAt as string).format(
+        `YYYYMMDD-${dayjs(invoice?.createdAt as string).hour()}`
+      );
 
   return (
     <>
@@ -42,10 +70,11 @@ export const ShowInvoice = () => {
         className="mx-auto my-10 min-h-[75vh] w-full max-w-5xl overflow-x-auto rounded border border-black bg-slate-50 p-10 print:my-0 print:flex print:min-h-screen print:flex-col print:justify-between print:border-none print:shadow-none"
       >
         <div className="flex items-center">
-          <div className="max-w-[300px] text-left">
+          <div className="max-w-[300px] text-left text-sm">
             <p className="text-xl font-bold text-blue-700">
               {comapanyInfos.name[0]}
             </p>
+            {!isInvoiceBefore1May2023 ? <p>TRN:- {comapanyInfos.TRN}</p> : null}
             <p>{comapanyInfos.address}</p>
 
             {comapanyInfos.tel.map((tel) => (
@@ -81,8 +110,12 @@ export const ShowInvoice = () => {
           />
 
           <div className="w-[300px] self-start text-right">
-            <p className="text-3xl font-bold text-blue-400">INVOICE</p>
-            <p>
+            {!isInvoiceBefore1May2023 ? (
+              <p className="text-3xl font-bold text-blue-400">TAX INVOICE</p>
+            ) : (
+              <p className="text-3xl font-bold text-blue-400">INVOICE</p>
+            )}
+            <p className="text-sm">
               DATE{" "}
               <span
                 style={{ printColorAdjust: "exact" }}
@@ -91,21 +124,13 @@ export const ShowInvoice = () => {
                 {invoice?.date ? dayjs(invoice.date).format("DD/MM/YYYY") : "-"}
               </span>
             </p>
-            <p>
+            <p className="text-sm">
               INVOICE #{" "}
               <span
                 style={{ printColorAdjust: "exact" }}
                 className="rounded-sm bg-red-100 p-1"
               >
-                [
-                {invoice?.date
-                  ? dayjs(invoice?.date).format(
-                      `YYYYMMDD-${dayjs(invoice?.createdAt as string).hour()}`
-                    )
-                  : dayjs(invoice?.createdAt as string).format(
-                      `YYYYMMDD-${dayjs(invoice?.createdAt as string).hour()}`
-                    )}
-                ]
+                [{invoiceNo}]
               </span>
             </p>
           </div>
@@ -134,11 +159,19 @@ export const ShowInvoice = () => {
                 style={{ printColorAdjust: "exact" }}
                 className="bg-red-100 uppercase text-gray-900"
               >
-                {invoiceTableHeader}
+                {isPassportInvoice
+                  ? invoicePassportTableHeader
+                  : invoiceTableHeader}
               </thead>
               <tbody>
                 {invoice.details.map((detail: IProduct, index: number) =>
-                  invoiceTableRow(detail, index)
+                  isPassportInvoice
+                    ? invoicePassportTableRow(
+                        detail,
+                        invoice?.ID as string,
+                        index
+                      )
+                    : invoiceTableRow(detail, index)
                 )}
               </tbody>
             </table>

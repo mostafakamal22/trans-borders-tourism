@@ -17,6 +17,16 @@ var paymentTypeSchema = new mongoose_1.Schema({
     method: {
         type: String,
     },
+    cost: {
+        type: Number,
+        required: [true, "Please Payment Type Cost!"],
+        min: [0, "Payment Type Cost Can NOT Be Less Than 0"],
+    },
+    tax: {
+        type: Number,
+        required: [true, "Please Payment Type Tax!"],
+        min: [0, "Payment Type Tax Can NOT Be Less Than 0"],
+    },
     total: {
         type: Number,
         required: [true, "Please Payment Type Total!"],

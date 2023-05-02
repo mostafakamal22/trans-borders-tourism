@@ -148,11 +148,13 @@ export const CreatePassport = () => {
               setPassportDetails({
                 ...passportDetails,
                 servicePrice: +e.target.value,
-                total:
-                  +e.target.value +
-                  passportDetails.taxable +
-                  passportDetails.taxRate,
                 sales:
+                  passportDetails.service === "change_situation"
+                    ? +e.target.value +
+                      passportDetails.taxRate +
+                      passportDetails.taxable
+                    : 0,
+                total:
                   passportDetails.service === "change_situation"
                     ? +e.target.value +
                       passportDetails.taxRate +
@@ -166,58 +168,25 @@ export const CreatePassport = () => {
           />
 
           <FormInput
-            label={passportTableHeaderTitles[6]}
+            label={passportTableHeaderTitles[7]}
             name="taxable"
             labeClassNames={lableClassNamesStyles.default}
-            className={inputClassNamesStyles.default}
+            className={`${inputClassNamesStyles.default} bg-slate-200`}
             type="number"
             value={passportDetails.taxable}
-            onChange={(e) =>
-              setPassportDetails({
-                ...passportDetails,
-                taxable: +e.target.value,
-                total:
-                  +e.target.value +
-                  passportDetails.servicePrice +
-                  passportDetails.taxRate,
-
-                sales:
-                  passportDetails.service === "change_situation"
-                    ? +e.target.value +
-                      passportDetails.taxRate +
-                      passportDetails.servicePrice
-                    : 0,
-                profit: 0,
-              })
-            }
+            disabled
             min={0}
             step={0.01}
           />
 
           <FormInput
-            label={passportTableHeaderTitles[7]}
+            label={passportTableHeaderTitles[6]}
             name="taxRate"
             labeClassNames={lableClassNamesStyles.default}
-            className={inputClassNamesStyles.default}
+            className={`${inputClassNamesStyles.default} bg-slate-200`}
             type="number"
             value={passportDetails.taxRate}
-            onChange={(e) =>
-              setPassportDetails({
-                ...passportDetails,
-                taxRate: +e.target.value,
-                total:
-                  +e.target.value +
-                  passportDetails.taxable +
-                  passportDetails.servicePrice,
-                sales:
-                  passportDetails.service === "change_situation"
-                    ? +e.target.value +
-                      passportDetails.taxable +
-                      passportDetails.servicePrice
-                    : 0,
-                profit: 0,
-              })
-            }
+            disabled
             min={0}
             step={0.01}
           />
@@ -226,22 +195,16 @@ export const CreatePassport = () => {
             label={passportTableHeaderTitles[8]}
             name="totalPayment"
             labeClassNames={lableClassNamesStyles.default}
-            className={inputClassNamesStyles.default}
+            className={`${inputClassNamesStyles.default} bg-slate-200`}
             type="number"
             value={passportDetails.total}
-            onChange={(e) =>
-              setPassportDetails({
-                ...passportDetails,
-                total: +e.target.value,
-                profit: passportDetails.sales - +e.target.value,
-              })
-            }
+            disabled
             min={0}
             step={0.01}
           />
 
           <FormInput
-            label={passportTableHeaderTitles[9]}
+            label={passportTableHeaderTitles[10]}
             name="sales"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -250,25 +213,15 @@ export const CreatePassport = () => {
             onChange={(e) =>
               setPassportDetails({
                 ...passportDetails,
+                total: calculatePassportTotal({
+                  sales: +e.target.value,
+                  servicePrice: passportDetails.servicePrice,
+                }),
                 sales: +e.target.value,
-                profit: +(+e.target.value - passportDetails.total).toFixed(2),
-              })
-            }
-            min={0}
-            step={0.01}
-          />
-
-          <FormInput
-            label={passportTableHeaderTitles[10]}
-            name="profit"
-            labeClassNames={lableClassNamesStyles.default}
-            className={inputClassNamesStyles.default}
-            type="number"
-            value={passportDetails.profit}
-            onChange={(e) =>
-              setPassportDetails({
-                ...passportDetails,
-                profit: +e.target.value,
+                profit: +calculatePassportProfit({
+                  sales: +e.target.value,
+                  servicePrice: passportDetails.servicePrice,
+                }),
               })
             }
             min={0}
@@ -277,6 +230,18 @@ export const CreatePassport = () => {
 
           <FormInput
             label={passportTableHeaderTitles[11]}
+            name="profit"
+            labeClassNames={lableClassNamesStyles.default}
+            className={`${inputClassNamesStyles.default} bg-slate-200`}
+            type="number"
+            value={passportDetails.profit}
+            disabled
+            min={0}
+            step={0.01}
+          />
+
+          <FormInput
+            label={passportTableHeaderTitles[12]}
             name="paymentDate"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -342,4 +307,32 @@ export const CreatePassport = () => {
       </form>
     </section>
   );
+};
+
+export const calculatePassportTotal = ({
+  sales,
+  servicePrice,
+}: {
+  sales: number;
+  servicePrice: number;
+}): number => {
+  const subTotal = ((sales - servicePrice) * 100) / 105;
+  const total = subTotal + servicePrice;
+  return +total.toFixed(2);
+};
+
+export const calculatePassportProfit = ({
+  sales,
+  servicePrice,
+}: {
+  sales: number;
+  servicePrice: number;
+}): number => {
+  const total = +calculatePassportTotal({
+    sales,
+    servicePrice,
+  });
+  const profit = total - servicePrice - 53;
+
+  return +profit.toFixed(2);
 };

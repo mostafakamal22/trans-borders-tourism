@@ -6,9 +6,7 @@ const totalsHeaders: string[] = ["القيمة", "الإجمالى"];
 export const Totals = ({ purchases }: { purchases: IPurchaseDocument[] }) => {
   const { totals } = purchasesCalculations(purchases);
 
-  const tableBody: string[][] = [
-    ["إجمالى  تكلفة المشتــريات ", totals.toFixed(2)],
-  ];
+  const tableBody: string[][] = [["تكلفة المشتــريات", totals.toFixed(2)]];
 
   //Define table data
   const tableHeader = (

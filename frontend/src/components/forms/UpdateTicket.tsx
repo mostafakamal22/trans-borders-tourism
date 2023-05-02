@@ -85,7 +85,7 @@ export const UpdateTicket = ({
 
   useEffect(() => {
     //scroll page back to top when component first mount
-    const yOffset = window.pageYOffset;
+    const yOffset = window.scrollY;
     window.scrollBy(0, -yOffset);
   }, []);
 
@@ -167,7 +167,8 @@ export const UpdateTicket = ({
                 setTicketsDetails({
                   ...ticketsDetails,
                   cost: +e.target.value,
-                  profit: ticketsDetails.sales - +e.target.value,
+                  sales: 0,
+                  profit: 0,
                 })
               }
               min={0}
@@ -186,6 +187,8 @@ export const UpdateTicket = ({
                   ...ticketsDetails,
                   sales: +e.target.value,
                   profit: +e.target.value - ticketsDetails.cost,
+                  paidAmount: +e.target.value,
+                  remainingAmount: 0,
                 })
               }
               min={0}
@@ -196,15 +199,10 @@ export const UpdateTicket = ({
               label={ticketsTableHeaderTitles[5]}
               name="profit"
               labeClassNames={lableClassNamesStyles.default}
-              className={inputClassNamesStyles.default}
+              className={`${inputClassNamesStyles.default} bg-slate-200`}
               type="number"
               value={ticketsDetails.profit}
-              onChange={(e) =>
-                setTicketsDetails({
-                  ...ticketsDetails,
-                  profit: +e.target.value,
-                })
-              }
+              disabled
               min={0}
               step={0.01}
             />
@@ -231,15 +229,10 @@ export const UpdateTicket = ({
               label={"Remaining Amount"}
               name="remainingAmount"
               labeClassNames={lableClassNamesStyles.default}
-              className={inputClassNamesStyles.default}
+              className={`${inputClassNamesStyles.default} bg-slate-200`}
               type="number"
               value={ticketsDetails.remainingAmount}
-              onChange={(e) =>
-                setTicketsDetails({
-                  ...ticketsDetails,
-                  remainingAmount: +e.target.value,
-                })
-              }
+              disabled
               min={0}
               step={0.01}
             />

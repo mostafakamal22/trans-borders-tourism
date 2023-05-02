@@ -11,6 +11,7 @@ import FormButton from "../shared/FormButton";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { useScroll } from "../../hooks/useScroll";
 import { ReactComponent as PurchaseAlt } from "../../assets/icons/purchase-alt.svg";
+import { IPurchaseType } from "../../../../backend/models/purchaseModel";
 
 export const CreatePurchase = () => {
   //state for Purchase Details
@@ -20,7 +21,9 @@ export const CreatePurchase = () => {
   });
 
   //state for purchaseTypes Details
-  const [purchaseTypesDetails, setPurchaseTypesDetails] = useState([
+  const [purchaseTypesDetails, setPurchaseTypesDetails] = useState<
+    IPurchaseType[]
+  >([
     {
       name: "",
       description: "",
@@ -230,23 +233,10 @@ export const CreatePurchase = () => {
               label="الاجمالى بعد الضريبة"
               name="itemTotal"
               labeClassNames={lableClassNamesStyles.default}
-              className={inputClassNamesStyles.default}
+              className={`${inputClassNamesStyles.default} bg-slate-200`}
               type="number"
               value={item.total}
-              onChange={(e) => {
-                const newArr = [...purchaseTypesDetails];
-                newArr[index].total = +e.target.value;
-                setPurchaseTypesDetails(newArr);
-
-                const newTotal = purchaseTypesDetails.reduce(
-                  (prev, curr) => prev + curr.total,
-                  0
-                );
-                setPurchaseDetails({
-                  ...purchaseDetails,
-                  total: +newTotal.toFixed(2),
-                });
-              }}
+              disabled
               min={0}
               step={0.01}
             />
@@ -283,12 +273,10 @@ export const CreatePurchase = () => {
             label="المبلغ الكــلى"
             name="totalPayment"
             labeClassNames={lableClassNamesStyles.default}
-            className={inputClassNamesStyles.default}
+            className={`${inputClassNamesStyles.default} bg-slate-200`}
             type="number"
             value={purchaseDetails.total}
-            onChange={(e) =>
-              setPurchaseDetails({ ...purchaseDetails, total: +e.target.value })
-            }
+            disabled
             min={0}
             step={0.01}
             required

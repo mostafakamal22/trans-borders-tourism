@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
 var mongoose_paginate_v2_1 = __importDefault(require("mongoose-paginate-v2"));
+var mongoose_plugin_autoinc_1 = require("mongoose-plugin-autoinc");
 //Define customer info Schema
 var customerSchema = new mongoose_1.Schema({
     name: {
@@ -95,6 +96,13 @@ mongoose_paginate_v2_1.default.paginate.options = {
 };
 //Paginate with plugin.
 invoiceSchema.plugin(mongoose_paginate_v2_1.default);
+//Auto Increament Invoice Number Plugin
+invoiceSchema.plugin(mongoose_plugin_autoinc_1.autoIncrement, {
+    model: "Invoice",
+    field: "no",
+    startAt: 1,
+    incrementBy: 1,
+});
 //Define Invoice Model
 var Invoice = (0, mongoose_1.model)("Invoice", invoiceSchema, "invoices");
 exports.default = Invoice;

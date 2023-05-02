@@ -18,6 +18,7 @@ export type FilterSummaryProps = {
 
 export type CompanyInfos = {
   name: string[];
+  TRN: number;
   address: string;
   website: string;
   email: string;

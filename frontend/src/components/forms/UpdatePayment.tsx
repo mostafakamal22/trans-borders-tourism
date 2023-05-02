@@ -24,6 +24,7 @@ import { motion } from "framer-motion";
 import { paymentMethods, paymentTypes } from "../payment/constants";
 import { PaymentMethods, PaymentTypes } from "../payment/types";
 import { ReactComponent as PaymentAlt } from "../../assets/icons/payment-alt.svg";
+import { IPaymentType } from "../../../../backend/models/paymentModel";
 
 export const UpdatePayment = ({
   id,
@@ -58,6 +59,8 @@ export const UpdatePayment = ({
         name: item?.name,
         description: item?.description,
         method: item?.method,
+        cost: item?.cost,
+        tax: item?.tax ? item?.tax : 0,
         total: item?.total,
       };
     }),
@@ -65,7 +68,7 @@ export const UpdatePayment = ({
 
   //state for paymentTypes Details
   const [paymentTypesDetails, setPaymentTypesDetails] =
-    useState(paymentTypesData);
+    useState<IPaymentType[]>(paymentTypesData);
 
   //state for items
   const [itemsCount, setItemsCount] = useState(1);
@@ -80,9 +83,11 @@ export const UpdatePayment = ({
         ? [
             ...paymentTypesDetails,
             {
-              name: "rent",
+              name: "bank_payments",
               description: "",
               method: "bank",
+              cost: 0,
+              tax: 0,
               total: 0,
             },
           ]
@@ -111,7 +116,7 @@ export const UpdatePayment = ({
 
   useEffect(() => {
     //scroll page back to top when component first mount
-    const yOffset = window.pageYOffset;
+    const yOffset = window.scrollY;
     window.scrollBy(0, -yOffset);
   }, []);
 
@@ -205,26 +210,67 @@ export const UpdatePayment = ({
               />
 
               <FormInput
-                label="المبلـغ"
+                label="المبلغ قبل الضريبة"
                 name="itemTotal"
                 labeClassNames={lableClassNamesStyles.default}
                 className={inputClassNamesStyles.default}
                 type="number"
-                value={item.total}
+                value={item.cost}
                 onChange={(e) => {
                   const newArr = [...paymentTypesDetails];
-                  newArr[index].total = +e.target.value;
+                  newArr[index].cost = +e.target.value;
+                  newArr[index].total = +e.target.value + newArr[index].tax;
                   setPaymentTypesDetails(newArr);
 
                   const newTotal = paymentTypesDetails.reduce(
-                    (prev: number, curr: any) => prev + curr.total,
+                    (prev, curr) => prev + curr.total,
                     0
                   );
-                  setPaymentDetails({ ...paymentDetails, total: newTotal });
+                  setPaymentDetails({
+                    ...paymentDetails,
+                    total: +newTotal.toFixed(2),
+                  });
                 }}
                 min={0}
                 step={0.01}
-                required
+              />
+
+              <FormInput
+                label="الضريبة"
+                name="itemTotal"
+                labeClassNames={lableClassNamesStyles.default}
+                className={inputClassNamesStyles.default}
+                type="number"
+                value={item.tax}
+                onChange={(e) => {
+                  const newArr = [...paymentTypesDetails];
+                  newArr[index].tax = +e.target.value;
+                  newArr[index].total = newArr[index].cost + +e.target.value;
+                  setPaymentTypesDetails(newArr);
+
+                  const newTotal = paymentTypesDetails.reduce(
+                    (prev, curr) => prev + curr.total,
+                    0
+                  );
+                  setPaymentDetails({
+                    ...paymentDetails,
+                    total: +newTotal.toFixed(2),
+                  });
+                }}
+                min={0}
+                step={0.01}
+              />
+
+              <FormInput
+                label="الاجمالى بعد الضريبة"
+                name="itemTotal"
+                labeClassNames={lableClassNamesStyles.default}
+                className={`${inputClassNamesStyles.default} bg-slate-200`}
+                type="number"
+                value={item.total}
+                disabled
+                min={0}
+                step={0.01}
               />
             </div>
           ))}
@@ -259,12 +305,10 @@ export const UpdatePayment = ({
               label="المبلغ الكــلى"
               name="totalPayment"
               labeClassNames={lableClassNamesStyles.default}
-              className={inputClassNamesStyles.default}
+              className={`${inputClassNamesStyles.default} bg-slate-200`}
               type="number"
               value={paymentDetails.total}
-              onChange={(e) =>
-                setPaymentDetails({ ...paymentDetails, total: +e.target.value })
-              }
+              disabled
               min={0}
               step={0.01}
               required

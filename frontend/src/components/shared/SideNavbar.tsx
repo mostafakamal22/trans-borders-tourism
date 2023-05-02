@@ -124,10 +124,10 @@ export const SideNavbar = () => {
     <aside
       className={`min-h-screen overflow-y-auto overflow-x-hidden bg-slate-50 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-400 scrollbar-corner-slate-700 scrollbar-track-rounded-full scrollbar-w-0 ${
         open ? "w-52" : "w-16"
-      }  px-4 font-semibold text-black duration-500`}
+      }  p-4 font-semibold text-black duration-500`}
       role={"navigation"}
     >
-      <div className="flex  justify-end py-3">
+      <div className="flex justify-end">
         <HiMenu
           size={26}
           className="cursor-pointer focus:bg-gray-100 hover:bg-gray-100"
