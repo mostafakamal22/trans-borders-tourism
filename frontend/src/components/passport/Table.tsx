@@ -72,7 +72,7 @@ export const tableRow = ({
 
   const cutoffDate = dayjs("2023-05-01");
 
-  const isInvoiceBefore1May2023 = dayjs(passport?.payment_date).isBefore(
+  const isPassportBefore1May2023 = dayjs(passport?.payment_date).isBefore(
     cutoffDate
   );
 
@@ -174,7 +174,7 @@ export const tableRow = ({
         scope="row"
         className="border-x  border-x-black  p-1 text-center text-gray-900"
       >
-        {isInvoiceBefore1May2023 ? "-" : tax}
+        {isPassportBefore1May2023 ? "-" : tax}
       </th>
 
       {/*Total Payment*/}

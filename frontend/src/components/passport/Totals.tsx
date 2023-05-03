@@ -4,13 +4,14 @@ import { passportsCalculations } from "./calculations";
 const totalsHeaders: string[] = ["القيمة", "الإجمالى"];
 
 export const Totals = ({ passports }: { passports: IPassportDocument[] }) => {
-  const { totals, servicePrices, taxables, profits, sales } =
+  const { totals, servicePrices, taxables, taxes, profits, sales } =
     passportsCalculations(passports);
 
   const tableBody: string[][] = [
     ["الرسوم الغير خاضعة للضريبة", servicePrices.toFixed(2)],
     ["رسوم الخدمة", taxables.toFixed(2)],
     ["الاجمالى قبل الضريبة", totals.toFixed(2)],
+    ["ضريبة القيمة المضافة", taxes.toFixed(2)],
     ["سعر البيع شامل الضريبة", sales.toFixed(2)],
     ["صافى الربح", profits.toFixed(2)],
   ];
