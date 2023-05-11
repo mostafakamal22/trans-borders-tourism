@@ -1,8 +1,14 @@
 import { useSearchParams } from "react-router-dom";
-import { FilterProps, FilterSummaryProps } from "./types";
+import {
+  FilterProps,
+  FilterSummaryProps,
+  PaymentMethods,
+  PaymentTypes,
+} from "./types";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { inputClassNamesStyles } from "../invoice/constants";
 import { FcFilledFilter } from "react-icons/fc";
+import { paymentMethods, paymentTypes } from "./constants";
 
 export const Filters = ({
   setSearchQuery,
@@ -182,20 +188,19 @@ export const Filters = ({
           </select>
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-2">
+        <div className="flex w-11/12 flex-col items-center justify-center gap-2">
           <label
             className="w-full rounded bg-red-700 p-2 text-white"
             htmlFor="method"
           >
             طريقة دفع المصـروف
           </label>
-          <input
-            type="text"
+
+          <select
             name="method"
             id="method"
             className={inputClassNamesStyles.default}
             value={method}
-            placeholder="طريقة دفع المصـروف"
             onChange={(e) => {
               if (pageNumber && +pageNumber > 1) {
                 SetURLSearchParams({ page: "1" });
@@ -206,23 +211,30 @@ export const Filters = ({
                 method: e.target.value,
               });
             }}
-          />
+          >
+            <option value={""}>كل الطرق</option>
+
+            {Object.keys(paymentMethods).map((paymentMethod) => (
+              <option key={paymentMethod} value={paymentMethod}>
+                {paymentMethods[paymentMethod as keyof PaymentMethods]}
+              </option>
+            ))}
+          </select>
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-2">
+        <div className="flex w-11/12 flex-col items-center justify-center gap-2">
           <label
             className="w-full rounded bg-red-700 p-2 text-white"
             htmlFor="type"
           >
             نوع المصروف
           </label>
-          <input
-            type="text"
+
+          <select
             name="type"
             id="type"
-            className={inputClassNamesStyles.default}
+            className={inputClassNamesStyles.default + " truncate text-center"}
             value={type}
-            placeholder="نوع المصروف"
             onChange={(e) => {
               if (pageNumber && +pageNumber > 1) {
                 SetURLSearchParams({ page: "1" });
@@ -233,7 +245,15 @@ export const Filters = ({
                 type: e.target.value,
               });
             }}
-          />
+          >
+            <option value={""}>كل الانواع</option>
+
+            {Object.keys(paymentTypes).map((paymentType) => (
+              <option key={paymentType} value={paymentType}>
+                {paymentTypes[paymentType as keyof PaymentTypes]}
+              </option>
+            ))}
+          </select>
         </div>
       </form>
     </div>
@@ -290,12 +310,13 @@ export const FiltersSummary = ({
 
       {method && (
         <span className="mx-1 rounded-md bg-pink-500 p-1 text-white">
-          {" طريقة دفع المصـروف:- " + method}
+          {" طريقة دفع المصـروف:- " +
+            paymentMethods[method as keyof PaymentMethods]}
         </span>
       )}
       {type && (
         <span className="mx-1 rounded-md bg-pink-500 p-1 text-white">
-          {" نوع المصروف:- " + type}
+          {" نوع المصروف:- " + paymentTypes[type as keyof PaymentTypes]}
         </span>
       )}
 

@@ -1,11 +1,7 @@
-import { useState, useEffect, useDeferredValue, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { PaginationTable } from "../shared/PaginationTable";
 import { MainSpinner } from "../shared/MainSpinner";
-import {
-  PaymentMethods,
-  PaymentSearchQueries,
-  PaymentTypes,
-} from "../payment/types";
+import { PaymentSearchQueries } from "../payment/types";
 import { useSearchParams } from "react-router-dom";
 import {
   PaymentSearchQuery,
@@ -23,7 +19,6 @@ import { tableHeader, tableRow } from "./Table";
 import { Filters, FiltersSummary } from "./Filters";
 import { Totals } from "./Totals";
 import { UpdatePayment } from "../forms/UpdatePayment";
-import { paymentMethods, paymentTypes } from "./constants";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 
 export const Payments = () => {
@@ -37,9 +32,6 @@ export const Payments = () => {
   });
 
   const { year, month, day, method, type } = searchQuery;
-
-  const deferredType = useDeferredValue(type);
-  const deferredMethod = useDeferredValue(method);
 
   const notInitialRender = useRef(false);
 
@@ -58,12 +50,8 @@ export const Payments = () => {
       day: +day,
       month: +month,
       year: +year,
-      type: Object.keys(paymentTypes).find(
-        (key) => paymentTypes[key as keyof PaymentTypes] === deferredType
-      ),
-      method: Object.keys(paymentMethods).find(
-        (key) => paymentMethods[key as keyof PaymentMethods] === deferredMethod
-      ),
+      type,
+      method,
     },
     option: {
       limit: tableRows,
@@ -161,15 +149,15 @@ export const Payments = () => {
       {!year &&
         !month &&
         !day &&
-        !deferredType &&
-        !deferredMethod &&
+        !type &&
+        !method &&
         payments?.length === 0 &&
         !isLoading &&
         !isFetching &&
         !isError && <NoSavedRecords customMsg={["مصروفات", "المصروفات"]} />}
 
       {/* if there is search query no Payments matches >>> No Search Found*/}
-      {(year || month || day || deferredMethod || deferredType) &&
+      {(year || month || day || method || type) &&
         payments?.length === 0 &&
         !isLoading &&
         !isFetching &&
