@@ -7,8 +7,9 @@ import { IInvoiceDocument } from "../../../../backend/models/invoiceModel";
 import { TableRowProps } from "../shared/PaginationTable";
 import { invoiceHeaderTitles } from "../invoice/constants";
 import { IProduct } from "../../../../backend/models/invoiceModel";
+import { Fragment } from "react";
 
-//Define table data
+//Define Invoice Main Table Data
 export const tableHeader = (
   <tr className="border-y border-y-black">
     {tableHeaderTitles.map((title) => (
@@ -125,7 +126,7 @@ export const tableRow = ({
   );
 };
 
-//Define invoice table data
+//Define Normal Invoice Table Data
 export const invoiceTableHeader = (
   <tr className="border-b border-b-black">
     {invoiceHeaderTitles.map((title: string) => (
@@ -133,20 +134,6 @@ export const invoiceTableHeader = (
         key={title}
         scope="col"
         className="border-x border-x-black py-3 px-3 text-center"
-      >
-        {title}
-      </th>
-    ))}
-  </tr>
-);
-
-export const invoicePassportTableHeader = (
-  <tr className="border-b border-b-black">
-    {invoicePassportHeaderTitles.map((title: string) => (
-      <th
-        key={title}
-        scope="col"
-        className="border-x border-x-black p-2 text-center text-sm print:border-x print:border-x-black"
       >
         {title}
       </th>
@@ -206,88 +193,199 @@ export const invoiceTableRow = (detail: IProduct, index: number) => {
   );
 };
 
-export const invoicePassportTableRow = (
+//Define Passport Invoice Table Data
+export const invoicePassportTableHeader = (
+  <tr className="border-b">
+    {invoicePassportHeaderTitles.map((title: string) => (
+      <th key={title} scope="col" className="border-x p-2 text-center text-sm">
+        {title}
+      </th>
+    ))}
+  </tr>
+);
+
+export const invoicePassportTableRows = (
   detail: IProduct,
   passportSpecialKey: string,
   index: number
 ) => {
   const sales = detail?.price;
-  const service_price = Number(passportSpecialKey.split(" ")[1]);
-  const total = ((sales - service_price) * 100) / 105;
-  const tax = sales - service_price - total;
-  const taxable = total + service_price;
+  const servicePrice = Number(passportSpecialKey.split(" ")[1]);
+  const total = ((sales - servicePrice) * 100) / 105;
+  const VAT = sales - servicePrice - total;
+  const totalServiceCharge = VAT + total;
+  const totalServicesPrices = servicePrice + total;
 
-  return (
-    <tr
-      key={`${passportSpecialKey}+${index}`}
-      style={{ printColorAdjust: "exact" }}
-      className={`${
-        index % 2 === 0 ? "bg-white" : "bg-red-100"
-      } border-b border-b-black`}
-    >
-      {/*Detail NO*/}
+  const passportServiceRow = (
+    <tr className="border-b bg-white">
+      {/*Service NO*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
-        {index + 1}
+        {"1"}
       </th>
 
       {/*Description*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
         {detail?.name ? detail?.name : "-"}
-      </th>
-
-      {/*Quantity*/}
-      <th
-        scope="row"
-        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
-      >
-        {detail?.quantity}
       </th>
 
       {/*Service Price*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
-        {service_price}
+        {servicePrice.toFixed(2)}
       </th>
 
-      {/*Total Payment*/}
+      {/*Quantity*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {detail?.quantity}
+      </th>
+
+      {/*Discount*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {"0.00"}
+      </th>
+
+      {/*VAT 5%*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {"0.00"}
+      </th>
+
+      {/*Amount*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {servicePrice.toFixed(2)}
+      </th>
+    </tr>
+  );
+
+  const serviceChargeRow = (
+    <tr className="border-b bg-white">
+      {/*Service NO*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {"2"}
+      </th>
+
+      {/*Description*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {"Service Charge"}
+      </th>
+
+      {/*Service Price*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
         {total?.toFixed(2)}
       </th>
 
-      {/*Total Taxable*/}
+      {/*Quantity*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
-        {taxable?.toFixed(2)}
+        {"1"}
       </th>
 
-      {/*Tax*/}
+      {/*Discount*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
-        {tax?.toFixed(2)}
+        {"0.00"}
       </th>
 
-      {/*Sales*/}
+      {/*VAT 5%*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {VAT.toFixed(2)}
+      </th>
+
+      {/*Amount*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {totalServiceCharge.toFixed(2)}
+      </th>
+    </tr>
+  );
+
+  const TotalsRow = (
+    <tr className="border-b bg-white font-bold">
+      <td></td>
+      <td></td>
+
+      {/*Total Services Prices*/}
+      <th
+        style={{ printColorAdjust: "exact" }}
+        scope="row"
+        className="border-x bg-red-100 p-2 text-center text-sm text-gray-900"
+      >
+        {totalServicesPrices.toFixed(2)}
+      </th>
+
+      <td></td>
+
+      {/*Total Discount*/}
+      <th
+        style={{ printColorAdjust: "exact" }}
+        scope="row"
+        className="border-x bg-red-100 p-2 text-center text-sm text-gray-900"
+      >
+        {"0.00"}
+      </th>
+
+      {/*Total VAT*/}
+      <th
+        style={{ printColorAdjust: "exact" }}
+        scope="row"
+        className="border-x bg-red-100 p-2 text-center text-sm text-gray-900"
+      >
+        {VAT.toFixed(2)}
+      </th>
+
+      {/*Total Sales (Amount)*/}
+      <th
+        style={{ printColorAdjust: "exact" }}
+        scope="row"
+        className="border-x bg-red-100 p-2 text-center text-sm text-gray-900"
       >
         {sales}
       </th>
     </tr>
+  );
+
+  return (
+    <Fragment key={`${passportSpecialKey}+${index}`}>
+      {passportServiceRow}
+      {serviceChargeRow}
+      {TotalsRow}
+    </Fragment>
   );
 };

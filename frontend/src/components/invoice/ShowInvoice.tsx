@@ -8,7 +8,7 @@ import { AiFillPrinter } from "react-icons/ai";
 import { comapanyInfos } from "./constants";
 import {
   invoicePassportTableHeader,
-  invoicePassportTableRow,
+  invoicePassportTableRows,
   invoiceTableHeader,
   invoiceTableRow,
 } from "./Table";
@@ -166,7 +166,7 @@ export const ShowInvoice = () => {
               <tbody>
                 {invoice.details.map((detail: IProduct, index: number) =>
                   isPassportInvoice
-                    ? invoicePassportTableRow(
+                    ? invoicePassportTableRows(
                         detail,
                         invoice?.ID as string,
                         index

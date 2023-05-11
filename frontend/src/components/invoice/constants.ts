@@ -42,12 +42,11 @@ export const invoiceHeaderTitles = [
 ];
 
 export const invoicePassportHeaderTitles = [
-  "NO.",
-  "Description",
+  "SNO",
+  "Service",
+  "Price",
   "Quantity",
-  "Government Fee",
-  "Service Fee",
-  "Total Before Add. VAT",
-  "Add. VAT(5% on Service Fee)",
-  "Total With Add. VAT",
+  "Disc",
+  "VAT 5%",
+  "Amount",
 ];
