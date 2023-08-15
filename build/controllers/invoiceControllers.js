@@ -81,27 +81,62 @@ exports.getInvoices = getInvoices;
 //@Route  >>>> POST /api/invoices
 //@Access >>>> Private(Admins Only)
 var createInvoice = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var invoice;
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
-    return __generator(this, function (_p) {
-        switch (_p.label) {
-            case 0: return [4 /*yield*/, invoiceModel_1.default.create({
-                    customer: (_a = req.body) === null || _a === void 0 ? void 0 : _a.customer,
-                    details: (_b = req.body) === null || _b === void 0 ? void 0 : _b.details,
+    var existInvoice, invoiceID, invoiceToUpdate, error, updatedInvoice, invoice;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4;
+    return __generator(this, function (_5) {
+        switch (_5.label) {
+            case 0: return [4 /*yield*/, invoiceModel_1.default.paginate({
+                    "customer.name": (_b = (_a = req.body) === null || _a === void 0 ? void 0 : _a.customer) === null || _b === void 0 ? void 0 : _b.name,
                     date: (_c = req.body) === null || _c === void 0 ? void 0 : _c.date,
-                    subtotal: (_d = req.body) === null || _d === void 0 ? void 0 : _d.subtotal,
-                    total: (_e = req.body) === null || _e === void 0 ? void 0 : _e.total,
-                    ID: (_f = req.body) === null || _f === void 0 ? void 0 : _f.ID,
-                    tax_due: (_g = req.body) === null || _g === void 0 ? void 0 : _g.taxDue,
-                    tax_rate: (_h = req.body) === null || _h === void 0 ? void 0 : _h.taxRate,
-                    taxable: (_j = req.body) === null || _j === void 0 ? void 0 : _j.taxable,
-                    paid_amount: (_k = req.body) === null || _k === void 0 ? void 0 : _k.paidAmount,
-                    remaining_amount: (_l = req.body) === null || _l === void 0 ? void 0 : _l.remainingAmount,
-                    payment_method: (_m = req.body) === null || _m === void 0 ? void 0 : _m.paymentMethod,
-                    other: (_o = req.body) === null || _o === void 0 ? void 0 : _o.other,
                 })];
             case 1:
-                invoice = _p.sent();
+                existInvoice = _5.sent();
+                if (!(existInvoice.totalDocs === 1)) return [3 /*break*/, 5];
+                invoiceID = existInvoice.docs[0].id;
+                return [4 /*yield*/, invoiceModel_1.default.findById(invoiceID)];
+            case 2:
+                invoiceToUpdate = _5.sent();
+                if (!!invoiceToUpdate) return [3 /*break*/, 3];
+                error = new Error();
+                error.name = "CastError";
+                error.path = "_id";
+                throw error;
+            case 3:
+                //Update Invoice With New Values.
+                invoiceToUpdate.customer = (_d = req.body) === null || _d === void 0 ? void 0 : _d.customer;
+                invoiceToUpdate.details = (_e = req.body) === null || _e === void 0 ? void 0 : _e.details;
+                invoiceToUpdate.date = (_f = req.body) === null || _f === void 0 ? void 0 : _f.date;
+                invoiceToUpdate.subtotal = (_g = req.body) === null || _g === void 0 ? void 0 : _g.subtotal;
+                invoiceToUpdate.total = (_h = req.body) === null || _h === void 0 ? void 0 : _h.total;
+                invoiceToUpdate.ID = (_j = req.body) === null || _j === void 0 ? void 0 : _j.ID;
+                invoiceToUpdate.tax_due = (_k = req.body) === null || _k === void 0 ? void 0 : _k.taxDue;
+                invoiceToUpdate.tax_rate = (_l = req.body) === null || _l === void 0 ? void 0 : _l.taxRate;
+                invoiceToUpdate.taxable = (_m = req.body) === null || _m === void 0 ? void 0 : _m.taxable;
+                invoiceToUpdate.paid_amount = (_o = req.body) === null || _o === void 0 ? void 0 : _o.paidAmount;
+                invoiceToUpdate.remaining_amount = (_p = req.body) === null || _p === void 0 ? void 0 : _p.remainingAmount;
+                invoiceToUpdate.payment_method = (_q = req.body) === null || _q === void 0 ? void 0 : _q.paymentMethod;
+                invoiceToUpdate.other = (_r = req.body) === null || _r === void 0 ? void 0 : _r.other;
+                return [4 /*yield*/, invoiceToUpdate.save()];
+            case 4:
+                updatedInvoice = _5.sent();
+                return [2 /*return*/, res.status(200).json(updatedInvoice)];
+            case 5: return [4 /*yield*/, invoiceModel_1.default.create({
+                    customer: (_s = req.body) === null || _s === void 0 ? void 0 : _s.customer,
+                    details: (_t = req.body) === null || _t === void 0 ? void 0 : _t.details,
+                    date: (_u = req.body) === null || _u === void 0 ? void 0 : _u.date,
+                    subtotal: (_v = req.body) === null || _v === void 0 ? void 0 : _v.subtotal,
+                    total: (_w = req.body) === null || _w === void 0 ? void 0 : _w.total,
+                    ID: (_x = req.body) === null || _x === void 0 ? void 0 : _x.ID,
+                    tax_due: (_y = req.body) === null || _y === void 0 ? void 0 : _y.taxDue,
+                    tax_rate: (_z = req.body) === null || _z === void 0 ? void 0 : _z.taxRate,
+                    taxable: (_0 = req.body) === null || _0 === void 0 ? void 0 : _0.taxable,
+                    paid_amount: (_1 = req.body) === null || _1 === void 0 ? void 0 : _1.paidAmount,
+                    remaining_amount: (_2 = req.body) === null || _2 === void 0 ? void 0 : _2.remainingAmount,
+                    payment_method: (_3 = req.body) === null || _3 === void 0 ? void 0 : _3.paymentMethod,
+                    other: (_4 = req.body) === null || _4 === void 0 ? void 0 : _4.other,
+                })];
+            case 6:
+                invoice = _5.sent();
                 res.status(201).json(invoice);
                 return [2 /*return*/];
         }

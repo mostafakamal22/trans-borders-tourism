@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Invoice from "../models/invoiceModel";
+import { ErrnoException } from "./adminControllers";
 
 //@Desc   >>>> Get All Invoices That Match Query Object.
 //@Route  >>>> POST /api/invoices/query
@@ -32,6 +33,47 @@ const getInvoices = async (req: Request, res: Response) => {
 //@Route  >>>> POST /api/invoices
 //@Access >>>> Private(Admins Only)
 const createInvoice = async (req: Request, res: Response) => {
+  //Check If the invoice exist on the DB.
+  const existInvoice = await Invoice.paginate({
+    "customer.name": req.body?.customer?.name,
+    date: req.body?.date,
+  });
+
+  if (existInvoice.totalDocs === 1) {
+    const invoiceID = existInvoice.docs[0].id;
+
+    //Get Invoice Wanted For Updating.
+    const invoiceToUpdate = await Invoice.findById(invoiceID);
+
+    //Check if Invoice is not exist.
+    if (!invoiceToUpdate) {
+      const error: ErrnoException = new Error();
+      error.name = "CastError";
+      error.path = "_id";
+      throw error;
+    } else {
+      //Update Invoice With New Values.
+      invoiceToUpdate.customer = req.body?.customer;
+      invoiceToUpdate.details = req.body?.details;
+      invoiceToUpdate.date = req.body?.date;
+      invoiceToUpdate.subtotal = req.body?.subtotal;
+      invoiceToUpdate.total = req.body?.total;
+      invoiceToUpdate.ID = req.body?.ID;
+      invoiceToUpdate.tax_due = req.body?.taxDue;
+      invoiceToUpdate.tax_rate = req.body?.taxRate;
+      invoiceToUpdate.taxable = req.body?.taxable;
+      invoiceToUpdate.paid_amount = req.body?.paidAmount;
+      invoiceToUpdate.remaining_amount = req.body?.remainingAmount;
+      invoiceToUpdate.payment_method = req.body?.paymentMethod;
+      invoiceToUpdate.other = req.body?.other;
+
+      //Get Updated Invoice info & Send it Back.
+      const updatedInvoice = await invoiceToUpdate.save();
+
+      return res.status(200).json(updatedInvoice);
+    }
+  }
+
   //Create New Invoice With Request Data & Send Created Invoice Back.
   const invoice = await Invoice.create({
     customer: req.body?.customer,
