@@ -121,6 +121,36 @@ export const tableRow = ({
         ))}
       </th>
 
+      {/*Company Tax Number*/}
+      <th
+        scope="row"
+        className="border-x border-x-black p-1 text-center text-gray-900"
+      >
+        {payment?.payment_types?.map((type: IPaymentType, index: number) => (
+          <span
+            key={index}
+            className="my-1 flex flex-row-reverse items-center justify-center gap-1 p-1"
+          >
+            <span>{type?.company_tax ? type.company_tax : "-"}</span>
+          </span>
+        ))}
+      </th>
+
+      {/*Company Name*/}
+      <th
+        scope="row"
+        className="border-x border-x-black p-1 text-center text-gray-900"
+      >
+        {payment?.payment_types?.map((type: IPaymentType, index: number) => (
+          <span
+            key={index}
+            className="my-1 flex flex-row-reverse items-center justify-center gap-1 p-1"
+          >
+            <span>{type?.company_name ? type.company_name : "-"}</span>
+          </span>
+        ))}
+      </th>
+
       {/*Payment Description*/}
       <th
         scope="row"

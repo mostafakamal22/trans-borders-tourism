@@ -7,6 +7,7 @@ export type PaymentTypes = {
   Commission: string;
   end_of_service: string;
   water_and_electricity: string;
+  calls_and_internet: string;
   bank_payments: string;
   consultations: string;
   destroyed_devices: string;

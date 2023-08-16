@@ -30,6 +30,8 @@ export const CreatePayment = () => {
       name: "bank_payments",
       description: "",
       method: "bank",
+      company_name: "",
+      company_tax: "",
       cost: 0,
       tax: 0,
       total: 0,
@@ -52,6 +54,8 @@ export const CreatePayment = () => {
               name: "bank_payments",
               description: "",
               method: "bank",
+              company_name: "",
+              company_tax: "",
               cost: 0,
               tax: 0,
               total: 0,
@@ -92,6 +96,8 @@ export const CreatePayment = () => {
           name: "bank_payments",
           description: "",
           method: "bank",
+          company_name: "",
+          company_tax: "",
           cost: 0,
           tax: 0,
           total: 0,
@@ -172,6 +178,35 @@ export const CreatePayment = () => {
                 setPaymentTypesDetails(newArr);
               }}
             />
+
+            <FormInput
+              label="Company name"
+              name="companyName"
+              labeClassNames={lableClassNamesStyles.default}
+              className={inputClassNamesStyles.default}
+              type="text"
+              value={item.company_name}
+              onChange={(e) => {
+                const newArr = [...paymentTypesDetails];
+                newArr[index].company_name = e.target.value;
+                setPaymentTypesDetails(newArr);
+              }}
+            />
+
+            <FormInput
+              label="Company Tax Number"
+              name="companyTax"
+              labeClassNames={lableClassNamesStyles.default}
+              className={inputClassNamesStyles.default}
+              type="text"
+              value={item.company_tax}
+              onChange={(e) => {
+                const newArr = [...paymentTypesDetails];
+                newArr[index].company_tax = e.target.value;
+                setPaymentTypesDetails(newArr);
+              }}
+            />
+
             <FormInput
               label="المبلغ قبل الضريبة"
               name="itemTotal"

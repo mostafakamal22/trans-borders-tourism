@@ -14,6 +14,8 @@ export interface IPaymentType {
   total: number;
   description?: string;
   method?: string;
+  company_name?: string;
+  company_tax?: string;
 }
 
 export interface IPayment {
@@ -48,6 +50,12 @@ const paymentTypeSchema = new Schema<IPaymentType>({
     type: Number,
     required: [true, "Please Payment Type Total!"],
     min: [0, "Payment Type Total Can NOT Be Less Than 0"],
+  },
+  company_name: {
+    type: String,
+  },
+  company_tax: {
+    type: String,
   },
 });
 
