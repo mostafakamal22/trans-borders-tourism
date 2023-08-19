@@ -56,7 +56,11 @@ export const billsApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: { ...billData },
       }),
-      invalidatesTags: [{ type: "Bill", id: "PARTIAL-LIST" }],
+      invalidatesTags: [
+        { type: "Bill", id: "PARTIAL-LIST" },
+        "Passport",
+        "Ticket",
+      ],
     }),
     updateBill: builder.mutation<IBillDocument, Partial<IBillDocument>>({
       query: (billData) => ({
@@ -67,6 +71,8 @@ export const billsApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: (_result, _error, IBillDocument) => [
         { type: "Bill", id: IBillDocument.id },
         { type: "Bill", id: "PARTIAL-LIST" },
+        "Passport",
+        "Ticket",
       ],
     }),
     deleteBill: builder.mutation<{ id: string }, string>({
@@ -79,6 +85,8 @@ export const billsApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: (_result, _error, id) => [
         { type: "Bill", id },
         { type: "Bill", id: "PARTIAL-LIST" },
+        "Passport",
+        "Ticket",
       ],
     }),
   }),

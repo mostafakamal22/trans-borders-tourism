@@ -156,10 +156,6 @@ export const CreateBill = () => {
       details: [...details],
       total: billDetails.total,
       date: billDetails.date,
-      //   subtotal: billDetails.subtotal,
-      //   taxDue: billDetails.taxDue,
-      //   taxRate: billDetails.taxRate,
-      //   taxable: billDetails.taxable,
       other: billDetails.other,
     };
 
@@ -260,8 +256,8 @@ export const CreateBill = () => {
             className="flex flex-wrap items-center justify-center gap-4 border-b-4 border-red-700 px-5 py-5 font-semibold"
           >
             <select
-              name={`itemName${index}`}
-              id={`itemName${index}`}
+              name={`itemType${index}`}
+              id={`itemType${index}`}
               className={inputClassNamesStyles.default}
               value={item.type}
               onChange={(e) => {
@@ -281,7 +277,7 @@ export const CreateBill = () => {
             </select>
 
             <label
-              htmlFor={`itemName${index}`}
+              htmlFor={`itemType${index}`}
               className={lableClassNamesStyles.default}
             >
               {"نوع الخدمة"}
@@ -364,22 +360,6 @@ export const CreateBill = () => {
 
             {item.type === "Passport" && (
               <>
-                {/* <FormInput
-                  label={passportTableHeaderTitles[0]}
-                  name="customerName"
-                  labeClassNames={lableClassNamesStyles.default}
-                  className={inputClassNamesStyles.default}
-                  type="text"
-                  value={passportDetails.name}
-                  onChange={(e) =>
-                    setPassportDetails({
-                      ...passportDetails,
-                      name: e.target.value,
-                    })
-                  }
-                  required
-                /> */}
-
                 <FormInput
                   label={passportTableHeaderTitles[1]}
                   name="customerNationality"
@@ -418,7 +398,7 @@ export const CreateBill = () => {
                   className={inputClassNamesStyles.default}
                   type="number"
                   value={passportDetails.servicePrice}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setPassportDetails({
                       ...passportDetails,
                       servicePrice: +e.target.value,
@@ -435,8 +415,28 @@ export const CreateBill = () => {
                             passportDetails.taxable
                           : 0,
                       profit: 0,
-                    })
-                  }
+                    });
+
+                    const newArr = [...itemsDetails];
+                    newArr[index].price =
+                      passportDetails.service === "change_situation"
+                        ? +e.target.value +
+                          passportDetails.taxRate +
+                          passportDetails.taxable
+                        : newArr[index].price;
+
+                    setItemsDetails(newArr);
+
+                    const newTotal = itemsDetails.reduce(
+                      (prev, curr) => prev + curr.price * curr.quantity,
+                      0
+                    );
+
+                    setBillDetails({
+                      ...billDetails,
+                      total: +newTotal.toFixed(2),
+                    });
+                  }}
                   min={0}
                   step={0.01}
                 />
@@ -528,21 +528,6 @@ export const CreateBill = () => {
                   step={0.01}
                 />
 
-                {/* <FormInput
-                  label={passportTableHeaderTitles[12]}
-                  name="paymentDate"
-                  labeClassNames={lableClassNamesStyles.default}
-                  className={inputClassNamesStyles.default}
-                  type="date"
-                  value={passportDetails.paymentDate}
-                  onChange={(e) =>
-                    setPassportDetails({
-                      ...passportDetails,
-                      paymentDate: e.target.value,
-                    })
-                  }
-                /> */}
-
                 <select
                   name="state"
                   id="state"
@@ -598,22 +583,6 @@ export const CreateBill = () => {
 
             {item.type === "Ticket" && (
               <>
-                {/* <FormInput
-                  label={ticketsTableHeaderTitles[0]}
-                  name="customerName"
-                  labeClassNames={lableClassNamesStyles.default}
-                  className={inputClassNamesStyles.default}
-                  type="text"
-                  value={ticketsDetails.name}
-                  onChange={(e) =>
-                    setTicketsDetails({
-                      ...ticketsDetails,
-                      name: e.target.value,
-                    })
-                  }
-                  required
-                /> */}
-
                 <FormInput
                   label={ticketsTableHeaderTitles[1]}
                   name="type"
@@ -779,21 +748,6 @@ export const CreateBill = () => {
                     })
                   }
                 />
-
-                {/* <FormInput
-                  label={ticketsTableHeaderTitles[7]}
-                  name="paymentDate"
-                  labeClassNames={lableClassNamesStyles.default}
-                  className={inputClassNamesStyles.default}
-                  type="date"
-                  value={ticketsDetails.paymentDate}
-                  onChange={(e) =>
-                    setTicketsDetails({
-                      ...ticketsDetails,
-                      paymentDate: e.target.value,
-                    })
-                  }
-                /> */}
               </>
             )}
           </div>

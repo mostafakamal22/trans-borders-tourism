@@ -25,7 +25,7 @@ export interface IBillProduct {
 export interface IBill {
   customer: IBillCustomer;
   details: IBillProduct[];
-  date: Date;
+  date: Date | string;
   subtotal?: number;
   taxable?: number;
   total?: number;

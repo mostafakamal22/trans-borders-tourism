@@ -16,6 +16,8 @@ import { FetchingMessage } from "../shared/FetchingMessage";
 import { NoSavedRecords } from "../shared/NoSavedRecords";
 import { NoSearchResult } from "../shared/NoSearchResult";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
+import { AnimatePresence } from "framer-motion";
+import { UpdateBill } from "../forms/UpdateBill";
 
 export const Bills = () => {
   //Search Query State
@@ -29,6 +31,12 @@ export const Bills = () => {
 
   //Is Filter Open
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
+
+  //BillID to Update
+  const [id, setId] = useState("");
+
+  //Is modal open
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   //Get Page Number From URL
   const [URLSearchParams] = useSearchParams();
@@ -76,7 +84,7 @@ export const Bills = () => {
         <span className="mr-2 flex items-center justify-center">
           <BillMain className="h-20 w-20 drop-shadow" />
         </span>
-        الفواتير -جديد-
+        -الفواتير -جديد
       </h2>
 
       {/*search Bills with name*/}
@@ -108,6 +116,8 @@ export const Bills = () => {
           options={data!}
           handleRemoving={handleRemoving}
           isDeleting={isDeleting}
+          setIsOpen={setIsOpen}
+          setId={setId}
         />
       )}
 
@@ -126,6 +136,11 @@ export const Bills = () => {
         !isLoading &&
         !isFetching &&
         !isError && <NoSearchResult />}
+
+      {/* Show update Bill Modal */}
+      <AnimatePresence initial={false}>
+        {isOpen && <UpdateBill setIsOpen={setIsOpen} id={id} />}
+      </AnimatePresence>
 
       {/* Show spinner when Loading State is true */}
       {isLoading && <MainSpinner isLoading={isLoading} />}

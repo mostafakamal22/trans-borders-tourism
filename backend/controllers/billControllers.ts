@@ -144,7 +144,8 @@ const updateBill = async (req: Request, res: Response) => {
     const updatedBill = await bill.save();
 
     const { details } = req.body;
-    if (!details || !details?.data) throw new Error("Bill Details is required");
+    if (!details) throw new Error("Bill Details is required");
+
     //Update Other Records
     for (let index = 0; index < details.length; index++) {
       //1-Check for passport type
@@ -162,18 +163,18 @@ const updateBill = async (req: Request, res: Response) => {
           console.log("Passport Not found");
         } else {
           //Update Passport With New Values.
-          passport.customer_name = details?.data.name;
-          passport.customer_nationality = details?.data.nationality;
-          passport.passport_id = details?.data.passportId;
-          passport.state = details?.data.state;
-          passport.service = details?.data.service;
-          passport.payment_date = details?.data.paymentDate;
-          passport.taxable = details?.data.taxable;
-          passport.tax_rate = details?.data.taxRate;
-          passport.service_price = details?.data.servicePrice;
-          passport.total = details?.data.total;
-          passport.sales = details?.data.sales;
-          passport.profit = details?.data.profit;
+          passport.customer_name = details[index]?.data.name;
+          passport.customer_nationality = details[index]?.data.nationality;
+          passport.passport_id = details[index]?.data.passportId;
+          passport.state = details[index]?.data.state;
+          passport.service = details[index]?.data.service;
+          passport.payment_date = details[index]?.data.paymentDate;
+          passport.taxable = details[index]?.data.taxable;
+          passport.tax_rate = details[index]?.data.taxRate;
+          passport.service_price = details[index]?.data.servicePrice;
+          passport.total = details[index]?.data.total;
+          passport.sales = details[index]?.data.sales;
+          passport.profit = details[index]?.data.profit;
 
           await passport.save();
         }
@@ -190,24 +191,24 @@ const updateBill = async (req: Request, res: Response) => {
           console.log("Ticket Not found");
         } else {
           //Update Ticket With New Values.
-          ticket.customer_name = details?.data?.name;
-          ticket.supplier = details?.data?.supplier;
-          ticket.employee = details?.data?.employee;
-          ticket.type = details?.data?.type;
-          ticket.cost = details?.data?.cost;
-          ticket.sales = details?.data?.sales;
-          ticket.profit = details?.data?.profit;
-          ticket.payment_date = details?.data?.paymentDate;
-          ticket.paid_amount = details?.data?.paidAmount;
-          ticket.remaining_amount = details?.data?.remainingAmount;
-          ticket.payment_method = details?.data?.paymentMethod;
+          ticket.customer_name = details[index]?.data?.name;
+          ticket.supplier = details[index]?.data?.supplier;
+          ticket.employee = details[index]?.data?.employee;
+          ticket.type = details[index]?.data?.type;
+          ticket.cost = details[index]?.data?.cost;
+          ticket.sales = details[index]?.data?.sales;
+          ticket.profit = details[index]?.data?.profit;
+          ticket.payment_date = details[index]?.data?.paymentDate;
+          ticket.paid_amount = details[index]?.data?.paidAmount;
+          ticket.remaining_amount = details[index]?.data?.remainingAmount;
+          ticket.payment_method = details[index]?.data?.paymentMethod;
 
           await ticket.save();
         }
       }
-
-      res.status(200).json(updatedBill);
     }
+
+    res.status(200).json(updatedBill);
   }
 };
 
@@ -215,6 +216,48 @@ const updateBill = async (req: Request, res: Response) => {
 //@Route  >>>> DELETE /api/bills/:id
 //@Access >>>> Private(Admins Only)
 const deleteBill = async (req: Request, res: Response) => {
+  //Get Bill Wanted For Updating.
+  const bill = await Bill.findById(req.params?.id);
+
+  //Check if Bill is not exist.
+  if (!bill) {
+    const error: ErrnoException = new Error();
+    error.name = "CastError";
+    error.path = "_id";
+    throw error;
+  } else {
+    const { details } = bill;
+    if (!details) throw new Error("Bill Details is required");
+
+    //Delete Other Records
+    for (let index = 0; index < details.length; index++) {
+      //1-Check for passport type
+      if (details[index]?.type === "Passport") {
+        //Delete passport record
+        //Get Passport Wanted For Deleting.
+        const deletedPassport = await Passport.findByIdAndDelete(
+          details[index]?.passport_ref
+        );
+
+        //Check If the Document is Already Deleted Or Not.
+        if (!deletedPassport?.id) {
+          console.log("This Passport Has Been Already Deleted!");
+        }
+      } else if (details[index]?.type === "Ticket") {
+        //Delete Ticket record
+        //Get Ticket Wanted For Deleting.
+        const deletedTicket = await Ticket.findByIdAndDelete(
+          details[index]?.ticket_ref
+        );
+
+        //Check If the Document is Already Deleted Or Not.
+        if (!deletedTicket?.id) {
+          console.log("This Ticket Has Been Already Deleted!");
+        }
+      }
+    }
+  }
+
   //Get Bill Wanted For Deleting.
   const deletedBill = await Bill.findByIdAndDelete(req.params?.id);
 

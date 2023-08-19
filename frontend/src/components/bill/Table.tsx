@@ -8,6 +8,7 @@ import { TableRowProps } from "../shared/PaginationTable";
 import { billHeaderTitles } from "../bill/constants";
 import { IBillProduct } from "../../../../backend/models/billModel";
 import { Fragment } from "react";
+import { AiFillEdit } from "react-icons/ai";
 
 //Define Bill Main Table Data
 export const tableHeader = (
@@ -32,7 +33,7 @@ export const tableRow = ({
   extraOptions,
 }: TableRowProps<IBillDocument>) => {
   const { item: bill, index, tableBodyData } = basicOptions;
-  const { isDeleting, handleRemoving } = extraOptions;
+  const { isDeleting, handleRemoving, setId, setIsOpen } = extraOptions;
 
   return (
     <tr
@@ -58,21 +59,24 @@ export const tableRow = ({
         </form>
       </th>
 
-      {/* Show Bill */}
+      {/* Edit Bill */}
       <th
         scope="row"
-        className="whitespace-nowrap border-x  border-x-black p-2 text-center  text-gray-900"
+        className="border-x border-x-black p-1 text-center text-gray-900"
       >
-        <Link
-          to={`/bills/${bill?.id}`}
-          state={{ bill }}
-          className="m-auto max-w-[150px] rounded bg-blue-800 px-3 py-2 text-white shadow-sm"
+        <button
+          className="flex w-full items-center justify-center rounded border border-transparent bg-blue-800 px-3 py-2.5 text-xs font-bold text-white transition-all duration-300 ease-in-out
+          hover:border-blue-800 hover:bg-white hover:text-blue-800"
+          onClick={() => {
+            setId?.(bill?.id);
+            setIsOpen?.(true);
+          }}
         >
-          عرض الفاتورة
-        </Link>
+          <AiFillEdit size={20} />
+        </button>
       </th>
 
-      {/* Edit Bill */}
+      {/* Show Bill */}
       <th
         scope="row"
         className="whitespace-nowrap border-x  border-x-black p-2 text-center  text-gray-900"
@@ -144,19 +148,74 @@ export const billTableHeader = (
   </tr>
 );
 
+// export const billTableRow = (detail: IBillProduct, index: number) => {
+
+//   return (
+//     <tr
+//       key={index}
+//       style={{ printColorAdjust: "exact" }}
+//       className={`${
+//         index % 2 === 0 ? "bg-white" : "bg-red-100"
+//       } border-b border-b-black`}
+//     >
+//       {/*Detail NO*/}
+//       <th
+//         scope="row"
+//         className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+//       >
+//         {index + 1}
+//       </th>
+
+//       {/*Description*/}
+//       <th
+//         scope="row"
+//         className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+//       >
+//         {detail.desc ? detail.desc : "-"}
+//       </th>
+
+//       {/*Quantity*/}
+//       <th
+//         scope="row"
+//         className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+//       >
+//         {detail.quantity}
+//       </th>
+
+//       {/*Price*/}
+//       <th
+//         scope="row"
+//         className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+//       >
+//         {detail.price}
+//       </th>
+
+//       {/*Total*/}
+//       <th
+//         scope="row"
+//         className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+//       >
+//         {detail.price * detail.quantity}
+//       </th>
+//     </tr>
+//   );
+// };
+
+//Define Passport Bill Table Data
 export const billTableRow = (detail: IBillProduct, index: number) => {
-  return (
-    <tr
-      key={index}
-      style={{ printColorAdjust: "exact" }}
-      className={`${
-        index % 2 === 0 ? "bg-white" : "bg-red-100"
-      } border-b border-b-black`}
-    >
-      {/*Detail NO*/}
+  const sales = detail?.price;
+  const quantity = detail?.quantity;
+  const total = detail?.price * quantity;
+
+  const disc = "0.00";
+  const VAT = "0.00";
+
+  const serviceRow = (
+    <tr className="border-b bg-white">
+      {/*Service NO*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
         {index + 1}
       </th>
@@ -164,39 +223,56 @@ export const billTableRow = (detail: IBillProduct, index: number) => {
       {/*Description*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
-        {detail.desc ? detail.desc : "-"}
+        {detail?.desc ? detail?.desc : "-"}
+      </th>
+
+      {/*Service Price*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {sales.toFixed(2)}
       </th>
 
       {/*Quantity*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
-        {detail.quantity}
+        {quantity}
       </th>
 
-      {/*Price*/}
+      {/*Discount*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
-        {detail.price}
+        {disc}
       </th>
 
-      {/*Total*/}
+      {/*VAT 5%*/}
       <th
         scope="row"
-        className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
-        {detail.price * detail.quantity}
+        {VAT}
+      </th>
+
+      {/*Amount*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {total.toFixed(2)}
       </th>
     </tr>
   );
+
+  return <Fragment key={index}>{serviceRow}</Fragment>;
 };
 
-//Define Passport Bill Table Data
 export const billPassportTableHeader = (
   <tr className="border-b">
     {billPassportHeaderTitles.map((title: string) => (
@@ -207,17 +283,12 @@ export const billPassportTableHeader = (
   </tr>
 );
 
-export const billPassportTableRows = (
-  detail: IBillProduct,
-  // passportSpecialKey: string,
-  index: number
-) => {
+export const billPassportTableRows = (detail: IBillProduct, index: number) => {
   const sales = detail?.price;
   const servicePrice = detail?.data?.servicePrice;
   const total = ((sales - servicePrice) * 100) / 105;
   const VAT = sales - servicePrice - total;
   const totalServiceCharge = VAT + total;
-  const totalServicesPrices = servicePrice + total;
 
   const passportServiceRow = (
     <tr className="border-b bg-white">
@@ -226,7 +297,8 @@ export const billPassportTableRows = (
         scope="row"
         className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
-        {"1"}
+        {index + 1}
+        {" -A"}
       </th>
 
       {/*Description*/}
@@ -286,7 +358,8 @@ export const billPassportTableRows = (
         scope="row"
         className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
-        {"2"}
+        {index + 1}
+        {" -B"}
       </th>
 
       {/*Description*/}
@@ -339,56 +412,40 @@ export const billPassportTableRows = (
     </tr>
   );
 
-  const TotalsRow = (
-    <tr className="border-b bg-white font-bold">
-      <td></td>
-      <td></td>
-
-      {/*Total Services Prices*/}
-      <th
-        style={{ printColorAdjust: "exact" }}
-        scope="row"
-        className="border-x bg-red-100 p-2 text-center text-sm text-gray-900"
-      >
-        {totalServicesPrices.toFixed(2)}
-      </th>
-
-      <td></td>
-
-      {/*Total Discount*/}
-      <th
-        style={{ printColorAdjust: "exact" }}
-        scope="row"
-        className="border-x bg-red-100 p-2 text-center text-sm text-gray-900"
-      >
-        {"0.00"}
-      </th>
-
-      {/*Total VAT*/}
-      <th
-        style={{ printColorAdjust: "exact" }}
-        scope="row"
-        className="border-x bg-red-100 p-2 text-center text-sm text-gray-900"
-      >
-        {VAT.toFixed(2)}
-      </th>
-
-      {/*Total Sales (Amount)*/}
-      <th
-        style={{ printColorAdjust: "exact" }}
-        scope="row"
-        className="border-x bg-red-100 p-2 text-center text-sm text-gray-900"
-      >
-        {sales}
-      </th>
-    </tr>
-  );
-
   return (
     <Fragment key={`${detail?.passport_ref}+${index}`}>
       {passportServiceRow}
       {serviceChargeRow}
-      {TotalsRow}
     </Fragment>
   );
+};
+
+export const calculateTableTotals = (
+  details: IBillProduct[]
+): { totalServices: number; totalAmount: number; TotalVAT: number } => {
+  let totals = { totalServices: 0, totalAmount: 0, TotalVAT: 0 };
+
+  details.map((detail) => {
+    if (detail.type === "Passport") {
+      const sales = detail?.price;
+      const servicePrice = detail?.data?.servicePrice;
+      const total = ((sales - servicePrice) * 100) / 105;
+      const VAT = sales - servicePrice - total;
+      const totalServicesPrices = servicePrice + total;
+
+      totals.TotalVAT += VAT;
+      totals.totalServices += totalServicesPrices;
+      totals.totalAmount += sales;
+    } else {
+      const sales = detail?.price;
+      const VAT = 0;
+      const total = sales * detail?.quantity;
+
+      totals.TotalVAT += VAT;
+      totals.totalServices += sales * detail?.quantity;
+      totals.totalAmount += total;
+    }
+  });
+
+  return totals;
 };

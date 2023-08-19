@@ -8,8 +8,8 @@ import { AiFillPrinter } from "react-icons/ai";
 import {
   billPassportTableHeader,
   billPassportTableRows,
-  billTableHeader,
   billTableRow,
+  calculateTableTotals,
 } from "./Table";
 import {
   IBillDocument,
@@ -31,7 +31,54 @@ export const ShowBill = () => {
 
   if (!bill) return <Navigate to={"/not-found"} replace />;
 
-  console.log(bill.details);
+  const { totalAmount, totalServices, TotalVAT } = calculateTableTotals(
+    bill.details
+  );
+
+  const TotalsRow = (
+    <tr className="border-b bg-white font-bold">
+      <td></td>
+      <td></td>
+
+      {/*Total Services Prices*/}
+      <th
+        style={{ printColorAdjust: "exact" }}
+        scope="row"
+        className="border-x bg-red-100 p-2 text-center text-sm text-gray-900"
+      >
+        {totalServices.toFixed(2)}
+      </th>
+
+      <td></td>
+
+      {/*Total Discount*/}
+      <th
+        style={{ printColorAdjust: "exact" }}
+        scope="row"
+        className="border-x bg-red-100 p-2 text-center text-sm text-gray-900"
+      >
+        {"0.00"}
+      </th>
+
+      {/*Total VAT*/}
+      <th
+        style={{ printColorAdjust: "exact" }}
+        scope="row"
+        className="border-x bg-red-100 p-2 text-center text-sm text-gray-900"
+      >
+        {TotalVAT.toFixed(2)}
+      </th>
+
+      {/*Total Sales (Amount)*/}
+      <th
+        style={{ printColorAdjust: "exact" }}
+        scope="row"
+        className="border-x bg-red-100 p-2 text-center text-sm text-gray-900"
+      >
+        {totalAmount.toFixed(2)}
+      </th>
+    </tr>
+  );
 
   return (
     <>
@@ -93,7 +140,7 @@ export const ShowBill = () => {
           />
 
           <div className="w-[300px] self-start text-right">
-            <p className="text-3xl font-bold text-blue-400">TAX BILL</p>
+            <p className="text-3xl font-bold text-blue-400">TAX INVOICE</p>
 
             <p className="text-sm">
               DATE{" "}
@@ -105,7 +152,7 @@ export const ShowBill = () => {
               </span>
             </p>
             <p className="text-sm">
-              BILL #{" "}
+              INVOICE #{" "}
               <span
                 style={{ printColorAdjust: "exact" }}
                 className="rounded-sm bg-red-100 p-1"
@@ -131,28 +178,27 @@ export const ShowBill = () => {
         </div>
 
         <div>
-          {bill.details.map((detail: IBillProduct, index: number) => (
-            <div
-              key={index}
-              className="relative my-10 overflow-x-auto rounded border-y-4 border-red-800 shadow-md sm:rounded-lg"
-            >
-              <table className="w-full text-sm font-bold text-gray-500">
-                <thead
-                  style={{ printColorAdjust: "exact" }}
-                  className="bg-red-100 uppercase text-gray-900"
-                >
-                  {detail.type === "Passport"
-                    ? billPassportTableHeader
-                    : billTableHeader}
-                </thead>
-                <tbody>
-                  {detail.type === "Passport"
-                    ? billPassportTableRows(detail, index)
-                    : billTableRow(detail, index)}
-                </tbody>
-              </table>
-            </div>
-          ))}
+          <div className="relative my-10 overflow-x-auto rounded border-y-4 border-red-800 shadow-md sm:rounded-lg">
+            <table className="w-full text-sm font-bold text-gray-500">
+              <thead
+                style={{ printColorAdjust: "exact" }}
+                className="bg-red-100 uppercase text-gray-900"
+              >
+                {billPassportTableHeader}
+              </thead>
+              <tbody>
+                {bill.details.map((detail: IBillProduct, index: number) => (
+                  <Fragment key={index}>
+                    {detail.type === "Passport"
+                      ? billPassportTableRows(detail, index)
+                      : billTableRow(detail, index)}
+                  </Fragment>
+                ))}
+
+                {TotalsRow}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div className="my-10 flex items-center justify-center gap-3 text-left font-semibold">
