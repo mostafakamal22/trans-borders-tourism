@@ -41,6 +41,17 @@ const menus: MenuType<MenuItem> = [
     icon: <BsPlus size={20} />,
   },
   {
+    name: "(جديد) الفواتير",
+    link: "/bills",
+    icon: <AiFillBell size={20} />,
+    margin: true,
+  },
+  {
+    name: "إضافة فاتورة",
+    link: "/bills/create",
+    icon: <BsPlus size={20} />,
+  },
+  {
     name: "الجوازات",
     link: "/passports",
     icon: <AiFillProject size={20} />,

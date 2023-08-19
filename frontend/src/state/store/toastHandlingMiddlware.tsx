@@ -14,6 +14,7 @@ const toastBlackList: string[] = [
   "refresh",
   "getPassports",
   "getInvoices",
+  "getBills",
   "getTickets",
   "getPurchases",
   "getPayments",

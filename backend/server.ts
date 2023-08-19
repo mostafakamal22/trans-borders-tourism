@@ -59,6 +59,10 @@ app.use("/api/purchases", purchasesRoute);
 import banksRoute from "./routes/bankRoutes";
 app.use("/api/banks", banksRoute);
 
+//Bill Router
+import billsRoute from "./routes/billRoutes";
+app.use("/api/bills", billsRoute);
+
 //serve Frontend
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(join(__dirname, "../frontend/dist")));
