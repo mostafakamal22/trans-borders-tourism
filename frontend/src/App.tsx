@@ -58,7 +58,7 @@ const App = () => {
                   {/* Invoices Routes */}
                   <Route path="/invoices">
                     <Route index element={<Invoices />} />
-                    <Route path="create" element={<CreateInvoice />} />
+                    {/* <Route path="create" element={<CreateInvoice />} /> */}
                     <Route path=":id" element={<ShowInvoice />} />
                   </Route>
                   {/* Bills Routes */}

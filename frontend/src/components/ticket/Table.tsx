@@ -92,7 +92,7 @@ export const tableRow = ({
       </th>
 
       {/* Make Invoice */}
-      <th
+      {/* <th
         scope="row"
         className="border-x border-x-black p-1 text-center text-gray-900"
       >
@@ -106,7 +106,7 @@ export const tableRow = ({
             isLoading={isCreatingInvoice}
           />
         </form>
-      </th>
+      </th> */}
 
       {/* Update ticket */}
       <th

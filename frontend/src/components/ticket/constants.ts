@@ -10,7 +10,7 @@ export const ticketsTableHeaderTitles: string[] = [
   "Supplier",
   "Date",
   "تعديل التذكرة",
-  "إضافة فاتورة",
+  // "إضافة فاتورة",
   "مسح التذكرة",
 ];
 

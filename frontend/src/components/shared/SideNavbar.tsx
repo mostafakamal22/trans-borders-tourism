@@ -30,18 +30,18 @@ const menus: MenuType<MenuItem> = [
   // { name: "analytics", link: "/", icon: TbReportAnalytics , margin: true},
 
   {
-    name: "الفواتير",
+    name: "(قديمة) الفواتير",
     link: "/invoices",
     icon: <AiFillBell size={20} />,
     margin: true,
   },
+  // {
+  //   name: "إضافة فاتورة",
+  //   link: "/invoices/create",
+  //   icon: <BsPlus size={20} />,
+  // },
   {
-    name: "إضافة فاتورة",
-    link: "/invoices/create",
-    icon: <BsPlus size={20} />,
-  },
-  {
-    name: "(جديد) الفواتير",
+    name: "(جديدة) الفواتير",
     link: "/bills",
     icon: <AiFillBell size={20} />,
     margin: true,

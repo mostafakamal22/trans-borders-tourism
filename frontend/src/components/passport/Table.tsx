@@ -12,7 +12,20 @@ export const tableHeader = (
   <tr className="border-y border-y-black">
     {[...passportTableHeaderTitles]
       .reverse()
-      .slice(0, 9)
+      .slice(0, 1)
+      .map((title) => (
+        <th
+          key={title}
+          scope="col"
+          className="max-w-[100px] border-x border-x-black p-1 text-center"
+        >
+          {title}
+        </th>
+      ))}
+
+    {[...passportTableHeaderTitles]
+      .reverse()
+      .slice(2, 9)
       .map((title) => (
         <th
           key={title}
@@ -101,7 +114,7 @@ export const tableRow = ({
       </th>
 
       {/* Make Invoice */}
-      <th
+      {/* <th
         scope="row"
         className="border-x border-x-black p-1 text-center text-gray-900"
       >
@@ -124,7 +137,7 @@ export const tableRow = ({
             isLoading={isCreatingInvoice}
           />
         </form>
-      </th>
+      </th> */}
 
       {/* Update Passport */}
       <th
