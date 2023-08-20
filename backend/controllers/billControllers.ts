@@ -16,6 +16,9 @@ const getBills = async (req: Request, res: Response) => {
     ? {
         //Filter By Customer Name.
         "customer.name": new RegExp(`${query?.name}`, "gi"),
+
+        //Filter By Detail type.
+        "details.type": new RegExp(`${query?.type}`, "gi"),
       }
     : {};
 

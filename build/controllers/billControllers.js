@@ -67,6 +67,8 @@ var getBills = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
                     ? {
                         //Filter By Customer Name.
                         "customer.name": new RegExp("".concat(query === null || query === void 0 ? void 0 : query.name), "gi"),
+                        //Filter By Detail type.
+                        "details.type": new RegExp("".concat(query === null || query === void 0 ? void 0 : query.type), "gi"),
                     }
                     : {};
                 options = __assign({ pagination: query ? true : false, sort: { createdAt: "desc" } }, option);

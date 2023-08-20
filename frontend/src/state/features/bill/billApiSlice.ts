@@ -11,6 +11,7 @@ export interface BillSearchQuery {
   option?: PaginateOptions;
   query?: {
     name?: string;
+    type?: string;
   };
 }
 

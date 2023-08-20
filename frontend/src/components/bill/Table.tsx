@@ -98,6 +98,21 @@ export const tableRow = ({
         {bill?.date ? dayjs(bill?.date).format("DD/MM/YYYY") : "-"}
       </th>
 
+      {/*Bill Type*/}
+      <th
+        scope="row"
+        className="border-x border-x-black p-1 text-center text-gray-900"
+      >
+        {bill?.details?.map((detail, index: number) => (
+          <span
+            key={index}
+            className="my-1 flex flex-row-reverse items-center justify-center gap-1 rounded bg-amber-400 p-1"
+          >
+            <span>{detail?.type}</span>
+          </span>
+        ))}
+      </th>
+
       {/*Bill Total*/}
       <th
         scope="row"
@@ -148,60 +163,6 @@ export const billTableHeader = (
   </tr>
 );
 
-// export const billTableRow = (detail: IBillProduct, index: number) => {
-
-//   return (
-//     <tr
-//       key={index}
-//       style={{ printColorAdjust: "exact" }}
-//       className={`${
-//         index % 2 === 0 ? "bg-white" : "bg-red-100"
-//       } border-b border-b-black`}
-//     >
-//       {/*Detail NO*/}
-//       <th
-//         scope="row"
-//         className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
-//       >
-//         {index + 1}
-//       </th>
-
-//       {/*Description*/}
-//       <th
-//         scope="row"
-//         className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
-//       >
-//         {detail.desc ? detail.desc : "-"}
-//       </th>
-
-//       {/*Quantity*/}
-//       <th
-//         scope="row"
-//         className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
-//       >
-//         {detail.quantity}
-//       </th>
-
-//       {/*Price*/}
-//       <th
-//         scope="row"
-//         className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
-//       >
-//         {detail.price}
-//       </th>
-
-//       {/*Total*/}
-//       <th
-//         scope="row"
-//         className="whitespace-nowrap  border-x border-x-black p-2 text-center text-sm font-normal text-gray-900"
-//       >
-//         {detail.price * detail.quantity}
-//       </th>
-//     </tr>
-//   );
-// };
-
-//Define Passport Bill Table Data
 export const billTableRow = (detail: IBillProduct, index: number) => {
   const sales = detail?.price;
   const quantity = detail?.quantity;
@@ -273,6 +234,7 @@ export const billTableRow = (detail: IBillProduct, index: number) => {
   return <Fragment key={index}>{serviceRow}</Fragment>;
 };
 
+//Define Passport Bill Table Data
 export const billPassportTableHeader = (
   <tr className="border-b">
     {billPassportHeaderTitles.map((title: string) => (

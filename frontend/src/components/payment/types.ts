@@ -12,6 +12,7 @@ export type PaymentTypes = {
   consultations: string;
   destroyed_devices: string;
   marketing: string;
+  NOQODI: string;
   other: string;
 };
 

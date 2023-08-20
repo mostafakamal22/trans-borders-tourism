@@ -21,8 +21,15 @@ import { UpdateBill } from "../forms/UpdateBill";
 
 export const Bills = () => {
   //Search Query State
-  const [searchQuery, setSearchQuery] = useState<BillSearchQueries>("");
-  const deferredQuery = useDeferredValue(searchQuery);
+  const [searchQuery, setSearchQuery] = useState<BillSearchQueries>({
+    name: "",
+    type: "",
+  });
+
+  const { name, type } = searchQuery;
+
+  const deferredName = useDeferredValue(name);
+  const deferredType = useDeferredValue(type);
 
   const notInitialRender = useRef<boolean>(false);
 
@@ -45,7 +52,10 @@ export const Bills = () => {
     : 1;
 
   const { data, isLoading, isFetching, isSuccess, isError } = useGetBillsQuery({
-    query: { name: deferredQuery.trim() },
+    query: {
+      name: deferredName.trim(),
+      type: deferredType.trim(),
+    },
     option: {
       limit: tableRows,
       page: pageNumber,
@@ -122,7 +132,8 @@ export const Bills = () => {
       )}
 
       {/* if there is No Bill Records */}
-      {!deferredQuery &&
+      {!deferredName &&
+        !deferredType &&
         !isLoading &&
         !isFetching &&
         !isError &&
@@ -131,7 +142,7 @@ export const Bills = () => {
         )}
 
       {/* if there is search query and no Bill matches >>> No Search Found*/}
-      {deferredQuery &&
+      {(deferredName || deferredType) &&
         bills?.length === 0 &&
         !isLoading &&
         !isFetching &&

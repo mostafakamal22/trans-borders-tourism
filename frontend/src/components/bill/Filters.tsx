@@ -21,6 +21,8 @@ export const Filters = ({
   const [URLSearchParams, SetURLSearchParams] = useSearchParams();
   const pageNumber: string | null = URLSearchParams.get("page");
 
+  const { name, type } = searchQuery;
+
   return (
     <div
       id="filters"
@@ -46,16 +48,45 @@ export const Filters = ({
           </label>
           <input
             type="text"
-            id="searchQuery"
-            name="searchQuery"
+            id="name"
+            name="name"
             className={inputClassNamesStyles.default}
             placeholder="بحث عن الفاتورة بالإسم"
-            value={searchQuery}
+            value={name}
             onChange={(e) => {
               if (pageNumber && +pageNumber > 1) {
                 SetURLSearchParams({ page: "1" });
               }
-              setSearchQuery(e.target.value);
+              setSearchQuery({
+                ...searchQuery,
+                name: e.target.value,
+              });
+            }}
+          />
+        </div>
+
+        <div className="flex basis-full flex-col items-center justify-center gap-2">
+          <label
+            htmlFor="searchQuery"
+            className="w-full rounded bg-red-700 p-2 text-white"
+          >
+            نوع الفاتورة
+          </label>
+          <input
+            type="text"
+            id="type"
+            name="type"
+            className={inputClassNamesStyles.default}
+            placeholder="نوع الفاتورة"
+            value={type}
+            onChange={(e) => {
+              if (pageNumber && +pageNumber > 1) {
+                SetURLSearchParams({ page: "1" });
+              }
+              setSearchQuery({
+                ...searchQuery,
+                type: e.target.value,
+              });
             }}
           />
         </div>
@@ -97,6 +128,7 @@ export const FiltersSummary = ({
   setIsFilterOpen,
   count,
 }: FilterSummaryProps) => {
+  const { name, type } = searchQuery;
   return (
     <h3
       id="filterHeader"
@@ -116,14 +148,20 @@ export const FiltersSummary = ({
         فلتــرة الفــواتيــر
       </p>
       <span>{" الفـواتيـر المحفوظة"}</span>
-      {!searchQuery && (
+      {!name && !type && (
         <span className="mx-1 rounded-md bg-blue-500 p-1 text-white">
           {" الكلية "}
         </span>
       )}
-      {searchQuery && (
+      {name && (
         <span className="mx-1 rounded-md bg-rose-500 p-1 text-white">
-          {" إسم العميل " + searchQuery}
+          {" إسم العميل " + name}
+        </span>
+      )}
+
+      {type && (
+        <span className="mx-1 rounded-md bg-rose-500 p-1 text-white">
+          {" نوع الفاتورة" + type}
         </span>
       )}
 

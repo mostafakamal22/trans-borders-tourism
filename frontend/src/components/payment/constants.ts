@@ -28,6 +28,7 @@ export const paymentTypes: PaymentTypes = {
   marketing: "مصاريف تسويق",
   end_of_service: "مصاريف نهايه الخدمه",
   destroyed_devices: "مصاريف اهلاك اصول ثابته",
+  NOQODI: "نقودى",
   other: "مصاريف أخرى",
 };
 

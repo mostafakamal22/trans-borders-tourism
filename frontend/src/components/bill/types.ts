@@ -1,4 +1,7 @@
-export type BillSearchQueries = string;
+export type BillSearchQueries = {
+  name: string;
+  type: string;
+};
 
 export type FilterProps = {
   setSearchQuery: React.Dispatch<React.SetStateAction<BillSearchQueries>>;
