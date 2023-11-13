@@ -18,12 +18,23 @@ import { NoSearchResult } from "../shared/NoSearchResult";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 import { AnimatePresence } from "framer-motion";
 import { UpdateBill } from "../forms/UpdateBill";
+import { useDownloadExcel } from "react-export-table-to-excel";
+import { RiFileExcel2Fill } from "react-icons/ri";
 
 export const Bills = () => {
   //Search Query State
   const [searchQuery, setSearchQuery] = useState<BillSearchQueries>({
     name: "",
     type: "",
+  });
+
+  //Table to Excel
+  const tableRef = useRef(null);
+
+  const { onDownload } = useDownloadExcel({
+    currentTableRef: tableRef.current,
+    filename: "Invoices table",
+    sheet: "Invoices",
   });
 
   const { name, type } = searchQuery;
@@ -119,16 +130,28 @@ export const Bills = () => {
 
       {/*Display Table All Data Needed*/}
       {!isLoading && bills?.length > 0 && (
-        <PaginationTable
-          tableRow={tableRow}
-          tableHeader={tableHeader}
-          tableBodyData={bills}
-          options={data!}
-          handleRemoving={handleRemoving}
-          isDeleting={isDeleting}
-          setIsOpen={setIsOpen}
-          setId={setId}
-        />
+        <>
+          <button
+            className="mx-auto my-5 flex items-center justify-center gap-1 rounded border bg-green-200 px-2 py-2 text-xs font-bold text-green-800 shadow transition-all duration-300 ease-in-out hover:border-green-800 hover:bg-white
+            hover:text-green-800 sm:px-3 sm:text-sm"
+            onClick={onDownload}
+          >
+            <RiFileExcel2Fill size={20} />
+            <span>Export excel</span>
+          </button>
+
+          <PaginationTable
+            tableRow={tableRow}
+            tableHeader={tableHeader}
+            tableBodyData={bills}
+            options={data!}
+            handleRemoving={handleRemoving}
+            isDeleting={isDeleting}
+            setIsOpen={setIsOpen}
+            setId={setId}
+            ref={tableRef}
+          />
+        </>
       )}
 
       {/* if there is No Bill Records */}

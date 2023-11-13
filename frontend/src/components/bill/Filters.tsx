@@ -13,7 +13,7 @@ export const Filters = ({
   setIsFilterOpen,
 }: FilterProps) => {
   let tableRowsRange: number[] = [];
-  for (let i = 10; i <= 200; i += 10) {
+  for (let i = 10; i <= 300; i += 10) {
     tableRowsRange.push(i);
   }
 

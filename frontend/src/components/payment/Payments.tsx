@@ -20,6 +20,8 @@ import { Filters, FiltersSummary } from "./Filters";
 import { Totals } from "./Totals";
 import { UpdatePayment } from "../forms/UpdatePayment";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
+import { useDownloadExcel } from "react-export-table-to-excel";
+import { RiFileExcel2Fill } from "react-icons/ri";
 
 export const Payments = () => {
   //Search Params
@@ -58,6 +60,15 @@ export const Payments = () => {
       page: pageNumber,
     },
   };
+
+  //Table to Excel
+  const tableRef = useRef(null);
+
+  const { onDownload } = useDownloadExcel({
+    currentTableRef: tableRef.current,
+    filename: "Payments table",
+    sheet: "Payments",
+  });
 
   const { data, isLoading, isFetching, isSuccess, isError } =
     useGetPaymentsQuery(searchObj);
@@ -133,16 +144,28 @@ export const Payments = () => {
 
       {/*Display Table All Data Needed*/}
       {!isLoading && payments?.length > 0 && (
-        <PaginationTable
-          tableRow={tableRow}
-          tableHeader={tableHeader}
-          tableBodyData={payments}
-          options={data!}
-          handleRemoving={handleRemoving}
-          setIsOpen={setIsOpen}
-          setId={setId}
-          isDeleting={isDeleting}
-        />
+        <>
+          <button
+            className="mx-auto my-5 flex items-center justify-center gap-1 rounded border bg-green-200 px-2 py-2 text-xs font-bold text-green-800 shadow transition-all duration-300 ease-in-out hover:border-green-800 hover:bg-white
+            hover:text-green-800 sm:px-3 sm:text-sm"
+            onClick={onDownload}
+          >
+            <RiFileExcel2Fill size={20} />
+            <span>Export excel</span>
+          </button>
+
+          <PaginationTable
+            tableRow={tableRow}
+            tableHeader={tableHeader}
+            tableBodyData={payments}
+            options={data!}
+            handleRemoving={handleRemoving}
+            setIsOpen={setIsOpen}
+            setId={setId}
+            isDeleting={isDeleting}
+            ref={tableRef}
+          />
+        </>
       )}
 
       {/* if there is No Payments Records */}

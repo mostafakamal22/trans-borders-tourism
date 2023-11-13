@@ -20,6 +20,8 @@ import { Filters, FiltersSummary } from "./Filters";
 import { ReactComponent as PurchaseMain } from "../../assets/icons/purchase-main.svg";
 import { UpdatePurchase } from "../forms/UpdatePurchase";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
+import { useDownloadExcel } from "react-export-table-to-excel";
+import { RiFileExcel2Fill } from "react-icons/ri";
 
 export const Purchases = () => {
   //Search Params
@@ -37,6 +39,15 @@ export const Purchases = () => {
   const deferredSupplier = useDeferredValue(supplier);
 
   const notInitialRender = useRef(false);
+
+  //Table to Excel
+  const tableRef = useRef(null);
+
+  const { onDownload } = useDownloadExcel({
+    currentTableRef: tableRef.current,
+    filename: "Purchases table",
+    sheet: "Purchases",
+  });
 
   //Table Row State
   const [tableRows, setTableRows] = useState(50);
@@ -137,16 +148,28 @@ export const Purchases = () => {
 
       {/*Display Table All Data Needed*/}
       {!isLoading && purchases?.length > 0 && (
-        <PaginationTable
-          tableRow={tableRow}
-          tableHeader={tableHeader}
-          tableBodyData={purchases}
-          options={data!}
-          handleRemoving={handleRemoving}
-          setIsOpen={setIsOpen}
-          setId={setId}
-          isDeleting={isDeleting}
-        />
+        <>
+          <button
+            className="mx-auto my-5 flex items-center justify-center gap-1 rounded border bg-green-200 px-2 py-2 text-xs font-bold text-green-800 shadow transition-all duration-300 ease-in-out hover:border-green-800 hover:bg-white
+            hover:text-green-800 sm:px-3 sm:text-sm"
+            onClick={onDownload}
+          >
+            <RiFileExcel2Fill size={20} />
+            <span>Export excel</span>
+          </button>
+
+          <PaginationTable
+            tableRow={tableRow}
+            tableHeader={tableHeader}
+            tableBodyData={purchases}
+            options={data!}
+            handleRemoving={handleRemoving}
+            setIsOpen={setIsOpen}
+            setId={setId}
+            isDeleting={isDeleting}
+            ref={tableRef}
+          />
+        </>
       )}
 
       {/* if there is No Purchases Records */}

@@ -27,6 +27,8 @@ import { FetchingMessage } from "../shared/FetchingMessage";
 import { NoSavedRecords } from "../shared/NoSavedRecords";
 import { NoSearchResult } from "../shared/NoSearchResult";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
+import { useDownloadExcel } from "react-export-table-to-excel";
+import { RiFileExcel2Fill } from "react-icons/ri";
 
 export const Tickets = () => {
   //Search Params
@@ -63,6 +65,15 @@ export const Tickets = () => {
   const deferredSupplier = useDeferredValue(supplier);
 
   const notInitialRender = useRef(false);
+
+  //Table to Excel
+  const tableRef = useRef(null);
+
+  const { onDownload } = useDownloadExcel({
+    currentTableRef: tableRef.current,
+    filename: "Tickets table",
+    sheet: "Tickets",
+  });
 
   //Table Row State
   const [tableRows, setTableRows] = useState(50);
@@ -205,18 +216,30 @@ export const Tickets = () => {
 
       {/*Display Table All Data Needed*/}
       {!isLoading && tickets?.length > 0 && (
-        <PaginationTable
-          tableRow={tableRow}
-          tableHeader={tableHeader}
-          tableBodyData={tickets}
-          options={data!}
-          handleRemoving={handleRemoving}
-          handleAddInvoice={handleAddInvoice}
-          setIsOpen={setIsOpen}
-          setId={setId}
-          isDeleting={isDeleting}
-          isCreatingInvoice={isCreatingInvoice}
-        />
+        <>
+          <button
+            className="mx-auto my-5 flex items-center justify-center gap-1 rounded border bg-green-200 px-2 py-2 text-xs font-bold text-green-800 shadow transition-all duration-300 ease-in-out hover:border-green-800 hover:bg-white
+            hover:text-green-800 sm:px-3 sm:text-sm"
+            onClick={onDownload}
+          >
+            <RiFileExcel2Fill size={20} />
+            <span>Export excel</span>
+          </button>
+
+          <PaginationTable
+            tableRow={tableRow}
+            tableHeader={tableHeader}
+            tableBodyData={tickets}
+            options={data!}
+            handleRemoving={handleRemoving}
+            handleAddInvoice={handleAddInvoice}
+            setIsOpen={setIsOpen}
+            setId={setId}
+            isDeleting={isDeleting}
+            isCreatingInvoice={isCreatingInvoice}
+            ref={tableRef}
+          />
+        </>
       )}
 
       {/* if there is No Tickets Records */}

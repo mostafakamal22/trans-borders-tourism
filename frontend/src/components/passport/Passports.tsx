@@ -25,6 +25,8 @@ import { NoSavedRecords } from "../shared/NoSavedRecords";
 import { FetchingMessage } from "../shared/FetchingMessage";
 import { ReactComponent as PassportMain } from "../../assets/icons/passport-main.svg";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
+import { useDownloadExcel } from "react-export-table-to-excel";
+import { RiFileExcel2Fill } from "react-icons/ri";
 
 export const Passports = () => {
   //Search Queries
@@ -58,6 +60,15 @@ export const Passports = () => {
   const deferredNationality = useDeferredValue(nationality);
 
   const notInitialRender = useRef(false);
+
+  //Table to Excel
+  const tableRef = useRef(null);
+
+  const { onDownload } = useDownloadExcel({
+    currentTableRef: tableRef.current,
+    filename: "Passports table",
+    sheet: "Passports",
+  });
 
   //Table Row State
   const [tableRows, setTableRows] = useState(50);
@@ -203,18 +214,30 @@ export const Passports = () => {
 
       {/*Display Table All Data Needed*/}
       {!isLoading && passports?.length > 0 && (
-        <PaginationTable
-          tableRow={tableRow}
-          tableHeader={tableHeader}
-          tableBodyData={passports}
-          options={data!}
-          handleRemoving={handleRemoving}
-          handleAddInvoice={handleAddInvoice}
-          setIsOpen={setIsOpen}
-          setId={setId}
-          isDeleting={isDeleting}
-          isCreatingInvoice={isCreatingInvoice}
-        />
+        <>
+          <button
+            className="mx-auto my-5 flex items-center justify-center gap-1 rounded border bg-green-200 px-2 py-2 text-xs font-bold text-green-800 shadow transition-all duration-300 ease-in-out hover:border-green-800 hover:bg-white
+            hover:text-green-800 sm:px-3 sm:text-sm"
+            onClick={onDownload}
+          >
+            <RiFileExcel2Fill size={20} />
+            <span>Export excel</span>
+          </button>
+
+          <PaginationTable
+            tableRow={tableRow}
+            tableHeader={tableHeader}
+            tableBodyData={passports}
+            options={data!}
+            handleRemoving={handleRemoving}
+            handleAddInvoice={handleAddInvoice}
+            setIsOpen={setIsOpen}
+            setId={setId}
+            isDeleting={isDeleting}
+            isCreatingInvoice={isCreatingInvoice}
+            ref={tableRef}
+          />
+        </>
       )}
 
       {/* if there is No Passports Records */}
