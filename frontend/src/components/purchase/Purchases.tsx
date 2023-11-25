@@ -1,4 +1,10 @@
-import { useEffect, useState, useDeferredValue, useRef } from "react";
+import {
+  useEffect,
+  useState,
+  useDeferredValue,
+  useRef,
+  useCallback,
+} from "react";
 import { useSearchParams } from "react-router-dom";
 import { MainSpinner } from "../shared/MainSpinner";
 import { PaginationTable } from "../shared/PaginationTable";
@@ -73,7 +79,7 @@ export const Purchases = () => {
     },
   };
 
-  const { data, isLoading, isFetching, isSuccess, isError } =
+  const { data, isLoading, isFetching, isSuccess, isError, error } =
     useGetPurchasesQuery(searchObj);
 
   const purchases = data?.docs ? data.docs : [];
@@ -91,14 +97,14 @@ export const Purchases = () => {
   const [id, setId] = useState("");
 
   // handle Delete Purchase
-  const handleRemoving = async (
-    e: React.SyntheticEvent,
-    removedPurchaseID: string
-  ) => {
-    e.preventDefault();
+  const handleRemoving = useCallback(
+    async (e: React.SyntheticEvent, removedPurchaseID: string) => {
+      e.preventDefault();
 
-    await deletePurchase(removedPurchaseID);
-  };
+      await deletePurchase(removedPurchaseID);
+    },
+    []
+  );
 
   useEffect(() => {
     if (notInitialRender.current && isSuccess && !isFetching && !isLoading) {
@@ -112,8 +118,27 @@ export const Purchases = () => {
   useDocumentTitle("المشتــريات");
   useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
 
+  //Show Error Message if could not fetch data
+  if (error) {
+    return (
+      <main className="w-full">
+        <h1 className="my-4 rounded border-l-4 border-red-600 bg-red-200 p-2 text-center text-base font-bold uppercase text-gray-800">
+          Error happened, try refresh the page.
+        </h1>
+      </main>
+    );
+  }
+
+  //Show spinner when Loading State is true
+  if (!data || isLoading)
+    return (
+      <main className="w-full">
+        <MainSpinner isLoading={isLoading} />
+      </main>
+    );
+
   return (
-    <section className="w-full">
+    <main className="w-full">
       <h2 className="my-4 mb-10 flex items-center justify-center rounded bg-red-700 px-2 py-4 text-3xl font-bold text-white shadow">
         <span className="mr-2 flex items-center justify-center">
           <PurchaseMain className="mr-1 h-20 w-20 drop-shadow" />
@@ -139,7 +164,7 @@ export const Purchases = () => {
       />
 
       {/*Show Purchases' Totals*/}
-      {!isLoading && !isFetching && purchases?.length !== 0 && (
+      {!isFetching && purchases?.length !== 0 && (
         <Totals purchases={purchases} />
       )}
 
@@ -147,7 +172,7 @@ export const Purchases = () => {
       {isFetching && <FetchingMessage isFetching={isFetching} />}
 
       {/*Display Table All Data Needed*/}
-      {!isLoading && purchases?.length > 0 && (
+      {purchases?.length > 0 && (
         <>
           <button
             className="mx-auto my-5 flex items-center justify-center gap-1 rounded border bg-green-200 px-2 py-2 text-xs font-bold text-green-800 shadow transition-all duration-300 ease-in-out hover:border-green-800 hover:bg-white
@@ -179,14 +204,12 @@ export const Purchases = () => {
         !deferredType &&
         !deferredSupplier &&
         purchases?.length === 0 &&
-        !isLoading &&
         !isFetching &&
         !isError && <NoSavedRecords customMsg={["مشتريات", "المشتريات"]} />}
 
       {/* if there is search query no Purchases matches >>> No Search Found*/}
       {(year || month || day || deferredSupplier || deferredType) &&
         purchases?.length === 0 &&
-        !isLoading &&
         !isFetching &&
         !isError && <NoSearchResult />}
 
@@ -194,9 +217,94 @@ export const Purchases = () => {
       <AnimatePresence initial={false}>
         {isOpen && <UpdatePurchase setIsOpen={setIsOpen} id={id} />}
       </AnimatePresence>
-
-      {/* Show spinner when Loading State is true */}
-      {isLoading && <MainSpinner isLoading={isLoading} />}
-    </section>
+    </main>
   );
 };
+
+// return (
+//     <section className="w-full">
+//       <h2 className="my-4 mb-10 flex items-center justify-center rounded bg-red-700 px-2 py-4 text-3xl font-bold text-white shadow">
+//         <span className="mr-2 flex items-center justify-center">
+//           <PurchaseMain className="mr-1 h-20 w-20 drop-shadow" />
+//         </span>
+//         المشتــريات
+//       </h2>
+
+//       {/*Show Purchases' Filters*/}
+//       <FiltersSummary
+//         searchQuery={searchQuery}
+//         count={data?.totalDocs ? data.totalDocs : 0}
+//         setIsFilterOpen={setIsFilterOpen}
+//         isFilterOpen={isFilterOpen}
+//       />
+
+//       <Filters
+//         searchQuery={searchQuery}
+//         setSearchQuery={setSearchQuery}
+//         setIsFilterOpen={setIsFilterOpen}
+//         isFilterOpen={isFilterOpen}
+//         tableRows={tableRows}
+//         setTableRows={setTableRows}
+//       />
+
+//       {/*Show Purchases' Totals*/}
+//       {!isLoading && !isFetching && purchases?.length !== 0 && (
+//         <Totals purchases={purchases} />
+//       )}
+
+//       {/* isFetching Message */}
+//       {isFetching && <FetchingMessage isFetching={isFetching} />}
+
+//       {/*Display Table All Data Needed*/}
+//       {!isLoading && purchases?.length > 0 && (
+//         <>
+//           <button
+//             className="mx-auto my-5 flex items-center justify-center gap-1 rounded border bg-green-200 px-2 py-2 text-xs font-bold text-green-800 shadow transition-all duration-300 ease-in-out hover:border-green-800 hover:bg-white
+//             hover:text-green-800 sm:px-3 sm:text-sm"
+//             onClick={onDownload}
+//           >
+//             <RiFileExcel2Fill size={20} />
+//             <span>Export excel</span>
+//           </button>
+
+//           <PaginationTable
+//             tableRow={tableRow}
+//             tableHeader={tableHeader}
+//             tableBodyData={purchases}
+//             options={data!}
+//             handleRemoving={handleRemoving}
+//             setIsOpen={setIsOpen}
+//             setId={setId}
+//             isDeleting={isDeleting}
+//             ref={tableRef}
+//           />
+//         </>
+//       )}
+
+//       {/* if there is No Purchases Records */}
+//       {!year &&
+//         !month &&
+//         !day &&
+//         !deferredType &&
+//         !deferredSupplier &&
+//         purchases?.length === 0 &&
+//         !isLoading &&
+//         !isFetching &&
+//         !isError && <NoSavedRecords customMsg={["مشتريات", "المشتريات"]} />}
+
+//       {/* if there is search query no Purchases matches >>> No Search Found*/}
+//       {(year || month || day || deferredSupplier || deferredType) &&
+//         purchases?.length === 0 &&
+//         !isLoading &&
+//         !isFetching &&
+//         !isError && <NoSearchResult />}
+
+//       {/* Show update Purchases Modal */}
+//       <AnimatePresence initial={false}>
+//         {isOpen && <UpdatePurchase setIsOpen={setIsOpen} id={id} />}
+//       </AnimatePresence>
+
+//       {/* Show spinner when Loading State is true */}
+//       {isLoading && <MainSpinner isLoading={isLoading} />}
+//     </section>
+//   );

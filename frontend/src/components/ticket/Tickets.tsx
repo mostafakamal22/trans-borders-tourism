@@ -1,4 +1,10 @@
-import { useState, useEffect, useDeferredValue, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  useDeferredValue,
+  useRef,
+  useCallback,
+} from "react";
 import { ReactComponent as TicketMain } from "../../assets/icons/ticket-main.svg";
 import { MainSpinner } from "../shared/MainSpinner";
 import { PaginationTable } from "../shared/PaginationTable";
@@ -106,7 +112,7 @@ export const Tickets = () => {
     },
   };
 
-  const { data, isLoading, isFetching, isSuccess, isError } =
+  const { data, isLoading, isFetching, isSuccess, isError, error } =
     useGetTicketsQuery(searchObj);
 
   const tickets = data?.docs ? data.docs : [];
@@ -126,45 +132,45 @@ export const Tickets = () => {
   const [id, setId] = useState("");
 
   //Handle Delete Ticket
-  const handleRemoving = async (
-    e: React.SyntheticEvent,
-    removedTicketID: string
-  ) => {
-    e.preventDefault();
+  const handleRemoving = useCallback(
+    async (e: React.SyntheticEvent, removedTicketID: string) => {
+      e.preventDefault();
 
-    await deleteTicket(removedTicketID);
-  };
+      await deleteTicket(removedTicketID);
+    },
+    []
+  );
 
   //Handle Creating Invoice
-  const handleAddInvoice = async (
-    e: React.SyntheticEvent,
-    ticket: ITicketDocument
-  ) => {
-    e.preventDefault();
+  const handleAddInvoice = useCallback(
+    async (e: React.SyntheticEvent, ticket: ITicketDocument) => {
+      e.preventDefault();
 
-    const invoiceData: InvoiceData = {
-      customer: { name: ticket?.customer_name },
-      details: [
-        {
-          name: ticket?.type as string,
-          quantity: 1,
-          price: ticket.sales,
-        },
-      ],
-      subtotal: ticket?.sales,
-      taxable: 0,
-      taxRate: 0,
-      taxDue: 0,
-      total: ticket?.sales,
-      date: ticket?.payment_date as Date,
-      paidAmount: ticket?.paid_amount,
-      remainingAmount: ticket?.remaining_amount,
-      paymentMethod:
-        paymentMethods[ticket?.payment_method as keyof PaymentMethods],
-    };
+      const invoiceData: InvoiceData = {
+        customer: { name: ticket?.customer_name },
+        details: [
+          {
+            name: ticket?.type as string,
+            quantity: 1,
+            price: ticket.sales,
+          },
+        ],
+        subtotal: ticket?.sales,
+        taxable: 0,
+        taxRate: 0,
+        taxDue: 0,
+        total: ticket?.sales,
+        date: ticket?.payment_date as Date,
+        paidAmount: ticket?.paid_amount,
+        remainingAmount: ticket?.remaining_amount,
+        paymentMethod:
+          paymentMethods[ticket?.payment_method as keyof PaymentMethods],
+      };
 
-    await createInvoice(invoiceData);
-  };
+      await createInvoice(invoiceData);
+    },
+    []
+  );
 
   useEffect(() => {
     if (notInitialRender.current && isSuccess && !isFetching && !isLoading) {
@@ -178,8 +184,27 @@ export const Tickets = () => {
   useDocumentTitle("التذاكــر");
   useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
 
+  //Show Error Message if could not fetch data
+  if (error) {
+    return (
+      <main className="w-full">
+        <h1 className="my-4 rounded border-l-4 border-red-600 bg-red-200 p-2 text-center text-base font-bold uppercase text-gray-800">
+          Error happened, try refresh the page.
+        </h1>
+      </main>
+    );
+  }
+
+  //Show spinner when Loading State is true
+  if (!data || isLoading)
+    return (
+      <main className="w-full">
+        <MainSpinner isLoading={isLoading} />
+      </main>
+    );
+
   return (
-    <section className="w-full">
+    <main className="w-full">
       <h2 className="my-4 mb-10 flex items-center justify-center rounded bg-red-700 px-2 py-4 text-3xl font-bold text-white shadow">
         <span className="mr-2 flex items-center justify-center">
           <TicketMain className="mr-1 h-20 w-20 drop-shadow" />
@@ -207,15 +232,13 @@ export const Tickets = () => {
       />
 
       {/*Show Tickets' Totals*/}
-      {!isLoading && !isFetching && tickets?.length !== 0 && (
-        <Totals tickets={tickets} />
-      )}
+      {!isFetching && tickets?.length !== 0 && <Totals tickets={tickets} />}
 
       {/* isFetching Message */}
       {isFetching && <FetchingMessage isFetching={isFetching} />}
 
       {/*Display Table All Data Needed*/}
-      {!isLoading && tickets?.length > 0 && (
+      {tickets?.length > 0 && (
         <>
           <button
             className="mx-auto my-5 flex items-center justify-center gap-1 rounded border bg-green-200 px-2 py-2 text-xs font-bold text-green-800 shadow transition-all duration-300 ease-in-out hover:border-green-800 hover:bg-white
@@ -252,7 +275,6 @@ export const Tickets = () => {
         !deferredCustomerName &&
         paymentMethodArr?.length === 0 &&
         tickets?.length === 0 &&
-        !isLoading &&
         !isFetching &&
         !isError && <NoSavedRecords customMsg={["تذاكر", "التذاكر"]} />}
 
@@ -267,7 +289,6 @@ export const Tickets = () => {
         deferredEmployee ||
         paymentMethodArr?.length > 0) &&
         tickets?.length === 0 &&
-        !isLoading &&
         !isFetching &&
         !isError && <NoSearchResult />}
 
@@ -275,9 +296,6 @@ export const Tickets = () => {
       <AnimatePresence initial={false}>
         {isOpen && <UpdateTicket setIsOpen={setIsOpen} id={id} />}
       </AnimatePresence>
-
-      {/* Show spinner when Loading State is true */}
-      {isLoading && <MainSpinner isLoading={isLoading} />}
-    </section>
+    </main>
   );
 };

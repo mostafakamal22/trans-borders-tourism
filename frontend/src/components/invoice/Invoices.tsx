@@ -1,4 +1,10 @@
-import { useState, useDeferredValue, useEffect, useRef } from "react";
+import {
+  useState,
+  useDeferredValue,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import { ReactComponent as InvoiceMain } from "../../assets/icons/invoice-main.svg";
 import { PaginationTable } from "../shared/PaginationTable";
 import { useSearchParams } from "react-router-dom";
@@ -47,7 +53,7 @@ export const Invoices = () => {
     ? +URLSearchParams.get("page")!
     : 1;
 
-  const { data, isLoading, isFetching, isSuccess, isError } =
+  const { data, isLoading, isFetching, isSuccess, isError, error } =
     useGetInvoicesQuery({
       query: { name: deferredQuery.trim() },
       option: {
@@ -61,14 +67,14 @@ export const Invoices = () => {
   const [deleteInvoice, { isLoading: isDeleting }] = useDeleteInvoiceMutation();
 
   //Handle Delete Invoice
-  const handleRemoving = async (
-    e: React.SyntheticEvent,
-    removedInvoiceID: string
-  ) => {
-    e.preventDefault();
+  const handleRemoving = useCallback(
+    async (e: React.SyntheticEvent, removedInvoiceID: string) => {
+      e.preventDefault();
 
-    await deleteInvoice(removedInvoiceID);
-  };
+      await deleteInvoice(removedInvoiceID);
+    },
+    []
+  );
 
   useEffect(() => {
     if (notInitialRender.current && isSuccess && !isFetching && !isLoading) {
@@ -82,8 +88,27 @@ export const Invoices = () => {
   useDocumentTitle("الفواتير");
   useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
 
+  //Show Error Message if could not fetch data
+  if (error) {
+    return (
+      <main className="w-full">
+        <h1 className="my-4 rounded border-l-4 border-red-600 bg-red-200 p-2 text-center text-base font-bold uppercase text-gray-800">
+          Error happened, try refresh the page.
+        </h1>
+      </main>
+    );
+  }
+
+  //Show spinner when Loading State is true
+  if (!data || isLoading)
+    return (
+      <main className="w-full">
+        <MainSpinner isLoading={isLoading} />
+      </main>
+    );
+
   return (
-    <section className="w-full">
+    <main className="w-full">
       <h2 className="my-4 mb-10 flex items-center justify-center rounded bg-red-700 px-2 py-4 text-3xl font-bold text-white shadow">
         <span className="mr-2 flex items-center justify-center">
           <InvoiceMain className="h-20 w-20 drop-shadow" />
@@ -112,7 +137,7 @@ export const Invoices = () => {
       {isFetching && <FetchingMessage isFetching={isFetching} />}
 
       {/*Display Table All Data Needed*/}
-      {!isLoading && invoices?.length > 0 && (
+      {invoices?.length > 0 && (
         <>
           <button
             className="mx-auto my-5 flex items-center justify-center gap-1 rounded border bg-green-200 px-2 py-2 text-xs font-bold text-green-800 shadow transition-all duration-300 ease-in-out hover:border-green-800 hover:bg-white
@@ -136,23 +161,14 @@ export const Invoices = () => {
       )}
 
       {/* if there is No Invoice Records */}
-      {!deferredQuery &&
-        !isLoading &&
-        !isFetching &&
-        !isError &&
-        invoices?.length === 0 && (
-          <NoSavedRecords customMsg={["فواتير", "الفواتير"]} />
-        )}
+      {!deferredQuery && !isFetching && !isError && invoices?.length === 0 && (
+        <NoSavedRecords customMsg={["فواتير", "الفواتير"]} />
+      )}
 
       {/* if there is search query and no Invoice matches >>> No Search Found*/}
-      {deferredQuery &&
-        invoices?.length === 0 &&
-        !isLoading &&
-        !isFetching &&
-        !isError && <NoSearchResult />}
-
-      {/* Show spinner when Loading State is true */}
-      {isLoading && <MainSpinner isLoading={isLoading} />}
-    </section>
+      {deferredQuery && invoices?.length === 0 && !isFetching && !isError && (
+        <NoSearchResult />
+      )}
+    </main>
   );
 };

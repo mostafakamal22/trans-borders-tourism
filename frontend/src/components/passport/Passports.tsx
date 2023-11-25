@@ -1,4 +1,10 @@
-import { useState, useDeferredValue, useEffect, useRef } from "react";
+import {
+  useState,
+  useDeferredValue,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import { PaginationTable } from "../shared/PaginationTable";
 import { MainSpinner } from "../shared/MainSpinner";
 import { UpdatePassport } from "../forms/UpdatePassport";
@@ -98,7 +104,7 @@ export const Passports = () => {
     },
   };
 
-  const { data, isLoading, isFetching, isSuccess, isError } =
+  const { data, isLoading, isFetching, isSuccess, isError, error } =
     useGetPassportsQuery(searchObj);
 
   const passports = data?.docs ? data.docs : [];
@@ -119,51 +125,54 @@ export const Passports = () => {
   const [id, setId] = useState("");
 
   // handle Delete Passport
-  const handleRemoving = async (
-    e: React.SyntheticEvent,
-    removedPassportID: string
-  ) => {
-    e.preventDefault();
+  const handleRemoving = useCallback(
+    async (e: React.SyntheticEvent, removedPassportID: string) => {
+      e.preventDefault();
 
-    await deletePassport(removedPassportID);
-  };
+      await deletePassport(removedPassportID);
+    },
+    []
+  );
 
   // handle Creating invoice
-  const handleAddInvoice = async (
-    e: React.SyntheticEvent,
-    customerName: string,
-    passport_service: string,
-    paymentDate: Date,
-    passportSales: number,
-    passportSpecialKey: string
-  ) => {
-    e.preventDefault();
+  const handleAddInvoice = useCallback(
+    async (
+      e: React.SyntheticEvent,
+      customerName: string,
+      passport_service: string,
+      paymentDate: Date,
+      passportSales: number,
+      passportSpecialKey: string
+    ) => {
+      e.preventDefault();
 
-    const invoiceData: InvoiceData = {
-      customer: { name: customerName },
-      details: [
-        {
-          name:
-            passport_service === "90days" ||
-            passport_service === "60days" ||
-            passport_service === "30days"
-              ? " فيزا " + passportService[passport_service]
-              : passportService[passport_service as keyof PassportService],
-          quantity: 1,
-          price: passportSales,
-        },
-      ],
-      ID: passportSpecialKey,
-      total: passportSales,
-      subtotal: 0,
-      date: paymentDate,
-      taxDue: 0,
-      taxRate: 0,
-      taxable: 0,
-    };
+      const invoiceData: InvoiceData = {
+        customer: { name: customerName },
+        details: [
+          {
+            name:
+              passport_service === "90days" ||
+              passport_service === "60days" ||
+              passport_service === "30days"
+                ? " فيزا " + passportService[passport_service]
+                : passportService[passport_service as keyof PassportService],
+            quantity: 1,
+            price: passportSales,
+          },
+        ],
+        ID: passportSpecialKey,
+        total: passportSales,
+        subtotal: 0,
+        date: paymentDate,
+        taxDue: 0,
+        taxRate: 0,
+        taxable: 0,
+      };
 
-    await createInvoice(invoiceData);
-  };
+      await createInvoice(invoiceData);
+    },
+    []
+  );
 
   useEffect(() => {
     if (notInitialRender.current && isSuccess && !isFetching && !isLoading) {
@@ -177,8 +186,27 @@ export const Passports = () => {
   useDocumentTitle("الجـــوازات");
   useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
 
+  //Show Error Message if could not fetch data
+  if (error) {
+    return (
+      <main className="w-full">
+        <h1 className="my-4 rounded border-l-4 border-red-600 bg-red-200 p-2 text-center text-base font-bold uppercase text-gray-800">
+          Error happened, try refresh the page.
+        </h1>
+      </main>
+    );
+  }
+
+  //Show spinner when Loading State is true
+  if (!data || isLoading)
+    return (
+      <main className="w-full">
+        <MainSpinner isLoading={isLoading} />
+      </main>
+    );
+
   return (
-    <section className="w-full">
+    <main className="w-full">
       <h2 className="my-4 mb-10 flex items-center justify-center rounded bg-red-700 px-2 py-4 text-3xl font-bold text-white shadow">
         <span className="mr-2 flex items-center justify-center">
           <PassportMain className="h-20 w-20 drop-shadow" />
@@ -205,7 +233,7 @@ export const Passports = () => {
       />
 
       {/*Show Passports' Totals*/}
-      {!isLoading && !isFetching && passports?.length !== 0 && (
+      {!isFetching && passports?.length !== 0 && (
         <Totals passports={passports} />
       )}
 
@@ -213,7 +241,7 @@ export const Passports = () => {
       {isFetching && <FetchingMessage isFetching={isFetching} />}
 
       {/*Display Table All Data Needed*/}
-      {!isLoading && passports?.length > 0 && (
+      {passports?.length > 0 && (
         <>
           <button
             className="mx-auto my-5 flex items-center justify-center gap-1 rounded border bg-green-200 px-2 py-2 text-xs font-bold text-green-800 shadow transition-all duration-300 ease-in-out hover:border-green-800 hover:bg-white
@@ -248,7 +276,6 @@ export const Passports = () => {
         stateArr?.length === 0 &&
         serviceArr?.length === 0 &&
         passports?.length === 0 &&
-        !isLoading &&
         !isFetching &&
         !isError && <NoSavedRecords customMsg={["جوازات", "الجوازات"]} />}
 
@@ -260,7 +287,6 @@ export const Passports = () => {
         stateArr?.length > 0 ||
         serviceArr?.length > 0) &&
         passports?.length === 0 &&
-        !isLoading &&
         !isFetching &&
         !isError && <NoSearchResult />}
 
@@ -268,9 +294,6 @@ export const Passports = () => {
       <AnimatePresence initial={false}>
         {isOpen && <UpdatePassport setIsOpen={setIsOpen} id={id} />}
       </AnimatePresence>
-
-      {/* Show spinner when Loading State is true */}
-      {isLoading && <MainSpinner isLoading={isLoading} />}
-    </section>
+    </main>
   );
 };

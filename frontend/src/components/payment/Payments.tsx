@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { PaginationTable } from "../shared/PaginationTable";
 import { MainSpinner } from "../shared/MainSpinner";
 import { PaymentSearchQueries } from "../payment/types";
@@ -70,7 +70,7 @@ export const Payments = () => {
     sheet: "Payments",
   });
 
-  const { data, isLoading, isFetching, isSuccess, isError } =
+  const { data, isLoading, isFetching, isSuccess, isError, error } =
     useGetPaymentsQuery(searchObj);
 
   const payments = data?.docs ? data.docs : [];
@@ -87,14 +87,14 @@ export const Payments = () => {
   const [id, setId] = useState("");
 
   // handle Delete Payment
-  const handleRemoving = async (
-    e: React.SyntheticEvent,
-    removedPaymentID: string
-  ) => {
-    e.preventDefault();
+  const handleRemoving = useCallback(
+    async (e: React.SyntheticEvent, removedPaymentID: string) => {
+      e.preventDefault();
 
-    await deletePayment(removedPaymentID);
-  };
+      await deletePayment(removedPaymentID);
+    },
+    []
+  );
 
   useEffect(() => {
     if (notInitialRender.current && isSuccess && !isFetching && !isLoading) {
@@ -108,8 +108,27 @@ export const Payments = () => {
   useDocumentTitle("المصــروفات");
   useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
 
+  //Show Error Message if could not fetch data
+  if (error) {
+    return (
+      <main className="w-full">
+        <h1 className="my-4 rounded border-l-4 border-red-600 bg-red-200 p-2 text-center text-base font-bold uppercase text-gray-800">
+          Error happened, try refresh the page.
+        </h1>
+      </main>
+    );
+  }
+
+  //Show spinner when Loading State is true
+  if (!data || isLoading)
+    return (
+      <main className="w-full">
+        <MainSpinner isLoading={isLoading} />
+      </main>
+    );
+
   return (
-    <section className="w-full">
+    <main className="w-full">
       <h2 className="my-4 mb-10 flex items-center justify-center rounded bg-red-700 px-2 py-4 text-3xl font-bold text-white shadow">
         <span className="mr-2 flex items-center justify-center">
           <PaymentMain className="mr-1 h-20 w-20 drop-shadow" />
@@ -135,15 +154,13 @@ export const Payments = () => {
       />
 
       {/*Show Payments' Totals*/}
-      {!isLoading && !isFetching && payments?.length !== 0 && (
-        <Totals payments={payments} />
-      )}
+      {!isFetching && payments?.length !== 0 && <Totals payments={payments} />}
 
       {/* isFetching Message */}
       {isFetching && <FetchingMessage isFetching={isFetching} />}
 
       {/*Display Table All Data Needed*/}
-      {!isLoading && payments?.length > 0 && (
+      {payments?.length > 0 && (
         <>
           <button
             className="mx-auto my-5 flex items-center justify-center gap-1 rounded border bg-green-200 px-2 py-2 text-xs font-bold text-green-800 shadow transition-all duration-300 ease-in-out hover:border-green-800 hover:bg-white
@@ -175,14 +192,12 @@ export const Payments = () => {
         !type &&
         !method &&
         payments?.length === 0 &&
-        !isLoading &&
         !isFetching &&
         !isError && <NoSavedRecords customMsg={["مصروفات", "المصروفات"]} />}
 
       {/* if there is search query no Payments matches >>> No Search Found*/}
       {(year || month || day || method || type) &&
         payments?.length === 0 &&
-        !isLoading &&
         !isFetching &&
         !isError && <NoSearchResult />}
 
@@ -190,9 +205,6 @@ export const Payments = () => {
       <AnimatePresence initial={false}>
         {isOpen && <UpdatePayment setIsOpen={setIsOpen} id={id} />}
       </AnimatePresence>
-
-      {/* Show spinner when Loading State is true */}
-      {isLoading && <MainSpinner isLoading={isLoading} />}
-    </section>
+    </main>
   );
 };
