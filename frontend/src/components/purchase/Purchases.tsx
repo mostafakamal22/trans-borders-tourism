@@ -79,7 +79,7 @@ export const Purchases = () => {
     },
   };
 
-  const { data, isLoading, isFetching, isSuccess, isError, error } =
+  const { data, isLoading, isFetching, isSuccess,  error } =
     useGetPurchasesQuery(searchObj);
 
   const purchases = data?.docs ? data.docs : [];
@@ -205,13 +205,13 @@ export const Purchases = () => {
         !deferredSupplier &&
         purchases?.length === 0 &&
         !isFetching &&
-        !isError && <NoSavedRecords customMsg={["مشتريات", "المشتريات"]} />}
+          <NoSavedRecords customMsg={["مشتريات", "المشتريات"]} />}
 
       {/* if there is search query no Purchases matches >>> No Search Found*/}
       {(year || month || day || deferredSupplier || deferredType) &&
         purchases?.length === 0 &&
         !isFetching &&
-        !isError && <NoSearchResult />}
+        <NoSearchResult />}
 
       {/* Show update Purchases Modal */}
       <AnimatePresence initial={false}>

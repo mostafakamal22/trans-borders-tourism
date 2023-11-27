@@ -112,7 +112,7 @@ export const Tickets = () => {
     },
   };
 
-  const { data, isLoading, isFetching, isSuccess, isError, error } =
+  const { data, isLoading, isFetching, isSuccess,  error } =
     useGetTicketsQuery(searchObj);
 
   const tickets = data?.docs ? data.docs : [];
@@ -276,7 +276,7 @@ export const Tickets = () => {
         paymentMethodArr?.length === 0 &&
         tickets?.length === 0 &&
         !isFetching &&
-        !isError && <NoSavedRecords customMsg={["تذاكر", "التذاكر"]} />}
+         <NoSavedRecords customMsg={["تذاكر", "التذاكر"]} />}
 
       {/* if there is search query no Tickets matches >>> No Search Found*/}
       {(year ||
@@ -290,7 +290,7 @@ export const Tickets = () => {
         paymentMethodArr?.length > 0) &&
         tickets?.length === 0 &&
         !isFetching &&
-        !isError && <NoSearchResult />}
+         <NoSearchResult />}
 
       {/* Show update Tickets Modal */}
       <AnimatePresence initial={false}>

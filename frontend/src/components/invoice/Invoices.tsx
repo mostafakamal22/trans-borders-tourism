@@ -53,7 +53,7 @@ export const Invoices = () => {
     ? +URLSearchParams.get("page")!
     : 1;
 
-  const { data, isLoading, isFetching, isSuccess, isError, error } =
+  const { data, isLoading, isFetching, isSuccess,  error } =
     useGetInvoicesQuery({
       query: { name: deferredQuery.trim() },
       option: {
@@ -161,12 +161,12 @@ export const Invoices = () => {
       )}
 
       {/* if there is No Invoice Records */}
-      {!deferredQuery && !isFetching && !isError && invoices?.length === 0 && (
+      {!deferredQuery && !isFetching  && invoices?.length === 0 && (
         <NoSavedRecords customMsg={["فواتير", "الفواتير"]} />
       )}
 
       {/* if there is search query and no Invoice matches >>> No Search Found*/}
-      {deferredQuery && invoices?.length === 0 && !isFetching && !isError && (
+      {deferredQuery && invoices?.length === 0 && !isFetching  && (
         <NoSearchResult />
       )}
     </main>

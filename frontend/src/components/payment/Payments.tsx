@@ -70,7 +70,7 @@ export const Payments = () => {
     sheet: "Payments",
   });
 
-  const { data, isLoading, isFetching, isSuccess, isError, error } =
+  const { data, isLoading, isFetching, isSuccess,   error } =
     useGetPaymentsQuery(searchObj);
 
   const payments = data?.docs ? data.docs : [];
@@ -193,13 +193,13 @@ export const Payments = () => {
         !method &&
         payments?.length === 0 &&
         !isFetching &&
-        !isError && <NoSavedRecords customMsg={["مصروفات", "المصروفات"]} />}
+         <NoSavedRecords customMsg={["مصروفات", "المصروفات"]} />}
 
       {/* if there is search query no Payments matches >>> No Search Found*/}
       {(year || month || day || method || type) &&
         payments?.length === 0 &&
         !isFetching &&
-        !isError && <NoSearchResult />}
+         <NoSearchResult />}
 
       {/* Show update Payments Modal */}
       <AnimatePresence initial={false}>

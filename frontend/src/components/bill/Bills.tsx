@@ -68,7 +68,7 @@ export const Bills = () => {
     ? +URLSearchParams.get("page")!
     : 1;
 
-  const { data, isLoading, isFetching, isSuccess, isError, error } =
+  const { data, isLoading, isFetching, isSuccess,  error } =
     useGetBillsQuery({
       query: {
         name: deferredName.trim(),
@@ -184,7 +184,6 @@ export const Bills = () => {
       {!deferredName &&
         !deferredType &&
         !isFetching &&
-        !isError &&
         bills?.length === 0 && (
           <NoSavedRecords customMsg={["فواتير", "الفواتير"]} />
         )}
@@ -193,7 +192,7 @@ export const Bills = () => {
       {(deferredName || deferredType) &&
         bills?.length === 0 &&
         !isFetching &&
-        !isError && <NoSearchResult />}
+          <NoSearchResult />}
 
       {/* Show update Bill Modal */}
       <AnimatePresence initial={false}>

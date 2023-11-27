@@ -104,7 +104,7 @@ export const Passports = () => {
     },
   };
 
-  const { data, isLoading, isFetching, isSuccess, isError, error } =
+  const { data, isLoading, isFetching, isSuccess,   error } =
     useGetPassportsQuery(searchObj);
 
   const passports = data?.docs ? data.docs : [];
@@ -277,7 +277,7 @@ export const Passports = () => {
         serviceArr?.length === 0 &&
         passports?.length === 0 &&
         !isFetching &&
-        !isError && <NoSavedRecords customMsg={["جوازات", "الجوازات"]} />}
+        <NoSavedRecords customMsg={["جوازات", "الجوازات"]} />}
 
       {/* if there is search query and no Passport matches >>> No Result Found*/}
       {(year ||
@@ -288,7 +288,7 @@ export const Passports = () => {
         serviceArr?.length > 0) &&
         passports?.length === 0 &&
         !isFetching &&
-        !isError && <NoSearchResult />}
+        <NoSearchResult />}
 
       {/* Show update Passport Modal */}
       <AnimatePresence initial={false}>
