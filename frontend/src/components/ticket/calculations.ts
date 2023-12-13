@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import { ITicketDocument } from "../../../../backend/models/ticketModel";
-import { TotalMonthValues } from "../invoice/calculations";
 import { TicketsChartsCalculations } from "./types";
 
 //Calculate Tickets' totals of [cost, sales and profits]
@@ -18,6 +17,21 @@ export const ticketsCalculations = (tickets: ITicketDocument[]) => {
   });
 
   return totalValues;
+};
+
+export type TotalMonthValues = {
+  0: number;
+  1: number;
+  2: number;
+  3: number;
+  4: number;
+  5: number;
+  6: number;
+  7: number;
+  8: number;
+  9: number;
+  10: number;
+  11: number;
 };
 
 //Calculate Tickets' Charts Needed Calcualtions

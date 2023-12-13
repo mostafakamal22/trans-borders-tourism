@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import {
   BarController,
   CategoryScale,
@@ -17,8 +16,7 @@ import {
   PointElement,
 } from "chart.js";
 import { Chart } from "react-chartjs-2";
-import { invoicesChartsCalculations } from "./calculations";
-import { useGetInvoicesQuery } from "../../state/features/invoice/invoiceApiSlice";
+import { useGetInvoicesStatisticsQuery } from "../../state/features/invoice/invoiceApiSlice";
 import dayjs from "dayjs";
 import { MainSpinner } from "../shared/MainSpinner";
 
@@ -137,12 +135,20 @@ export const labels = [
 ];
 
 export function InvoiceCharts() {
-  const { data: invoiceData, isLoading, isFetching } = useGetInvoicesQuery({});
+  const { data, isLoading, isFetching, isError } =
+    useGetInvoicesStatisticsQuery(null, {
+      pollingInterval: 3600000,
+    });
 
-  const { totalMonthValues, totalLastThreeValues } = useMemo(
-    () => invoicesChartsCalculations(invoiceData?.docs || []),
-    [invoiceData]
-  );
+  if (isError) return <div>An error has occurred!</div>;
+
+  if (isLoading || isFetching || !data) {
+    return (
+      <MainSpinner spinnerHeight="20vh" isLoading={isLoading || isFetching} />
+    );
+  }
+
+  const { totalLastThreeValues, totalMonthValues } = data;
 
   const barData: ChartData = {
     labels,
@@ -166,8 +172,8 @@ export function InvoiceCharts() {
         label: `مجموع عام ${dayjs().year()}`,
         backgroundColor: "#c92a2a",
         borderColor: "#c92a2a",
-        data: Object.values(totalLastThreeValues[dayjs().year()]).map(
-          (value: number) => parseInt(value.toString())
+        data: Object.values(totalLastThreeValues[dayjs().year()]).map((value) =>
+          parseInt(value.toString())
         ),
       },
       {
@@ -176,7 +182,7 @@ export function InvoiceCharts() {
         backgroundColor: "rgb(72, 73, 185)",
         borderColor: "rgb(72, 73, 185)",
         data: Object.values(totalLastThreeValues[dayjs().year() - 1]).map(
-          (value: number) => parseInt(value.toString())
+          (value) => parseInt(value.toString())
         ),
       },
 
@@ -186,17 +192,11 @@ export function InvoiceCharts() {
         backgroundColor: "rgb(45, 185, 63)",
         borderColor: "rgb(45, 185, 63)",
         data: Object.values(totalLastThreeValues[dayjs().year() - 2]).map(
-          (value: number) => parseInt(value.toString())
+          (value) => parseInt(value.toString())
         ),
       },
     ],
   };
-
-  if (isLoading || isFetching) {
-    return (
-      <MainSpinner spinnerHeight="20vh" isLoading={isLoading || isFetching} />
-    );
-  }
 
   return (
     <>

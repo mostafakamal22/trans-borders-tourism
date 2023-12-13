@@ -6,7 +6,8 @@ import { PassportCharts } from "../passport/Charts";
 import { TicketCharts } from "../ticket/Charts";
 
 const mainHeadings: string[] = [
-  "الفواتير",
+  "(قديمة) الفواتير",
+  // '(جديدة) الفواتير',
   "الجوازات",
   "التذاكـر",
   "التأشيرات",

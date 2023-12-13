@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Invoice from "../models/invoiceModel";
 import { ErrnoException } from "./adminControllers";
+import { invoicesChartsCalculations } from "../calculations/invoices";
 
 //@Desc   >>>> Get All Invoices That Match Query Object.
 //@Route  >>>> POST /api/invoices/query
@@ -109,4 +110,16 @@ const deleteInvoice = async (req: Request, res: Response) => {
   }
 };
 
-export { getInvoices, createInvoice, deleteInvoice };
+//@Desc   >>>> Get Invoices Statistcis.
+//@Route  >>>> GET /api/invoices/statistics
+//@Access >>>> Private(Admins Only)
+const getInvoicesStatistics = async (_req: Request, res: Response) => {
+  //Get All Invoices Data.
+  const invoices = await Invoice.find({});
+
+  const statistics = invoicesChartsCalculations(invoices);
+
+  res.status(200).json(statistics);
+};
+
+export { getInvoices, createInvoice, deleteInvoice, getInvoicesStatistics };

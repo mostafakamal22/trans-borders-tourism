@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import { IPassportDocument } from "../../../../backend/models/passportModel";
-import { TotalMonthValues } from "../invoice/calculations";
 import { PassportsChartsCalculations } from "./types";
 import { calculateTax } from "./Table";
 
@@ -33,6 +32,21 @@ export const passportsCalculations = (passports: IPassportDocument[]) => {
   });
 
   return totalValues;
+};
+
+export type TotalMonthValues = {
+  0: number;
+  1: number;
+  2: number;
+  3: number;
+  4: number;
+  5: number;
+  6: number;
+  7: number;
+  8: number;
+  9: number;
+  10: number;
+  11: number;
 };
 
 //Calculate Passports' Charts Needed Calcualtions

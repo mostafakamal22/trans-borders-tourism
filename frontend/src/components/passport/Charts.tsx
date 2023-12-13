@@ -12,9 +12,8 @@ import dayjs from "dayjs";
 import { MainSpinner } from "../shared/MainSpinner";
 import { Chart } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement } from "chart.js";
-import { passportsChartsCalculations } from "./calculations";
+import { passportsChartsCalculations, TotalMonthValues } from "./calculations";
 import { passportService } from "./constants";
-import { TotalMonthValues } from "../invoice/calculations";
 import { Sales } from "../shared/Sales";
 
 ChartJS.register(

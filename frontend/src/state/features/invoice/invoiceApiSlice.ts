@@ -6,6 +6,7 @@ import {
 } from "../../../../../backend/models/invoiceModel";
 import { apiSlice } from "../../app/apiSlice";
 import { ListResponse } from "../passport/passportsApiSlice";
+import { InvoicesChartsCalculations } from "../../../../../backend/calculations/invoices";
 
 export interface InvoiceSearchQuery {
   option?: PaginateOptions;
@@ -74,6 +75,14 @@ export const invoicesApiSlice = apiSlice.injectEndpoints({
         { type: "Invoice", id: "PARTIAL-LIST" },
       ],
     }),
+    getInvoicesStatistics: builder.query<
+      ReturnType<InvoicesChartsCalculations>,
+      null
+    >({
+      query: () => ({
+        url: "/api/invoices/statistics",
+      }),
+    }),
   }),
 });
 
@@ -81,5 +90,6 @@ export const {
   useGetInvoicesQuery,
   useCreateInvoiceMutation,
   useDeleteInvoiceMutation,
+  useGetInvoicesStatisticsQuery,
   usePrefetch,
 } = invoicesApiSlice;

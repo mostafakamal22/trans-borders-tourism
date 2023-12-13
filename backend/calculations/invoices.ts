@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { IInvoiceDocument } from "../../../../backend/models/invoiceModel";
+import { IInvoiceDocument } from "../models/invoiceModel";
 
 export type TotalMonthValues = {
   0: number;
