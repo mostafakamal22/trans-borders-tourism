@@ -16,6 +16,8 @@ const toastBlackList: string[] = [
   "getInvoices",
   "getInvoicesStatistics",
   "getBills",
+  "getOneBill",
+  "getBillsStatistics",
   "getTickets",
   "getPurchases",
   "getPayments",
@@ -26,14 +28,14 @@ const toastMessages = {
   //Bad Request
   400: (
     <div className="flex flex-col items-center justify-center gap-2 font-Tajawal">
-      <h3 className="text-base font-semibold   md:text-xl">طلب خاطئ!</h3>
+      <h3 className="text-base font-semibold md:text-xl">طلب خاطئ!</h3>
       <p>يرجى التأكد من المدخلات وحاول مجدداً</p>
     </div>
   ),
   //Too Many Requests Error
   429: (
     <div className="flex flex-col items-center justify-center gap-2 font-Tajawal">
-      <h3 className="text-base font-semibold   md:text-xl">
+      <h3 className="text-base font-semibold md:text-xl">
         لقد تخطيت عدد المحاولات المسموح بها!
       </h3>
       <p>حاول مجددا لاحقا</p>
@@ -42,7 +44,7 @@ const toastMessages = {
   //Server Error
   500: (
     <div className="flex flex-col items-center justify-center gap-2 font-Tajawal">
-      <h3 className="text-base font-semibold   md:text-xl">خطأ من السيرفر!</h3>
+      <h3 className="text-base font-semibold md:text-xl">خطأ من السيرفر!</h3>
       <p>حاول مجددا لاحقا</p>
     </div>
   ),
@@ -50,7 +52,7 @@ const toastMessages = {
   //Unknown Error
   unknown: (
     <div className="flex flex-col items-center justify-center gap-2 font-Tajawal">
-      <h3 className="text-base font-semibold   md:text-xl">خطأ غير معلوم!</h3>
+      <h3 className="text-base font-semibold md:text-xl">خطأ غير معلوم!</h3>
 
       <p>حاول مجددا لاحقا</p>
     </div>
@@ -112,21 +114,21 @@ export const toastHandlingMiddlware: Middleware =
 
     if (isFulfilled(action) && !toastBlackList.includes(endpointName)) {
       let message = (
-        <h3 className="font-Tajawal text-base font-semibold  md:text-xl">
+        <h3 className="font-Tajawal text-base font-semibold md:text-xl">
           تمت العملية بنجاح
         </h3>
       );
 
       if (endpointName === "login")
         message = (
-          <h3 className="font-Tajawal text-base font-semibold  md:text-xl">
+          <h3 className="font-Tajawal text-base font-semibold md:text-xl">
             مرحبا بك
           </h3>
         );
 
       if (endpointName === "sendLogout")
         message = (
-          <h3 className="font-Tajawal text-base font-semibold  md:text-xl">
+          <h3 className="font-Tajawal text-base font-semibold md:text-xl">
             تم تسجيل الخروج بنجاح
           </h3>
         );
@@ -159,7 +161,7 @@ const SessionExpireMsg = () => {
 
   return (
     <div className="flex flex-col items-center justify-center gap-2 font-Tajawal">
-      <h3 className="text-base font-semibold   md:text-xl">
+      <h3 className="text-base font-semibold md:text-xl">
         لقد إنتهت مدة تسجيل دخولك!
       </h3>
     </div>

@@ -3,6 +3,7 @@ import Bill from "../models/billModel";
 import { ErrnoException } from "./adminControllers";
 import Passport from "../models/passportModel";
 import Ticket from "../models/ticketModel";
+import { billsChartsCalculations } from "../calculations/bills";
 
 //@Desc   >>>> Get All Bills That Match Query Object.
 //@Route  >>>> POST /api/bills/query
@@ -32,6 +33,24 @@ const getBills = async (req: Request, res: Response) => {
   //Get All Bills Data That Match Query & Send it Back.
   const bills = await Bill.paginate(queries, options);
   res.status(200).json(bills);
+};
+
+//@Desc   >>>> GET ONE Bill
+//@Route  >>>> GET /api/bills/:id
+//@Access >>>> Private(Admins Only)
+const getOneBill = async (req: Request, res: Response) => {
+  const bill = await Bill.findById(req.params?.id);
+
+  //Check if Bill is not exist.
+  if (!bill) {
+    const error: ErrnoException = new Error();
+    error.name = "CastError";
+    error.path = "_id";
+    throw error;
+  } else {
+    //Send Bill.
+    res.status(200).json(bill);
+  }
 };
 
 //@Desc   >>>> Create Bill
@@ -273,4 +292,23 @@ const deleteBill = async (req: Request, res: Response) => {
   }
 };
 
-export { getBills, createBill, deleteBill, updateBill };
+//@Desc   >>>> Get Bills Statistcis.
+//@Route  >>>> GET /api/bills/statistics
+//@Access >>>> Private(Admins Only)
+const getBillsStatistics = async (_req: Request, res: Response) => {
+  //Get All Bills Data.
+  const bills = await Bill.find({});
+
+  const statistics = billsChartsCalculations(bills);
+
+  res.status(200).json(statistics);
+};
+
+export {
+  getBills,
+  getOneBill,
+  createBill,
+  deleteBill,
+  updateBill,
+  getBillsStatistics,
+};

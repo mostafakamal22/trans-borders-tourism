@@ -6,6 +6,7 @@ import {
 } from "../../../../../backend/models/billModel";
 import { apiSlice } from "../../app/apiSlice";
 import { ListResponse } from "../passport/passportsApiSlice";
+import { BillsChartsCalculations } from "../../../../../backend/calculations/bills";
 
 export interface BillSearchQuery {
   option?: PaginateOptions;
@@ -51,6 +52,12 @@ export const billsApiSlice = apiSlice.injectEndpoints({
             ]
           : [{ type: "Bill", id: "PARTIAL-LIST" }],
     }),
+    getOneBill: builder.query<IBillDocument, { id: string }>({
+      query: ({ id }) => ({
+        method: "GET",
+        url: `/api/bills/${id}`,
+      }),
+    }),
     createBill: builder.mutation<IBillDocument, BillData>({
       query: (billData) => ({
         url: "/api/bills",
@@ -90,13 +97,23 @@ export const billsApiSlice = apiSlice.injectEndpoints({
         "Ticket",
       ],
     }),
+    getBillsStatistics: builder.query<
+      ReturnType<BillsChartsCalculations>,
+      null
+    >({
+      query: () => ({
+        url: "/api/bills/statistics",
+      }),
+    }),
   }),
 });
 
 export const {
   useGetBillsQuery,
+  useGetOneBillQuery,
   useCreateBillMutation,
   useUpdateBillMutation,
   useDeleteBillMutation,
+  useGetBillsStatisticsQuery,
   usePrefetch,
 } = billsApiSlice;

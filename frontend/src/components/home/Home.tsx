@@ -4,16 +4,13 @@ import useDocumentTitle from "../../hooks/useDocumentTitle";
 import logo from "../../assets/imgs/trans-logo.png";
 import { PassportCharts } from "../passport/Charts";
 import { TicketCharts } from "../ticket/Charts";
+import { BillCharts } from "../bill/Charts";
 
 const mainHeadings: string[] = [
   "(قديمة) الفواتير",
-  // '(جديدة) الفواتير',
+  "(جديدة) الفواتير",
   "الجوازات",
   "التذاكـر",
-  "التأشيرات",
-  "المصروفات",
-  "المشتريات",
-  "المعاملات البنكية",
 ];
 
 export const Home = () => {
@@ -38,13 +35,25 @@ export const Home = () => {
         <InvoiceCharts />
       </section>
 
+      {/* Bills Section */}
+      <section
+        id="bills"
+        className="my-10 flex flex-col items-center justify-center gap-10 font-semibold md:flex-row md:flex-wrap"
+      >
+        <h2 className="mb-2 w-full basis-full rounded bg-red-800 p-2 text-2xl text-white">
+          {mainHeadings[1]}
+        </h2>
+
+        <BillCharts />
+      </section>
+
       {/* Passports Section */}
       <section
         id="passports"
         className="my-10 flex flex-col items-center justify-center gap-10 font-semibold md:flex-row md:flex-wrap"
       >
         <h2 className="mb-2 w-full basis-full rounded bg-red-800 p-2 text-2xl text-white">
-          {mainHeadings[1]}
+          {mainHeadings[2]}
         </h2>
 
         <PassportCharts />
@@ -56,7 +65,7 @@ export const Home = () => {
         className="my-10 flex flex-col items-center justify-center gap-10 font-semibold md:flex-row md:flex-wrap"
       >
         <h2 className="mb-2 w-full basis-full rounded bg-red-800 p-2 text-2xl text-white">
-          {mainHeadings[2]}
+          {mainHeadings[3]}
         </h2>
 
         <TicketCharts />

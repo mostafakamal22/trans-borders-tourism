@@ -5,6 +5,8 @@ import {
   deleteBill,
   updateBill,
   createBill,
+  getBillsStatistics,
+  getOneBill,
 } from "../controllers/billControllers";
 
 const router = Router();
@@ -13,8 +15,11 @@ router.route("/").post(authAdminProtect, createBill);
 
 router.route("/query").post(authAdminProtect, getBills);
 
+router.route("/statistics").get(authAdminProtect, getBillsStatistics);
+
 router
   .route("/:id")
+  .get(authAdminProtect, getOneBill)
   .put(authAdminProtect, updateBill)
   .delete(authAdminProtect, deleteBill);
 

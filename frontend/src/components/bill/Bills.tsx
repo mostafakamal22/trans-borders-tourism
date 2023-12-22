@@ -68,17 +68,16 @@ export const Bills = () => {
     ? +URLSearchParams.get("page")!
     : 1;
 
-  const { data, isLoading, isFetching, isSuccess,  error } =
-    useGetBillsQuery({
-      query: {
-        name: deferredName.trim(),
-        type: deferredType.trim(),
-      },
-      option: {
-        limit: tableRows,
-        page: pageNumber,
-      },
-    });
+  const { data, isLoading, isFetching, isSuccess, error } = useGetBillsQuery({
+    query: {
+      name: deferredName.trim(),
+      type: deferredType.trim(),
+    },
+    option: {
+      limit: tableRows,
+      page: pageNumber,
+    },
+  });
 
   const bills = data?.docs ? data.docs : [];
 
@@ -103,7 +102,7 @@ export const Bills = () => {
   }, [pageNumber, isSuccess, isFetching, isLoading, scrollToTable]);
 
   useScroll("filterHeader");
-  useDocumentTitle("الفواتير -جديد-");
+  useDocumentTitle("(جديدة) الفواتير");
   useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
 
   //Show Error Message if could not fetch data
@@ -131,7 +130,7 @@ export const Bills = () => {
         <span className="mr-2 flex items-center justify-center">
           <BillMain className="h-20 w-20 drop-shadow" />
         </span>
-        -الفواتير -جديد
+        (جديدة) الفواتير
       </h2>
 
       {/*search Bills with name*/}
@@ -181,18 +180,14 @@ export const Bills = () => {
       )}
 
       {/* if there is No Bill Records */}
-      {!deferredName &&
-        !deferredType &&
-        !isFetching &&
-        bills?.length === 0 && (
-          <NoSavedRecords customMsg={["فواتير", "الفواتير"]} />
-        )}
+      {!deferredName && !deferredType && !isFetching && bills?.length === 0 && (
+        <NoSavedRecords customMsg={["فواتير", "الفواتير"]} />
+      )}
 
       {/* if there is search query and no Bill matches >>> No Search Found*/}
-      {(deferredName || deferredType) &&
-        bills?.length === 0 &&
-        !isFetching &&
-          <NoSearchResult />}
+      {(deferredName || deferredType) && bills?.length === 0 && !isFetching && (
+        <NoSearchResult />
+      )}
 
       {/* Show update Bill Modal */}
       <AnimatePresence initial={false}>

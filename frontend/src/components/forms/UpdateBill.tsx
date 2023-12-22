@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import {
-  useGetBillsQuery,
+  useGetOneBillQuery,
   useUpdateBillMutation,
 } from "../../state/features/bill/billApiSlice";
 import {
   IBillCustomer,
+  IBillDocument,
   IBillProduct,
 } from "../../../../backend/models/billModel";
 import {
@@ -39,6 +40,7 @@ import { ReactComponent as BillAlt } from "../../assets/icons/invoice-alt.svg";
 import { motion } from "framer-motion";
 import FormButton from "../shared/FormButton";
 import { RiSendPlaneFill } from "react-icons/ri";
+import { MainSpinner } from "../shared/MainSpinner";
 
 export const UpdateBill = ({
   id,
@@ -47,87 +49,72 @@ export const UpdateBill = ({
   id: string;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { bill: foundBill } = useGetBillsQuery(
-    {},
-    {
-      selectFromResult: ({ data }) => ({
-        bill: data?.docs.find((bill) => bill.id === id),
-      }),
-    }
+  // Initial state
+  const initialCustomerDetails = { name: "" };
+
+  const initialBillDetails = {
+    date: "",
+    subtotal: 0,
+    total: 0,
+    taxRate: 0,
+    taxDue: 0,
+    taxable: 0,
+    other: "",
+  };
+
+  const initialItemsDetails: IBillProduct[] = [];
+
+  const initialPassportDetails = {
+    name: "",
+    nationality: "",
+    state: "accepted",
+    service: "30days",
+    passportId: "",
+    paymentDate: "",
+    servicePrice: 0,
+    taxable: 53,
+    taxRate: 2.65,
+    total: 0,
+    sales: 0,
+    profit: 0,
+  };
+
+  const initialTicketsDetails = {
+    name: "",
+    type: "",
+    employee: "",
+    supplier: "",
+    paymentDate: "",
+    paymentMethod: "cash",
+    cost: 0,
+    sales: 0,
+    profit: 0,
+    paidAmount: 0,
+    remainingAmount: 0,
+  };
+
+  // Data fetching
+  const { data: foundBill, isLoading, error } = useGetOneBillQuery({ id });
+
+  // State for Customer Details
+  const [customerDetails, setCustomerDetails] = useState<IBillCustomer>(
+    initialCustomerDetails
   );
 
-  if (!foundBill) {
-    setIsOpen(false);
-    return null;
-  }
+  // State for Bill Details
+  const [billDetails, setBillDetails] = useState(initialBillDetails);
 
-  const billStringify = JSON.stringify(foundBill);
-  const bill = JSON.parse(billStringify);
+  // State for Items Details
+  const [itemsDetails, setItemsDetails] =
+    useState<IBillProduct[]>(initialItemsDetails);
 
-  //state for Customer Details
-  const [customerDetails, setCustomerDetails] = useState<IBillCustomer>({
-    name: bill?.customer?.name,
-  });
-
-  //state for bill Details
-  const [billDetails, setBillDetails] = useState({
-    date: bill?.date ? dayjs(bill?.date).format("YYYY-MM-DD") : "",
-    subtotal: bill?.subtotal,
-    total: bill?.total,
-    taxRate: bill?.tax_rate || 0,
-    taxDue: bill?.tax_due || 0,
-    taxable: bill?.taxable || 0,
-    other: bill?.other,
-  });
-
-  //state for items Details
-  const [itemsDetails, setItemsDetails] = useState<IBillProduct[]>(
-    bill.details
+  // State for Passport Details
+  const [passportDetails, setPassportDetails] = useState(
+    initialPassportDetails
   );
 
-  //state for Passport type
-  const [passportDetails, setPassportDetails] = useState(() => {
-    const passportDetail = bill.details.find(
-      (detail: IBillProduct) => detail.type === "Passport"
-    );
-
-    return {
-      name: passportDetail ? passportDetail?.data?.name : "",
-      nationality: passportDetail ? passportDetail?.data?.nationality : "",
-      state: passportDetail ? passportDetail?.data?.state : "accepted",
-      service: passportDetail
-        ? (passportDetail?.data?.service as string)
-        : "30days",
-      passportId: passportDetail ? passportDetail?.data?.passportId : "",
-      paymentDate: passportDetail ? passportDetail?.data?.paymentDate : "",
-      servicePrice: passportDetail ? passportDetail?.data?.servicePrice : 0,
-      taxable: passportDetail ? passportDetail?.data?.taxable : 53,
-      taxRate: passportDetail ? passportDetail?.data?.taxRate : 2.65,
-      total: passportDetail ? passportDetail?.data?.total : 0,
-      sales: passportDetail ? passportDetail?.data?.sales : 0,
-      profit: passportDetail ? passportDetail?.data?.profit : 0,
-    };
-  });
-
-  //state for Ticket Details
-  const [ticketsDetails, setTicketsDetails] = useState(() => {
-    const ticketDetail = bill.details.find(
-      (detail: IBillProduct) => detail.type === "Ticket"
-    );
-    return {
-      name: ticketDetail ? ticketDetail?.data?.name : "",
-      type: ticketDetail ? ticketDetail?.data?.type : "",
-      employee: ticketDetail ? ticketDetail?.data?.employee : "",
-      supplier: ticketDetail ? ticketDetail?.data?.supplier : "",
-      paymentDate: ticketDetail ? ticketDetail?.data?.paymentDate : "",
-      paymentMethod: ticketDetail ? ticketDetail?.data?.paymentMethod : "cash",
-      cost: ticketDetail ? ticketDetail?.data?.cost : 0,
-      sales: ticketDetail ? ticketDetail?.data?.sales : 0,
-      profit: ticketDetail ? ticketDetail?.data?.profit : 0,
-      paidAmount: ticketDetail ? ticketDetail?.data?.paidAmount : 0,
-      remainingAmount: ticketDetail ? ticketDetail?.data?.remainingAmount : 0,
-    };
-  });
+  // State for Tickets Details
+  const [ticketsDetails, setTicketsDetails] = useState(initialTicketsDetails);
 
   //state for items
   const [itemsCount, setItemsCount] = useState(1);
@@ -153,7 +140,7 @@ export const UpdateBill = ({
     setItemsDetails(newItems);
   };
 
-  const [updateBill, { isLoading }] = useUpdateBillMutation();
+  const [updateBill, { isLoading: isUpdating }] = useUpdateBillMutation();
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -190,7 +177,7 @@ export const UpdateBill = ({
       })),
     ];
 
-    const billData = {
+    const billData: Partial<IBillDocument> = {
       id,
       customer: { ...customerDetails },
       details: [...details],
@@ -202,11 +189,106 @@ export const UpdateBill = ({
     await updateBill(billData);
   };
 
+  // Initialize state after data is fetched
+  useEffect(() => {
+    if (foundBill) {
+      //Make a deep copy of the bill object
+      const billStringify = JSON.stringify(foundBill);
+      const bill = JSON.parse(billStringify);
+
+      //Customer Details
+      setCustomerDetails({
+        name: bill?.customer?.name,
+      });
+
+      //bill Details
+      setBillDetails({
+        date: bill?.date ? dayjs(bill?.date).format("YYYY-MM-DD") : "",
+        subtotal: bill?.subtotal,
+        total: bill?.total,
+        taxRate: bill?.tax_rate || 0,
+        taxDue: bill?.tax_due || 0,
+        taxable: bill?.taxable || 0,
+        other: bill?.other,
+      });
+
+      //items Details
+      setItemsDetails(bill.details);
+
+      //Passport type
+      setPassportDetails(() => {
+        const passportDetail = bill.details.find(
+          (detail: IBillProduct) => detail.type === "Passport"
+        );
+
+        return {
+          name: passportDetail ? passportDetail?.data?.name : "",
+          nationality: passportDetail ? passportDetail?.data?.nationality : "",
+          state: passportDetail ? passportDetail?.data?.state : "accepted",
+          service: passportDetail
+            ? (passportDetail?.data?.service as string)
+            : "30days",
+          passportId: passportDetail ? passportDetail?.data?.passportId : "",
+          paymentDate: passportDetail ? passportDetail?.data?.paymentDate : "",
+          servicePrice: passportDetail ? passportDetail?.data?.servicePrice : 0,
+          taxable: passportDetail ? passportDetail?.data?.taxable : 53,
+          taxRate: passportDetail ? passportDetail?.data?.taxRate : 2.65,
+          total: passportDetail ? passportDetail?.data?.total : 0,
+          sales: passportDetail ? passportDetail?.data?.sales : 0,
+          profit: passportDetail ? passportDetail?.data?.profit : 0,
+        };
+      });
+
+      //Ticket Details
+      setTicketsDetails(() => {
+        const ticketDetail = bill.details.find(
+          (detail: IBillProduct) => detail.type === "Ticket"
+        );
+        return {
+          name: ticketDetail ? ticketDetail?.data?.name : "",
+          type: ticketDetail ? ticketDetail?.data?.type : "",
+          employee: ticketDetail ? ticketDetail?.data?.employee : "",
+          supplier: ticketDetail ? ticketDetail?.data?.supplier : "",
+          paymentDate: ticketDetail ? ticketDetail?.data?.paymentDate : "",
+          paymentMethod: ticketDetail
+            ? ticketDetail?.data?.paymentMethod
+            : "cash",
+          cost: ticketDetail ? ticketDetail?.data?.cost : 0,
+          sales: ticketDetail ? ticketDetail?.data?.sales : 0,
+          profit: ticketDetail ? ticketDetail?.data?.profit : 0,
+          paidAmount: ticketDetail ? ticketDetail?.data?.paidAmount : 0,
+          remainingAmount: ticketDetail
+            ? ticketDetail?.data?.remainingAmount
+            : 0,
+        };
+      });
+    }
+  }, [foundBill]);
+
   useEffect(() => {
     //scroll page back to top when component first mount
     const yOffset = window.scrollY;
     window.scrollBy(0, -yOffset);
   }, []);
+
+  //Show Error Message if could not fetch data
+  if (error) {
+    return (
+      <div className="w-full">
+        <h1 className="my-4 rounded border-l-4 border-red-600 bg-red-200 p-2 text-center text-base font-bold uppercase text-gray-800">
+          Error happened, try refresh the page.
+        </h1>
+      </div>
+    );
+  }
+
+  //Show spinner when Loading State is true
+  if (!foundBill || isLoading)
+    return (
+      <div className="w-full">
+        <MainSpinner isLoading={isLoading} />
+      </div>
+    );
 
   return (
     <div className="fixed inset-0 z-50  h-screen w-full overflow-y-auto overflow-x-hidden bg-black/75 scrollbar-thin scrollbar-track-transparent  scrollbar-thumb-gray-400 scrollbar-track-rounded-full md:inset-0">
@@ -825,7 +907,7 @@ export const UpdateBill = ({
           {/*form button */}
           <FormButton
             text={{ default: "تعديل الفاتورة", loading: "جارى الحفظ" }}
-            isLoading={isLoading}
+            isLoading={isUpdating}
             icon={<RiSendPlaneFill className="ml-1" size={25} />}
           />
         </form>
