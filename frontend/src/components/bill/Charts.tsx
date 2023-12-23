@@ -1,10 +1,8 @@
-import { useMemo } from "react";
 import { ChartData, ChartOptions } from "chart.js";
 import { Chart } from "react-chartjs-2";
-import { useGetBillsQuery } from "../../state/features/bill/billApiSlice";
+import { useGetBillsStatisticsQuery } from "../../state/features/bill/billApiSlice";
 import dayjs from "dayjs";
 import { MainSpinner } from "../shared/MainSpinner";
-import { billsChartsCalculations } from "../../../../backend/calculations/bills";
 import { labels } from "../invoice/Charts";
 
 export const barOptions: ChartOptions = {
@@ -94,12 +92,22 @@ export const lineOptions: ChartOptions = {
 };
 
 export function BillCharts() {
-  const { data: billData, isLoading, isFetching } = useGetBillsQuery({});
-
-  const { totalMonthValues, totalLastThreeValues } = useMemo(
-    () => billsChartsCalculations(billData?.docs || []),
-    [billData]
+  const { data, isLoading, isFetching, isError } = useGetBillsStatisticsQuery(
+    null,
+    {
+      pollingInterval: 3600000,
+    }
   );
+
+  if (isError) return <div>An error has occurred!</div>;
+
+  if (isLoading || isFetching || !data) {
+    return (
+      <MainSpinner spinnerHeight="20vh" isLoading={isLoading || isFetching} />
+    );
+  }
+
+  const { totalLastThreeValues, totalMonthValues } = data;
 
   const barData: ChartData = {
     labels: labels,

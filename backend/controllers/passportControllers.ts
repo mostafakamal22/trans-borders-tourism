@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Passport from "../models/passportModel";
 import { ErrnoException } from "./adminControllers";
+import { passportsChartsCalculations } from "../calculations/passports";
 
 //@Desc   >>>> Get All Passports That Match Query Object.
 //@Route  >>>> POST /api/passports/query
@@ -55,6 +56,24 @@ const getPassports = async (req: Request, res: Response) => {
   //Get All Passports Data That Match Query & Send it Back.
   const passports = await Passport.paginate(queries, options);
   res.status(200).json(passports);
+};
+
+//@Desc   >>>> GET ONE Passport
+//@Route  >>>> GET /api/passports/:id
+//@Access >>>> Private(Admins Only)
+const getOnePassport = async (req: Request, res: Response) => {
+  const passport = await Passport.findById(req.params?.id);
+
+  //Check if Passport is not exist.
+  if (!passport) {
+    const error: ErrnoException = new Error();
+    error.name = "CastError";
+    error.path = "_id";
+    throw error;
+  } else {
+    //Send Passport.
+    res.status(200).json(passport);
+  }
 };
 
 //@Desc   >>>> Create Passport
@@ -129,4 +148,23 @@ const deletePassport = async (req: Request, res: Response) => {
   }
 };
 
-export { updatePassport, createPassport, deletePassport, getPassports };
+//@Desc   >>>> Get Passports Statistcis.
+//@Route  >>>> GET /api/passports/statistics
+//@Access >>>> Private(Admins Only)
+const getPassportsStatistics = async (_req: Request, res: Response) => {
+  //Get All Passports Data.
+  const passports = await Passport.find({});
+
+  const statistics = passportsChartsCalculations(passports);
+
+  res.status(200).json(statistics);
+};
+
+export {
+  getPassports,
+  getOnePassport,
+  createPassport,
+  updatePassport,
+  deletePassport,
+  getPassportsStatistics,
+};

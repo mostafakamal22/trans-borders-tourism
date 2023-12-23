@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Ticket from "../models/ticketModel";
 import { ErrnoException } from "./adminControllers";
+import { ticketsChartsCalculations } from "../calculations/tickets";
 
 //@Desc   >>>> Get All Tickets That Match Query Object.
 //@Route  >>>> POST /api/tickets/query
@@ -68,6 +69,24 @@ const getTickets = async (req: Request, res: Response) => {
   //Get All Tickets Data That Match Query & Send it Back.
   const tickets = await Ticket.paginate(queries, options);
   res.status(200).json(tickets);
+};
+
+//@Desc   >>>> GET ONE Ticket
+//@Route  >>>> GET /api/tickets/:id
+//@Access >>>> Private(Admins Only)
+const getOneTicket = async (req: Request, res: Response) => {
+  const ticket = await Ticket.findById(req.params?.id);
+
+  //Check if Ticket is not exist.
+  if (!ticket) {
+    const error: ErrnoException = new Error();
+    error.name = "CastError";
+    error.path = "_id";
+    throw error;
+  } else {
+    //Send Ticket.
+    res.status(200).json(ticket);
+  }
 };
 
 //@Desc   >>>> Create Ticket
@@ -140,4 +159,23 @@ const deleteTicket = async (req: Request, res: Response) => {
   }
 };
 
-export { getTickets, deleteTicket, createTicket, updateTicket };
+//@Desc   >>>> Get Tickets Statistcis.
+//@Route  >>>> GET /api/tickets/statistics
+//@Access >>>> Private(Admins Only)
+const getTicketsStatistics = async (_req: Request, res: Response) => {
+  //Get All Tickets Data.
+  const tickets = await Ticket.find({});
+
+  const statistics = ticketsChartsCalculations(tickets);
+
+  res.status(200).json(statistics);
+};
+
+export {
+  getTickets,
+  getOneTicket,
+  deleteTicket,
+  createTicket,
+  updateTicket,
+  getTicketsStatistics,
+};

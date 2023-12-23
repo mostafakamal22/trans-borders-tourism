@@ -16,7 +16,7 @@ import {
 import { AiFillCloseCircle } from "react-icons/ai";
 import dayjs from "dayjs";
 import {
-  useGetPassportsQuery,
+  useGetOnePassportQuery,
   useUpdatePassportMutation,
 } from "../../state/features/passport/passportsApiSlice";
 import { motion } from "framer-motion";
@@ -28,6 +28,7 @@ import {
   calculatePassportProfit,
   calculatePassportTotal,
 } from "./CreatePassport";
+import { MainSpinner } from "../shared/MainSpinner";
 
 export const UpdatePassport = ({
   id,
@@ -36,39 +37,36 @@ export const UpdatePassport = ({
   id: string;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { passport } = useGetPassportsQuery(
-    {},
-    {
-      selectFromResult: ({ data }) => ({
-        passport: data?.docs.find((passport) => passport.id === id),
-      }),
-    }
-  );
+  // Initial state
+  const initialPassportDetails = {
+    name: "",
+    nationality: "",
+    state: "",
+    service: "",
+    passportId: "",
+    paymentDate: "",
+    servicePrice: 0,
+    taxable: 0,
+    taxRate: 0,
+    total: 0,
+    sales: 0,
+    profit: 0,
+  };
 
-  if (!passport) {
-    setIsOpen(false);
-    return null;
-  }
+  // Data fetching
+  const {
+    data: foundPassport,
+    isLoading,
+    error,
+  } = useGetOnePassportQuery({ id });
 
   //state for passport Details
-  const [passportDetails, setPassportDetails] = useState({
-    name: passport?.customer_name,
-    nationality: passport?.customer_nationality,
-    state: passport?.state,
-    service: passport?.service,
-    passportId: passport?.passport_id,
-    paymentDate: passport?.payment_date
-      ? dayjs(passport?.payment_date).format("YYYY-MM-DD")
-      : "",
-    servicePrice: passport?.service_price,
-    taxable: passport?.taxable,
-    taxRate: passport?.tax_rate,
-    total: passport?.total,
-    sales: passport?.sales,
-    profit: passport?.profit,
-  });
+  const [passportDetails, setPassportDetails] = useState(
+    initialPassportDetails
+  );
 
-  const [updatePassport, { isLoading }] = useUpdatePassportMutation();
+  const [updatePassport, { isLoading: isUpdating }] =
+    useUpdatePassportMutation();
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -92,11 +90,53 @@ export const UpdatePassport = ({
     await updatePassport(passportData);
   };
 
+  // Initialize state after data is fetched
+  useEffect(() => {
+    if (foundPassport) {
+      //Passport Details
+      setPassportDetails({
+        name: foundPassport?.customer_name,
+        nationality: foundPassport?.customer_nationality,
+        state: foundPassport?.state,
+        service: foundPassport?.service,
+        passportId: foundPassport?.passport_id as string,
+        paymentDate: foundPassport?.payment_date
+          ? dayjs(foundPassport?.payment_date).format("YYYY-MM-DD")
+          : "",
+        servicePrice: foundPassport?.service_price,
+        taxable: foundPassport?.taxable,
+        taxRate: foundPassport?.tax_rate,
+        total: foundPassport?.total,
+        sales: foundPassport?.sales,
+        profit: foundPassport?.profit,
+      });
+    }
+  }, [foundPassport]);
+
   useEffect(() => {
     //scroll page back to top when component first mount
     const yOffset = window.scrollY;
     window.scrollBy(0, -yOffset);
   }, []);
+
+  //Show Error Message if could not fetch data
+  if (error) {
+    return (
+      <div className="w-full">
+        <h1 className="my-4 rounded border-l-4 border-red-600 bg-red-200 p-2 text-center text-base font-bold uppercase text-gray-800">
+          Error happened, try refresh the page.
+        </h1>
+      </div>
+    );
+  }
+
+  //Show spinner when Loading State is true
+  if (!foundPassport || isLoading)
+    return (
+      <div className="w-full">
+        <MainSpinner isLoading={isLoading} />
+      </div>
+    );
 
   return (
     <div className="fixed inset-0 z-50  h-screen w-full overflow-y-auto overflow-x-hidden bg-black/75 scrollbar-thin scrollbar-track-transparent  scrollbar-thumb-gray-400 scrollbar-track-rounded-full md:inset-0">
@@ -336,7 +376,7 @@ export const UpdatePassport = ({
           {/*Form Button */}
           <FormButton
             text={{ default: "حفظ التعديلات", loading: "جارى الحفظ" }}
-            isLoading={isLoading}
+            isLoading={isUpdating}
             icon={<RiSendPlaneFill className="ml-1" size={25} />}
           />
         </form>

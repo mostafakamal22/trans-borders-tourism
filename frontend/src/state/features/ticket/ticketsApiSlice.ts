@@ -2,7 +2,10 @@ import { PaginateOptions } from "mongoose";
 import type { ITicketDocument } from "../../../../../backend/models/ticketModel";
 import { apiSlice } from "../../app/apiSlice";
 import { ListResponse } from "../passport/passportsApiSlice";
-import { PaymentMethodsQueries } from "../../../components/ticket/types";
+import {
+  PaymentMethodsQueries,
+  TicketsChartsCalculations,
+} from "../../../components/ticket/types";
 
 export interface TicketSearchQuery {
   option?: PaginateOptions;
@@ -41,6 +44,12 @@ export const ticketsApiSlice = apiSlice.injectEndpoints({
             : [{ type: "Ticket", id: "PARTIAL-LIST" }],
       }
     ),
+    getOneTicket: builder.query<ITicketDocument, { id: string }>({
+      query: ({ id }) => ({
+        method: "GET",
+        url: `/api/tickets/${id}`,
+      }),
+    }),
     createTicket: builder.mutation<ITicketDocument, Partial<ITicketDocument>>({
       query: (ticketData) => ({
         url: "/api/tickets",
@@ -72,13 +81,23 @@ export const ticketsApiSlice = apiSlice.injectEndpoints({
         { type: "Ticket", id: "PARTIAL-LIST" },
       ],
     }),
+    getTicketsStatistics: builder.query<
+      ReturnType<TicketsChartsCalculations>,
+      null
+    >({
+      query: () => ({
+        url: "/api/tickets/statistics",
+      }),
+    }),
   }),
 });
 
 export const {
   useGetTicketsQuery,
+  useGetOneTicketQuery,
   useCreateTicketMutation,
   useUpdateTicketMutation,
   useDeleteTicketMutation,
+  useGetTicketsStatisticsQuery,
   usePrefetch,
 } = ticketsApiSlice;

@@ -6,7 +6,7 @@ import FormButton from "../shared/FormButton";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { AiFillCloseCircle } from "react-icons/ai";
 import {
-  useGetTicketsQuery,
+  useGetOneTicketQuery,
   useUpdateTicketMutation,
 } from "../../state/features/ticket/ticketsApiSlice";
 import { ticketsTableHeaderTitles } from "../ticket/constants";
@@ -21,6 +21,7 @@ import {
   closeBtnAnimationsOptions,
   modalAnimationOptions,
 } from "../helpers/animationOptions";
+import { MainSpinner } from "../shared/MainSpinner";
 
 export const UpdateTicket = ({
   id,
@@ -29,65 +30,95 @@ export const UpdateTicket = ({
   id: string;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { ticket } = useGetTicketsQuery(
-    {},
-    {
-      selectFromResult: ({ data }) => ({
-        ticket: data?.docs.find((ticket) => ticket.id === id),
-      }),
-    }
-  );
+  const initialTicketDetails = {
+    name: "",
+    type: "",
+    employee: "",
+    supplier: "",
+    paymentDate: "",
+    paymentMethod: "",
+    cost: 0,
+    sales: 0,
+    profit: 0,
+    paidAmount: 0,
+    remainingAmount: 0,
+  };
 
-  if (!ticket) {
-    setIsOpen(false);
-    return null;
-  }
+  // Data fetching
+  const { data: foundTicket, isLoading, error } = useGetOneTicketQuery({ id });
 
   //state for Ticket Details
-  const [ticketsDetails, setTicketsDetails] = useState({
-    name: ticket?.customer_name,
-    type: ticket?.type,
-    employee: ticket?.employee,
-    supplier: ticket?.supplier,
-    paymentDate: ticket?.payment_date
-      ? dayjs(ticket?.payment_date).format("YYYY-MM-DD")
-      : "",
-    paymentMethod: ticket?.payment_method,
-    cost: ticket?.cost,
-    sales: ticket?.sales,
-    profit: ticket?.profit,
-    paidAmount: ticket?.paid_amount,
-    remainingAmount: ticket?.remaining_amount,
-  });
+  const [ticketDetails, setTicketDetails] = useState(initialTicketDetails);
 
-  const [updateTicket, { isLoading }] = useUpdateTicketMutation();
+  const [updateTicket, { isLoading: isUpdating }] = useUpdateTicketMutation();
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
     const ticketData = {
       id,
-      name: ticketsDetails?.name.trim(),
-      type: ticketsDetails?.type?.trim(),
-      employee: ticketsDetails?.employee?.trim(),
-      supplier: ticketsDetails?.supplier?.trim(),
-      cost: ticketsDetails.cost,
-      sales: ticketsDetails.sales,
-      profit: ticketsDetails.profit,
-      paymentDate: ticketsDetails.paymentDate,
-      paymentMethod: ticketsDetails.paymentMethod,
-      paidAmount: ticketsDetails.paidAmount,
-      remainingAmount: ticketsDetails.remainingAmount,
+      name: ticketDetails?.name.trim(),
+      type: ticketDetails?.type?.trim(),
+      employee: ticketDetails?.employee?.trim(),
+      supplier: ticketDetails?.supplier?.trim(),
+      cost: ticketDetails.cost,
+      sales: ticketDetails.sales,
+      profit: ticketDetails.profit,
+      paymentDate: ticketDetails.paymentDate,
+      paymentMethod: ticketDetails.paymentMethod,
+      paidAmount: ticketDetails.paidAmount,
+      remainingAmount: ticketDetails.remainingAmount,
     };
 
     await updateTicket(ticketData);
   };
+
+  // Initialize state after data is fetched
+  useEffect(() => {
+    if (foundTicket) {
+      //Ticket Details
+      setTicketDetails({
+        name: foundTicket?.customer_name,
+        type: foundTicket?.type || "",
+        employee: foundTicket?.employee || "",
+        supplier: foundTicket?.supplier || "",
+        paymentDate: foundTicket?.payment_date
+          ? dayjs(foundTicket?.payment_date).format("YYYY-MM-DD")
+          : "",
+        paymentMethod: foundTicket?.payment_method as string,
+        cost: foundTicket?.cost,
+        sales: foundTicket?.sales,
+        profit: foundTicket?.profit,
+        paidAmount: foundTicket?.paid_amount,
+        remainingAmount: foundTicket?.remaining_amount,
+      });
+    }
+  }, [foundTicket]);
 
   useEffect(() => {
     //scroll page back to top when component first mount
     const yOffset = window.scrollY;
     window.scrollBy(0, -yOffset);
   }, []);
+
+  //Show Error Message if could not fetch data
+  if (error) {
+    return (
+      <div className="w-full">
+        <h1 className="my-4 rounded border-l-4 border-red-600 bg-red-200 p-2 text-center text-base font-bold uppercase text-gray-800">
+          Error happened, try refresh the page.
+        </h1>
+      </div>
+    );
+  }
+
+  //Show spinner when Loading State is true
+  if (!foundTicket || isLoading)
+    return (
+      <div className="w-full">
+        <MainSpinner isLoading={isLoading} />
+      </div>
+    );
 
   return (
     <div className="fixed inset-0 z-50  h-screen w-full overflow-y-auto overflow-x-hidden bg-black/75 scrollbar-thin scrollbar-track-transparent  scrollbar-thumb-gray-400 scrollbar-track-rounded-full md:inset-0">
@@ -122,9 +153,9 @@ export const UpdateTicket = ({
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
               type="text"
-              value={ticketsDetails.name}
+              value={ticketDetails.name}
               onChange={(e) =>
-                setTicketsDetails({ ...ticketsDetails, name: e.target.value })
+                setTicketDetails({ ...ticketDetails, name: e.target.value })
               }
               required
             />
@@ -135,9 +166,9 @@ export const UpdateTicket = ({
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
               type="text"
-              value={ticketsDetails.type}
+              value={ticketDetails.type}
               onChange={(e) =>
-                setTicketsDetails({ ...ticketsDetails, type: e.target.value })
+                setTicketDetails({ ...ticketDetails, type: e.target.value })
               }
             />
 
@@ -147,10 +178,10 @@ export const UpdateTicket = ({
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
               type="text"
-              value={ticketsDetails.employee}
+              value={ticketDetails.employee}
               onChange={(e) =>
-                setTicketsDetails({
-                  ...ticketsDetails,
+                setTicketDetails({
+                  ...ticketDetails,
                   employee: e.target.value,
                 })
               }
@@ -162,10 +193,10 @@ export const UpdateTicket = ({
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
               type="number"
-              value={ticketsDetails.cost}
+              value={ticketDetails.cost}
               onChange={(e) =>
-                setTicketsDetails({
-                  ...ticketsDetails,
+                setTicketDetails({
+                  ...ticketDetails,
                   cost: +e.target.value,
                   sales: 0,
                   profit: 0,
@@ -181,12 +212,12 @@ export const UpdateTicket = ({
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
               type="number"
-              value={ticketsDetails.sales}
+              value={ticketDetails.sales}
               onChange={(e) =>
-                setTicketsDetails({
-                  ...ticketsDetails,
+                setTicketDetails({
+                  ...ticketDetails,
                   sales: +e.target.value,
-                  profit: +e.target.value - ticketsDetails.cost,
+                  profit: +e.target.value - ticketDetails.cost,
                   paidAmount: +e.target.value,
                   remainingAmount: 0,
                 })
@@ -201,7 +232,7 @@ export const UpdateTicket = ({
               labeClassNames={lableClassNamesStyles.default}
               className={`${inputClassNamesStyles.default} bg-slate-200`}
               type="number"
-              value={ticketsDetails.profit}
+              value={ticketDetails.profit}
               disabled
               min={0}
               step={0.01}
@@ -213,12 +244,12 @@ export const UpdateTicket = ({
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
               type="number"
-              value={ticketsDetails.paidAmount}
+              value={ticketDetails.paidAmount}
               onChange={(e) =>
-                setTicketsDetails({
-                  ...ticketsDetails,
+                setTicketDetails({
+                  ...ticketDetails,
                   paidAmount: +e.target.value,
-                  remainingAmount: ticketsDetails.sales - +e.target.value,
+                  remainingAmount: ticketDetails.sales - +e.target.value,
                 })
               }
               min={0}
@@ -231,7 +262,7 @@ export const UpdateTicket = ({
               labeClassNames={lableClassNamesStyles.default}
               className={`${inputClassNamesStyles.default} bg-slate-200`}
               type="number"
-              value={ticketsDetails.remainingAmount}
+              value={ticketDetails.remainingAmount}
               disabled
               min={0}
               step={0.01}
@@ -241,10 +272,10 @@ export const UpdateTicket = ({
               name="paymentMethodUpdate"
               id="paymentMethodUpdate"
               className={inputClassNamesStyles.default}
-              value={ticketsDetails.paymentMethod}
+              value={ticketDetails.paymentMethod}
               onChange={(e) =>
-                setTicketsDetails({
-                  ...ticketsDetails,
+                setTicketDetails({
+                  ...ticketDetails,
                   paymentMethod: e.target.value,
                 })
               }
@@ -269,10 +300,10 @@ export const UpdateTicket = ({
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
               type="text"
-              value={ticketsDetails.supplier}
+              value={ticketDetails.supplier}
               onChange={(e) =>
-                setTicketsDetails({
-                  ...ticketsDetails,
+                setTicketDetails({
+                  ...ticketDetails,
                   supplier: e.target.value,
                 })
               }
@@ -284,10 +315,10 @@ export const UpdateTicket = ({
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
               type="date"
-              value={ticketsDetails.paymentDate}
+              value={ticketDetails.paymentDate}
               onChange={(e) =>
-                setTicketsDetails({
-                  ...ticketsDetails,
+                setTicketDetails({
+                  ...ticketDetails,
                   paymentDate: e.target.value,
                 })
               }
@@ -297,7 +328,7 @@ export const UpdateTicket = ({
           {/*Form Button */}
           <FormButton
             text={{ default: "حفظ التعديلات", loading: "جارى الحفظ" }}
-            isLoading={isLoading}
+            isLoading={isUpdating}
             icon={<RiSendPlaneFill className="ml-1" size={25} />}
           />
         </form>

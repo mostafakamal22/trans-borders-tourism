@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import {
   ChartData,
   ChartOptions,
@@ -7,14 +6,14 @@ import {
   RadialLinearScale,
 } from "chart.js";
 import { barOptions, labels, lineOptions } from "../invoice/Charts";
-import { useGetPassportsQuery } from "../../state/features/passport/passportsApiSlice";
-import dayjs from "dayjs";
+import { useGetPassportsStatisticsQuery } from "../../state/features/passport/passportsApiSlice";
 import { MainSpinner } from "../shared/MainSpinner";
 import { Chart } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement } from "chart.js";
-import { passportsChartsCalculations, TotalMonthValues } from "./calculations";
+import { TotalMonthValues } from "./calculations";
 import { passportService } from "./constants";
 import { Sales } from "../shared/Sales";
+import dayjs from "dayjs";
 
 ChartJS.register(
   ArcElement,
@@ -84,21 +83,24 @@ export const polarOptions: ChartOptions = {
 };
 
 export function PassportCharts() {
-  const {
-    data: passportData,
-    isLoading,
-    isFetching,
-  } = useGetPassportsQuery({});
+  const { data, isLoading, isFetching, isError } =
+    useGetPassportsStatisticsQuery(null, {
+      pollingInterval: 3600000,
+    });
 
+  if (isError) return <div>An error has occurred!</div>;
+
+  if (isLoading || isFetching || !data) {
+    return (
+      <MainSpinner spinnerHeight="20vh" isLoading={isLoading || isFetching} />
+    );
+  }
   const {
     totalMonthValues,
     totalLastThreeValues,
     totalForEveryService,
     topNationalities,
-  } = useMemo(
-    () => passportsChartsCalculations(passportData?.docs || []),
-    [passportData]
-  );
+  } = data;
 
   const barData: ChartData = {
     labels,

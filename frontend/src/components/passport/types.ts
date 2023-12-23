@@ -1,5 +1,5 @@
 import { IPassportDocument } from "../../../../backend/models/passportModel";
-import { TotalMonthValues } from "../invoice/calculations";
+import { TotalMonthValues } from "./calculations";
 
 export type PassportSearchQueries = {
   year: number | string;

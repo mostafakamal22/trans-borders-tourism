@@ -1,5 +1,5 @@
 import { ITicketDocument } from "../../../../backend/models/ticketModel";
-import { TotalMonthValues } from "../invoice/calculations";
+import { TotalMonthValues } from "./calculations";
 
 export type TicketSearchQueries = {
   year: string | number;

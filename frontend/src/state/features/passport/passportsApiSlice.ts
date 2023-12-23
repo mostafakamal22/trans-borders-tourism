@@ -3,6 +3,7 @@ import { IPassportDocument } from "../../../../../backend/models/passportModel";
 import {
   PassportServiceQueries,
   PassportStateQueries,
+  PassportsChartsCalculations,
 } from "../../../components/passport/types";
 import { apiSlice } from "../../app/apiSlice";
 
@@ -56,6 +57,12 @@ export const passportsApiSlice = apiSlice.injectEndpoints({
             ]
           : [{ type: "Passport", id: "PARTIAL-LIST" }],
     }),
+    getOnePassport: builder.query<IPassportDocument, { id: string }>({
+      query: ({ id }) => ({
+        method: "GET",
+        url: `/api/passports/${id}`,
+      }),
+    }),
     createPassport: builder.mutation<
       IPassportDocument,
       Partial<IPassportDocument>
@@ -93,13 +100,23 @@ export const passportsApiSlice = apiSlice.injectEndpoints({
         { type: "Passport", id: "PARTIAL-LIST" },
       ],
     }),
+    getPassportsStatistics: builder.query<
+      ReturnType<PassportsChartsCalculations>,
+      null
+    >({
+      query: () => ({
+        url: "/api/passports/statistics",
+      }),
+    }),
   }),
 });
 
 export const {
   useGetPassportsQuery,
+  useGetOnePassportQuery,
   useCreatePassportMutation,
   useUpdatePassportMutation,
   useDeletePassportMutation,
+  useGetPassportsStatisticsQuery,
   usePrefetch,
 } = passportsApiSlice;

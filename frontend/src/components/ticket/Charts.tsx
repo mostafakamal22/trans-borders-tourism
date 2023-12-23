@@ -1,14 +1,13 @@
 import { ChartData, ChartOptions } from "chart.js";
 import { Chart } from "react-chartjs-2";
 import { barOptions, labels, lineOptions } from "../invoice/Charts";
-import dayjs from "dayjs";
 import { MainSpinner } from "../shared/MainSpinner";
-import { useGetTicketsQuery } from "../../state/features/ticket/ticketsApiSlice";
-import { useMemo } from "react";
-import { ticketsChartsCalculations, TotalMonthValues } from "./calculations";
+import { useGetTicketsStatisticsQuery } from "../../state/features/ticket/ticketsApiSlice";
+import { TotalMonthValues } from "./calculations";
 import { pieOptions, polarOptions } from "../passport/Charts";
 import { paymentMethods } from "../payment/constants";
 import { Sales } from "../shared/Sales";
+import dayjs from "dayjs";
 
 const tBarOptions: ChartOptions = {
   ...barOptions,
@@ -66,7 +65,20 @@ const tPieOptions: ChartOptions = {
 };
 
 export function TicketCharts() {
-  const { data: ticketData, isLoading, isFetching } = useGetTicketsQuery({});
+  const { data, isLoading, isFetching, isError } = useGetTicketsStatisticsQuery(
+    null,
+    {
+      pollingInterval: 3600000,
+    }
+  );
+
+  if (isError) return <div>An error has occurred!</div>;
+
+  if (isLoading || isFetching || !data) {
+    return (
+      <MainSpinner spinnerHeight="20vh" isLoading={isLoading || isFetching} />
+    );
+  }
 
   const {
     totalMonthValues,
@@ -74,10 +86,7 @@ export function TicketCharts() {
     topEmployees,
     topSuppliers,
     totalForEveryPaymentMethod,
-  } = useMemo(
-    () => ticketsChartsCalculations(ticketData?.docs || []),
-    [ticketData]
-  );
+  } = data;
 
   const barData: ChartData = {
     labels,
