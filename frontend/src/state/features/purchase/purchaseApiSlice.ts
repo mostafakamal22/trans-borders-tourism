@@ -51,6 +51,12 @@ export const purchasesApiSlice = apiSlice.injectEndpoints({
             ]
           : [{ type: "Purchase", id: "PARTIAL-LIST" }],
     }),
+    getOnePurchase: builder.query<IPurchaseDocument, { id: string }>({
+      query: ({ id }) => ({
+        method: "GET",
+        url: `/api/purchases/${id}`,
+      }),
+    }),
     createPurchase: builder.mutation<
       IPurchaseDocument,
       Partial<IPurchaseDocument>
@@ -93,6 +99,7 @@ export const purchasesApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetPurchasesQuery,
+  useGetOnePurchaseQuery,
   useCreatePurchaseMutation,
   useUpdatePurchaseMutation,
   useDeletePurchaseMutation,

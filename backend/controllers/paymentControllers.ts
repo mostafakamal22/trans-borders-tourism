@@ -58,6 +58,24 @@ const getPayments = async (req: Request, res: Response) => {
   res.status(200).json(payments);
 };
 
+//@Desc   >>>> GET ONE Payment
+//@Route  >>>> GET /api/payments/:id
+//@Access >>>> Private(Admins Only)
+const getOnePayment = async (req: Request, res: Response) => {
+  const payment = await Payment.findById(req.params?.id);
+
+  //Check if Payment is not exist.
+  if (!payment) {
+    const error: ErrnoException = new Error();
+    error.name = "CastError";
+    error.path = "_id";
+    throw error;
+  } else {
+    //Send Payment.
+    res.status(200).json(payment);
+  }
+};
+
 //@Desc   >>>> Create Payment
 //@Route  >>>> POST /api/payments
 //@Access >>>> Private(Admins Only)
@@ -112,4 +130,10 @@ const deletePayment = async (req: Request, res: Response) => {
   }
 };
 
-export { getPayments, deletePayment, createPayment, updatePayment };
+export {
+  getPayments,
+  getOnePayment,
+  deletePayment,
+  createPayment,
+  updatePayment,
+};

@@ -79,7 +79,7 @@ export const Purchases = () => {
     },
   };
 
-  const { data, isLoading, isFetching, isSuccess,  error } =
+  const { data, isLoading, isFetching, isSuccess, error } =
     useGetPurchasesQuery(searchObj);
 
   const purchases = data?.docs ? data.docs : [];
@@ -204,14 +204,12 @@ export const Purchases = () => {
         !deferredType &&
         !deferredSupplier &&
         purchases?.length === 0 &&
-        !isFetching &&
-          <NoSavedRecords customMsg={["مشتريات", "المشتريات"]} />}
+        !isFetching && <NoSavedRecords customMsg={["مشتريات", "المشتريات"]} />}
 
       {/* if there is search query no Purchases matches >>> No Search Found*/}
       {(year || month || day || deferredSupplier || deferredType) &&
         purchases?.length === 0 &&
-        !isFetching &&
-        <NoSearchResult />}
+        !isFetching && <NoSearchResult />}
 
       {/* Show update Purchases Modal */}
       <AnimatePresence initial={false}>
@@ -220,91 +218,3 @@ export const Purchases = () => {
     </main>
   );
 };
-
-// return (
-//     <section className="w-full">
-//       <h2 className="my-4 mb-10 flex items-center justify-center rounded bg-red-700 px-2 py-4 text-3xl font-bold text-white shadow">
-//         <span className="mr-2 flex items-center justify-center">
-//           <PurchaseMain className="mr-1 h-20 w-20 drop-shadow" />
-//         </span>
-//         المشتــريات
-//       </h2>
-
-//       {/*Show Purchases' Filters*/}
-//       <FiltersSummary
-//         searchQuery={searchQuery}
-//         count={data?.totalDocs ? data.totalDocs : 0}
-//         setIsFilterOpen={setIsFilterOpen}
-//         isFilterOpen={isFilterOpen}
-//       />
-
-//       <Filters
-//         searchQuery={searchQuery}
-//         setSearchQuery={setSearchQuery}
-//         setIsFilterOpen={setIsFilterOpen}
-//         isFilterOpen={isFilterOpen}
-//         tableRows={tableRows}
-//         setTableRows={setTableRows}
-//       />
-
-//       {/*Show Purchases' Totals*/}
-//       {!isLoading && !isFetching && purchases?.length !== 0 && (
-//         <Totals purchases={purchases} />
-//       )}
-
-//       {/* isFetching Message */}
-//       {isFetching && <FetchingMessage isFetching={isFetching} />}
-
-//       {/*Display Table All Data Needed*/}
-//       {!isLoading && purchases?.length > 0 && (
-//         <>
-//           <button
-//             className="mx-auto my-5 flex items-center justify-center gap-1 rounded border bg-green-200 px-2 py-2 text-xs font-bold text-green-800 shadow transition-all duration-300 ease-in-out hover:border-green-800 hover:bg-white
-//             hover:text-green-800 sm:px-3 sm:text-sm"
-//             onClick={onDownload}
-//           >
-//             <RiFileExcel2Fill size={20} />
-//             <span>Export excel</span>
-//           </button>
-
-//           <PaginationTable
-//             tableRow={tableRow}
-//             tableHeader={tableHeader}
-//             tableBodyData={purchases}
-//             options={data!}
-//             handleRemoving={handleRemoving}
-//             setIsOpen={setIsOpen}
-//             setId={setId}
-//             isDeleting={isDeleting}
-//             ref={tableRef}
-//           />
-//         </>
-//       )}
-
-//       {/* if there is No Purchases Records */}
-//       {!year &&
-//         !month &&
-//         !day &&
-//         !deferredType &&
-//         !deferredSupplier &&
-//         purchases?.length === 0 &&
-//         !isLoading &&
-//         !isFetching &&
-//         !isError && <NoSavedRecords customMsg={["مشتريات", "المشتريات"]} />}
-
-//       {/* if there is search query no Purchases matches >>> No Search Found*/}
-//       {(year || month || day || deferredSupplier || deferredType) &&
-//         purchases?.length === 0 &&
-//         !isLoading &&
-//         !isFetching &&
-//         !isError && <NoSearchResult />}
-
-//       {/* Show update Purchases Modal */}
-//       <AnimatePresence initial={false}>
-//         {isOpen && <UpdatePurchase setIsOpen={setIsOpen} id={id} />}
-//       </AnimatePresence>
-
-//       {/* Show spinner when Loading State is true */}
-//       {isLoading && <MainSpinner isLoading={isLoading} />}
-//     </section>
-//   );

@@ -9,7 +9,7 @@ import { RiSendPlaneFill } from "react-icons/ri";
 import FormButton from "../shared/FormButton";
 import { FormInput } from "../shared/FormInput";
 import {
-  useGetPurchasesQuery,
+  useGetOnePurchaseQuery,
   useUpdatePurchaseMutation,
 } from "../../state/features/purchase/purchaseApiSlice";
 import { motion } from "framer-motion";
@@ -22,6 +22,8 @@ import {
   lableClassNamesStyles,
 } from "../invoice/constants";
 import { ReactComponent as PurchaseAlt } from "../../assets/icons/purchase-alt.svg";
+import { IPurchaseType } from "../../../../backend/models/purchaseModel";
+import { MainSpinner } from "../shared/MainSpinner";
 
 export const UpdatePurchase = ({
   id,
@@ -30,43 +32,39 @@ export const UpdatePurchase = ({
   id: string;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { purchase } = useGetPurchasesQuery(
-    {},
-    {
-      selectFromResult: ({ data }) => ({
-        purchase: data?.docs.find((purchase) => purchase.id === id),
-      }),
-    }
-  );
+  //initialize state
+  const initialPurchaseDetails = {
+    date: dayjs().format("YYYY-MM-DD"),
+    total: 0,
+  };
 
-  if (!purchase) {
-    setIsOpen(false);
-    return null;
-  }
+  const initialPurchaseTypes: IPurchaseType[] = [
+    {
+      name: "",
+      description: "",
+      supplier: "",
+      reference_number: "",
+      cost: 0,
+      tax: 0,
+      total: 0,
+    },
+  ];
+
+  // Data fetching
+  const {
+    data: foundPurchase,
+    isLoading,
+    error,
+  } = useGetOnePurchaseQuery({ id });
 
   //state for Purchase Details
-  const [purchaseDetails, setPurchaseDetails] = useState({
-    date: dayjs(purchase?.date).format("YYYY-MM-DD"),
-    total: purchase?.total,
-  });
-
-  const purchaseTypesData = [
-    ...purchase.purchase_types.map((item: any) => {
-      return {
-        name: item?.name,
-        description: item?.description,
-        supplier: item?.supplier,
-        reference_number: item?.reference_number,
-        cost: item?.cost,
-        tax: item?.tax,
-        total: item?.total,
-      };
-    }),
-  ];
+  const [purchaseDetails, setPurchaseDetails] = useState(
+    initialPurchaseDetails
+  );
 
   //state for purchaseTypes Details
   const [purchaseTypesDetails, setPurchaseTypesDetails] =
-    useState(purchaseTypesData);
+    useState<IPurchaseType[]>(initialPurchaseTypes);
 
   //state for items
   const [itemsCount, setItemsCount] = useState(1);
@@ -98,7 +96,8 @@ export const UpdatePurchase = ({
     setPurchaseDetails({ ...purchaseDetails, total: newTotal });
   };
 
-  const [updatePurchase, { isLoading }] = useUpdatePurchaseMutation();
+  const [updatePurchase, { isLoading: isUpdating }] =
+    useUpdatePurchaseMutation();
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -113,11 +112,58 @@ export const UpdatePurchase = ({
     await updatePurchase(purchaseData);
   };
 
+  // Initialize state after data is fetched
+  useEffect(() => {
+    if (foundPurchase) {
+      //Purchase Details
+      setPurchaseDetails({
+        date: dayjs(foundPurchase?.date).format("YYYY-MM-DD"),
+        total: foundPurchase?.total,
+      });
+
+      const purchaseTypesData: IPurchaseType[] = [
+        ...foundPurchase.purchase_types.map((item: any) => {
+          return {
+            name: item?.name,
+            description: item?.description,
+            supplier: item?.supplier,
+            reference_number: item?.reference_number,
+            cost: item?.cost,
+            tax: item?.tax,
+            total: item?.total,
+          };
+        }),
+      ];
+
+      //PurchaseTypes Details
+      setPurchaseTypesDetails(purchaseTypesData);
+    }
+  }, [foundPurchase]);
+
   useEffect(() => {
     //scroll page back to top when component first mount
     const yOffset = window.scrollY;
     window.scrollBy(0, -yOffset);
   }, []);
+
+  //Show Error Message if could not fetch data
+  if (error) {
+    return (
+      <div className="w-full">
+        <h1 className="my-4 rounded border-l-4 border-red-600 bg-red-200 p-2 text-center text-base font-bold uppercase text-gray-800">
+          Error happened, try refresh the page.
+        </h1>
+      </div>
+    );
+  }
+
+  //Show spinner when Loading State is true
+  if (!foundPurchase || isLoading)
+    return (
+      <div className="w-full">
+        <MainSpinner isLoading={isLoading} />
+      </div>
+    );
 
   return (
     <div className="fixed inset-0 z-50  h-screen w-full overflow-y-auto overflow-x-hidden bg-black/75 scrollbar-thin scrollbar-track-transparent  scrollbar-thumb-gray-400 scrollbar-track-rounded-full md:inset-0">
@@ -328,7 +374,7 @@ export const UpdatePurchase = ({
           {/*Form Button */}
           <FormButton
             text={{ default: "حفظ التعديلات", loading: "جارى الحفظ" }}
-            isLoading={isLoading}
+            isLoading={isUpdating}
             icon={<RiSendPlaneFill className="mr-1" size={25} />}
           />
         </form>

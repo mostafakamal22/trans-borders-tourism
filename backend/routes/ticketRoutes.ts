@@ -19,8 +19,8 @@ router.route("/query").post(authAdminProtect, getTickets);
 
 router
   .route("/:id")
-  .put(authAdminProtect, updateTicket)
   .get(authAdminProtect, getOneTicket)
+  .put(authAdminProtect, updateTicket)
   .delete(authAdminProtect, deleteTicket);
 
 export default router;

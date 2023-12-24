@@ -58,6 +58,24 @@ const getPurchases = async (req: Request, res: Response) => {
   res.status(200).json(purchases);
 };
 
+//@Desc   >>>> GET ONE Purchase
+//@Route  >>>> GET /api/purchases/:id
+//@Access >>>> Private(Admins Only)
+const getOnePurchase = async (req: Request, res: Response) => {
+  const purchase = await Purchase.findById(req.params?.id);
+
+  //Check if Purchase is not exist.
+  if (!purchase) {
+    const error: ErrnoException = new Error();
+    error.name = "CastError";
+    error.path = "_id";
+    throw error;
+  } else {
+    //Send Purchase.
+    res.status(200).json(purchase);
+  }
+};
+
 //@Desc   >>>> Create Purchase
 //@Route  >>>> POST /api/Purchases/
 //@Access >>>> Private(Admins Only)
@@ -112,4 +130,10 @@ const deletePurchase = async (req: Request, res: Response) => {
   }
 };
 
-export { getPurchases, createPurchase, updatePurchase, deletePurchase };
+export {
+  getPurchases,
+  getOnePurchase,
+  createPurchase,
+  updatePurchase,
+  deletePurchase,
+};

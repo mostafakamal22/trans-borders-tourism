@@ -4,6 +4,7 @@ import {
   getPurchases,
   updatePurchase,
   deletePurchase,
+  getOnePurchase,
 } from "../controllers/purchaseController";
 import { authAdminProtect } from "../middlewares/adminMiddlewares/authAdminProtect";
 
@@ -15,6 +16,7 @@ router.route("/query").post(authAdminProtect, getPurchases);
 
 router
   .route("/:id")
+  .get(authAdminProtect, getOnePurchase)
   .put(authAdminProtect, updatePurchase)
   .delete(authAdminProtect, deletePurchase);
 

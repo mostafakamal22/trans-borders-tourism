@@ -9,7 +9,7 @@ import FormButton from "../shared/FormButton";
 import { FormInput } from "../shared/FormInput";
 import dayjs from "dayjs";
 import {
-  useGetPaymentsQuery,
+  useGetOnePaymentQuery,
   useUpdatePaymentMutation,
 } from "../../state/features/payment/paymentApiSlice";
 import {
@@ -25,6 +25,7 @@ import { paymentMethods, paymentTypes } from "../payment/constants";
 import { PaymentMethods, PaymentTypes } from "../payment/types";
 import { ReactComponent as PaymentAlt } from "../../assets/icons/payment-alt.svg";
 import { IPaymentType } from "../../../../backend/models/paymentModel";
+import { MainSpinner } from "../shared/MainSpinner";
 
 export const UpdatePayment = ({
   id,
@@ -33,44 +34,38 @@ export const UpdatePayment = ({
   id: string;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { payment } = useGetPaymentsQuery(
-    {},
-    {
-      selectFromResult: ({ data }) => ({
-        payment: data?.docs.find((payment) => payment.id === id),
-      }),
-    }
-  );
+  //initialize state
+  const initialPaymentDetails = {
+    date: dayjs().format("YYYY-MM-DD"),
+    total: 0,
+  };
 
-  if (!payment) {
-    setIsOpen(false);
-    return null;
-  }
+  const initialPaymentTypes: IPaymentType[] = [
+    {
+      name: "",
+      description: "",
+      method: "",
+      company_name: "",
+      company_tax: "",
+      cost: 0,
+      tax: 0,
+      total: 0,
+    },
+  ];
+
+  // Data fetching
+  const {
+    data: foundPayment,
+    isLoading,
+    error,
+  } = useGetOnePaymentQuery({ id });
 
   //state for payment Details
-  const [paymentDetails, setPaymentDetails] = useState({
-    date: dayjs(payment?.date).format("YYYY-MM-DD"),
-    total: payment?.total,
-  });
-
-  const paymentTypesData = [
-    ...payment?.payment_types?.map((item: any) => {
-      return {
-        name: item?.name,
-        description: item?.description,
-        method: item?.method,
-        company_name: item?.company_name,
-        company_tax: item?.company_tax,
-        cost: item?.cost,
-        tax: item?.tax ? item?.tax : 0,
-        total: item?.total,
-      };
-    }),
-  ];
+  const [paymentDetails, setPaymentDetails] = useState(initialPaymentDetails);
 
   //state for paymentTypes Details
   const [paymentTypesDetails, setPaymentTypesDetails] =
-    useState<IPaymentType[]>(paymentTypesData);
+    useState<IPaymentType[]>(initialPaymentTypes);
 
   //state for items
   const [itemsCount, setItemsCount] = useState(1);
@@ -103,7 +98,7 @@ export const UpdatePayment = ({
     setPaymentDetails({ ...paymentDetails, total: +newTotal.toFixed(2) });
   };
 
-  const [updatePayment, { isLoading }] = useUpdatePaymentMutation();
+  const [updatePayment, { isLoading: isUpdating }] = useUpdatePaymentMutation();
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -118,11 +113,59 @@ export const UpdatePayment = ({
     await updatePayment(paymentData);
   };
 
+  // Initialize state after data is fetched
+  useEffect(() => {
+    if (foundPayment) {
+      //Payment Details
+      setPaymentDetails({
+        date: dayjs(foundPayment?.date).format("YYYY-MM-DD"),
+        total: foundPayment?.total,
+      });
+
+      const paymentTypesData: IPaymentType[] = [
+        ...foundPayment?.payment_types?.map((item: any) => {
+          return {
+            name: item?.name,
+            description: item?.description,
+            method: item?.method,
+            company_name: item?.company_name,
+            company_tax: item?.company_tax,
+            cost: item?.cost,
+            tax: item?.tax ? item?.tax : 0,
+            total: item?.total,
+          };
+        }),
+      ];
+
+      //PaymentTypes Details
+      setPaymentTypesDetails(paymentTypesData);
+    }
+  }, [foundPayment]);
+
   useEffect(() => {
     //scroll page back to top when component first mount
     const yOffset = window.scrollY;
     window.scrollBy(0, -yOffset);
   }, []);
+
+  //Show Error Message if could not fetch data
+  if (error) {
+    return (
+      <div className="w-full">
+        <h1 className="my-4 rounded border-l-4 border-red-600 bg-red-200 p-2 text-center text-base font-bold uppercase text-gray-800">
+          Error happened, try refresh the page.
+        </h1>
+      </div>
+    );
+  }
+
+  //Show spinner when Loading State is true
+  if (!foundPayment || isLoading)
+    return (
+      <div className="w-full">
+        <MainSpinner isLoading={isLoading} />
+      </div>
+    );
 
   return (
     <div className="fixed inset-0 z-50  h-screen w-full overflow-y-auto overflow-x-hidden bg-black/75 scrollbar-thin scrollbar-track-transparent  scrollbar-thumb-gray-400 scrollbar-track-rounded-full md:inset-0">
@@ -363,7 +406,7 @@ export const UpdatePayment = ({
           {/*Form Button */}
           <FormButton
             text={{ default: "تعديل المصــروف", loading: "جارى التعديل" }}
-            isLoading={isLoading}
+            isLoading={isUpdating}
             icon={<RiSendPlaneFill className="mr-1" size={25} />}
           />
         </form>

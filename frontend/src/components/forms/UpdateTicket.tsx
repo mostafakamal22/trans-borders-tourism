@@ -30,6 +30,7 @@ export const UpdateTicket = ({
   id: string;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  //initialize state
   const initialTicketDetails = {
     name: "",
     type: "",

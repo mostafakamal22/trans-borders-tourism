@@ -51,6 +51,12 @@ export const paymentsApiSlice = apiSlice.injectEndpoints({
             ]
           : [{ type: "Payment", id: "PARTIAL-LIST" }],
     }),
+    getOnePayment: builder.query<IPaymentDocument, { id: string }>({
+      query: ({ id }) => ({
+        method: "GET",
+        url: `/api/payments/${id}`,
+      }),
+    }),
     createPayment: builder.mutation<
       IPaymentDocument,
       Partial<IPaymentDocument>
@@ -93,6 +99,7 @@ export const paymentsApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetPaymentsQuery,
+  useGetOnePaymentQuery,
   useCreatePaymentMutation,
   useUpdatePaymentMutation,
   useDeletePaymentMutation,

@@ -4,6 +4,7 @@ import {
   createPayment,
   deletePayment,
   updatePayment,
+  getOnePayment,
 } from "../controllers/paymentControllers";
 import { authAdminProtect } from "../middlewares/adminMiddlewares/authAdminProtect";
 
@@ -15,6 +16,7 @@ router.route("/query").post(authAdminProtect, getPayments);
 
 router
   .route("/:id")
+  .get(authAdminProtect, getOnePayment)
   .put(authAdminProtect, updatePayment)
   .delete(authAdminProtect, deletePayment);
 
