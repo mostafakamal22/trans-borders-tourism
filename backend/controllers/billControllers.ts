@@ -1,9 +1,10 @@
-import { Request, Response } from "express";
 import Bill from "../models/billModel";
-import { ErrnoException } from "./adminControllers";
 import Passport from "../models/passportModel";
 import Ticket from "../models/ticketModel";
+import { ErrnoException } from "./adminControllers";
 import { billsChartsCalculations } from "../calculations/bills";
+import { Request, Response } from "express";
+import cache from "../lib/node-cache";
 
 //@Desc   >>>> Get All Bills That Match Query Object.
 //@Route  >>>> POST /api/bills/query
@@ -295,13 +296,38 @@ const deleteBill = async (req: Request, res: Response) => {
 //@Desc   >>>> Get Bills Statistcis.
 //@Route  >>>> GET /api/bills/statistics
 //@Access >>>> Private(Admins Only)
+// const getBillsStatistics = async (_req: Request, res: Response) => {
+//   //Get All Bills Data.
+//   const bills = await Bill.find({});
+
+//   const statistics = billsChartsCalculations(bills);
+
+//   res.status(200).json(statistics);
+// };
+
+//@Desc   >>>> Get Bills Statistics.
+//@Route  >>>> GET /api/bills/statistics
+//@Access >>>> Private(Admins Only)
 const getBillsStatistics = async (_req: Request, res: Response) => {
-  //Get All Bills Data.
-  const bills = await Bill.find({});
+  // Try to get statistics from cache
+  const cachedStatistics = cache.get("bills-statistics");
 
-  const statistics = billsChartsCalculations(bills);
+  if (cachedStatistics) {
+    // If statistics are cached, return them
+    res.status(200).json(cachedStatistics);
+  } else {
+    // If not cached, fetch bills data from the database
+    const bills = await Bill.find({});
 
-  res.status(200).json(statistics);
+    // Perform calculations on bills data
+    const statistics = billsChartsCalculations(bills);
+
+    // Cache the statistics with an expiration time (e.g., one day)
+    cache.set("bills-statistics", statistics, 86400); // 86400 seconds = 1 day
+
+    // Send the response with the calculated statistics
+    res.status(200).json(statistics);
+  }
 };
 
 export {

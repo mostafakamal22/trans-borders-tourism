@@ -1,7 +1,8 @@
-import { Request, Response } from "express";
 import Passport from "../models/passportModel";
+import cache from "../lib/node-cache";
 import { ErrnoException } from "./adminControllers";
 import { passportsChartsCalculations } from "../calculations/passports";
+import { Request, Response } from "express";
 
 //@Desc   >>>> Get All Passports That Match Query Object.
 //@Route  >>>> POST /api/passports/query
@@ -148,16 +149,29 @@ const deletePassport = async (req: Request, res: Response) => {
   }
 };
 
-//@Desc   >>>> Get Passports Statistcis.
+//@Desc   >>>> Get Passports Statistics.
 //@Route  >>>> GET /api/passports/statistics
 //@Access >>>> Private(Admins Only)
 const getPassportsStatistics = async (_req: Request, res: Response) => {
-  //Get All Passports Data.
-  const passports = await Passport.find({});
+  // Try to get statistics from cache
+  const cachedStatistics = cache.get("passports-statistics");
 
-  const statistics = passportsChartsCalculations(passports);
+  if (cachedStatistics) {
+    // If statistics are cached, return them
+    res.status(200).json(cachedStatistics);
+  } else {
+    // If not cached, fetch passports data from the database
+    const passports = await Passport.find({});
 
-  res.status(200).json(statistics);
+    // Perform calculations on passports data
+    const statistics = passportsChartsCalculations(passports);
+
+    // Cache the statistics with an expiration time (e.g., one day)
+    cache.set("passports-statistics", statistics, 86400); // 86400 seconds = 1 day
+
+    // Send the response with the calculated statistics
+    res.status(200).json(statistics);
+  }
 };
 
 export {

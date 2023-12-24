@@ -1,7 +1,8 @@
-import { Request, Response } from "express";
 import Ticket from "../models/ticketModel";
-import { ErrnoException } from "./adminControllers";
+import cache from "../lib/node-cache";
 import { ticketsChartsCalculations } from "../calculations/tickets";
+import { Request, Response } from "express";
+import { ErrnoException } from "./adminControllers";
 
 //@Desc   >>>> Get All Tickets That Match Query Object.
 //@Route  >>>> POST /api/tickets/query
@@ -159,16 +160,29 @@ const deleteTicket = async (req: Request, res: Response) => {
   }
 };
 
-//@Desc   >>>> Get Tickets Statistcis.
+//@Desc   >>>> Get Tickets Statistics.
 //@Route  >>>> GET /api/tickets/statistics
 //@Access >>>> Private(Admins Only)
 const getTicketsStatistics = async (_req: Request, res: Response) => {
-  //Get All Tickets Data.
-  const tickets = await Ticket.find({});
+  // Try to get statistics from cache
+  const cachedStatistics = cache.get("tickets-statistics");
 
-  const statistics = ticketsChartsCalculations(tickets);
+  if (cachedStatistics) {
+    // If statistics are cached, return them
+    res.status(200).json(cachedStatistics);
+  } else {
+    // If not cached, fetch tickets data from the database
+    const tickets = await Ticket.find({});
 
-  res.status(200).json(statistics);
+    // Perform calculations on tickets data
+    const statistics = ticketsChartsCalculations(tickets);
+
+    // Cache the statistics with an expiration time (e.g., one day)
+    cache.set("tickets-statistics", statistics, 86400); // 86400 seconds = 1 day
+
+    // Send the response with the calculated statistics
+    res.status(200).json(statistics);
+  }
 };
 
 export {

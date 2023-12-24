@@ -38,6 +38,7 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.6.5",
     "mongoose-paginate-v2": "^1.7.1",
-    "mongoose-plugin-autoinc": "^1.1.9"
+    "mongoose-plugin-autoinc": "^1.1.9",
+    "node-cache": "^5.1.2"
   }
 }

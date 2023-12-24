@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Invoice from "../models/invoiceModel";
 import { ErrnoException } from "./adminControllers";
 import { invoicesChartsCalculations } from "../calculations/invoices";
+import cache from "../lib/node-cache";
 
 //@Desc   >>>> Get All Invoices That Match Query Object.
 //@Route  >>>> POST /api/invoices/query
@@ -110,16 +111,29 @@ const deleteInvoice = async (req: Request, res: Response) => {
   }
 };
 
-//@Desc   >>>> Get Invoices Statistcis.
+//@Desc   >>>> Get Invoices Statistics.
 //@Route  >>>> GET /api/invoices/statistics
 //@Access >>>> Private(Admins Only)
 const getInvoicesStatistics = async (_req: Request, res: Response) => {
-  //Get All Invoices Data.
-  const invoices = await Invoice.find({});
+  // Try to get statistics from cache
+  const cachedStatistics = cache.get("invoices-statistics");
 
-  const statistics = invoicesChartsCalculations(invoices);
+  if (cachedStatistics) {
+    // If statistics are cached, return them
+    res.status(200).json(cachedStatistics);
+  } else {
+    // If not cached, fetch invoices data from the database
+    const invoices = await Invoice.find({});
 
-  res.status(200).json(statistics);
+    // Perform calculations on invoices data
+    const statistics = invoicesChartsCalculations(invoices);
+
+    // Cache the statistics with an expiration time (e.g., one day)
+    cache.set("invoices-statistics", statistics, 86400); // 86400 seconds = 1 day
+
+    // Send the response with the calculated statistics
+    res.status(200).json(statistics);
+  }
 };
 
 export { getInvoices, createInvoice, deleteInvoice, getInvoicesStatistics };
