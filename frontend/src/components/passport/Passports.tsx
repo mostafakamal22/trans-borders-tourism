@@ -6,7 +6,6 @@ import {
   useCallback,
 } from "react";
 import { PaginationTable } from "../shared/PaginationTable";
-import { MainSpinner } from "../shared/MainSpinner";
 import { UpdatePassport } from "../forms/UpdatePassport";
 import { tableHeader, tableRow } from "./Table";
 import { PassportSearchQueries, PassportService } from "./types";
@@ -33,6 +32,8 @@ import { ReactComponent as PassportMain } from "../../assets/icons/passport-main
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 import { useDownloadExcel } from "react-export-table-to-excel";
 import { RiFileExcel2Fill } from "react-icons/ri";
+import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
+import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 
 export const Passports = () => {
   //Search Queries
@@ -104,7 +105,7 @@ export const Passports = () => {
     },
   };
 
-  const { data, isLoading, isFetching, isSuccess,   error } =
+  const { data, isLoading, isFetching, isSuccess, error } =
     useGetPassportsQuery(searchObj);
 
   const passports = data?.docs ? data.docs : [];
@@ -188,22 +189,11 @@ export const Passports = () => {
 
   //Show Error Message if could not fetch data
   if (error) {
-    return (
-      <main className="w-full">
-        <h1 className="my-4 rounded border-l-4 border-red-600 bg-red-200 p-2 text-center text-base font-bold uppercase text-gray-800">
-          Error happened, try refresh the page.
-        </h1>
-      </main>
-    );
+    return <DataFetchingErrorMessage />;
   }
 
   //Show spinner when Loading State is true
-  if (!data || isLoading)
-    return (
-      <main className="w-full">
-        <MainSpinner isLoading={isLoading} />
-      </main>
-    );
+  if (!data || isLoading) return <DataFetchingSpinner />;
 
   return (
     <main className="w-full">
@@ -276,8 +266,7 @@ export const Passports = () => {
         stateArr?.length === 0 &&
         serviceArr?.length === 0 &&
         passports?.length === 0 &&
-        !isFetching &&
-        <NoSavedRecords customMsg={["جوازات", "الجوازات"]} />}
+        !isFetching && <NoSavedRecords customMsg={["جوازات", "الجوازات"]} />}
 
       {/* if there is search query and no Passport matches >>> No Result Found*/}
       {(year ||
@@ -287,8 +276,7 @@ export const Passports = () => {
         stateArr?.length > 0 ||
         serviceArr?.length > 0) &&
         passports?.length === 0 &&
-        !isFetching &&
-        <NoSearchResult />}
+        !isFetching && <NoSearchResult />}
 
       {/* Show update Passport Modal */}
       <AnimatePresence initial={false}>

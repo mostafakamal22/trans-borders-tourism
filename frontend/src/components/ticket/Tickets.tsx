@@ -6,7 +6,6 @@ import {
   useCallback,
 } from "react";
 import { ReactComponent as TicketMain } from "../../assets/icons/ticket-main.svg";
-import { MainSpinner } from "../shared/MainSpinner";
 import { PaginationTable } from "../shared/PaginationTable";
 import { UpdateTicket } from "../forms/UpdateTicket";
 import { TicketSearchQueries } from "./types";
@@ -35,6 +34,8 @@ import { NoSearchResult } from "../shared/NoSearchResult";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 import { useDownloadExcel } from "react-export-table-to-excel";
 import { RiFileExcel2Fill } from "react-icons/ri";
+import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
+import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 
 export const Tickets = () => {
   //Search Params
@@ -112,7 +113,7 @@ export const Tickets = () => {
     },
   };
 
-  const { data, isLoading, isFetching, isSuccess,  error } =
+  const { data, isLoading, isFetching, isSuccess, error } =
     useGetTicketsQuery(searchObj);
 
   const tickets = data?.docs ? data.docs : [];
@@ -186,22 +187,11 @@ export const Tickets = () => {
 
   //Show Error Message if could not fetch data
   if (error) {
-    return (
-      <main className="w-full">
-        <h1 className="my-4 rounded border-l-4 border-red-600 bg-red-200 p-2 text-center text-base font-bold uppercase text-gray-800">
-          Error happened, try refresh the page.
-        </h1>
-      </main>
-    );
+    return <DataFetchingErrorMessage />;
   }
 
   //Show spinner when Loading State is true
-  if (!data || isLoading)
-    return (
-      <main className="w-full">
-        <MainSpinner isLoading={isLoading} />
-      </main>
-    );
+  if (!data || isLoading) return <DataFetchingSpinner />;
 
   return (
     <main className="w-full">
@@ -275,8 +265,7 @@ export const Tickets = () => {
         !deferredCustomerName &&
         paymentMethodArr?.length === 0 &&
         tickets?.length === 0 &&
-        !isFetching &&
-         <NoSavedRecords customMsg={["تذاكر", "التذاكر"]} />}
+        !isFetching && <NoSavedRecords customMsg={["تذاكر", "التذاكر"]} />}
 
       {/* if there is search query no Tickets matches >>> No Search Found*/}
       {(year ||
@@ -289,8 +278,7 @@ export const Tickets = () => {
         deferredEmployee ||
         paymentMethodArr?.length > 0) &&
         tickets?.length === 0 &&
-        !isFetching &&
-         <NoSearchResult />}
+        !isFetching && <NoSearchResult />}
 
       {/* Show update Tickets Modal */}
       <AnimatePresence initial={false}>

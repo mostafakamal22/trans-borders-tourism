@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { PaginationTable } from "../shared/PaginationTable";
-import { MainSpinner } from "../shared/MainSpinner";
 import { PaymentSearchQueries } from "../payment/types";
 import { useSearchParams } from "react-router-dom";
 import {
@@ -22,6 +21,8 @@ import { UpdatePayment } from "../forms/UpdatePayment";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 import { useDownloadExcel } from "react-export-table-to-excel";
 import { RiFileExcel2Fill } from "react-icons/ri";
+import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
+import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 
 export const Payments = () => {
   //Search Params
@@ -70,7 +71,7 @@ export const Payments = () => {
     sheet: "Payments",
   });
 
-  const { data, isLoading, isFetching, isSuccess,   error } =
+  const { data, isLoading, isFetching, isSuccess, error } =
     useGetPaymentsQuery(searchObj);
 
   const payments = data?.docs ? data.docs : [];
@@ -110,22 +111,11 @@ export const Payments = () => {
 
   //Show Error Message if could not fetch data
   if (error) {
-    return (
-      <main className="w-full">
-        <h1 className="my-4 rounded border-l-4 border-red-600 bg-red-200 p-2 text-center text-base font-bold uppercase text-gray-800">
-          Error happened, try refresh the page.
-        </h1>
-      </main>
-    );
+    return <DataFetchingErrorMessage />;
   }
 
   //Show spinner when Loading State is true
-  if (!data || isLoading)
-    return (
-      <main className="w-full">
-        <MainSpinner isLoading={isLoading} />
-      </main>
-    );
+  if (!data || isLoading) return <DataFetchingSpinner />;
 
   return (
     <main className="w-full">
@@ -192,14 +182,12 @@ export const Payments = () => {
         !type &&
         !method &&
         payments?.length === 0 &&
-        !isFetching &&
-         <NoSavedRecords customMsg={["مصروفات", "المصروفات"]} />}
+        !isFetching && <NoSavedRecords customMsg={["مصروفات", "المصروفات"]} />}
 
       {/* if there is search query no Payments matches >>> No Search Found*/}
       {(year || month || day || method || type) &&
         payments?.length === 0 &&
-        !isFetching &&
-         <NoSearchResult />}
+        !isFetching && <NoSearchResult />}
 
       {/* Show update Payments Modal */}
       <AnimatePresence initial={false}>

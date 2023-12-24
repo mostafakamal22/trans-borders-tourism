@@ -8,7 +8,6 @@ import {
 import { ReactComponent as InvoiceMain } from "../../assets/icons/invoice-main.svg";
 import { PaginationTable } from "../shared/PaginationTable";
 import { useSearchParams } from "react-router-dom";
-import { MainSpinner } from "../shared/MainSpinner";
 import { InvoiceSearchQueries } from "./types";
 import {
   useGetInvoicesQuery,
@@ -24,6 +23,8 @@ import { NoSearchResult } from "../shared/NoSearchResult";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 import { useDownloadExcel } from "react-export-table-to-excel";
 import { RiFileExcel2Fill } from "react-icons/ri";
+import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
+import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 
 export const Invoices = () => {
   //Search Query State
@@ -53,14 +54,15 @@ export const Invoices = () => {
     ? +URLSearchParams.get("page")!
     : 1;
 
-  const { data, isLoading, isFetching, isSuccess,  error } =
-    useGetInvoicesQuery({
+  const { data, isLoading, isFetching, isSuccess, error } = useGetInvoicesQuery(
+    {
       query: { name: deferredQuery.trim() },
       option: {
         limit: tableRows,
         page: pageNumber,
       },
-    });
+    }
+  );
 
   const invoices = data?.docs ? data.docs : [];
 
@@ -90,22 +92,11 @@ export const Invoices = () => {
 
   //Show Error Message if could not fetch data
   if (error) {
-    return (
-      <main className="w-full">
-        <h1 className="my-4 rounded border-l-4 border-red-600 bg-red-200 p-2 text-center text-base font-bold uppercase text-gray-800">
-          Error happened, try refresh the page.
-        </h1>
-      </main>
-    );
+    return <DataFetchingErrorMessage />;
   }
 
   //Show spinner when Loading State is true
-  if (!data || isLoading)
-    return (
-      <main className="w-full">
-        <MainSpinner isLoading={isLoading} />
-      </main>
-    );
+  if (!data || isLoading) return <DataFetchingSpinner />;
 
   return (
     <main className="w-full">
@@ -161,12 +152,12 @@ export const Invoices = () => {
       )}
 
       {/* if there is No Invoice Records */}
-      {!deferredQuery && !isFetching  && invoices?.length === 0 && (
+      {!deferredQuery && !isFetching && invoices?.length === 0 && (
         <NoSavedRecords customMsg={["فواتير", "الفواتير"]} />
       )}
 
       {/* if there is search query and no Invoice matches >>> No Search Found*/}
-      {deferredQuery && invoices?.length === 0 && !isFetching  && (
+      {deferredQuery && invoices?.length === 0 && !isFetching && (
         <NoSearchResult />
       )}
     </main>

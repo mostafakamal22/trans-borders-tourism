@@ -23,7 +23,8 @@ import {
 } from "../invoice/constants";
 import { ReactComponent as PurchaseAlt } from "../../assets/icons/purchase-alt.svg";
 import { IPurchaseType } from "../../../../backend/models/purchaseModel";
-import { MainSpinner } from "../shared/MainSpinner";
+import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
+import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 
 export const UpdatePurchase = ({
   id,
@@ -148,22 +149,11 @@ export const UpdatePurchase = ({
 
   //Show Error Message if could not fetch data
   if (error) {
-    return (
-      <div className="w-full">
-        <h1 className="my-4 rounded border-l-4 border-red-600 bg-red-200 p-2 text-center text-base font-bold uppercase text-gray-800">
-          Error happened, try refresh the page.
-        </h1>
-      </div>
-    );
+    return <DataFetchingErrorMessage />;
   }
 
   //Show spinner when Loading State is true
-  if (!foundPurchase || isLoading)
-    return (
-      <div className="w-full">
-        <MainSpinner isLoading={isLoading} />
-      </div>
-    );
+  if (!foundPurchase || isLoading) return <DataFetchingSpinner />;
 
   return (
     <div className="fixed inset-0 z-50  h-screen w-full overflow-y-auto overflow-x-hidden bg-black/75 scrollbar-thin scrollbar-track-transparent  scrollbar-thumb-gray-400 scrollbar-track-rounded-full md:inset-0">

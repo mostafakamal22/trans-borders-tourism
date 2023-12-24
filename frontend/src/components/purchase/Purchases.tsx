@@ -6,7 +6,6 @@ import {
   useCallback,
 } from "react";
 import { useSearchParams } from "react-router-dom";
-import { MainSpinner } from "../shared/MainSpinner";
 import { PaginationTable } from "../shared/PaginationTable";
 import { PurchaseSearchQueries } from "./types";
 import {
@@ -28,6 +27,8 @@ import { UpdatePurchase } from "../forms/UpdatePurchase";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 import { useDownloadExcel } from "react-export-table-to-excel";
 import { RiFileExcel2Fill } from "react-icons/ri";
+import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
+import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 
 export const Purchases = () => {
   //Search Params
@@ -120,22 +121,11 @@ export const Purchases = () => {
 
   //Show Error Message if could not fetch data
   if (error) {
-    return (
-      <main className="w-full">
-        <h1 className="my-4 rounded border-l-4 border-red-600 bg-red-200 p-2 text-center text-base font-bold uppercase text-gray-800">
-          Error happened, try refresh the page.
-        </h1>
-      </main>
-    );
+    return <DataFetchingErrorMessage />;
   }
 
   //Show spinner when Loading State is true
-  if (!data || isLoading)
-    return (
-      <main className="w-full">
-        <MainSpinner isLoading={isLoading} />
-      </main>
-    );
+  if (!data || isLoading) return <DataFetchingSpinner />;
 
   return (
     <main className="w-full">
