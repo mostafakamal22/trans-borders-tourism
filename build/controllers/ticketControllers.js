@@ -50,8 +50,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTicket = exports.createTicket = exports.deleteTicket = exports.getTickets = void 0;
+exports.getTicketsStatistics = exports.updateTicket = exports.createTicket = exports.deleteTicket = exports.getOneTicket = exports.getTickets = void 0;
 var ticketModel_1 = __importDefault(require("../models/ticketModel"));
+var node_cache_1 = __importDefault(require("../lib/node-cache"));
+var tickets_1 = require("../calculations/tickets");
 //@Desc   >>>> Get All Tickets That Match Query Object.
 //@Route  >>>> POST /api/tickets/query
 //@Access >>>> Private(Admins Only)
@@ -111,6 +113,33 @@ var getTickets = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     });
 }); };
 exports.getTickets = getTickets;
+//@Desc   >>>> GET ONE Ticket
+//@Route  >>>> GET /api/tickets/:id
+//@Access >>>> Private(Admins Only)
+var getOneTicket = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var ticket, error;
+    var _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0: return [4 /*yield*/, ticketModel_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
+            case 1:
+                ticket = _b.sent();
+                //Check if Ticket is not exist.
+                if (!ticket) {
+                    error = new Error();
+                    error.name = "CastError";
+                    error.path = "_id";
+                    throw error;
+                }
+                else {
+                    //Send Ticket.
+                    res.status(200).json(ticket);
+                }
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.getOneTicket = getOneTicket;
 //@Desc   >>>> Create Ticket
 //@Route  >>>> POST /api/tickets/
 //@Access >>>> private(For Admins)
@@ -202,3 +231,30 @@ var deleteTicket = function (req, res) { return __awaiter(void 0, void 0, void 0
     });
 }); };
 exports.deleteTicket = deleteTicket;
+//@Desc   >>>> Get Tickets Statistics.
+//@Route  >>>> GET /api/tickets/statistics
+//@Access >>>> Private(Admins Only)
+var getTicketsStatistics = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var cachedStatistics, tickets, statistics;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                cachedStatistics = node_cache_1.default.get("tickets-statistics");
+                if (!cachedStatistics) return [3 /*break*/, 1];
+                // If statistics are cached, return them
+                res.status(200).json(cachedStatistics);
+                return [3 /*break*/, 3];
+            case 1: return [4 /*yield*/, ticketModel_1.default.find({})];
+            case 2:
+                tickets = _a.sent();
+                statistics = (0, tickets_1.ticketsChartsCalculations)(tickets);
+                // Cache the statistics with an expiration time (e.g., one day)
+                node_cache_1.default.set("tickets-statistics", statistics, 86400); // 86400 seconds = 1 day
+                // Send the response with the calculated statistics
+                res.status(200).json(statistics);
+                _a.label = 3;
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getTicketsStatistics = getTicketsStatistics;

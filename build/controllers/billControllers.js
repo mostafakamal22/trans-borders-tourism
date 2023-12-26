@@ -50,10 +50,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateBill = exports.deleteBill = exports.createBill = exports.getBills = void 0;
+exports.getBillsStatistics = exports.updateBill = exports.deleteBill = exports.createBill = exports.getOneBill = exports.getBills = void 0;
 var billModel_1 = __importDefault(require("../models/billModel"));
 var passportModel_1 = __importDefault(require("../models/passportModel"));
 var ticketModel_1 = __importDefault(require("../models/ticketModel"));
+var bills_1 = require("../calculations/bills");
+var node_cache_1 = __importDefault(require("../lib/node-cache"));
 //@Desc   >>>> Get All Bills That Match Query Object.
 //@Route  >>>> POST /api/bills/query
 //@Access >>>> Private(Admins Only)
@@ -81,6 +83,33 @@ var getBills = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
     });
 }); };
 exports.getBills = getBills;
+//@Desc   >>>> GET ONE Bill
+//@Route  >>>> GET /api/bills/:id
+//@Access >>>> Private(Admins Only)
+var getOneBill = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var bill, error;
+    var _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0: return [4 /*yield*/, billModel_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
+            case 1:
+                bill = _b.sent();
+                //Check if Bill is not exist.
+                if (!bill) {
+                    error = new Error();
+                    error.name = "CastError";
+                    error.path = "_id";
+                    throw error;
+                }
+                else {
+                    //Send Bill.
+                    res.status(200).json(bill);
+                }
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.getOneBill = getOneBill;
 //@Desc   >>>> Create Bill
 //@Route  >>>> POST /api/bills
 //@Access >>>> Private(Admins Only)
@@ -361,3 +390,39 @@ var deleteBill = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     });
 }); };
 exports.deleteBill = deleteBill;
+//@Desc   >>>> Get Bills Statistcis.
+//@Route  >>>> GET /api/bills/statistics
+//@Access >>>> Private(Admins Only)
+// const getBillsStatistics = async (_req: Request, res: Response) => {
+//   //Get All Bills Data.
+//   const bills = await Bill.find({});
+//   const statistics = billsChartsCalculations(bills);
+//   res.status(200).json(statistics);
+// };
+//@Desc   >>>> Get Bills Statistics.
+//@Route  >>>> GET /api/bills/statistics
+//@Access >>>> Private(Admins Only)
+var getBillsStatistics = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var cachedStatistics, bills, statistics;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                cachedStatistics = node_cache_1.default.get("bills-statistics");
+                if (!cachedStatistics) return [3 /*break*/, 1];
+                // If statistics are cached, return them
+                res.status(200).json(cachedStatistics);
+                return [3 /*break*/, 3];
+            case 1: return [4 /*yield*/, billModel_1.default.find({})];
+            case 2:
+                bills = _a.sent();
+                statistics = (0, bills_1.billsChartsCalculations)(bills);
+                // Cache the statistics with an expiration time (e.g., one day)
+                node_cache_1.default.set("bills-statistics", statistics, 86400); // 86400 seconds = 1 day
+                // Send the response with the calculated statistics
+                res.status(200).json(statistics);
+                _a.label = 3;
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getBillsStatistics = getBillsStatistics;

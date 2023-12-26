@@ -50,8 +50,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteInvoice = exports.createInvoice = exports.getInvoices = void 0;
+exports.getInvoicesStatistics = exports.deleteInvoice = exports.createInvoice = exports.getInvoices = void 0;
 var invoiceModel_1 = __importDefault(require("../models/invoiceModel"));
+var invoices_1 = require("../calculations/invoices");
+var node_cache_1 = __importDefault(require("../lib/node-cache"));
 //@Desc   >>>> Get All Invoices That Match Query Object.
 //@Route  >>>> POST /api/invoices/query
 //@Access >>>> Private(Admins Only)
@@ -167,3 +169,30 @@ var deleteInvoice = function (req, res) { return __awaiter(void 0, void 0, void 
     });
 }); };
 exports.deleteInvoice = deleteInvoice;
+//@Desc   >>>> Get Invoices Statistics.
+//@Route  >>>> GET /api/invoices/statistics
+//@Access >>>> Private(Admins Only)
+var getInvoicesStatistics = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var cachedStatistics, invoices, statistics;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                cachedStatistics = node_cache_1.default.get("invoices-statistics");
+                if (!cachedStatistics) return [3 /*break*/, 1];
+                // If statistics are cached, return them
+                res.status(200).json(cachedStatistics);
+                return [3 /*break*/, 3];
+            case 1: return [4 /*yield*/, invoiceModel_1.default.find({})];
+            case 2:
+                invoices = _a.sent();
+                statistics = (0, invoices_1.invoicesChartsCalculations)(invoices);
+                // Cache the statistics with an expiration time (e.g., one day)
+                node_cache_1.default.set("invoices-statistics", statistics, 86400); // 86400 seconds = 1 day
+                // Send the response with the calculated statistics
+                res.status(200).json(statistics);
+                _a.label = 3;
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getInvoicesStatistics = getInvoicesStatistics;

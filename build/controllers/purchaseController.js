@@ -50,7 +50,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePurchase = exports.updatePurchase = exports.createPurchase = exports.getPurchases = void 0;
+exports.deletePurchase = exports.updatePurchase = exports.createPurchase = exports.getOnePurchase = exports.getPurchases = void 0;
 var purchaseModel_1 = __importDefault(require("../models/purchaseModel"));
 //@Desc   >>>> Get All Purchases That Match Query Object.
 //@Route  >>>> POST /api/purchases/query
@@ -102,6 +102,33 @@ var getPurchases = function (req, res) { return __awaiter(void 0, void 0, void 0
     });
 }); };
 exports.getPurchases = getPurchases;
+//@Desc   >>>> GET ONE Purchase
+//@Route  >>>> GET /api/purchases/:id
+//@Access >>>> Private(Admins Only)
+var getOnePurchase = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var purchase, error;
+    var _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0: return [4 /*yield*/, purchaseModel_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
+            case 1:
+                purchase = _b.sent();
+                //Check if Purchase is not exist.
+                if (!purchase) {
+                    error = new Error();
+                    error.name = "CastError";
+                    error.path = "_id";
+                    throw error;
+                }
+                else {
+                    //Send Purchase.
+                    res.status(200).json(purchase);
+                }
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.getOnePurchase = getOnePurchase;
 //@Desc   >>>> Create Purchase
 //@Route  >>>> POST /api/Purchases/
 //@Access >>>> Private(Admins Only)

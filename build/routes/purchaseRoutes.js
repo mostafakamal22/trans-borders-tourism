@@ -8,6 +8,7 @@ router.route("/").post(authAdminProtect_1.authAdminProtect, purchaseController_1
 router.route("/query").post(authAdminProtect_1.authAdminProtect, purchaseController_1.getPurchases);
 router
     .route("/:id")
+    .get(authAdminProtect_1.authAdminProtect, purchaseController_1.getOnePurchase)
     .put(authAdminProtect_1.authAdminProtect, purchaseController_1.updatePurchase)
     .delete(authAdminProtect_1.authAdminProtect, purchaseController_1.deletePurchase);
 exports.default = router;

@@ -50,7 +50,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatePayment = exports.createPayment = exports.deletePayment = exports.getPayments = void 0;
+exports.updatePayment = exports.createPayment = exports.deletePayment = exports.getOnePayment = exports.getPayments = void 0;
 var paymentModel_1 = __importDefault(require("../models/paymentModel"));
 //@Desc   >>>> Get All Payments That Match Query Object.
 //@Route  >>>> POST /api/payments/query
@@ -102,6 +102,33 @@ var getPayments = function (req, res) { return __awaiter(void 0, void 0, void 0,
     });
 }); };
 exports.getPayments = getPayments;
+//@Desc   >>>> GET ONE Payment
+//@Route  >>>> GET /api/payments/:id
+//@Access >>>> Private(Admins Only)
+var getOnePayment = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var payment, error;
+    var _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0: return [4 /*yield*/, paymentModel_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
+            case 1:
+                payment = _b.sent();
+                //Check if Payment is not exist.
+                if (!payment) {
+                    error = new Error();
+                    error.name = "CastError";
+                    error.path = "_id";
+                    throw error;
+                }
+                else {
+                    //Send Payment.
+                    res.status(200).json(payment);
+                }
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.getOnePayment = getOnePayment;
 //@Desc   >>>> Create Payment
 //@Route  >>>> POST /api/payments
 //@Access >>>> Private(Admins Only)

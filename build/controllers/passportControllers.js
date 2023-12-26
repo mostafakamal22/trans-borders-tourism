@@ -50,8 +50,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPassports = exports.deletePassport = exports.createPassport = exports.updatePassport = void 0;
+exports.getPassportsStatistics = exports.deletePassport = exports.updatePassport = exports.createPassport = exports.getOnePassport = exports.getPassports = void 0;
 var passportModel_1 = __importDefault(require("../models/passportModel"));
+var node_cache_1 = __importDefault(require("../lib/node-cache"));
+var passports_1 = require("../calculations/passports");
 //@Desc   >>>> Get All Passports That Match Query Object.
 //@Route  >>>> POST /api/passports/query
 //@Access >>>> Private(Admins Only)
@@ -102,6 +104,33 @@ var getPassports = function (req, res) { return __awaiter(void 0, void 0, void 0
     });
 }); };
 exports.getPassports = getPassports;
+//@Desc   >>>> GET ONE Passport
+//@Route  >>>> GET /api/passports/:id
+//@Access >>>> Private(Admins Only)
+var getOnePassport = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var passport, error;
+    var _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0: return [4 /*yield*/, passportModel_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
+            case 1:
+                passport = _b.sent();
+                //Check if Passport is not exist.
+                if (!passport) {
+                    error = new Error();
+                    error.name = "CastError";
+                    error.path = "_id";
+                    throw error;
+                }
+                else {
+                    //Send Passport.
+                    res.status(200).json(passport);
+                }
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.getOnePassport = getOnePassport;
 //@Desc   >>>> Create Passport
 //@Route  >>>> POST /api/passports
 //@Access >>>> Private(Admins Only)
@@ -196,3 +225,30 @@ var deletePassport = function (req, res) { return __awaiter(void 0, void 0, void
     });
 }); };
 exports.deletePassport = deletePassport;
+//@Desc   >>>> Get Passports Statistics.
+//@Route  >>>> GET /api/passports/statistics
+//@Access >>>> Private(Admins Only)
+var getPassportsStatistics = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var cachedStatistics, passports, statistics;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                cachedStatistics = node_cache_1.default.get("passports-statistics");
+                if (!cachedStatistics) return [3 /*break*/, 1];
+                // If statistics are cached, return them
+                res.status(200).json(cachedStatistics);
+                return [3 /*break*/, 3];
+            case 1: return [4 /*yield*/, passportModel_1.default.find({})];
+            case 2:
+                passports = _a.sent();
+                statistics = (0, passports_1.passportsChartsCalculations)(passports);
+                // Cache the statistics with an expiration time (e.g., one day)
+                node_cache_1.default.set("passports-statistics", statistics, 86400); // 86400 seconds = 1 day
+                // Send the response with the calculated statistics
+                res.status(200).json(statistics);
+                _a.label = 3;
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getPassportsStatistics = getPassportsStatistics;

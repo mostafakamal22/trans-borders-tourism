@@ -8,6 +8,7 @@ router.route("/").post(authAdminProtect_1.authAdminProtect, paymentControllers_1
 router.route("/query").post(authAdminProtect_1.authAdminProtect, paymentControllers_1.getPayments);
 router
     .route("/:id")
+    .get(authAdminProtect_1.authAdminProtect, paymentControllers_1.getOnePayment)
     .put(authAdminProtect_1.authAdminProtect, paymentControllers_1.updatePayment)
     .delete(authAdminProtect_1.authAdminProtect, paymentControllers_1.deletePayment);
 exports.default = router;

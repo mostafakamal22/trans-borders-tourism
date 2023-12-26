@@ -5,9 +5,11 @@ var ticketControllers_1 = require("../controllers/ticketControllers");
 var authAdminProtect_1 = require("../middlewares/adminMiddlewares/authAdminProtect");
 var router = (0, express_1.Router)();
 router.route("/").post(authAdminProtect_1.authAdminProtect, ticketControllers_1.createTicket);
+router.route("/statistics").get(authAdminProtect_1.authAdminProtect, ticketControllers_1.getTicketsStatistics);
 router.route("/query").post(authAdminProtect_1.authAdminProtect, ticketControllers_1.getTickets);
 router
     .route("/:id")
+    .get(authAdminProtect_1.authAdminProtect, ticketControllers_1.getOneTicket)
     .put(authAdminProtect_1.authAdminProtect, ticketControllers_1.updateTicket)
     .delete(authAdminProtect_1.authAdminProtect, ticketControllers_1.deleteTicket);
 exports.default = router;
