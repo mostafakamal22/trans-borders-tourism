@@ -189,12 +189,14 @@ export function TicketCharts() {
     parseInt(
       totalLastThreeValues[dayjs().year()][
         dayjs().month() as keyof TotalMonthValues
-      ].toString()
+      ]?.toString?.()
     ) -
     parseInt(
       totalLastThreeValues[dayjs().year()][
-        (dayjs().month() - 1) as keyof TotalMonthValues
-      ].toString()
+        (dayjs().month() - 1 >= 0
+          ? dayjs().month() - 1
+          : 0) as keyof TotalMonthValues
+      ]?.toString?.()
     );
 
   //Sales This Year
