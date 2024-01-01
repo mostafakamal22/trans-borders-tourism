@@ -13,6 +13,9 @@ import { connectToMongoose } from "./config/dbConfig";
 
 const app = express();
 
+//Enable Express to trust the headers set by the reverse proxy (e.g., Nginx, Apache).
+app.set("trust proxy", true);
+
 //Middlewares
 //Express json parser middleware
 app.use(express.json());

@@ -16,6 +16,8 @@ var adminErrorHandling_1 = __importDefault(require("./utils/adminErrorHandling")
 var adminApiLimiter_1 = require("./middlewares/adminMiddlewares/adminApiLimiter");
 var dbConfig_1 = require("./config/dbConfig");
 var app = (0, express_1.default)();
+//Enable Express to trust the headers set by the reverse proxy (e.g., Nginx, Apache).
+app.set("trust proxy", true);
 //Middlewares
 //Express json parser middleware
 app.use(express_1.default.json());
