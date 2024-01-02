@@ -135,17 +135,14 @@ export const labels = [
 ];
 
 export function InvoiceCharts() {
-  const { data, isLoading, isFetching, isError } =
-    useGetInvoicesStatisticsQuery(null, {
-      pollingInterval: 3600000,
-    });
+  const { data, isLoading, isError } = useGetInvoicesStatisticsQuery(null, {
+    pollingInterval: 3600000,
+  });
 
   if (isError) return <div>An error has occurred!</div>;
 
-  if (isLoading || isFetching || !data) {
-    return (
-      <MainSpinner spinnerHeight="20vh" isLoading={isLoading || isFetching} />
-    );
+  if (isLoading || !data) {
+    return <MainSpinner spinnerHeight="20vh" isLoading={true} />;
   }
 
   const { totalLastThreeValues, totalMonthValues } = data;
@@ -204,14 +201,14 @@ export function InvoiceCharts() {
         type="bar"
         options={barOptions}
         data={barData}
-        className="w-full  rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
+        className="w-full rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
       />
 
       <Chart
         type="line"
         options={lineOptions}
         data={lineData}
-        className="w-full  rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
+        className="w-full rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
       />
     </>
   );

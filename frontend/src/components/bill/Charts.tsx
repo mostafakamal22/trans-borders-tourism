@@ -1,9 +1,9 @@
 import { ChartData, ChartOptions } from "chart.js";
 import { Chart } from "react-chartjs-2";
 import { useGetBillsStatisticsQuery } from "../../state/features/bill/billApiSlice";
-import dayjs from "dayjs";
 import { MainSpinner } from "../shared/MainSpinner";
 import { labels } from "../invoice/Charts";
+import dayjs from "dayjs";
 
 export const barOptions: ChartOptions = {
   scales: {
@@ -92,19 +92,14 @@ export const lineOptions: ChartOptions = {
 };
 
 export function BillCharts() {
-  const { data, isLoading, isFetching, isError } = useGetBillsStatisticsQuery(
-    null,
-    {
-      pollingInterval: 3600000,
-    }
-  );
+  const { data, isLoading, isError } = useGetBillsStatisticsQuery(null, {
+    pollingInterval: 3600000,
+  });
 
   if (isError) return <div>An error has occurred!</div>;
 
-  if (isLoading || isFetching || !data) {
-    return (
-      <MainSpinner spinnerHeight="20vh" isLoading={isLoading || isFetching} />
-    );
+  if (isLoading || !data) {
+    return <MainSpinner spinnerHeight="20vh" isLoading={true} />;
   }
 
   const { totalLastThreeValues, totalMonthValues } = data;
@@ -157,26 +152,20 @@ export function BillCharts() {
     ],
   };
 
-  if (isLoading || isFetching) {
-    return (
-      <MainSpinner spinnerHeight="20vh" isLoading={isLoading || isFetching} />
-    );
-  }
-
   return (
     <>
       <Chart
         type="bar"
         options={barOptions}
         data={barData}
-        className="w-full  rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
+        className="w-full rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
       />
 
       <Chart
         type="line"
         options={lineOptions}
         data={lineData}
-        className="w-full  rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
+        className="w-full rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
       />
     </>
   );

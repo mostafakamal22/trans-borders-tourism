@@ -83,17 +83,14 @@ export const polarOptions: ChartOptions = {
 };
 
 export function PassportCharts() {
-  const { data, isLoading, isFetching, isError } =
-    useGetPassportsStatisticsQuery(null, {
-      pollingInterval: 3600000,
-    });
+  const { data, isLoading, isError } = useGetPassportsStatisticsQuery(null, {
+    pollingInterval: 3600000,
+  });
 
   if (isError) return <div>An error has occurred!</div>;
 
-  if (isLoading || isFetching || !data) {
-    return (
-      <MainSpinner spinnerHeight="20vh" isLoading={isLoading || isFetching} />
-    );
+  if (isLoading || !data) {
+    return <MainSpinner spinnerHeight="20vh" isLoading={true} />;
   }
   const {
     totalMonthValues,
@@ -219,12 +216,6 @@ export function PassportCharts() {
         .toString()
     );
 
-  if (isLoading || isFetching) {
-    return (
-      <MainSpinner spinnerHeight="20vh" isLoading={isLoading || isFetching} />
-    );
-  }
-
   return (
     <>
       <Sales salesThisMonth={salesThisMonth} salesThisYear={salesThisYear} />
@@ -233,28 +224,28 @@ export function PassportCharts() {
         type="bar"
         options={PBarOptions}
         data={barData}
-        className="w-full  rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
+        className="w-full rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
       />
 
       <Chart
         type="line"
         options={pLineOptions}
         data={lineData}
-        className="w-full  rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
+        className="w-full rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
       />
 
       <Chart
         type="pie"
         options={pieOptions}
         data={pieData}
-        className="w-full  rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
+        className="w-full rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
       />
 
       <Chart
         type="polarArea"
         options={polarOptions}
         data={polarData}
-        className="w-full  rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
+        className="w-full rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
       />
     </>
   );

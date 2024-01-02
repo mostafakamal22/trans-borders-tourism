@@ -64,20 +64,20 @@ const tPieOptions: ChartOptions = {
   },
 };
 
+// Define the handle types which will be passed to the forwardRef
+export type TicketsHandle = {
+  isFetching: () => boolean;
+};
+
 export function TicketCharts() {
-  const { data, isLoading, isFetching, isError } = useGetTicketsStatisticsQuery(
-    null,
-    {
-      pollingInterval: 3600000,
-    }
-  );
+  const { data, isLoading, isError } = useGetTicketsStatisticsQuery(null, {
+    pollingInterval: 3600000,
+  });
 
   if (isError) return <div>An error has occurred!</div>;
 
-  if (isLoading || isFetching || !data) {
-    return (
-      <MainSpinner spinnerHeight="20vh" isLoading={isLoading || isFetching} />
-    );
+  if (isLoading || !data) {
+    return <MainSpinner spinnerHeight="20vh" isLoading={true} />;
   }
 
   const {
@@ -212,12 +212,6 @@ export function TicketCharts() {
         .toString()
     );
 
-  if (isLoading || isFetching) {
-    return (
-      <MainSpinner spinnerHeight="20vh" isLoading={isLoading || isFetching} />
-    );
-  }
-
   return (
     <>
       <Sales salesThisMonth={salesThisMonth} salesThisYear={salesThisYear} />
@@ -226,28 +220,28 @@ export function TicketCharts() {
         type="bar"
         options={tBarOptions}
         data={barData}
-        className="w-full  rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
+        className="w-full rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
       />
 
       <Chart
         type="line"
         options={tLineOptions}
         data={lineData}
-        className="w-full  rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
+        className="w-full rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
       />
 
       <Chart
         type="pie"
         options={tPieOptions}
         data={pieData}
-        className="w-full  rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
+        className="w-full rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
       />
 
       <Chart
         type="polarArea"
         options={tPolarEmployeeOptions}
         data={polarEmployeesData}
-        className="w-full  rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
+        className="w-full rounded border border-emerald-300 p-2 font-Tajawal shadow md:max-h-96 md:max-w-lg"
       />
 
       <Chart
