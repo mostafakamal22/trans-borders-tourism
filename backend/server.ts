@@ -66,6 +66,10 @@ app.use("/api/banks", banksRoute);
 import billsRoute from "./routes/billRoutes";
 app.use("/api/bills", billsRoute);
 
+//Receipt Voucher Router
+import receiptVouchersRoute from "./routes/receiptVoucherRoutes";
+app.use("/api/receiptVouchers", receiptVouchersRoute);
+
 //serve Frontend
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(join(__dirname, "../frontend/dist")));
