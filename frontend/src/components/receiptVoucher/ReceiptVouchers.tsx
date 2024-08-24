@@ -22,7 +22,7 @@ import { tableHeader, tableRow } from "./Table";
 import { FetchingMessage } from "../shared/FetchingMessage";
 import { Totals } from "./Totals";
 import { Filters, FiltersSummary } from "./Filters";
-// import { ReactComponent as ReceiptVoucherMain } from "../../assets/icons/receiptVoucher-main.svg";
+import { ReactComponent as ReceiptVoucherMain } from "../../assets/icons/receiptVoucher-main.svg";
 import { UpdateReceiptVoucher } from "../forms/UpdateReceiptVoucher";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 import { useDownloadExcel } from "react-export-table-to-excel";
@@ -128,7 +128,7 @@ export const ReceiptVouchers = () => {
     <main className="w-full">
       <h2 className="my-4 mb-10 flex items-center justify-center rounded bg-red-700 px-2 py-4 text-3xl font-bold text-white shadow">
         <span className="mr-2 flex items-center justify-center">
-          {/* <ReceiptVoucherMain className="mr-1 h-20 w-20 drop-shadow" /> */}
+          <ReceiptVoucherMain className="mr-1 h-20 w-20 drop-shadow" />
         </span>
         سنـــدات القبــض
       </h2>
