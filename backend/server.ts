@@ -1,15 +1,15 @@
 import "express-async-errors";
 import dotenv from "dotenv";
 dotenv.config();
-import { join, resolve } from "path";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { corsDevOptions, corsProOptions } from "./config/corsConfig";
 import errorHandler from "./utils/errorHandling";
 import adminErrorHandler from "./utils/adminErrorHandling";
+import { join, resolve } from "path";
 import { adminApiLimiter } from "./middlewares/adminMiddlewares/adminApiLimiter";
 import { connectToMongoose } from "./config/dbConfig";
+import { corsDevOptions, corsProOptions } from "./config/corsConfig";
 
 const app = express();
 
@@ -69,6 +69,10 @@ app.use("/api/bills", billsRoute);
 //Receipt Voucher Router
 import receiptVouchersRoute from "./routes/receiptVoucherRoutes";
 app.use("/api/receiptVouchers", receiptVouchersRoute);
+
+//Payment Voucher Router
+import paymentVouchersRoute from "./routes/paymentVoucherRoutes";
+app.use("/api/paymentVouchers", paymentVouchersRoute);
 
 //serve Frontend
 if (process.env.NODE_ENV === "production") {
