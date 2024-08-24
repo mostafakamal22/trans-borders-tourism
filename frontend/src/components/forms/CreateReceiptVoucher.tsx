@@ -4,7 +4,7 @@ import {
   inputClassNamesStyles,
   lableClassNamesStyles,
 } from "../invoice/constants";
-// import { ReactComponent as ReceiptVoucherAlt } from "../../assets/icons/receiptVoucher-alt.svg";
+import { ReactComponent as ReceiptVoucherAlt } from "../../assets/icons/receiptVoucher-alt.svg";
 import { FormInput } from "../shared/FormInput";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { useCreateReceiptVoucherMutation } from "../../state/features/receiptVoucher/receiptVouchersApiSlice";
@@ -60,7 +60,7 @@ export const CreateReceiptVoucher = () => {
   return (
     <section id="createReceiptVoucher" className="w-full">
       <h3 className="mb-10 flex items-center justify-center rounded bg-red-800 px-2 py-4 text-center text-xl font-bold text-white shadow ">
-        {/* <ReceiptVoucherAlt className="mr-1 h-16 w-16 drop-shadow" /> */}
+        <ReceiptVoucherAlt className="mr-1 h-16 w-16 drop-shadow" />
         <span>إضافة سند جديد</span>
       </h3>
 

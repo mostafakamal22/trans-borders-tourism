@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-// import { ReactComponent as ReceiptVoucherAlt } from "../../assets/icons/receiptVoucher-alt.svg";
+import { ReactComponent as ReceiptVoucherAlt } from "../../assets/icons/receiptVoucher-alt.svg";
 import { RiSendPlaneFill } from "react-icons/ri";
 import FormButton from "../shared/FormButton";
 import { FormInput } from "../shared/FormInput";
@@ -118,7 +118,7 @@ export const UpdateReceiptVoucher = ({
         className="mx-auto my-5 w-full max-w-5xl rounded bg-slate-50 p-6 shadow-lg shadow-black/30"
       >
         <h3 className="mb-10 flex items-center justify-center rounded bg-red-800 px-2 py-4 text-center text-xl font-bold text-white shadow ">
-          {/* <ReceiptVoucherAlt className="mr-1 h-16 w-16 drop-shadow" /> */}
+          <ReceiptVoucherAlt className="mr-1 h-16 w-16 drop-shadow" />
           <span> تعديل بيانات السند</span>
         </h3>
 
