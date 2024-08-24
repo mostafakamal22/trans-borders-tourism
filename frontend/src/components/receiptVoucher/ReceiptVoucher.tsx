@@ -168,14 +168,14 @@ export const ReceiptVoucher = () => {
           className="mt-5 rounded bg-red-200  p-2 font-semibold underline underline-offset-4"
         >
           <div className="my-5 flex items-center p-2">
-            <p className="text-left">Paid To Mr or M/s</p>
+            <p className="text-left">Received from Mr or M/s</p>
             <p
               style={{ printColorAdjust: "exact" }}
               className="mx-auto w-[60%] rounded  bg-slate-50 p-2 text-xl"
             >
               {name}
             </p>
-            <p>يصرف إلى السيد /السادة</p>
+            <p>إستلمنا من السيد / السادة</p>
           </div>
 
           <div className="my-5 flex  items-center p-2">
