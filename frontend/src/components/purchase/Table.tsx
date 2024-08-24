@@ -2,7 +2,7 @@ import { TiDelete } from "react-icons/ti";
 import FormButton from "../shared/FormButton";
 import { TableRowProps } from "../shared/PaginationTable";
 import { purchaseTableHeaderTitles } from "./constants";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import { AiFillEdit } from "react-icons/ai";
 import {
   IPurchaseDocument,
@@ -63,7 +63,7 @@ export const tableRow = ({
       </th>
 
       {/* Payment Voucher */}
-      <th
+      {/* <th
         scope="row"
         className="border-x border-x-black p-1 text-center text-gray-900"
       >
@@ -74,7 +74,7 @@ export const tableRow = ({
         >
           سند الصرف
         </Link>
-      </th>
+      </th> */}
 
       {/*Update Purchase*/}
       <th

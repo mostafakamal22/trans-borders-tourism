@@ -87,11 +87,11 @@ const menus: MenuType<MenuItem> = [
     link: "/purchases/create",
     icon: <BsPlus size={20} />,
   },
-  {
-    name: "إضافة سند",
-    link: "/purchases/create/voucher",
-    icon: <BsPlus size={20} />,
-  },
+  // {
+  //   name: "إضافة سند",
+  //   link: "/purchases/create/voucher",
+  //   icon: <BsPlus size={20} />,
+  // },
   {
     name: "المصروفات",
     link: "/payments",

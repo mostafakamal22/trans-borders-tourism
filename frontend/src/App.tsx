@@ -19,7 +19,7 @@ import { ToastContainer } from "react-toastify";
 import { Purchases } from "./components/purchase/Purchases";
 import { CreatePurchase } from "./components/forms/CreatePurchase";
 import { PaymentVoucher } from "./components/purchase/PaymentVoucher";
-import { CreateVoucher } from "./components/forms/CreateVoucher";
+// import { CreateVoucher } from "./components/forms/CreateVoucher";
 import { Payments } from "./components/payment/Payments";
 import { CreatePayment } from "./components/forms/CreatePayment";
 import { Bills } from "./components/bill/Bills";
@@ -78,7 +78,7 @@ const App = () => {
                 <Route path="/purchases">
                   <Route index element={<Purchases />} />
                   <Route path="create" element={<CreatePurchase />} />
-                  <Route path="create/voucher" element={<CreateVoucher />} />
+                  {/* <Route path="create/voucher" element={<CreateVoucher />} /> */}
                   <Route path=":id" element={<PaymentVoucher />} />
                 </Route>
                 {/* Payments Routes */}
