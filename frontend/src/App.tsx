@@ -25,6 +25,9 @@ import { CreatePayment } from "./components/forms/CreatePayment";
 import { Bills } from "./components/bill/Bills";
 import { CreateBill } from "./components/forms/CreateBill";
 import { ShowBill } from "./components/bill/ShowBill";
+import { ReceiptVoucher } from "./components/receiptVoucher/ReceiptVoucher";
+import { CreateReceiptVoucher } from "./components/forms/CreateReceiptVoucher";
+import { ReceiptVouchers } from "./components/receiptVoucher/ReceiptVouchers";
 import "react-toastify/dist/ReactToastify.min.css";
 
 const App = () => {
@@ -82,6 +85,12 @@ const App = () => {
                 <Route path="/payments">
                   <Route index element={<Payments />} />
                   <Route path="create" element={<CreatePayment />} />
+                </Route>
+                {/* Receipt Vouchers Routes */}
+                <Route path="/receiptVouchers">
+                  <Route index element={<ReceiptVouchers />} />
+                  <Route path="create" element={<CreateReceiptVoucher />} />
+                  <Route path=":id" element={<ReceiptVoucher />} />
                 </Route>
               </Route>
               {/* </Route> */}

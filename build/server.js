@@ -57,6 +57,9 @@ app.use("/api/banks", bankRoutes_1.default);
 //Bill Router
 var billRoutes_1 = __importDefault(require("./routes/billRoutes"));
 app.use("/api/bills", billRoutes_1.default);
+//Receipt Voucher Router
+var receiptVoucherRoutes_1 = __importDefault(require("./routes/receiptVoucherRoutes"));
+app.use("/api/receiptVouchers", receiptVoucherRoutes_1.default);
 //serve Frontend
 if (process.env.NODE_ENV === "production") {
     app.use(express_1.default.static((0, path_1.join)(__dirname, "../frontend/dist")));

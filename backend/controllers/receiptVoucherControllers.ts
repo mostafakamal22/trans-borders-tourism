@@ -45,12 +45,15 @@ const getReceiptVouchers = async (req: Request, res: Response) => {
   //Define Query Option
   const options = {
     pagination: query ? true : false,
-    sort: { payment_date: "desc", createdAt: "desc" },
+    sort: {
+      createdAt: "desc",
+    },
     ...option,
   };
 
   //Get All ReceiptVouchers Data That Match Query & Send it Back.
   const receiptVouchers = await ReceiptVoucher.paginate(queries, options);
+
   res.status(200).json(receiptVouchers);
 };
 
@@ -77,13 +80,14 @@ const getOneReceiptVoucher = async (req: Request, res: Response) => {
 //@Access >>>> private(For Admins)
 const createReceiptVoucher = async (req: Request, res: Response) => {
   //Create New ReceiptVoucher With Request Data & Send Created ReceiptVoucher Back.
+
   const receiptVoucher = await ReceiptVoucher.create({
-    customer_name: req.body?.name,
+    customer_name: req.body?.customer_name,
     bank: req.body?.bank,
-    no: req.body?.no,
+    reference_number: req.body?.reference_number,
     being: req.body?.being,
     amount: req.body?.amount,
-    payment_date: req.body?.paymentDate,
+    payment_date: req.body?.payment_date,
   });
   res.status(201).json(receiptVoucher);
 };
@@ -103,12 +107,12 @@ const updateReceiptVoucher = async (req: Request, res: Response) => {
     throw error;
   } else {
     //Update ReceiptVoucher With New Values.
-    receiptVoucher.customer_name = req.body?.name;
+    receiptVoucher.customer_name = req.body?.customer_name;
     receiptVoucher.bank = req.body?.bank;
-    receiptVoucher.no = req.body?.no;
+    receiptVoucher.reference_number = req.body?.reference_number;
     receiptVoucher.being = req.body?.being;
     receiptVoucher.amount = req.body?.amount;
-    receiptVoucher.payment_date = req.body?.paymentDate;
+    receiptVoucher.payment_date = req.body?.payment_date;
 
     //Get Updated ReceiptVoucher info & Send it Back.
     const updatedReceiptVoucher = await receiptVoucher.save();

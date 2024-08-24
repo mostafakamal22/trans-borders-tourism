@@ -8,6 +8,7 @@ import {
   AiFillSchedule,
   AiFillShopping,
   AiFillAccountBook,
+  AiFillMoneyCollect,
 } from "react-icons/ai";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useSendLogoutMutation } from "../../state/features/admin/auth/authApiSlice";
@@ -103,7 +104,18 @@ const menus: MenuType<MenuItem> = [
     link: "/payments/create",
     icon: <BsPlus size={20} />,
   },
+  {
+    name: "سند القبض",
+    link: "/receiptVouchers",
+    icon: <AiFillMoneyCollect size={20} />,
+    margin: true,
+  },
 
+  {
+    name: "إضافة سند القبض",
+    link: "/receiptVouchers/create",
+    icon: <BsPlus size={20} />,
+  },
   // ["المعاملات البنكية", "/banks", <AiFillBank size={20} />],
   // ["إضافة معاملة", "/banks/create", <BsPlus size={20} />],
   // { name: "File Manager", link: "/", icon: FiFolder },
