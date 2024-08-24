@@ -113,7 +113,7 @@ export const ReceiptVouchers = () => {
   }, [pageNumber, isSuccess, isFetching, isLoading, scrollToTable]);
 
   useScroll("filterHeader");
-  useDocumentTitle("سنـــدات الصـــرف");
+  useDocumentTitle("سنـــدات القبــض");
   useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
 
   //Show Error Message if could not fetch data
@@ -130,7 +130,7 @@ export const ReceiptVouchers = () => {
         <span className="mr-2 flex items-center justify-center">
           {/* <ReceiptVoucherMain className="mr-1 h-20 w-20 drop-shadow" /> */}
         </span>
-        سنـــدات الصـــرف
+        سنـــدات القبــض
       </h2>
 
       {/*Show ReceiptVouchers' Filters*/}
