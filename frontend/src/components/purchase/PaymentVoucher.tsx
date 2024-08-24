@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
+import { AiFillPrinter } from "react-icons/ai";
+import { useGetOnePurchaseQuery } from "../../state/features/purchase/purchaseApiSlice";
+import { useScroll } from "../../hooks/useScroll";
+import { paymentVoucherCompanyInfos } from "./constants";
 import logo from "../../assets/imgs/trans-logo.png";
 import ReactToPrint from "react-to-print";
-import { AiFillPrinter } from "react-icons/ai";
 import dayjs from "dayjs";
-import { useGetPurchasesQuery } from "../../state/features/purchase/purchaseApiSlice";
-import { useScroll } from "../../hooks/useScroll";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
-import { paymentVoucherCompanyInfos } from "./constants";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
+import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 
 export const PaymentVoucher = () => {
   // Initial state
@@ -24,15 +25,14 @@ export const PaymentVoucher = () => {
     initialPurchaseDetails
   );
 
-  const purchaseID = useParams().id;
-  const { purchase } = useGetPurchasesQuery(
-    {},
-    {
-      selectFromResult: ({ data }) => ({
-        purchase: data?.docs.find((purchase) => purchase.id === purchaseID),
-      }),
-    }
-  );
+  const purchaseID = useParams()?.id || "";
+
+  //Data fetching
+  const {
+    data: purchase,
+    isLoading,
+    error,
+  } = useGetOnePurchaseQuery({ id: purchaseID });
 
   const componentRef = useRef<HTMLDivElement>(null);
 
@@ -55,8 +55,15 @@ export const PaymentVoucher = () => {
     }
   }, [purchase]);
 
+  //Show Error Message if could not fetch data
+  if (error) {
+    if ("originalStatus" in error && error.originalStatus === 404)
+      return <Navigate to={"/not-found"} />;
+    return <DataFetchingErrorMessage />;
+  }
+
   //Show spinner when Loading State is true
-  if (!purchase) return <DataFetchingSpinner />;
+  if (!purchase || isLoading) return <DataFetchingSpinner />;
 
   const { supplier, referenceNumber, total, paymentDate } = purchaseDetails;
 

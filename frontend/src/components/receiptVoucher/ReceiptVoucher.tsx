@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { AiFillPrinter } from "react-icons/ai";
-import { useGetReceiptVouchersQuery } from "../../state/features/receiptVoucher/receiptVouchersApiSlice";
+import { useGetOneReceiptVoucherQuery } from "../../state/features/receiptVoucher/receiptVouchersApiSlice";
 import { useScroll } from "../../hooks/useScroll";
 import { receiptVoucherCompanyInfos } from "./constants";
+import { formatID } from "./utils";
+import { comapanyInfos } from "../bill/constants";
 import logo from "../../assets/imgs/trans-logo.png";
 import ReactToPrint from "react-to-print";
 import dayjs from "dayjs";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
-import { formatID } from "./utils";
-import { comapanyInfos } from "../bill/constants";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
+import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 
 export const ReceiptVoucher = () => {
   // Initial state
@@ -28,17 +29,14 @@ export const ReceiptVoucher = () => {
     initialReceiptVoucherDetails
   );
 
-  const receiptVoucherID = useParams().id;
-  const { receiptVoucher } = useGetReceiptVouchersQuery(
-    {},
-    {
-      selectFromResult: ({ data }) => ({
-        receiptVoucher: data?.docs.find(
-          (receiptVoucher) => receiptVoucher.id === receiptVoucherID
-        ),
-      }),
-    }
-  );
+  const receiptVoucherID = useParams()?.id || "";
+
+  //Data fetching
+  const {
+    data: receiptVoucher,
+    isLoading,
+    error,
+  } = useGetOneReceiptVoucherQuery({ id: receiptVoucherID });
 
   const componentRef = useRef<HTMLDivElement>(null);
 
@@ -62,8 +60,15 @@ export const ReceiptVoucher = () => {
     }
   }, [receiptVoucher]);
 
+  //Show Error Message if could not fetch data
+  if (error) {
+    if ("originalStatus" in error && error.originalStatus === 404)
+      return <Navigate to={"/not-found"} />;
+    return <DataFetchingErrorMessage />;
+  }
+
   //Show spinner when Loading State is true
-  if (!receiptVoucher) return <DataFetchingSpinner />;
+  if (!receiptVoucher || isLoading) return <DataFetchingSpinner />;
 
   const { amount, paymentDate, name, referenceNumber, bank, being } =
     receiptVoucherDetails;
