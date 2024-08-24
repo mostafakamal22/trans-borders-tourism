@@ -1,5 +1,6 @@
 import Ticket from "../models/ticketModel";
 import cache from "../lib/node-cache";
+import Bill from "../models/billModel";
 import { ticketsChartsCalculations } from "../calculations/tickets";
 import { Request, Response } from "express";
 import { ErrnoException } from "./adminControllers";
@@ -67,9 +68,27 @@ const getTickets = async (req: Request, res: Response) => {
     ...option,
   };
 
-  //Get All Tickets Data That Match Query & Send it Back.
+  //Get All Tickets Data That Match Query.
   const tickets = await Ticket.paginate(queries, options);
-  res.status(200).json(tickets);
+
+  // Add bill_id to each ticket
+  const ticketsWithBillId = await Promise.all(
+    tickets.docs.map(async (ticket) => {
+      const bill = await Bill.findOne({
+        "details.ticket_ref": ticket.id,
+      });
+      return {
+        ...ticket,
+        bill_id: bill ? bill.ID : null,
+      };
+    })
+  );
+
+  // Send the response
+  res.status(200).json({
+    ...tickets,
+    docs: ticketsWithBillId,
+  });
 };
 
 //@Desc   >>>> GET ONE Ticket

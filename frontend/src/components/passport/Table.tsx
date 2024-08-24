@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { passportService, passportTableHeaderTitles } from "./constants";
 import { PassportService } from "./types";
-import { AiFillEdit, AiFillFileAdd } from "react-icons/ai";
+import { AiFillEdit } from "react-icons/ai";
 import FormButton from "../shared/FormButton";
 import { TiDelete } from "react-icons/ti";
 import { IPassportDocument } from "../../../../backend/models/passportModel";
@@ -62,6 +62,9 @@ export const tableHeader = (
         </th>
       ))}
     <th scope="col" className="border-x border-x-black p-1 text-center">
+      رقم الفاتورة
+    </th>
+    <th scope="col" className="border-x border-x-black p-1 text-center">
       م
     </th>
   </tr>
@@ -70,12 +73,12 @@ export const tableHeader = (
 export const tableRow = ({
   basicOptions,
   extraOptions,
-}: TableRowProps<IPassportDocument>) => {
+}: TableRowProps<IPassportDocument & { bill_id: number | null }>) => {
   const { item: passport, index, tableBodyData } = basicOptions;
   const {
     handleRemoving,
-    handleAddInvoice,
-    isCreatingInvoice,
+    // handleAddInvoice,
+    // isCreatingInvoice,
     isDeleting,
     setId,
     setIsOpen,
@@ -254,6 +257,14 @@ export const tableRow = ({
         className="border-x  border-x-black bg-red-200 p-1 text-center text-gray-900"
       >
         {passport?.customer_name}
+      </th>
+
+      {/*Bill ID*/}
+      <th
+        scope="row"
+        className="border-x  border-x-black bg-red-200 p-1 text-center text-gray-900"
+      >
+        {passport?.bill_id || "-"}
       </th>
 
       {/*passport NO*/}

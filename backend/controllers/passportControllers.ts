@@ -1,5 +1,6 @@
 import Passport from "../models/passportModel";
 import cache from "../lib/node-cache";
+import Bill from "../models/billModel";
 import { ErrnoException } from "./adminControllers";
 import { passportsChartsCalculations } from "../calculations/passports";
 import { Request, Response } from "express";
@@ -54,9 +55,27 @@ const getPassports = async (req: Request, res: Response) => {
     ...option,
   };
 
-  //Get All Passports Data That Match Query & Send it Back.
+  //Get All Passports Data That Match Query.
   const passports = await Passport.paginate(queries, options);
-  res.status(200).json(passports);
+
+  // Add bill_id to each passport
+  const passportsWithBillId = await Promise.all(
+    passports.docs.map(async (passport) => {
+      const bill = await Bill.findOne({
+        "details.passport_ref": passport.id,
+      });
+      return {
+        ...passport,
+        bill_id: bill ? bill.ID : null,
+      };
+    })
+  );
+
+  // Send the response
+  res.status(200).json({
+    ...passports,
+    docs: passportsWithBillId,
+  });
 };
 
 //@Desc   >>>> GET ONE Passport

@@ -23,27 +23,28 @@ export interface TicketSearchQuery {
 
 export const ticketsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getTickets: builder.query<ListResponse<ITicketDocument>, TicketSearchQuery>(
-      {
-        query: (searchQueries) => ({
-          method: "POST",
-          url: "/api/tickets/query",
-          body: { ...searchQueries },
-        }),
-        providesTags: (result, _error, _page) =>
-          result
-            ? [
-                // Provides a tag for each Doc in the current page,
-                // as well as the 'PARTIAL-LIST' tag.
-                ...result.docs.map(({ id }) => ({
-                  type: "Ticket" as const,
-                  id,
-                })),
-                { type: "Ticket", id: "PARTIAL-LIST" },
-              ]
-            : [{ type: "Ticket", id: "PARTIAL-LIST" }],
-      }
-    ),
+    getTickets: builder.query<
+      ListResponse<ITicketDocument & { bill_id: number | null }>,
+      TicketSearchQuery
+    >({
+      query: (searchQueries) => ({
+        method: "POST",
+        url: "/api/tickets/query",
+        body: { ...searchQueries },
+      }),
+      providesTags: (result, _error, _page) =>
+        result
+          ? [
+              // Provides a tag for each Doc in the current page,
+              // as well as the 'PARTIAL-LIST' tag.
+              ...result.docs.map(({ id }) => ({
+                type: "Ticket" as const,
+                id,
+              })),
+              { type: "Ticket", id: "PARTIAL-LIST" },
+            ]
+          : [{ type: "Ticket", id: "PARTIAL-LIST" }],
+    }),
     getOneTicket: builder.query<ITicketDocument, { id: string }>({
       query: ({ id }) => ({
         method: "GET",

@@ -1,7 +1,7 @@
 import { ITicketDocument } from "../../../../backend/models/ticketModel";
 import { TableRowProps } from "../shared/PaginationTable";
 import { creditStates, ticketsTableHeaderTitles } from "./constants";
-import { AiFillEdit, AiFillFileAdd } from "react-icons/ai";
+import { AiFillEdit } from "react-icons/ai";
 import FormButton from "../shared/FormButton";
 import { TiDelete } from "react-icons/ti";
 import dayjs from "dayjs";
@@ -46,7 +46,9 @@ export const tableHeader = (
           {title}
         </th>
       ))}
-
+    <th scope="col" className="border-x border-x-black p-1 text-center">
+      رقم الفاتورة
+    </th>
     <th scope="col" className="border-x border-x-black p-1 text-center">
       م
     </th>
@@ -56,12 +58,12 @@ export const tableHeader = (
 export const tableRow = ({
   basicOptions,
   extraOptions,
-}: TableRowProps<ITicketDocument>) => {
+}: TableRowProps<ITicketDocument & { bill_id: number | null }>) => {
   const { item: ticket, index, tableBodyData } = basicOptions;
   const {
     handleRemoving,
-    handleAddInvoice,
-    isCreatingInvoice,
+    // handleAddInvoice,
+    // isCreatingInvoice,
     isDeleting,
     setId,
     setIsOpen,
@@ -215,6 +217,14 @@ export const tableRow = ({
         className="border-x  border-x-black bg-red-200 p-1 text-center text-gray-900"
       >
         {ticket?.customer_name ? ticket.customer_name : "-"}
+      </th>
+
+      {/*Bill ID*/}
+      <th
+        scope="row"
+        className="border-x  border-x-black bg-red-200 p-1 text-center text-gray-900"
+      >
+        {ticket?.bill_id || "-"}
       </th>
 
       {/*ticket NO*/}

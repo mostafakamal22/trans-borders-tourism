@@ -36,7 +36,7 @@ export interface PassportSearchQuery {
 export const passportsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPassports: builder.query<
-      ListResponse<IPassportDocument>,
+      ListResponse<IPassportDocument & { bill_id: number | null }>,
       PassportSearchQuery
     >({
       query: (searchQueries) => ({
