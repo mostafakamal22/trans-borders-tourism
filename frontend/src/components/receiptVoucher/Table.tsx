@@ -70,7 +70,7 @@ export const tableRow = ({
           className="inline-flex items-center rounded border border-transparent bg-orange-800 px-2 py-2 text-xs font-bold text-white transition-all duration-300 ease-in-out
              hover:border-orange-800 hover:bg-white hover:text-orange-800"
         >
-          سند الصرف
+          سند القبض
         </Link>
       </th>
 
