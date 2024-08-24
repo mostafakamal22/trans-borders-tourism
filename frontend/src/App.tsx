@@ -18,7 +18,7 @@ import { MainLayout } from "./components/shared/MainLayout";
 import { ToastContainer } from "react-toastify";
 import { Purchases } from "./components/purchase/Purchases";
 import { CreatePurchase } from "./components/forms/CreatePurchase";
-import { PaymentVoucher } from "./components/purchase/PaymentVoucher";
+// import { PaymentVoucher } from "./components/purchase/PaymentVoucher";
 // import { CreateVoucher } from "./components/forms/CreateVoucher";
 import { Payments } from "./components/payment/Payments";
 import { CreatePayment } from "./components/forms/CreatePayment";
@@ -28,7 +28,10 @@ import { ShowBill } from "./components/bill/ShowBill";
 import { ReceiptVoucher } from "./components/receiptVoucher/ReceiptVoucher";
 import { CreateReceiptVoucher } from "./components/forms/CreateReceiptVoucher";
 import { ReceiptVouchers } from "./components/receiptVoucher/ReceiptVouchers";
+import { PaymentVouchers } from "./components/paymentVoucher/PaymentVouchers";
+import { CreatePaymentVoucher } from "./components/forms/CreatePaymentVoucher";
 import "react-toastify/dist/ReactToastify.min.css";
+import { PaymentVoucher } from "./components/paymentVoucher/PaymentVoucher";
 
 const App = () => {
   return (
@@ -79,7 +82,7 @@ const App = () => {
                   <Route index element={<Purchases />} />
                   <Route path="create" element={<CreatePurchase />} />
                   {/* <Route path="create/voucher" element={<CreateVoucher />} /> */}
-                  <Route path=":id" element={<PaymentVoucher />} />
+                  {/* <Route path=":id" element={<PaymentVoucher />} /> */}
                 </Route>
                 {/* Payments Routes */}
                 <Route path="/payments">
@@ -91,6 +94,12 @@ const App = () => {
                   <Route index element={<ReceiptVouchers />} />
                   <Route path="create" element={<CreateReceiptVoucher />} />
                   <Route path=":id" element={<ReceiptVoucher />} />
+                </Route>
+                {/* Payment Vouchers Routes */}
+                <Route path="/paymentVouchers">
+                  <Route index element={<PaymentVouchers />} />
+                  <Route path="create" element={<CreatePaymentVoucher />} />
+                  <Route path=":id" element={<PaymentVoucher />} />
                 </Route>
               </Route>
               {/* </Route> */}

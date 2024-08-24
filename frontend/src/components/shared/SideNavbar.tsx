@@ -9,6 +9,7 @@ import {
   AiFillShopping,
   AiFillAccountBook,
   AiFillMoneyCollect,
+  AiFillPayCircle,
 } from "react-icons/ai";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useSendLogoutMutation } from "../../state/features/admin/auth/authApiSlice";
@@ -104,6 +105,19 @@ const menus: MenuType<MenuItem> = [
     link: "/payments/create",
     icon: <BsPlus size={20} />,
   },
+  {
+    name: "سند الصرف",
+    link: "/paymentVouchers",
+    icon: <AiFillPayCircle size={20} />,
+    margin: true,
+  },
+
+  {
+    name: "إضافة سند الصرف",
+    link: "/paymentVouchers/create",
+    icon: <BsPlus size={20} />,
+  },
+
   {
     name: "سند القبض",
     link: "/receiptVouchers",

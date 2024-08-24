@@ -72,6 +72,7 @@ export const apiSlice = createApi({
     "Purchase",
     "Payment",
     "ReceiptVoucher",
+    "PaymentVoucher",
   ],
   endpoints: (_builder) => ({}),
 });

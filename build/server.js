@@ -6,15 +6,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("express-async-errors");
 var dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-var path_1 = require("path");
 var express_1 = __importDefault(require("express"));
 var cors_1 = __importDefault(require("cors"));
 var cookie_parser_1 = __importDefault(require("cookie-parser"));
-var corsConfig_1 = require("./config/corsConfig");
 var errorHandling_1 = __importDefault(require("./utils/errorHandling"));
 var adminErrorHandling_1 = __importDefault(require("./utils/adminErrorHandling"));
+var path_1 = require("path");
 var adminApiLimiter_1 = require("./middlewares/adminMiddlewares/adminApiLimiter");
 var dbConfig_1 = require("./config/dbConfig");
+var corsConfig_1 = require("./config/corsConfig");
 var app = (0, express_1.default)();
 //Enable Express to trust the headers set by the reverse proxy (e.g., Nginx, Apache).
 app.set("trust proxy", true);
@@ -60,6 +60,9 @@ app.use("/api/bills", billRoutes_1.default);
 //Receipt Voucher Router
 var receiptVoucherRoutes_1 = __importDefault(require("./routes/receiptVoucherRoutes"));
 app.use("/api/receiptVouchers", receiptVoucherRoutes_1.default);
+//Payment Voucher Router
+var paymentVoucherRoutes_1 = __importDefault(require("./routes/paymentVoucherRoutes"));
+app.use("/api/paymentVouchers", paymentVoucherRoutes_1.default);
 //serve Frontend
 if (process.env.NODE_ENV === "production") {
     app.use(express_1.default.static((0, path_1.join)(__dirname, "../frontend/dist")));

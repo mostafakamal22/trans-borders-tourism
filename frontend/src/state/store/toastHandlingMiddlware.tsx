@@ -29,6 +29,8 @@ const toastBlackList: string[] = [
   "getOnePayment",
   "getReceiptVouchers",
   "getOneReceiptVoucher",
+  "getPaymentVouchers",
+  "getOnePaymentVoucher",
 ];
 
 //Toast Messages
