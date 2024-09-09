@@ -94,6 +94,10 @@ var billSchema = new mongoose_1.Schema({
     },
     payment_method: {
         type: String,
+        enum: {
+            values: ["cash", "bank", "credit"],
+            message: "{VALUE} is not supported as bill Payment Method",
+        },
     },
     other: {
         type: String,

@@ -246,7 +246,7 @@ var updateBill = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                     (bill.taxable = (_j = req.body) === null || _j === void 0 ? void 0 : _j.taxable),
                     (bill.paid_amount = (_k = req.body) === null || _k === void 0 ? void 0 : _k.paidAmount),
                     (bill.remaining_amount = (_l = req.body) === null || _l === void 0 ? void 0 : _l.remainingAmount),
-                    (bill.payment_method = (_m = req.body) === null || _m === void 0 ? void 0 : _m.paymentMethod),
+                    (bill.payment_method = (_m = req.body) === null || _m === void 0 ? void 0 : _m.payment_method),
                     (bill.other = (_o = req.body) === null || _o === void 0 ? void 0 : _o.other);
                 return [4 /*yield*/, bill.save()];
             case 3:
