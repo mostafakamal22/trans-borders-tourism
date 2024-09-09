@@ -223,12 +223,12 @@ exports.createBill = createBill;
 //@Access >>>> Private(Admins Only)
 var updateBill = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var bill, error, updatedBill, details, index, passport, ticket;
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26;
-    return __generator(this, function (_27) {
-        switch (_27.label) {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25;
+    return __generator(this, function (_26) {
+        switch (_26.label) {
             case 0: return [4 /*yield*/, billModel_1.default.findById((_a = req.params) === null || _a === void 0 ? void 0 : _a.id)];
             case 1:
-                bill = _27.sent();
+                bill = _26.sent();
                 if (!!bill) return [3 /*break*/, 2];
                 error = new Error();
                 error.name = "CastError";
@@ -250,18 +250,18 @@ var updateBill = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                     (bill.other = (_o = req.body) === null || _o === void 0 ? void 0 : _o.other);
                 return [4 /*yield*/, bill.save()];
             case 3:
-                updatedBill = _27.sent();
+                updatedBill = _26.sent();
                 details = req.body.details;
                 if (!details)
                     throw new Error("Bill Details is required");
                 index = 0;
-                _27.label = 4;
+                _26.label = 4;
             case 4:
                 if (!(index < details.length)) return [3 /*break*/, 14];
                 if (!(((_p = details[index]) === null || _p === void 0 ? void 0 : _p.type) === "Passport")) return [3 /*break*/, 9];
                 return [4 /*yield*/, passportModel_1.default.findById((_q = details[index]) === null || _q === void 0 ? void 0 : _q.passport_ref)];
             case 5:
-                passport = _27.sent();
+                passport = _26.sent();
                 if (!!passport) return [3 /*break*/, 6];
                 // const error: ErrnoException = new Error();
                 // error.name = "CastError";
@@ -285,14 +285,14 @@ var updateBill = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 passport.profit = (_2 = details[index]) === null || _2 === void 0 ? void 0 : _2.data.profit;
                 return [4 /*yield*/, passport.save()];
             case 7:
-                _27.sent();
-                _27.label = 8;
+                _26.sent();
+                _26.label = 8;
             case 8: return [3 /*break*/, 13];
             case 9:
                 if (!(((_3 = details[index]) === null || _3 === void 0 ? void 0 : _3.type) === "Ticket")) return [3 /*break*/, 13];
                 return [4 /*yield*/, ticketModel_1.default.findById((_4 = details[index]) === null || _4 === void 0 ? void 0 : _4.ticket_ref)];
             case 10:
-                ticket = _27.sent();
+                ticket = _26.sent();
                 if (!!ticket) return [3 /*break*/, 11];
                 // const error: ErrnoException = new Error();
                 // error.name = "CastError";
@@ -312,17 +312,17 @@ var updateBill = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 ticket.payment_date = (_20 = (_19 = details[index]) === null || _19 === void 0 ? void 0 : _19.data) === null || _20 === void 0 ? void 0 : _20.paymentDate;
                 ticket.paid_amount = (_22 = (_21 = details[index]) === null || _21 === void 0 ? void 0 : _21.data) === null || _22 === void 0 ? void 0 : _22.paidAmount;
                 ticket.remaining_amount = (_24 = (_23 = details[index]) === null || _23 === void 0 ? void 0 : _23.data) === null || _24 === void 0 ? void 0 : _24.remainingAmount;
-                ticket.payment_method = (_26 = (_25 = details[index]) === null || _25 === void 0 ? void 0 : _25.data) === null || _26 === void 0 ? void 0 : _26.paymentMethod;
+                ticket.payment_method = (_25 = req.body) === null || _25 === void 0 ? void 0 : _25.payment_method;
                 return [4 /*yield*/, ticket.save()];
             case 12:
-                _27.sent();
-                _27.label = 13;
+                _26.sent();
+                _26.label = 13;
             case 13:
                 index++;
                 return [3 /*break*/, 4];
             case 14:
                 res.status(200).json(updatedBill);
-                _27.label = 15;
+                _26.label = 15;
             case 15: return [2 /*return*/];
         }
     });

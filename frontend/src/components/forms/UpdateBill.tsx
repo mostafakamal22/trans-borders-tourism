@@ -87,7 +87,7 @@ export const UpdateBill = ({
     employee: "",
     supplier: "",
     paymentDate: "",
-    // paymentMethod: "cash",
+    paymentMethod: "cash",
     cost: 0,
     sales: 0,
     profit: 0,
@@ -255,9 +255,9 @@ export const UpdateBill = ({
           employee: ticketDetail ? ticketDetail?.data?.employee : "",
           supplier: ticketDetail ? ticketDetail?.data?.supplier : "",
           paymentDate: ticketDetail ? ticketDetail?.data?.paymentDate : "",
-          // paymentMethod: ticketDetail
-          //   ? ticketDetail?.data?.paymentMethod
-          //   : "cash",
+          paymentMethod: ticketDetail
+            ? ticketDetail?.data?.paymentMethod
+            : "cash",
           cost: ticketDetail ? ticketDetail?.data?.cost : 0,
           sales: ticketDetail ? ticketDetail?.data?.sales : 0,
           profit: ticketDetail ? ticketDetail?.data?.profit : 0,
@@ -897,12 +897,16 @@ export const UpdateBill = ({
               id="paymentMethod"
               className={inputClassNamesStyles.default}
               value={billDetails.paymentMethod}
-              onChange={(e) =>
+              onChange={(e) => {
                 setBillDetails({
                   ...billDetails,
                   paymentMethod: e.target.value,
-                })
-              }
+                });
+                setTicketsDetails({
+                  ...ticketsDetails,
+                  paymentMethod: e.target.value,
+                });
+              }}
             >
               {paymentMethodsOptions}
             </select>

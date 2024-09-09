@@ -84,7 +84,7 @@ export const CreateBill = () => {
     employee: "",
     supplier: "",
     paymentDate: "",
-    // paymentMethod: "cash",
+    paymentMethod: "cash",
     cost: 0,
     sales: 0,
     profit: 0,
@@ -213,7 +213,7 @@ export const CreateBill = () => {
         employee: "",
         supplier: "",
         paymentDate: "",
-        // paymentMethod: "cash",
+        paymentMethod: "cash",
         cost: 0,
         sales: 0,
         profit: 0,
@@ -918,12 +918,16 @@ export const CreateBill = () => {
             id="paymentMethod"
             className={inputClassNamesStyles.default}
             value={billDetails.paymentMethod}
-            onChange={(e) =>
+            onChange={(e) => {
               setBillDetails({
                 ...billDetails,
                 paymentMethod: e.target.value,
-              })
-            }
+              });
+              setTicketsDetails({
+                ...ticketsDetails,
+                paymentMethod: e.target.value,
+              });
+            }}
           >
             {paymentMethodsOptions}
           </select>

@@ -33,6 +33,7 @@ const getBills = async (req: Request, res: Response) => {
 
   //Get All Bills Data That Match Query & Send it Back.
   const bills = await Bill.paginate(queries, options);
+
   res.status(200).json(bills);
 };
 
@@ -224,7 +225,7 @@ const updateBill = async (req: Request, res: Response) => {
           ticket.payment_date = details[index]?.data?.paymentDate;
           ticket.paid_amount = details[index]?.data?.paidAmount;
           ticket.remaining_amount = details[index]?.data?.remainingAmount;
-          ticket.payment_method = details[index]?.data?.paymentMethod;
+          ticket.payment_method = req.body?.payment_method;
 
           await ticket.save();
         }
