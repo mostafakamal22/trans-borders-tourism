@@ -160,7 +160,7 @@ const updateBill = async (req: Request, res: Response) => {
       (bill.taxable = req.body?.taxable),
       (bill.paid_amount = req.body?.paidAmount),
       (bill.remaining_amount = req.body?.remainingAmount),
-      (bill.payment_method = req.body?.paymentMethod),
+      (bill.payment_method = req.body?.payment_method),
       (bill.other = req.body?.other);
 
     //Get Updated Bill info & Send it Back.

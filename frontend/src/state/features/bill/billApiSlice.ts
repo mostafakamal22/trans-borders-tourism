@@ -27,7 +27,7 @@ export interface BillData {
   //   taxable: number;
   //   paidAmount?: number;
   //   remainingAmount?: number;
-  //   paymentMethod?: string;
+  paymentMethod?: IBillDocument["payment_method"];
   other?: string;
 }
 
@@ -57,6 +57,8 @@ export const billsApiSlice = apiSlice.injectEndpoints({
         method: "GET",
         url: `/api/bills/${id}`,
       }),
+      providesTags: (result, _error, arg) =>
+        result ? [{ type: "Bill", id: arg.id }] : ["Bill"],
     }),
     createBill: builder.mutation<IBillDocument, BillData>({
       query: (billData) => ({

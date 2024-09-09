@@ -33,7 +33,7 @@ export interface IBill {
   tax_due?: number;
   paid_amount?: number;
   remaining_amount?: number;
-  payment_method?: string;
+  payment_method?: "cash" | "bank" | "credit";
   other?: string;
 }
 
@@ -128,6 +128,10 @@ const billSchema = new Schema<IBill>(
     },
     payment_method: {
       type: String,
+      enum: {
+        values: ["cash", "bank", "credit"],
+        message: "{VALUE} is not supported as bill Payment Method",
+      },
     },
     other: {
       type: String,

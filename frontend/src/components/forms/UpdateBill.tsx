@@ -60,6 +60,7 @@ export const UpdateBill = ({
     taxRate: 0,
     taxDue: 0,
     taxable: 0,
+    paymentMethod: "cash",
     other: "",
   };
 
@@ -86,7 +87,7 @@ export const UpdateBill = ({
     employee: "",
     supplier: "",
     paymentDate: "",
-    paymentMethod: "cash",
+    // paymentMethod: "cash",
     cost: 0,
     sales: 0,
     profit: 0,
@@ -184,6 +185,8 @@ export const UpdateBill = ({
       details: [...details],
       total: billDetails.total,
       date: billDetails.date,
+      payment_method:
+        billDetails.paymentMethod as IBillDocument["payment_method"],
       other: billDetails.other,
     };
 
@@ -210,6 +213,7 @@ export const UpdateBill = ({
         taxRate: bill?.tax_rate || 0,
         taxDue: bill?.tax_due || 0,
         taxable: bill?.taxable || 0,
+        paymentMethod: bill?.payment_method || "cash",
         other: bill?.other,
       });
 
@@ -251,9 +255,9 @@ export const UpdateBill = ({
           employee: ticketDetail ? ticketDetail?.data?.employee : "",
           supplier: ticketDetail ? ticketDetail?.data?.supplier : "",
           paymentDate: ticketDetail ? ticketDetail?.data?.paymentDate : "",
-          paymentMethod: ticketDetail
-            ? ticketDetail?.data?.paymentMethod
-            : "cash",
+          // paymentMethod: ticketDetail
+          //   ? ticketDetail?.data?.paymentMethod
+          //   : "cash",
           cost: ticketDetail ? ticketDetail?.data?.cost : 0,
           sales: ticketDetail ? ticketDetail?.data?.sales : 0,
           profit: ticketDetail ? ticketDetail?.data?.profit : 0,
@@ -279,6 +283,14 @@ export const UpdateBill = ({
 
   //Show spinner when Loading State is true
   if (!foundBill || isLoading) return <DataFetchingSpinner />;
+
+  const paymentMethodsOptions = Object.keys(paymentMethods)
+    .filter((pm) => pm !== "later")
+    .map((method: string) => (
+      <option key={method} value={method}>
+        {paymentMethods[method as keyof PaymentMethods]}
+      </option>
+    ));
 
   return (
     <div className="fixed inset-0 z-50  h-screen w-full overflow-y-auto overflow-x-hidden bg-black/75 scrollbar-thin scrollbar-track-transparent  scrollbar-thumb-gray-400 scrollbar-track-rounded-full md:inset-0">
@@ -782,7 +794,7 @@ export const UpdateBill = ({
                     step={0.01}
                   />
 
-                  <select
+                  {/* <select
                     name="paymentMethod"
                     id="paymentMethod"
                     className={inputClassNamesStyles.default}
@@ -806,7 +818,7 @@ export const UpdateBill = ({
                     className={lableClassNamesStyles.default}
                   >
                     {"Payment Method"}
-                  </label>
+                  </label> */}
 
                   <FormInput
                     label={ticketsTableHeaderTitles[6]}
@@ -879,6 +891,28 @@ export const UpdateBill = ({
               min={0}
               required
             />
+
+            <select
+              name="paymentMethod"
+              id="paymentMethod"
+              className={inputClassNamesStyles.default}
+              value={billDetails.paymentMethod}
+              onChange={(e) =>
+                setBillDetails({
+                  ...billDetails,
+                  paymentMethod: e.target.value,
+                })
+              }
+            >
+              {paymentMethodsOptions}
+            </select>
+
+            <label
+              htmlFor="paymentMethod"
+              className={lableClassNamesStyles.default}
+            >
+              {"Payment Method"}
+            </label>
 
             <textarea
               className={inputClassNamesStyles.default}

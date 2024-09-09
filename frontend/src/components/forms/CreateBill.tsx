@@ -16,6 +16,7 @@ import { useScroll } from "../../hooks/useScroll";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 import {
   IBillCustomer,
+  IBillDocument,
   IBillProduct,
 } from "../../../../backend/models/billModel";
 import {
@@ -46,6 +47,7 @@ export const CreateBill = () => {
     taxRate: 0,
     taxDue: 0,
     taxable: 0,
+    paymentMethod: "cash",
     other: "",
   });
 
@@ -82,7 +84,7 @@ export const CreateBill = () => {
     employee: "",
     supplier: "",
     paymentDate: "",
-    paymentMethod: "cash",
+    // paymentMethod: "cash",
     cost: 0,
     sales: 0,
     profit: 0,
@@ -156,6 +158,8 @@ export const CreateBill = () => {
       details: [...details],
       total: billDetails.total,
       date: billDetails.date,
+      paymentMethod:
+        billDetails.paymentMethod as IBillDocument["payment_method"],
       other: billDetails.other,
     };
 
@@ -175,6 +179,7 @@ export const CreateBill = () => {
         taxRate: 0,
         taxDue: 0,
         taxable: 0,
+        paymentMethod: "cash",
         other: "",
       });
 
@@ -208,7 +213,7 @@ export const CreateBill = () => {
         employee: "",
         supplier: "",
         paymentDate: "",
-        paymentMethod: "cash",
+        // paymentMethod: "cash",
         cost: 0,
         sales: 0,
         profit: 0,
@@ -217,6 +222,14 @@ export const CreateBill = () => {
       });
     }
   }, [isSuccess]);
+
+  const paymentMethodsOptions = Object.keys(paymentMethods)
+    .filter((pm) => pm !== "later")
+    .map((method: string) => (
+      <option key={method} value={method}>
+        {paymentMethods[method as keyof PaymentMethods]}
+      </option>
+    ));
 
   useScroll("createBill");
   useDocumentTitle("إضافة فاتورة جديدة");
@@ -708,7 +721,7 @@ export const CreateBill = () => {
                   step={0.01}
                 />
 
-                <select
+                {/* <select
                   name="paymentMethod"
                   id="paymentMethod"
                   className={inputClassNamesStyles.default}
@@ -720,11 +733,13 @@ export const CreateBill = () => {
                     })
                   }
                 >
-                  {Object.keys(paymentMethods).map((method: string) => (
-                    <option key={method} value={method}>
-                      {paymentMethods[method as keyof PaymentMethods]}
-                    </option>
-                  ))}
+                  {Object.keys(paymentMethods)
+                    .filter((pm) => pm !== "later")
+                    .map((method: string) => (
+                      <option key={method} value={method}>
+                        {paymentMethods[method as keyof PaymentMethods]}
+                      </option>
+                    ))}
                 </select>
 
                 <label
@@ -732,7 +747,7 @@ export const CreateBill = () => {
                   className={lableClassNamesStyles.default}
                 >
                   {"Payment Method"}
-                </label>
+                </label> */}
 
                 <FormInput
                   label={ticketsTableHeaderTitles[6]}
@@ -897,6 +912,28 @@ export const CreateBill = () => {
             min={0}
             required
           />
+
+          <select
+            name="paymentMethod"
+            id="paymentMethod"
+            className={inputClassNamesStyles.default}
+            value={billDetails.paymentMethod}
+            onChange={(e) =>
+              setBillDetails({
+                ...billDetails,
+                paymentMethod: e.target.value,
+              })
+            }
+          >
+            {paymentMethodsOptions}
+          </select>
+
+          <label
+            htmlFor="paymentMethod"
+            className={lableClassNamesStyles.default}
+          >
+            {"Payment Method"}
+          </label>
 
           <textarea
             className={inputClassNamesStyles.default}

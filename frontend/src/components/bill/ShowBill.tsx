@@ -226,7 +226,10 @@ export const ShowBill = () => {
               style={{ printColorAdjust: "exact" }}
               className="ml-4 rounded bg-red-100 py-2 px-4"
             >
-              {bill?.payment_method ? bill.payment_method : "-"}
+              {bill?.payment_method
+                ? bill.payment_method.charAt(0).toUpperCase() +
+                  bill.payment_method.slice(1)
+                : "-"}
             </span>
           </p>
         </div>
