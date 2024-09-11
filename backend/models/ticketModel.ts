@@ -19,6 +19,7 @@ export interface ITicket {
   type?: string;
   payment_method?: string;
   payment_date?: Date;
+  bill_id?: number;
 }
 
 const ticketSchema = new Schema<ITicket>(
@@ -66,6 +67,9 @@ const ticketSchema = new Schema<ITicket>(
     },
     payment_date: {
       type: Date,
+    },
+    bill_id: {
+      type: Number,
     },
   },
   {
