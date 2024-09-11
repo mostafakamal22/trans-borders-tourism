@@ -14,7 +14,7 @@ import {
 import { paymentMethods } from "../payment/constants";
 import { PaymentMethods } from "../payment/types";
 
-export const CreateTicket = () => {
+export default function CreateTicket() {
   //state for Ticket Details
   const [ticketsDetails, setTicketsDetails] = useState({
     name: "",
@@ -273,4 +273,4 @@ export const CreateTicket = () => {
       </form>
     </section>
   );
-};
+}

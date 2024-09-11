@@ -19,7 +19,7 @@ import {
 import { useScroll } from "../../hooks/useScroll";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 
-export const ShowInvoice = () => {
+export default function ShowInvoice() {
   const location = useLocation();
   const invoice: IInvoiceDocument = location?.state?.invoice;
 
@@ -241,4 +241,4 @@ export const ShowInvoice = () => {
       </div>
     </>
   );
-};
+}

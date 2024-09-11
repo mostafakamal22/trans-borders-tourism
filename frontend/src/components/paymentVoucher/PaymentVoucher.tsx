@@ -13,7 +13,7 @@ import useDocumentTitle from "../../hooks/useDocumentTitle";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 
-export const PaymentVoucher = () => {
+export default function PaymentVoucher() {
   // Initial state
   const initialPaymentVoucherDetails = {
     name: "",
@@ -244,4 +244,4 @@ export const PaymentVoucher = () => {
       </div>
     </>
   );
-};
+}

@@ -16,7 +16,7 @@ import { useScroll } from "../../hooks/useScroll";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { ICustomer, IProduct } from "../../../../backend/models/invoiceModel";
 
-export const CreateInvoice = () => {
+export default function CreateInvoice() {
   //state for Customer Details
   const [customerDetails, setCustomerDetails] = useState<ICustomer>({
     name: "",
@@ -417,4 +417,4 @@ export const CreateInvoice = () => {
       </form>
     </section>
   );
-};
+}

@@ -11,7 +11,7 @@ import { useCreateReceiptVoucherMutation } from "../../state/features/receiptVou
 import { useScroll } from "../../hooks/useScroll";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 
-export const CreateReceiptVoucher = () => {
+export default function CreateReceiptVoucher() {
   //state for receiptVoucher Details
   const [receiptVoucherDetails, setReceiptVoucherDetails] = useState({
     name: "",
@@ -174,4 +174,4 @@ export const CreateReceiptVoucher = () => {
       </form>
     </section>
   );
-};
+}

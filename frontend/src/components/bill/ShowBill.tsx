@@ -20,7 +20,7 @@ import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { comapanyInfos } from "./constants";
 import { Fragment } from "react";
 
-export const ShowBill = () => {
+export default function ShowBill() {
   const location = useLocation();
   const bill: IBillDocument = location?.state?.bill;
 
@@ -263,4 +263,4 @@ export const ShowBill = () => {
       </div>
     </>
   );
-};
+}

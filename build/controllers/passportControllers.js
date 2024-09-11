@@ -53,13 +53,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPassportsStatistics = exports.deletePassport = exports.updatePassport = exports.createPassport = exports.getOnePassport = exports.getPassports = void 0;
 var passportModel_1 = __importDefault(require("../models/passportModel"));
 var node_cache_1 = __importDefault(require("../lib/node-cache"));
-var billModel_1 = __importDefault(require("../models/billModel"));
 var passports_1 = require("../calculations/passports");
 //@Desc   >>>> Get All Passports That Match Query Object.
 //@Route  >>>> POST /api/passports/query
 //@Access >>>> Private(Admins Only)
 var getPassports = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, query, option, queries, options, passports, passportsWithBillId;
+    var _a, query, option, queries, options, passports;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -99,23 +98,8 @@ var getPassports = function (req, res) { return __awaiter(void 0, void 0, void 0
                 return [4 /*yield*/, passportModel_1.default.paginate(queries, options)];
             case 1:
                 passports = _b.sent();
-                return [4 /*yield*/, Promise.all(passports.docs.map(function (passport) { return __awaiter(void 0, void 0, void 0, function () {
-                        var bill;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, billModel_1.default.findOne({
-                                        "details.passport_ref": passport.id,
-                                    })];
-                                case 1:
-                                    bill = _a.sent();
-                                    return [2 /*return*/, __assign(__assign({}, passport), { bill_id: bill ? bill.ID : null })];
-                            }
-                        });
-                    }); }))];
-            case 2:
-                passportsWithBillId = _b.sent();
                 // Send the response
-                res.status(200).json(__assign(__assign({}, passports), { docs: passportsWithBillId }));
+                res.status(200).json(__assign({}, passports));
                 return [2 /*return*/];
         }
     });

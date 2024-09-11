@@ -11,7 +11,7 @@ import { useCreatePaymentVoucherMutation } from "../../state/features/paymentVou
 import { useScroll } from "../../hooks/useScroll";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 
-export const CreatePaymentVoucher = () => {
+export default function CreatePaymentVoucher() {
   //state for paymentVoucher Details
   const [paymentVoucherDetails, setPaymentVoucherDetails] = useState({
     name: "",
@@ -174,4 +174,4 @@ export const CreatePaymentVoucher = () => {
       </form>
     </section>
   );
-};
+}

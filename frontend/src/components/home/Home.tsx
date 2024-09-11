@@ -13,7 +13,7 @@ const mainHeadings: string[] = [
   "التذاكـر",
 ];
 
-export const Home = () => {
+export default function Home() {
   useDocumentTitle("الصفحة الرئيسية");
   useScroll("main");
 
@@ -36,4 +36,4 @@ export const Home = () => {
       <TicketsSection heading={mainHeadings[3]} />
     </main>
   );
-};
+}

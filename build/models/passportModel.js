@@ -53,6 +53,9 @@ var passportSchema = new mongoose_1.Schema({
     payment_date: {
         type: Date,
     },
+    bill_id: {
+        type: Number,
+    },
 }, {
     timestamps: true,
 });

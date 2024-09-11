@@ -26,7 +26,7 @@ import { RiFileExcel2Fill } from "react-icons/ri";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 
-export const Invoices = () => {
+export default function Invoices() {
   //Search Query State
   const [searchQuery, setSearchQuery] = useState<InvoiceSearchQueries>("");
   const deferredQuery = useDeferredValue(searchQuery);
@@ -162,4 +162,4 @@ export const Invoices = () => {
       )}
     </main>
   );
-};
+}

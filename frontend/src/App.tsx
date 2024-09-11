@@ -1,37 +1,87 @@
+// import { Routes, Route, Navigate } from "react-router-dom";
+// import AdminLogin from "./components/forms/AdminLogin";
+// import NotFoundPage from "./components/shared/NotFoundPage";
+// import AdminProfile from "./components/profile/AdminProfile";
+// import { Home } from "./components/home/Home";
+// import { Invoices } from "./components/invoice/Invoices";
+// import { ShowInvoice } from "./components/invoice/ShowInvoice";
+// import UpdateAdmin from "./components/forms/UpdateAdmin";
+// import { Passports } from "./components/passport/Passports";
+// import { CreatePassport } from "./components/forms/CreatePassport";
+// import { CreateTicket } from "./components/forms/CreateTicket";
+// import { Tickets } from "./components/ticket/Tickets";
+// import { RequireAuth } from "./components/shared/RequireAuth";
+// import PersistLogin from "./components/shared/PersistLogin";
+// // import Prefetch from "./components/shared/Prefetch";
+// import { PublicLayout } from "./components/shared/PublicLayout";
+// import { MainLayout } from "./components/shared/MainLayout";
+// import { ToastContainer } from "react-toastify";
+// import { Purchases } from "./components/purchase/Purchases";
+// import { CreatePurchase } from "./components/forms/CreatePurchase";
+// // import { PaymentVoucher } from "./components/purchase/PaymentVoucher";
+// // import { CreateVoucher } from "./components/forms/CreateVoucher";
+// import { Payments } from "./components/payment/Payments";
+// import { CreatePayment } from "./components/forms/CreatePayment";
+// import { Bills } from "./components/bill/Bills";
+// import { CreateBill } from "./components/forms/CreateBill";
+// import { ShowBill } from "./components/bill/ShowBill";
+// import { ReceiptVoucher } from "./components/receiptVoucher/ReceiptVoucher";
+// import { CreateReceiptVoucher } from "./components/forms/CreateReceiptVoucher";
+// import { ReceiptVouchers } from "./components/receiptVoucher/ReceiptVouchers";
+// import { PaymentVouchers } from "./components/paymentVoucher/PaymentVouchers";
+// import { CreatePaymentVoucher } from "./components/forms/CreatePaymentVoucher";
+// import "react-toastify/dist/ReactToastify.min.css";
+// import { PaymentVoucher } from "./components/paymentVoucher/PaymentVoucher";
+// import { Suspense } from "react";
+
 import { Routes, Route, Navigate } from "react-router-dom";
+import { lazy } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+
+// Normal Components
 import AdminLogin from "./components/forms/AdminLogin";
-import NotFoundPage from "./components/shared/NotFoundPage";
-import AdminProfile from "./components/profile/AdminProfile";
-import { Home } from "./components/home/Home";
-import { Invoices } from "./components/invoice/Invoices";
-import { ShowInvoice } from "./components/invoice/ShowInvoice";
-import UpdateAdmin from "./components/forms/UpdateAdmin";
-import { Passports } from "./components/passport/Passports";
-import { CreatePassport } from "./components/forms/CreatePassport";
-import { CreateTicket } from "./components/forms/CreateTicket";
-import { Tickets } from "./components/ticket/Tickets";
-import { RequireAuth } from "./components/shared/RequireAuth";
 import PersistLogin from "./components/shared/PersistLogin";
-// import Prefetch from "./components/shared/Prefetch";
+import NotFoundPage from "./components/shared/NotFoundPage";
+import { RequireAuth } from "./components/shared/RequireAuth";
 import { PublicLayout } from "./components/shared/PublicLayout";
 import { MainLayout } from "./components/shared/MainLayout";
-import { ToastContainer } from "react-toastify";
-import { Purchases } from "./components/purchase/Purchases";
-import { CreatePurchase } from "./components/forms/CreatePurchase";
-// import { PaymentVoucher } from "./components/purchase/PaymentVoucher";
-// import { CreateVoucher } from "./components/forms/CreateVoucher";
-import { Payments } from "./components/payment/Payments";
-import { CreatePayment } from "./components/forms/CreatePayment";
-import { Bills } from "./components/bill/Bills";
-import { CreateBill } from "./components/forms/CreateBill";
-import { ShowBill } from "./components/bill/ShowBill";
-import { ReceiptVoucher } from "./components/receiptVoucher/ReceiptVoucher";
-import { CreateReceiptVoucher } from "./components/forms/CreateReceiptVoucher";
-import { ReceiptVouchers } from "./components/receiptVoucher/ReceiptVouchers";
-import { PaymentVouchers } from "./components/paymentVoucher/PaymentVouchers";
-import { CreatePaymentVoucher } from "./components/forms/CreatePaymentVoucher";
-import "react-toastify/dist/ReactToastify.min.css";
-import { PaymentVoucher } from "./components/paymentVoucher/PaymentVoucher";
+
+// Lazy loaded components
+const Home = lazy(() => import("./components/home/Home"));
+const AdminProfile = lazy(() => import("./components/profile/AdminProfile"));
+const Invoices = lazy(() => import("./components/invoice/Invoices"));
+const ShowInvoice = lazy(() => import("./components/invoice/ShowInvoice"));
+const UpdateAdmin = lazy(() => import("./components/forms/UpdateAdmin"));
+const Passports = lazy(() => import("./components/passport/Passports"));
+const CreatePassport = lazy(() => import("./components/forms/CreatePassport"));
+const CreateTicket = lazy(() => import("./components/forms/CreateTicket"));
+const Tickets = lazy(() => import("./components/ticket/Tickets"));
+const Purchases = lazy(() => import("./components/purchase/Purchases"));
+const CreatePurchase = lazy(() => import("./components/forms/CreatePurchase"));
+const Payments = lazy(() => import("./components/payment/Payments"));
+const CreatePayment = lazy(() => import("./components/forms/CreatePayment"));
+const Bills = lazy(() => import("./components/bill/Bills"));
+const CreateBill = lazy(() => import("./components/forms/CreateBill"));
+const ShowBill = lazy(() => import("./components/bill/ShowBill"));
+const ReceiptVoucher = lazy(
+  () => import("./components/receiptVoucher/ReceiptVoucher")
+);
+const CreateReceiptVoucher = lazy(
+  () => import("./components/forms/CreateReceiptVoucher")
+);
+const ReceiptVouchers = lazy(
+  () => import("./components/receiptVoucher/ReceiptVouchers")
+);
+const PaymentVouchers = lazy(
+  () => import("./components/paymentVoucher/PaymentVouchers")
+);
+const CreatePaymentVoucher = lazy(
+  () => import("./components/forms/CreatePaymentVoucher")
+);
+const PaymentVoucher = lazy(
+  () => import("./components/paymentVoucher/PaymentVoucher")
+);
 
 const App = () => {
   return (

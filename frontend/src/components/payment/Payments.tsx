@@ -24,7 +24,7 @@ import { RiFileExcel2Fill } from "react-icons/ri";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 
-export const Payments = () => {
+export default function Payments() {
   //Search Params
   const [searchQuery, setSearchQuery] = useState<PaymentSearchQueries>({
     day: "",
@@ -195,4 +195,4 @@ export const Payments = () => {
       </AnimatePresence>
     </main>
   );
-};
+}

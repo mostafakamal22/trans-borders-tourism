@@ -28,7 +28,7 @@ import { RiFileExcel2Fill } from "react-icons/ri";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 
-export const Bills = () => {
+export default function Bills() {
   //Search Query State
   const [searchQuery, setSearchQuery] = useState<BillSearchQueries>({
     name: "",
@@ -185,4 +185,4 @@ export const Bills = () => {
       </AnimatePresence>
     </main>
   );
-};
+}

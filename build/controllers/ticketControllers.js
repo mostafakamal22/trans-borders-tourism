@@ -53,13 +53,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTicketsStatistics = exports.updateTicket = exports.createTicket = exports.deleteTicket = exports.getOneTicket = exports.getTickets = void 0;
 var ticketModel_1 = __importDefault(require("../models/ticketModel"));
 var node_cache_1 = __importDefault(require("../lib/node-cache"));
-var billModel_1 = __importDefault(require("../models/billModel"));
 var tickets_1 = require("../calculations/tickets");
 //@Desc   >>>> Get All Tickets That Match Query Object.
 //@Route  >>>> POST /api/tickets/query
 //@Access >>>> Private(Admins Only)
 var getTickets = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, query, option, customerName, employee, supplier, type, paymentMethod, queries, options, tickets, ticketsWithBillId;
+    var _a, query, option, customerName, employee, supplier, type, paymentMethod, queries, options, tickets;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -108,23 +107,8 @@ var getTickets = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 return [4 /*yield*/, ticketModel_1.default.paginate(queries, options)];
             case 1:
                 tickets = _b.sent();
-                return [4 /*yield*/, Promise.all(tickets.docs.map(function (ticket) { return __awaiter(void 0, void 0, void 0, function () {
-                        var bill;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0: return [4 /*yield*/, billModel_1.default.findOne({
-                                        "details.ticket_ref": ticket.id,
-                                    })];
-                                case 1:
-                                    bill = _a.sent();
-                                    return [2 /*return*/, __assign(__assign({}, ticket), { bill_id: bill ? bill.ID : null })];
-                            }
-                        });
-                    }); }))];
-            case 2:
-                ticketsWithBillId = _b.sent();
                 // Send the response
-                res.status(200).json(__assign(__assign({}, tickets), { docs: ticketsWithBillId }));
+                res.status(200).json(__assign({}, tickets));
                 return [2 /*return*/];
         }
     });

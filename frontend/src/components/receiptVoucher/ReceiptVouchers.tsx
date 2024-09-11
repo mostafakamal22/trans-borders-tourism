@@ -30,7 +30,7 @@ import { RiFileExcel2Fill } from "react-icons/ri";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 
-export const ReceiptVouchers = () => {
+export default function ReceiptVouchers() {
   //Search Params
   const [searchQuery, setSearchQuery] = useState<ReceiptVoucherSearchQueries>({
     day: "",
@@ -203,4 +203,4 @@ export const ReceiptVouchers = () => {
       </AnimatePresence>
     </main>
   );
-};
+}

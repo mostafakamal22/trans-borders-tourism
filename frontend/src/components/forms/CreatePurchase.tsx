@@ -13,7 +13,7 @@ import { useScroll } from "../../hooks/useScroll";
 import { ReactComponent as PurchaseAlt } from "../../assets/icons/purchase-alt.svg";
 import { IPurchaseType } from "../../../../backend/models/purchaseModel";
 
-export const CreatePurchase = () => {
+export default function CreatePurchase() {
   //state for Purchase Details
   const [purchaseDetails, setPurchaseDetails] = useState({
     date: "",
@@ -305,4 +305,4 @@ export const CreatePurchase = () => {
       </form>
     </section>
   );
-};
+}

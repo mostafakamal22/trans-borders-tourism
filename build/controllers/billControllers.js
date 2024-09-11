@@ -156,6 +156,7 @@ var createBill = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                                         sales: (_8 = (_7 = details[index]) === null || _7 === void 0 ? void 0 : _7.data) === null || _8 === void 0 ? void 0 : _8.sales,
                                         profit: (_10 = (_9 = details[index]) === null || _9 === void 0 ? void 0 : _9.data) === null || _10 === void 0 ? void 0 : _10.profit,
                                         payment_date: (_12 = (_11 = details[index]) === null || _11 === void 0 ? void 0 : _11.data) === null || _12 === void 0 ? void 0 : _12.paymentDate,
+                                        bill_id: bill.ID,
                                     })];
                             case 1:
                                 passport_1 = _37.sent();
@@ -182,6 +183,7 @@ var createBill = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                                         paid_amount: (_31 = (_30 = details[index]) === null || _30 === void 0 ? void 0 : _30.data) === null || _31 === void 0 ? void 0 : _31.paidAmount,
                                         remaining_amount: (_33 = (_32 = details[index]) === null || _32 === void 0 ? void 0 : _32.data) === null || _33 === void 0 ? void 0 : _33.remainingAmount,
                                         payment_method: (_35 = (_34 = details[index]) === null || _34 === void 0 ? void 0 : _34.data) === null || _35 === void 0 ? void 0 : _35.paymentMethod,
+                                        bill_id: bill.ID,
                                     })];
                             case 3:
                                 ticket_1 = _37.sent();

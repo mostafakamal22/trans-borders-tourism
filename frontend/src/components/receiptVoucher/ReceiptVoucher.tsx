@@ -13,7 +13,7 @@ import useDocumentTitle from "../../hooks/useDocumentTitle";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 
-export const ReceiptVoucher = () => {
+export default function ReceiptVoucher() {
   // Initial state
   const initialReceiptVoucherDetails = {
     name: "",
@@ -244,4 +244,4 @@ export const ReceiptVoucher = () => {
       </div>
     </>
   );
-};
+}

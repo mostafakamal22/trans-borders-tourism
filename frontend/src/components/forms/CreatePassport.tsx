@@ -17,7 +17,7 @@ import { useCreatePassportMutation } from "../../state/features/passport/passpor
 import { useScroll } from "../../hooks/useScroll";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 
-export const CreatePassport = () => {
+export default function CreatePassport() {
   //state for passport Details
   const [passportDetails, setPassportDetails] = useState({
     name: "",
@@ -307,7 +307,7 @@ export const CreatePassport = () => {
       </form>
     </section>
   );
-};
+}
 
 export const calculatePassportTotal = ({
   sales,

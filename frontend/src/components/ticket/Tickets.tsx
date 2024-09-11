@@ -37,7 +37,7 @@ import { RiFileExcel2Fill } from "react-icons/ri";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 
-export const Tickets = () => {
+export default function Tickets() {
   //Search Params
   const [searchQuery, setSearchQuery] = useState<TicketSearchQueries>({
     day: "",
@@ -286,4 +286,4 @@ export const Tickets = () => {
       </AnimatePresence>
     </main>
   );
-};
+}

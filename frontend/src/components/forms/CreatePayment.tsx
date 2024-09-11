@@ -15,7 +15,7 @@ import { paymentMethods, paymentTypes } from "../payment/constants";
 import { PaymentMethods, PaymentTypes } from "../payment/types";
 import { IPaymentType } from "../../../../backend/models/paymentModel";
 
-export const CreatePayment = () => {
+export default function CreatePayment() {
   //state for payment Details
   const [paymentDetails, setPaymentDetails] = useState({
     date: "",
@@ -335,4 +335,4 @@ export const CreatePayment = () => {
       </form>
     </section>
   );
-};
+}

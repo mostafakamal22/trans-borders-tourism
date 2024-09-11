@@ -35,7 +35,7 @@ import { RiFileExcel2Fill } from "react-icons/ri";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 
-export const Passports = () => {
+export default function Passports() {
   //Search Queries
   const [searchQuery, setSearchQuery] = useState<PassportSearchQueries>({
     year: "",
@@ -284,4 +284,4 @@ export const Passports = () => {
       </AnimatePresence>
     </main>
   );
-};
+}

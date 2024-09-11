@@ -33,7 +33,7 @@ import { paymentMethods } from "../payment/constants";
 import { PaymentMethods } from "../payment/types";
 import { ticketsTableHeaderTitles } from "../ticket/constants";
 
-export const CreateBill = () => {
+export default function CreateBill() {
   //state for Customer Details
   const [customerDetails, setCustomerDetails] = useState<IBillCustomer>({
     name: "",
@@ -962,4 +962,4 @@ export const CreateBill = () => {
       </form>
     </section>
   );
-};
+}
