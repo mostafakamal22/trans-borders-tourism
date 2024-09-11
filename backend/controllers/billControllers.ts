@@ -97,6 +97,7 @@ const createBill = async (req: Request, res: Response) => {
         sales: details[index]?.data?.sales,
         profit: details[index]?.data?.profit,
         payment_date: details[index]?.data?.paymentDate,
+        bill_id: bill.ID,
       });
 
       bill.details.map((item, i) => {
@@ -120,6 +121,7 @@ const createBill = async (req: Request, res: Response) => {
         paid_amount: details[index]?.data?.paidAmount,
         remaining_amount: details[index]?.data?.remainingAmount,
         payment_method: details[index]?.data?.paymentMethod,
+        bill_id: bill.ID,
       });
 
       bill.details.map((item, i) => {

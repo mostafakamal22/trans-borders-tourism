@@ -20,6 +20,7 @@ interface IPassport {
   total: number;
   sales: number;
   profit: number;
+  bill_id?: number;
 }
 
 const passportSchema = new Schema<IPassport>(
@@ -70,6 +71,9 @@ const passportSchema = new Schema<IPassport>(
     },
     payment_date: {
       type: Date,
+    },
+    bill_id: {
+      type: Number,
     },
   },
   {
