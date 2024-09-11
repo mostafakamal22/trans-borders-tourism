@@ -262,7 +262,7 @@ export const tableRow = ({
       {/*Bill ID*/}
       <th
         scope="row"
-        className="border-x  border-x-black bg-red-200 p-1 text-center text-gray-900"
+        className="border-x  border-x-black bg-green-200 p-1 text-center text-gray-900"
       >
         {passport?.bill_id || "-"}
       </th>
