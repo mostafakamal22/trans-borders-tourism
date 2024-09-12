@@ -11,6 +11,9 @@ import { BillsChartsCalculations } from "../../../../../backend/calculations/bil
 export interface BillSearchQuery {
   option?: PaginateOptions;
   query?: {
+    year?: number;
+    day?: number;
+    month?: number;
     name?: string;
     type?: string;
   };

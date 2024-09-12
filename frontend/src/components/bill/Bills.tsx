@@ -25,15 +25,29 @@ import { AnimatePresence } from "framer-motion";
 import { UpdateBill } from "../forms/UpdateBill";
 import { useDownloadExcel } from "react-export-table-to-excel";
 import { RiFileExcel2Fill } from "react-icons/ri";
+import { saveAs } from "file-saver";
+import { AiFillPrinter } from "react-icons/ai";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
+import JSZip from "jszip";
+import ConvertingMessage from "../shared/ConvertingMessage";
+import ConvertedBillToPDF from "./ConvertedBillToPDF";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import ReactDOMServer from "react-dom/server";
 
 export default function Bills() {
   //Search Query State
   const [searchQuery, setSearchQuery] = useState<BillSearchQueries>({
+    year: "",
+    month: "",
+    day: "",
     name: "",
     type: "",
   });
+
+  //Converting Bill to PDFs state
+  const [isConvering, setIsConverting] = useState(false);
 
   //Table to Excel
   const tableRef = useRef(null);
@@ -44,7 +58,7 @@ export default function Bills() {
     sheet: "Invoices",
   });
 
-  const { name, type } = searchQuery;
+  const { year, month, day, name, type } = searchQuery;
 
   const deferredName = useDeferredValue(name);
   const deferredType = useDeferredValue(type);
@@ -71,6 +85,9 @@ export default function Bills() {
 
   const { data, isLoading, isFetching, isSuccess, error } = useGetBillsQuery({
     query: {
+      day: +day,
+      month: +month,
+      year: +year,
       name: deferredName.trim(),
       type: deferredType.trim(),
     },
@@ -101,6 +118,102 @@ export default function Bills() {
       notInitialRender.current = true;
     }
   }, [pageNumber, isSuccess, isFetching, isLoading, scrollToTable]);
+
+  // // Function to render each ShowBill component as a PDF
+  const handleDownloadBillsAsPDF = async () => {
+    setIsConverting(true);
+    const zip = new JSZip();
+
+    for (let i = 0; i < bills.length; i++) {
+      // Render the ShowBill component as a string (HTML) using ReactDOMServer
+      const billElementHTML = ReactDOMServer.renderToString(
+        <ConvertedBillToPDF bill={bills[i]} />
+      );
+
+      // Create a temporary div element and set its innerHTML to the rendered HTML
+      const tempDiv = document.createElement("div");
+
+      tempDiv.innerHTML = billElementHTML;
+      document.body.appendChild(tempDiv);
+
+      // Use html2canvas to capture the tempDiv as an image
+      const canvas = await html2canvas(tempDiv, {
+        scale: 1, // Adjust the scale if needed
+      });
+
+      // Create PDF and add the captured image
+      const imgData = canvas.toDataURL("image/png", 0.5); // Adjust the quality if needed
+      const pdf = new jsPDF("p", "mm", "a4");
+      pdf.addImage(
+        imgData,
+        "PNG",
+        10,
+        10,
+        190,
+        (canvas.height / canvas.width) * 190,
+        undefined,
+        "FAST"
+      );
+
+      // Generate a Blob from the PDF and add it to the ZIP file
+      const pdfBlob = pdf.output("blob");
+      zip.file(`bill-${bills[i].ID}.pdf`, pdfBlob);
+
+      // Clean up the tempDiv after capturing
+      document.body.removeChild(tempDiv);
+    }
+
+    // Generate ZIP and trigger download
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+    saveAs(zipBlob, "bills.zip");
+
+    setIsConverting(false);
+  };
+
+  // const generatePdf = async (bills: IBillDocument[]) => {
+  //   try {
+  //     setIsConverting(true);
+  //     const pdfBlobs = await Promise.all(
+  //       bills.map((bill) => generatePdfUrl(bill))
+  //     );
+  //     await createAndDownloadZip(pdfBlobs);
+  //     setIsConverting(false);
+  //   } catch (error) {
+  //     console.error("Error generating PDFs:", error);
+  //     setIsConverting(false);
+  //   }
+  // };
+
+  // const generatePdfUrl = (bill: IBillDocument): Promise<Blob> => {
+  //   return new Promise((resolve, reject) => {
+  //     const pdfElement = (
+  //       <BlobProvider document={<ConvertedBillToPDF bill={bill} />}>
+  //         {({ blob, loading, error }) => {
+  //           if (!loading && !error && blob) {
+  //             resolve(blob);
+  //           } else if (error) {
+  //             reject(error);
+  //           }
+  //           return null;
+  //         }}
+  //       </BlobProvider>
+  //     );
+  //     ReactDOM.render(pdfElement, document.createElement("div"));
+  //   });
+  // };
+
+  // async function createAndDownloadZip(pdfBlobs: Blob[]) {
+  //   const zip = new JSZip();
+  //   const agent_name = "Bill"; // This can be dynamic for different PDFs.
+
+  //   for (let i = 0; i < pdfBlobs.length; i++) {
+  //     const blob = pdfBlobs[i];
+  //     zip.file(`${agent_name}-${i}.pdf`, blob);
+  //   }
+
+  //   const zipBlob = await zip.generateAsync({ type: "blob" });
+  //   saveAs(zipBlob, "Bills.zip");
+  // }
 
   useScroll("filterHeader");
   useDocumentTitle("(جديدة) الفواتير");
@@ -143,17 +256,30 @@ export default function Bills() {
       {/* isFetching Message */}
       {isFetching && <FetchingMessage isFetching={isFetching} />}
 
+      {/* isConverting Message */}
+      {isConvering && <ConvertingMessage />}
+
       {/*Display Table All Data Needed*/}
       {bills?.length > 0 && (
         <>
-          <button
-            className="mx-auto my-5 flex items-center justify-center gap-1 rounded border bg-green-200 px-2 py-2 text-xs font-bold text-green-800 shadow transition-all duration-300 ease-in-out hover:border-green-800 hover:bg-white
+          <div className="my-10 flex flex-wrap items-center justify-center gap-4">
+            <button
+              className="flex items-center justify-center gap-1 rounded border bg-green-200 px-2 py-2 text-xs font-bold text-green-800 shadow transition-all duration-300 ease-in-out hover:border-green-800 hover:bg-white
             hover:text-green-800 sm:px-3 sm:text-sm"
-            onClick={onDownload}
-          >
-            <RiFileExcel2Fill size={20} />
-            <span>Export excel</span>
-          </button>
+              onClick={onDownload}
+            >
+              <RiFileExcel2Fill size={20} />
+              <span>Export excel</span>
+            </button>
+            <button
+              onClick={handleDownloadBillsAsPDF}
+              className="flex items-center justify-center gap-1 rounded border bg-red-200 px-2 py-2 text-xs font-bold text-red-800 shadow transition-all duration-300 ease-in-out hover:border-red-800 hover:bg-white
+            hover:text-red-800 sm:px-3 sm:text-sm"
+            >
+              <AiFillPrinter className="mr-1" size={20} />
+              Download PDFs
+            </button>
+          </div>
 
           <PaginationTable
             tableRow={tableRow}
@@ -170,14 +296,20 @@ export default function Bills() {
       )}
 
       {/* if there is No Bill Records */}
-      {!deferredName && !deferredType && !isFetching && bills?.length === 0 && (
-        <NoSavedRecords customMsg={["فواتير", "الفواتير"]} />
-      )}
+      {!year &&
+        !month &&
+        !day &&
+        !deferredName &&
+        !deferredType &&
+        !isFetching &&
+        bills?.length === 0 && (
+          <NoSavedRecords customMsg={["فواتير", "الفواتير"]} />
+        )}
 
       {/* if there is search query and no Bill matches >>> No Search Found*/}
-      {(deferredName || deferredType) && bills?.length === 0 && !isFetching && (
-        <NoSearchResult />
-      )}
+      {(year || month || day || deferredName || deferredType) &&
+        bills?.length === 0 &&
+        !isFetching && <NoSearchResult />}
 
       {/* Show update Bill Modal */}
       <AnimatePresence initial={false}>

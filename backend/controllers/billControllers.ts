@@ -16,6 +16,28 @@ const getBills = async (req: Request, res: Response) => {
   //Prepare Queries for Mongoose Query.
   const queries = query
     ? {
+        //Filter By Year, Month And Day.
+        $expr: {
+          $setEquals: [
+            [
+              query?.year && {
+                $year: "$date",
+              },
+              query?.month && {
+                $month: "$date",
+              },
+              query?.day && {
+                $dayOfMonth: "$date",
+              },
+            ],
+
+            [
+              query?.year && query?.year,
+              query?.month && query?.month,
+              query?.day && query?.day,
+            ],
+          ],
+        },
         //Filter By Customer Name.
         "customer.name": new RegExp(`${query?.name}`, "gi"),
 

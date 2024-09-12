@@ -1,1 +1,0 @@
-import{a as o,w as e,j as s}from"./vendor.c41dc8f7.js";const n=({name:r,label:t,labeClassNames:a,...l})=>o(e,{children:[s("input",{name:r,id:r,...l}),s("label",{className:a,htmlFor:r,children:t})]});export{n as F};

@@ -12,16 +12,31 @@ export const Filters = ({
   isFilterOpen,
   setIsFilterOpen,
 }: FilterProps) => {
-  let tableRowsRange: number[] = [];
-  for (let i = 10; i <= 300; i += 10) {
-    tableRowsRange.push(i);
-  }
-
   //Get Page Number From URL
   const [URLSearchParams, SetURLSearchParams] = useSearchParams();
   const pageNumber: string | null = URLSearchParams.get("page");
 
-  const { name, type } = searchQuery;
+  const { year, month, day, name, type } = searchQuery;
+
+  let yearRange: number[] = [];
+  for (let i = 2015; i <= 2060; i++) {
+    yearRange.push(i);
+  }
+
+  let monthRange: number[] = [];
+  for (let i = 1; i <= 30; i++) {
+    monthRange.push(i);
+  }
+
+  let dayRange: number[] = [];
+  for (let i = 1; i <= 31; i++) {
+    dayRange.push(i);
+  }
+
+  let tableRowsRange: number[] = [];
+  for (let i = 10; i <= 300; i += 10) {
+    tableRowsRange.push(i);
+  }
 
   return (
     <div
@@ -91,6 +106,106 @@ export const Filters = ({
           />
         </div>
 
+        <div className="flex flex-col items-center justify-center gap-2">
+          <label
+            className="w-full rounded bg-red-700 p-2 text-white"
+            htmlFor="year"
+          >
+            السنة
+          </label>
+
+          <select
+            name="year"
+            id="year"
+            className={inputClassNamesStyles.default}
+            value={year}
+            onChange={(e) => {
+              if (pageNumber && +pageNumber > 1) {
+                SetURLSearchParams({ page: "1" });
+              }
+
+              setSearchQuery({
+                ...searchQuery,
+                year: e.target.value,
+              });
+            }}
+          >
+            <option value={""}>{"كل السنوات"}</option>
+
+            {yearRange.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col items-center justify-center gap-2">
+          <label
+            className="w-full rounded bg-red-700 p-2 text-white"
+            htmlFor="month"
+          >
+            الشهر
+          </label>
+
+          <select
+            name="month"
+            id="month"
+            className={inputClassNamesStyles.default}
+            value={month}
+            onChange={(e) => {
+              if (pageNumber && +pageNumber > 1) {
+                SetURLSearchParams({ page: "1" });
+              }
+
+              setSearchQuery({
+                ...searchQuery,
+                month: e.target.value,
+              });
+            }}
+          >
+            <option value={""}>{"كل الشهور"}</option>
+
+            {monthRange.map((month) => (
+              <option key={month} value={month}>
+                {month}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col items-center justify-center gap-2">
+          <label
+            className="w-full rounded bg-red-700 p-2 text-white"
+            htmlFor="day"
+          >
+            اليوم
+          </label>
+          <select
+            name="day"
+            id="day"
+            className={inputClassNamesStyles.default}
+            value={day}
+            onChange={(e) => {
+              if (pageNumber && +pageNumber > 1) {
+                SetURLSearchParams({ page: "1" });
+              }
+              setSearchQuery({
+                ...searchQuery,
+                day: e.target.value,
+              });
+            }}
+          >
+            <option value={""}>{"كل الايام"}</option>
+
+            {dayRange.map((day) => (
+              <option key={day} value={day}>
+                {day}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div className="flex w-full flex-col items-center justify-center gap-2 font-semibold">
           <label
             className="w-full rounded bg-red-700 p-2 text-white"
@@ -128,7 +243,7 @@ export const FiltersSummary = ({
   setIsFilterOpen,
   count,
 }: FilterSummaryProps) => {
-  const { name, type } = searchQuery;
+  const { year, month, day, name, type } = searchQuery;
   return (
     <h3
       id="filterHeader"
@@ -148,11 +263,27 @@ export const FiltersSummary = ({
         فلتــرة الفــواتيــر
       </p>
       <span>{" الفـواتيـر المحفوظة"}</span>
-      {!name && !type && (
+      {!month && !day && !year && !name && !type && (
         <span className="mx-1 rounded-md bg-blue-500 p-1 text-white">
           {" الكلية "}
         </span>
       )}
+      {month && (
+        <span className="mx-1 rounded-md bg-rose-500 p-1 text-white">
+          {" عن شهر " + month}
+        </span>
+      )}
+      {day && (
+        <span className="mx-1 rounded-md bg-rose-500 p-1 text-white">
+          {" يوم " + day}
+        </span>
+      )}
+      {year && (
+        <span className="mx-1 rounded-md bg-amber-500 p-1 text-white">
+          {" سنة " + year}
+        </span>
+      )}
+
       {name && (
         <span className="mx-1 rounded-md bg-rose-500 p-1 text-white">
           {" إسم العميل " + name}

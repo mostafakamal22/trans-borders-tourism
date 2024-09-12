@@ -1,0 +1,1 @@
+import{r as t}from"./vendor.c17f1326.js";const l=e=>{t.exports.useEffect(()=>{const o=document.getElementById(e);o&&o.scrollIntoView({behavior:"smooth"})},[])},c=()=>{const e=document.getElementById("table");e&&e.scrollIntoView({behavior:"smooth"})};export{c as s,l as u};

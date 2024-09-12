@@ -1,6 +1,9 @@
 export type BillSearchQueries = {
   name: string;
   type: string;
+  year: number | string;
+  month: number | string;
+  day: number | string;
 };
 
 export type FilterProps = {

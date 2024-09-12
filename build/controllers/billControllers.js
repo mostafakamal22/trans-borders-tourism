@@ -67,6 +67,27 @@ var getBills = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
                 _a = req.body, query = _a.query, option = _a.option;
                 queries = query
                     ? {
+                        //Filter By Year, Month And Day.
+                        $expr: {
+                            $setEquals: [
+                                [
+                                    (query === null || query === void 0 ? void 0 : query.year) && {
+                                        $year: "$date",
+                                    },
+                                    (query === null || query === void 0 ? void 0 : query.month) && {
+                                        $month: "$date",
+                                    },
+                                    (query === null || query === void 0 ? void 0 : query.day) && {
+                                        $dayOfMonth: "$date",
+                                    },
+                                ],
+                                [
+                                    (query === null || query === void 0 ? void 0 : query.year) && (query === null || query === void 0 ? void 0 : query.year),
+                                    (query === null || query === void 0 ? void 0 : query.month) && (query === null || query === void 0 ? void 0 : query.month),
+                                    (query === null || query === void 0 ? void 0 : query.day) && (query === null || query === void 0 ? void 0 : query.day),
+                                ],
+                            ],
+                        },
                         //Filter By Customer Name.
                         "customer.name": new RegExp("".concat(query === null || query === void 0 ? void 0 : query.name), "gi"),
                         //Filter By Detail type.
