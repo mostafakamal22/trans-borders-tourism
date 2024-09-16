@@ -30,7 +30,6 @@ export default function ConvertedBillToPDF({ bill }: ConvertedBillToPDFProps) {
 
       {/*Total Services Prices*/}
       <th
-        style={{ printColorAdjust: "exact" }}
         scope="row"
         className="border-x bg-red-100 p-2 text-center text-sm text-gray-900"
       >
@@ -41,7 +40,6 @@ export default function ConvertedBillToPDF({ bill }: ConvertedBillToPDFProps) {
 
       {/*Total Discount*/}
       <th
-        style={{ printColorAdjust: "exact" }}
         scope="row"
         className="border-x bg-red-100 p-2 text-center text-sm text-gray-900"
       >
@@ -50,7 +48,6 @@ export default function ConvertedBillToPDF({ bill }: ConvertedBillToPDFProps) {
 
       {/*Total VAT*/}
       <th
-        style={{ printColorAdjust: "exact" }}
         scope="row"
         className="border-x bg-red-100 p-2 text-center text-sm text-gray-900"
       >
@@ -59,7 +56,6 @@ export default function ConvertedBillToPDF({ bill }: ConvertedBillToPDFProps) {
 
       {/*Total Sales (Amount)*/}
       <th
-        style={{ printColorAdjust: "exact" }}
         scope="row"
         className="border-x bg-red-100 p-2 text-center text-sm text-gray-900"
       >
@@ -118,30 +114,19 @@ export default function ConvertedBillToPDF({ bill }: ConvertedBillToPDFProps) {
 
           <p className="my-4 text-sm">
             DATE{" "}
-            <span
-              style={{ printColorAdjust: "exact" }}
-              className="rounded-sm bg-red-100 p-1"
-            >
+            <span className="rounded-sm bg-red-100 p-1">
               {bill?.date ? dayjs(bill.date).format("DD/MM/YYYY") : "-"}
             </span>
           </p>
           <p className="my-4 text-sm">
             INVOICE #{" "}
-            <span
-              style={{ printColorAdjust: "exact" }}
-              className="rounded-sm bg-red-100 p-1"
-            >
-              [{bill.ID}]
-            </span>
+            <span className="rounded-sm bg-red-100 p-1">[{bill.ID}]</span>
           </p>
         </div>
       </div>
 
       <div className=" mt-5">
-        <h2
-          style={{ printColorAdjust: "exact" }}
-          className="mb-4 bg-red-100 p-1 text-xl font-bold"
-        >
+        <h2 className="mb-4 flex items-center justify-center bg-red-100 p-1 text-xl font-bold">
           Bill To
         </h2>
 
@@ -154,10 +139,7 @@ export default function ConvertedBillToPDF({ bill }: ConvertedBillToPDFProps) {
       <div>
         <div className="relative my-10 overflow-x-auto rounded border-y-4 border-red-800 shadow-md sm:rounded-lg">
           <table className="w-full text-sm font-bold text-gray-500">
-            <thead
-              style={{ printColorAdjust: "exact" }}
-              className="bg-red-100 uppercase text-gray-900"
-            >
+            <thead className="bg-red-100 uppercase text-gray-900">
               {billPassportTableHeader}
             </thead>
             <tbody>
@@ -178,28 +160,19 @@ export default function ConvertedBillToPDF({ bill }: ConvertedBillToPDFProps) {
       <div className="my-10 flex items-center justify-center gap-3 text-left font-semibold">
         <p className="mx-1">
           Paid Amount
-          <span
-            style={{ printColorAdjust: "exact" }}
-            className="ml-4 rounded bg-red-100 py-2 px-4"
-          >
+          <span className="ml-4 rounded bg-red-100 py-2 px-4">
             {bill?.total}
           </span>
         </p>
         <p className="mx-1">
           Remaining Amount
-          <span
-            style={{ printColorAdjust: "exact" }}
-            className="ml-4 rounded bg-red-100 py-2 px-4"
-          >
+          <span className="ml-4 rounded bg-red-100 py-2 px-4">
             {bill?.remaining_amount ? bill.remaining_amount : 0}
           </span>
         </p>
         <p className="mx-1">
           Payment Method
-          <span
-            style={{ printColorAdjust: "exact" }}
-            className="ml-4 rounded bg-red-100 py-2 px-4"
-          >
+          <span className="ml-4 rounded bg-red-100 py-2 px-4">
             {bill?.payment_method
               ? bill.payment_method.charAt(0).toUpperCase() +
                 bill.payment_method.slice(1)
@@ -209,10 +182,7 @@ export default function ConvertedBillToPDF({ bill }: ConvertedBillToPDFProps) {
       </div>
 
       <div className=" mt-5">
-        <h3
-          style={{ printColorAdjust: "exact" }}
-          className="mb-4 bg-red-100 p-1 text-xl font-bold"
-        >
+        <h3 className="mb-4 bg-red-100 p-1 text-xl font-bold">
           Other Comments
         </h3>
 

@@ -7,7 +7,7 @@
     "start": "node build/server.js",
     "dev": "npx nodemon",
     "dev2": "cd Frontend && npm run dev",
-    "build": "rimraf ./build && tsc"
+    "build": "rimraf ./build && rimraf ./frontend/dist && tsc && cd frontend && npm run build"
   },
   "keywords": [],
   "author": "",
