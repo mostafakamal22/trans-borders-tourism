@@ -9,5 +9,5 @@ deployment:
     # Create the frontend directory if it doesn't exist
     - mkdir -p $DEPLOYPATH/frontend
 
-    # Deploy the dist folder into the frontend folder
+    # Deploy the dist folder into the frontend folder.
     - /bin/cp -R frontend/dist $DEPLOYPATH/frontend/
