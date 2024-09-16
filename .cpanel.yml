@@ -3,8 +3,6 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/tbtouris/api/
 
-    - /bin/cp -R build $DEPLOYPATH
+    - rsync -av --exclude='.git' ./ $DEPLOYPATH
 
-    - mkdir -p $DEPLOYPATH/frontend
-
-    - /bin/cp -R frontend/dist $DEPLOYPATH/frontend/
+    - npm --prefix $DEPLOYPATH install
