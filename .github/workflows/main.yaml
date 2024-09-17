@@ -38,7 +38,7 @@ jobs:
       # Step 3: Run npm install on the server after deployment
       - name: 🔧 Run npm install on server
         run: |
-          sshpass -p "${{ vars.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -T -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} << 'EOF'
+        sshpass -p "${{ vars.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -T -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} << 'EOF'
             cd /home/tbtouris/api
             npm install
           EOF
