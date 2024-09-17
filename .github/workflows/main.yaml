@@ -25,9 +25,9 @@ jobs:
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }} # Add this secret in your GitHub repository settings
-          username: ${{ secrets.FTP_USERNAME }} # Add this secret
-          password: ${{ secrets.FTP_PASSWORD }} # Add this secret
+          server: ${{ vars.FTP_SERVER }} # Add this secret in your GitHub repository settings
+          username: ${{ vars.FTP_USERNAME }} # Add this secret
+          password: ${{ vars.FTP_PASSWORD }} # Add this secret
           local-dir: ./ # All root files will be uploaded
           server-dir: /home/tbtouris/api/ # Server directory path
           protocol: ftps # Use ftps for a secure connection
@@ -41,13 +41,13 @@ jobs:
       # Step 4: Install dependencies and build the project on the server using a custom SSH port
       - name: 🔧 Install and Build on Server
         run: |
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          sshpass -p "${{ vars.SSH_PASSWORD }}" ssh -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} << 'EOF'
             cd /home/tbtouris/api
             npm install
             npm run build
           EOF
         env:
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_PASSWORD: ${{ vars.SSH_PASSWORD }}
+          SSH_USER: ${{ vars.SSH_USER }}
+          SSH_HOST: ${{ vars.SSH_HOST }}
+          SSH_PORT: ${{ vars.SSH_PORT }}
