@@ -1,10 +1,8 @@
 name: 🚀 Deploy website on push
-
 on:
   push:
     branches:
       - main
-
 jobs:
   web-deploy:
     name: 🎉 Deploy
@@ -12,35 +10,32 @@ jobs:
     steps:
       - name: 🚚 Get latest code
         uses: actions/checkout@v4
-
-      # Step 1: Install and Build Project Locally
       - name: 🔨 Build Project Locally
         run: |
           npm install
           npm run build
-
-      # Step 2: Deploy Files to the Server
       - name: 📂 Sync files to server
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ vars.FTP_SERVER }}
           username: ${{ vars.FTP_USERNAME }}
           password: ${{ vars.FTP_PASSWORD }}
-          local-dir: ./ # Sync all files in the root directory (after build)
-          server-dir: /home/tbtouris/api/ # Your server directory
+          local-dir: ./
+          server-dir: /home/tbtouris/api/
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
             **/frontend/node_modules/**
             **/backend/node_modules/**
-
-      # Step 3: Run npm install on the server after deployment
-      - name: 🔧 Run npm install on server
-        run: |
-        sshpass -p "${{ vars.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -T -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} << 'EOF'
+      - name: 🔧 Install and Build on Server
+        run: >
+          sshpass -p "${{ vars.SSH_PASSWORD }}" ssh -o
+          StrictHostKeyChecking=no -T -p ${{ vars.SSH_PORT }} ${{
+          vars.SSH_USER }}@${{ vars.SSH_HOST }} << 'EOF'
             cd /home/tbtouris/api
             npm install
+            npm run build
           EOF
         env:
           SSH_PASSWORD: ${{ vars.SSH_PASSWORD }}
