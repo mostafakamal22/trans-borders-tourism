@@ -26,8 +26,9 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
-            **/frontend/node_modules/**
-            **/backend/node_modules/**
+            **/backend/**
+            **/frontend/**
+            !**/frontend/dist/**
       - name: 🔧 Install and Build on Server
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -T -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
