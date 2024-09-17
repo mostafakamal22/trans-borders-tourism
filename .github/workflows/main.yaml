@@ -29,13 +29,10 @@ jobs:
             **/frontend/node_modules/**
             **/backend/node_modules/**
       - name: 🔧 Install and Build on Server
-        run: >
-          sshpass -p "${{ vars.SSH_PASSWORD }}" ssh -o
-          StrictHostKeyChecking=no -T -p ${{ vars.SSH_PORT }} ${{
-          vars.SSH_USER }}@${{ vars.SSH_HOST }} << 'EOF'
+        run: |
+          sshpass -p "${{ vars.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -T -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} << 'EOF'
             cd /home/tbtouris/api
             npm install
-            npm run build
           EOF
         env:
           SSH_PASSWORD: ${{ vars.SSH_PASSWORD }}
