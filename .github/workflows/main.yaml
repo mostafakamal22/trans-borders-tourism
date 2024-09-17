@@ -3,48 +3,44 @@ name: 🚀 Deploy website on push
 on:
   push:
     branches:
-      - main # Change this to your default branch if different
+      - main
 
 jobs:
   web-deploy:
     name: 🎉 Deploy
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout the latest code
       - name: 🚚 Get latest code
         uses: actions/checkout@v4
 
-      # Step 2: Install Node.js 20 (updated to the latest version)
-      - name: Use Node.js 20
-        uses: actions/setup-node@v3
-        with:
-          node-version: "20"
+      # Step 1: Install and Build Project Locally
+      - name: 🔨 Build Project Locally
+        run: |
+          npm install
+          npm run build
 
-      # Step 3: Sync files to the server via FTP (Upload all files to /home/tbtouris/api)
-      - name: 📂 Sync files
+      # Step 2: Deploy Files to the Server
+      - name: 📂 Sync files to server
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ vars.FTP_SERVER }} # Add this secret in your GitHub repository settings
-          username: ${{ vars.FTP_USERNAME }} # Add this secret
-          password: ${{ vars.FTP_PASSWORD }} # Add this secret
-          local-dir: ./ # All root files will be uploaded
-          server-dir: /home/tbtouris/api/ # Server directory path
-          protocol: ftps # Use ftps for a secure connection
-          exclude: | # Exclude unnecessary files
+          server: ${{ vars.FTP_SERVER }}
+          username: ${{ vars.FTP_USERNAME }}
+          password: ${{ vars.FTP_PASSWORD }}
+          local-dir: ./ # Sync all files in the root directory (after build)
+          server-dir: /home/tbtouris/api/ # Your server directory
+          exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
             **/frontend/node_modules/**
             **/backend/node_modules/**
 
-      # Step 4: Install dependencies and build the project on the server using a custom SSH port
-      - name: 🔧 Install and Build on Server
+      # Step 3: Run npm install on the server after deployment
+      - name: 🔧 Run npm install on server
         run: |
           sshpass -p "${{ vars.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -T -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} << 'EOF'
             cd /home/tbtouris/api
             npm install
-            npm run build
           EOF
         env:
           SSH_PASSWORD: ${{ vars.SSH_PASSWORD }}
