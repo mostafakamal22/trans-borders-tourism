@@ -17,9 +17,9 @@ jobs:
       - name: 📂 Sync files to server
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ vars.FTP_SERVER }}
-          username: ${{ vars.FTP_USERNAME }}
-          password: ${{ vars.FTP_PASSWORD }}
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
           server-dir: /home/tbtouris/api/
           exclude: |
@@ -30,12 +30,12 @@ jobs:
             **/backend/node_modules/**
       - name: 🔧 Install and Build on Server
         run: |
-          sshpass -p "${{ vars.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -T -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} << 'EOF'
-            cd /home/tbtouris/api
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -T -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            cd home/tbtouris/api
             npm install
           EOF
         env:
-          SSH_PASSWORD: ${{ vars.SSH_PASSWORD }}
-          SSH_USER: ${{ vars.SSH_USER }}
-          SSH_HOST: ${{ vars.SSH_HOST }}
-          SSH_PORT: ${{ vars.SSH_PORT }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}

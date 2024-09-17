@@ -1,8 +1,0 @@
----
-deployment:
-  tasks:
-    - export DEPLOYPATH=/home/tbtouris/api/
-
-    - /bin/cp -r * $DEPLOYPATH
-
-    - npm --prefix $DEPLOYPATH install
