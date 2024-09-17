@@ -41,11 +41,11 @@ jobs:
       # Step 4: Install dependencies and build the project on the server using a custom SSH port
       - name: 🔧 Install and Build on Server
         run: |
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -T -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-      cd /home/tbtouris/api
-      npm install
-      npm run build
-      EOF
+          sshpass -p "${{ vars.SSH_PASSWORD }}" ssh -T -p ${{ vars.SSH_PORT }} ${{ vars.SSH_USER }}@${{ vars.SSH_HOST }} << 'EOF'
+            cd /home/tbtouris/api
+            npm install
+            npm run build
+          EOF
         env:
           SSH_PASSWORD: ${{ vars.SSH_PASSWORD }}
           SSH_USER: ${{ vars.SSH_USER }}
