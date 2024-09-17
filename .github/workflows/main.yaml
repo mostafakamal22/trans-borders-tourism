@@ -1,0 +1,53 @@
+name: 🚀 Deploy website on push
+
+on:
+  push:
+    branches:
+      - main # Change this to your default branch if different
+
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the latest code
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+
+      # Step 2: Install Node.js 16
+      - name: Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+
+      # Step 3: Sync files to the server via FTP (Upload all files to /home/tbtouris/api)
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }} # Add this secret in your GitHub repository settings
+          username: ${{ secrets.FTP_USERNAME }} # Add this secret
+          password: ${{ secrets.FTP_PASSWORD }} # Add this secret
+          local-dir: ./ # All root files will be uploaded
+          server-dir: /home/tbtouris/api/ # Server directory path
+          protocol: ftps # Use ftps for a secure connection
+          exclude: | # Exclude unnecessary files
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/frontend/node_modules/**
+            **/backend/node_modules/**
+
+      # Step 4: Install dependencies and build the project on the server using a custom SSH port
+      - name: 🔧 Install and Build on Server
+        run: |
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            cd /home/tbtouris/api
+            npm install
+            npm run build
+          EOF
+        env:
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
