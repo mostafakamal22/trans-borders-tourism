@@ -21,7 +21,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
-          server-dir: /home/tbtouris/api/
+          server-dir: /api/
           exclude: |
             **/.git*
             **/.git*/**
@@ -32,7 +32,7 @@ jobs:
       - name: 🔧 Install and Build on Server
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -T -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd home/tbtouris/api
+            cd api
             npm install
           EOF
         env:
