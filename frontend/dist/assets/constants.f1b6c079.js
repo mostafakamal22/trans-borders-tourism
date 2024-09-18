@@ -1,1 +1,0 @@
-const u=["Customer Name","Type","\u0627\u0633\u0645 \u0627\u0644\u0645\u0648\u0638\u0641","Cost","Sales","Profit","Supplier","Date","\u062A\u0639\u062F\u064A\u0644 \u0627\u0644\u062A\u0630\u0643\u0631\u0629","\u0645\u0633\u062D \u0627\u0644\u062A\u0630\u0643\u0631\u0629"],t=["Paid Amount","Remaining Amount","Payment Method"];export{t as c,u as t};

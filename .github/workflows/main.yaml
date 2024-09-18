@@ -1,4 +1,4 @@
-name: 🚀 Deploy website on push
+name: 🚀 Deploy Dashboard on push
 on:
   push:
     branches:
@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: 🚚 Get latest code
         uses: actions/checkout@v4
-      - name: 🔨 Build Project Locally
+      - name: 🔨 Install and Build Project Locally
         run: |
           npm install
           npm run build
@@ -29,7 +29,7 @@ jobs:
             **/backend/**
             **/frontend/**
             !**/frontend/dist/**
-      - name: 🔧 Install and Build on Server
+      - name: 🔧 Install Backend Dependencies on Server
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -T -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd api
