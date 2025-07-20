@@ -10,6 +10,8 @@ import paginate from "mongoose-paginate-v2";
 export interface ITicket {
   customer_name: string;
   cost: number;
+  total?: number;
+  taxable?: number;
   sales: number;
   profit: number;
   paid_amount: number;
@@ -41,6 +43,14 @@ const ticketSchema = new Schema<ITicket>(
       type: Number,
       default: 0,
       min: [0, "Ticket Cost Can Not Be Less Than 0"],
+    },
+    total: {
+      type: Number,
+      min: [0, "Ticket total Can Not Be Less Than 0"],
+    },
+    taxable: {
+      type: Number,
+      min: [0, "Ticket taxable Can Not Be Less Than 0"],
     },
     sales: {
       type: Number,

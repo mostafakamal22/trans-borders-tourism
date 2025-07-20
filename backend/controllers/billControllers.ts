@@ -137,6 +137,8 @@ const createBill = async (req: Request, res: Response) => {
         supplier: details[index]?.data?.supplier,
         type: details[index]?.data?.type,
         cost: details[index]?.data?.cost,
+        total: details[index]?.data?.total,
+        taxable: details[index]?.data?.taxable,
         sales: details[index]?.data?.sales,
         profit: details[index]?.data?.profit,
         payment_date: details[index]?.data?.paymentDate,
@@ -244,6 +246,8 @@ const updateBill = async (req: Request, res: Response) => {
           ticket.employee = details[index]?.data?.employee;
           ticket.type = details[index]?.data?.type;
           ticket.cost = details[index]?.data?.cost;
+          ticket.total = details[index]?.data?.total;
+          ticket.taxable = details[index]?.data?.taxable;
           ticket.sales = details[index]?.data?.sales;
           ticket.profit = details[index]?.data?.profit;
           ticket.payment_date = details[index]?.data?.paymentDate;

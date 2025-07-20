@@ -105,6 +105,8 @@ const createTicket = async (req: Request, res: Response) => {
     supplier: req.body?.supplier,
     type: req.body?.type,
     cost: req.body?.cost,
+    total: req.body?.total,
+    taxable: req.body?.taxable,
     sales: req.body?.sales,
     profit: req.body?.profit,
     payment_date: req.body?.paymentDate,
@@ -135,6 +137,8 @@ const updateTicket = async (req: Request, res: Response) => {
     ticket.employee = req.body?.employee;
     ticket.type = req.body?.type;
     ticket.cost = req.body?.cost;
+    ticket.total = req.body?.total;
+    ticket.taxable = req.body?.taxable;
     ticket.sales = req.body?.sales;
     ticket.profit = req.body?.profit;
     ticket.payment_date = req.body?.paymentDate;
