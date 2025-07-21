@@ -23,6 +23,11 @@ import {
 } from "../helpers/animationOptions";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
+import {
+  calculateTicketProfit,
+  calculateTicketTax,
+  calculateTicketTotal,
+} from "./CreateTicket";
 
 export const UpdateTicket = ({
   id,
@@ -40,6 +45,8 @@ export const UpdateTicket = ({
     paymentDate: "",
     paymentMethod: "",
     cost: 0,
+    total: 0,
+    taxable: 0,
     sales: 0,
     profit: 0,
     paidAmount: 0,
@@ -64,6 +71,8 @@ export const UpdateTicket = ({
       employee: ticketDetails?.employee?.trim(),
       supplier: ticketDetails?.supplier?.trim(),
       cost: ticketDetails.cost,
+      total: ticketDetails.total,
+      taxable: ticketDetails.taxable,
       sales: ticketDetails.sales,
       profit: ticketDetails.profit,
       paymentDate: ticketDetails.paymentDate,
@@ -89,6 +98,8 @@ export const UpdateTicket = ({
           : "",
         paymentMethod: foundTicket?.payment_method as string,
         cost: foundTicket?.cost,
+        total: foundTicket?.total || 0,
+        taxable: foundTicket?.taxable || 0,
         sales: foundTicket?.sales,
         profit: foundTicket?.profit,
         paidAmount: foundTicket?.paid_amount,
@@ -115,7 +126,7 @@ export const UpdateTicket = ({
     <div className="fixed inset-0 z-50  h-screen w-full overflow-y-auto overflow-x-hidden bg-black/75 scrollbar-thin scrollbar-track-transparent  scrollbar-thumb-gray-400 scrollbar-track-rounded-full md:inset-0">
       <motion.button
         {...closeBtnAnimationsOptions}
-        className="fixed top-5 right-[5%] inline-flex items-center rounded border border-transparent bg-red-800 px-2  py-2 text-xs font-bold text-white shadow transition-all duration-300 ease-in-out hover:border-red-800
+        className="fixed right-[5%] top-5 inline-flex items-center rounded border border-transparent bg-red-800 px-2  py-2 text-xs font-bold text-white shadow transition-all duration-300 ease-in-out hover:border-red-800
        hover:bg-white hover:text-red-800 sm:px-3 sm:text-sm"
         onClick={() => setIsOpen(false)}
         type="button"
@@ -189,6 +200,8 @@ export const UpdateTicket = ({
                 setTicketDetails({
                   ...ticketDetails,
                   cost: +e.target.value,
+                  total: 0,
+                  taxable: 0,
                   sales: 0,
                   profit: 0,
                 })
@@ -199,6 +212,30 @@ export const UpdateTicket = ({
 
             <FormInput
               label={ticketsTableHeaderTitles[4]}
+              name="total"
+              labeClassNames={lableClassNamesStyles.default}
+              className={`${inputClassNamesStyles.default} bg-slate-200`}
+              type="number"
+              value={ticketDetails.total}
+              disabled
+              min={0}
+              step={0.01}
+            />
+
+            <FormInput
+              label={ticketsTableHeaderTitles[5]}
+              name="taxable"
+              labeClassNames={lableClassNamesStyles.default}
+              className={`${inputClassNamesStyles.default} bg-slate-200`}
+              type="number"
+              value={ticketDetails.taxable}
+              disabled
+              min={0}
+              step={0.01}
+            />
+
+            <FormInput
+              label={ticketsTableHeaderTitles[6]}
               name="sales"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
@@ -208,7 +245,18 @@ export const UpdateTicket = ({
                 setTicketDetails({
                   ...ticketDetails,
                   sales: +e.target.value,
-                  profit: +e.target.value - ticketDetails.cost,
+                  total: calculateTicketTotal({
+                    sales: +e.target.value,
+                    cost: ticketDetails.cost,
+                  }),
+                  taxable: calculateTicketTax({
+                    sales: +e.target.value,
+                    cost: ticketDetails.cost,
+                  }),
+                  profit: +calculateTicketProfit({
+                    sales: +e.target.value,
+                    cost: ticketDetails.cost,
+                  }),
                   paidAmount: +e.target.value,
                   remainingAmount: 0,
                 })
@@ -218,7 +266,7 @@ export const UpdateTicket = ({
             />
 
             <FormInput
-              label={ticketsTableHeaderTitles[5]}
+              label={ticketsTableHeaderTitles[7]}
               name="profit"
               labeClassNames={lableClassNamesStyles.default}
               className={`${inputClassNamesStyles.default} bg-slate-200`}
@@ -286,7 +334,7 @@ export const UpdateTicket = ({
             </label>
 
             <FormInput
-              label={ticketsTableHeaderTitles[6]}
+              label={ticketsTableHeaderTitles[8]}
               name="supplierUpdate"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}
@@ -301,7 +349,7 @@ export const UpdateTicket = ({
             />
 
             <FormInput
-              label={ticketsTableHeaderTitles[7]}
+              label={ticketsTableHeaderTitles[9]}
               name="paymentDate"
               labeClassNames={lableClassNamesStyles.default}
               className={inputClassNamesStyles.default}

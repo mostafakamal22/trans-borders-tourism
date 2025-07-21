@@ -17,7 +17,7 @@ export const tableHeader = (
       <th
         key={title}
         scope="col"
-        className="border-x border-x-black py-3 px-3 text-center"
+        className="border-x border-x-black px-3 py-3 text-center"
       >
         {title}
       </th>
@@ -155,7 +155,7 @@ export const billTableHeader = (
       <th
         key={title}
         scope="col"
-        className="border-x border-x-black py-3 px-3 text-center"
+        className="border-x border-x-black px-3 py-3 text-center"
       >
         {title}
       </th>
@@ -329,7 +329,7 @@ export const billPassportTableRows = (detail: IBillProduct, index: number) => {
         scope="row"
         className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
-        {"Service Charge"}
+        {`${detail?.desc ? detail?.desc : " "} - Service Charge`}
       </th>
 
       {/*Service Price*/}
@@ -382,10 +382,152 @@ export const billPassportTableRows = (detail: IBillProduct, index: number) => {
   );
 };
 
+export const billTicketTableRows = (detail: IBillProduct, index: number) => {
+  const servicePrice = detail?.data?.cost;
+  const total = detail?.data?.total || 0;
+  const serviceCharge = total - servicePrice;
+  const VAT = detail?.data?.taxable || 0;
+  const totalServiceCharge = VAT + serviceCharge;
+
+  const ticketServiceRow = (
+    <tr className="border-b bg-white">
+      {/*Service NO*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {index + 1}
+        {" -A"}
+      </th>
+
+      {/*Description*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {detail?.desc ? detail?.desc : "-"}
+      </th>
+
+      {/*Service Price*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {servicePrice.toFixed(2)}
+      </th>
+
+      {/*Quantity*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {detail?.quantity}
+      </th>
+
+      {/*Discount*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {"0.00"}
+      </th>
+
+      {/*VAT 5%*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {"0.00"}
+      </th>
+
+      {/*Amount*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {servicePrice.toFixed(2)}
+      </th>
+    </tr>
+  );
+
+  const serviceChargeRow = (
+    <tr className="border-b bg-white">
+      {/*Service NO*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {index + 1}
+        {" -B"}
+      </th>
+
+      {/*Description*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {`${detail?.desc ? detail?.desc : " "} - Service Charge`}
+      </th>
+
+      {/*Service Price*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {serviceCharge?.toFixed(2)}
+      </th>
+
+      {/*Quantity*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {"1"}
+      </th>
+
+      {/*Discount*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {"0.00"}
+      </th>
+
+      {/*VAT 5%*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {VAT.toFixed(2)}
+      </th>
+
+      {/*Amount*/}
+      <th
+        scope="row"
+        className="border-x p-2 text-center text-sm font-normal text-gray-900"
+      >
+        {totalServiceCharge.toFixed(2)}
+      </th>
+    </tr>
+  );
+
+  return (
+    <Fragment key={`${detail?.ticket_ref}+${index}`}>
+      {ticketServiceRow}
+      {serviceChargeRow}
+    </Fragment>
+  );
+};
+
 export const calculateTableTotals = (
-  details: IBillProduct[]
+  details: IBillProduct[],
+  date: string | Date
 ): { totalServices: number; totalAmount: number; TotalVAT: number } => {
   let totals = { totalServices: 0, totalAmount: 0, TotalVAT: 0 };
+
+  const cutoffDate = dayjs("2025-05-01");
+
+  const isTicketBefore1May2025 = dayjs(date).isBefore(cutoffDate);
 
   details.map((detail) => {
     if (detail.type === "Passport") {
@@ -394,6 +536,17 @@ export const calculateTableTotals = (
       const total = ((sales - servicePrice) * 100) / 105;
       const VAT = sales - servicePrice - total;
       const totalServicesPrices = servicePrice + total;
+
+      totals.TotalVAT += VAT;
+      totals.totalServices += totalServicesPrices;
+      totals.totalAmount += sales;
+    } else if (detail.type === "Ticket" && !isTicketBefore1May2025) {
+      const sales = detail?.price;
+      const servicePrice = detail?.data?.cost;
+      const total = detail?.data?.total || 0;
+      const VAT = detail?.data?.taxable || 0;
+      const serviceCharge = total - servicePrice;
+      const totalServicesPrices = servicePrice + serviceCharge;
 
       totals.TotalVAT += VAT;
       totals.totalServices += totalServicesPrices;

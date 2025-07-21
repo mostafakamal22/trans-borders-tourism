@@ -9,6 +9,7 @@ import {
   billPassportTableHeader,
   billPassportTableRows,
   billTableRow,
+  billTicketTableRows,
   calculateTableTotals,
 } from "./Table";
 import {
@@ -32,8 +33,13 @@ export default function ShowBill() {
   if (!bill) return <Navigate to={"/not-found"} replace />;
 
   const { totalAmount, totalServices, TotalVAT } = calculateTableTotals(
-    bill.details
+    bill.details,
+    bill.date
   );
+
+  const cutoffDate = dayjs("2025-05-01");
+
+  const isTicketBefore1May2025 = dayjs(bill?.date).isBefore(cutoffDate);
 
   const TotalsRow = (
     <tr className="border-b bg-white font-bold">
@@ -85,8 +91,8 @@ export default function ShowBill() {
       <ReactToPrint
         trigger={() => (
           <button
-            className="fixed top-[15vh] left-4 z-10 my-5 inline-flex items-center rounded border bg-red-200 px-2 py-2 text-xs font-bold text-red-800 shadow transition-all duration-300 ease-in-out hover:border-red-800 hover:bg-white
-            hover:text-red-800 print:hidden sm:px-3 sm:text-sm"
+            className="fixed left-4 top-[15vh] z-10 my-5 inline-flex items-center rounded border bg-red-200 px-2 py-2 text-xs font-bold text-red-800 shadow transition-all duration-300 ease-in-out hover:border-red-800 hover:bg-white
+            hover:text-red-800 sm:px-3 sm:text-sm print:hidden"
           >
             <AiFillPrinter className="mr-1" size={20} />
             طباعة الفاتورة
@@ -191,6 +197,8 @@ export default function ShowBill() {
                   <Fragment key={index}>
                     {detail.type === "Passport"
                       ? billPassportTableRows(detail, index)
+                      : detail.type === "Ticket" && !isTicketBefore1May2025
+                      ? billTicketTableRows(detail, index)
                       : billTableRow(detail, index)}
                   </Fragment>
                 ))}
@@ -206,7 +214,7 @@ export default function ShowBill() {
             Paid Amount
             <span
               style={{ printColorAdjust: "exact" }}
-              className="ml-4 rounded bg-red-100 py-2 px-4"
+              className="ml-4 rounded bg-red-100 px-4 py-2"
             >
               {bill?.total}
             </span>
@@ -215,7 +223,7 @@ export default function ShowBill() {
             Remaining Amount
             <span
               style={{ printColorAdjust: "exact" }}
-              className="ml-4 rounded bg-red-100 py-2 px-4"
+              className="ml-4 rounded bg-red-100 px-4 py-2"
             >
               {bill?.remaining_amount ? bill.remaining_amount : 0}
             </span>
@@ -224,7 +232,7 @@ export default function ShowBill() {
             Payment Method
             <span
               style={{ printColorAdjust: "exact" }}
-              className="ml-4 rounded bg-red-100 py-2 px-4"
+              className="ml-4 rounded bg-red-100 px-4 py-2"
             >
               {bill?.payment_method
                 ? bill.payment_method.charAt(0).toUpperCase() +

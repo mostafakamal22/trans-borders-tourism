@@ -5,6 +5,7 @@ import {
   billPassportTableHeader,
   billPassportTableRows,
   billTableRow,
+  billTicketTableRows,
   calculateTableTotals,
 } from "./Table";
 import {
@@ -20,8 +21,13 @@ interface ConvertedBillToPDFProps {
 
 export default function ConvertedBillToPDF({ bill }: ConvertedBillToPDFProps) {
   const { totalAmount, totalServices, TotalVAT } = calculateTableTotals(
-    bill.details
+    bill.details,
+    bill.date
   );
+
+  const cutoffDate = dayjs("2025-05-01");
+
+  const isTicketBefore1May2025 = dayjs(bill?.date).isBefore(cutoffDate);
 
   const TotalsRow = (
     <tr className="border-b bg-white font-bold">
@@ -147,6 +153,8 @@ export default function ConvertedBillToPDF({ bill }: ConvertedBillToPDFProps) {
                 <Fragment key={index}>
                   {detail.type === "Passport"
                     ? billPassportTableRows(detail, index)
+                    : detail.type === "Ticket" && !isTicketBefore1May2025
+                    ? billTicketTableRows(detail, index)
                     : billTableRow(detail, index)}
                 </Fragment>
               ))}
@@ -160,19 +168,19 @@ export default function ConvertedBillToPDF({ bill }: ConvertedBillToPDFProps) {
       <div className="my-10 flex items-center justify-center gap-3 text-left font-semibold">
         <p className="mx-1">
           Paid Amount
-          <span className="ml-4 rounded bg-red-100 py-2 px-4">
+          <span className="ml-4 rounded bg-red-100 px-4 py-2">
             {bill?.total}
           </span>
         </p>
         <p className="mx-1">
           Remaining Amount
-          <span className="ml-4 rounded bg-red-100 py-2 px-4">
+          <span className="ml-4 rounded bg-red-100 px-4 py-2">
             {bill?.remaining_amount ? bill.remaining_amount : 0}
           </span>
         </p>
         <p className="mx-1">
           Payment Method
-          <span className="ml-4 rounded bg-red-100 py-2 px-4">
+          <span className="ml-4 rounded bg-red-100 px-4 py-2">
             {bill?.payment_method
               ? bill.payment_method.charAt(0).toUpperCase() +
                 bill.payment_method.slice(1)

@@ -16,7 +16,7 @@ import { PaymentMethods } from "../payment/types";
 
 export default function CreateTicket() {
   //state for Ticket Details
-  const [ticketsDetails, setTicketsDetails] = useState({
+  const [ticketDetails, setTicketDetails] = useState({
     name: "",
     type: "",
     employee: "",
@@ -24,6 +24,8 @@ export default function CreateTicket() {
     paymentDate: "",
     paymentMethod: "cash",
     cost: 0,
+    total: 0,
+    taxable: 0,
     sales: 0,
     profit: 0,
     paidAmount: 0,
@@ -36,17 +38,19 @@ export default function CreateTicket() {
     e.preventDefault();
 
     const ticketData = {
-      name: ticketsDetails.name.trim(),
-      type: ticketsDetails.type.trim(),
-      employee: ticketsDetails.employee.trim(),
-      supplier: ticketsDetails.supplier.trim(),
-      cost: ticketsDetails.cost,
-      sales: ticketsDetails.sales,
-      profit: ticketsDetails.profit,
-      paymentDate: ticketsDetails.paymentDate,
-      paymentMethod: ticketsDetails.paymentMethod,
-      paidAmount: ticketsDetails.paidAmount,
-      remainingAmount: ticketsDetails.remainingAmount,
+      name: ticketDetails.name.trim(),
+      type: ticketDetails.type.trim(),
+      employee: ticketDetails.employee.trim(),
+      supplier: ticketDetails.supplier.trim(),
+      cost: ticketDetails.cost,
+      total: ticketDetails.total,
+      taxable: ticketDetails.taxable,
+      sales: ticketDetails.sales,
+      profit: ticketDetails.profit,
+      paymentDate: ticketDetails.paymentDate,
+      paymentMethod: ticketDetails.paymentMethod,
+      paidAmount: ticketDetails.paidAmount,
+      remainingAmount: ticketDetails.remainingAmount,
     };
 
     await createTicket(ticketData);
@@ -55,7 +59,7 @@ export default function CreateTicket() {
   useEffect(() => {
     if (isSuccess) {
       //Set Ticket Inputs To Default
-      setTicketsDetails({
+      setTicketDetails({
         name: "",
         type: "",
         employee: "",
@@ -63,6 +67,8 @@ export default function CreateTicket() {
         paymentDate: "",
         paymentMethod: "cash",
         cost: 0,
+        total: 0,
+        taxable: 0,
         sales: 0,
         profit: 0,
         paidAmount: 0,
@@ -92,9 +98,9 @@ export default function CreateTicket() {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            value={ticketsDetails.name}
+            value={ticketDetails.name}
             onChange={(e) =>
-              setTicketsDetails({ ...ticketsDetails, name: e.target.value })
+              setTicketDetails({ ...ticketDetails, name: e.target.value })
             }
             required
           />
@@ -105,9 +111,9 @@ export default function CreateTicket() {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            value={ticketsDetails.type}
+            value={ticketDetails.type}
             onChange={(e) =>
-              setTicketsDetails({ ...ticketsDetails, type: e.target.value })
+              setTicketDetails({ ...ticketDetails, type: e.target.value })
             }
           />
 
@@ -117,10 +123,10 @@ export default function CreateTicket() {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            value={ticketsDetails.employee}
+            value={ticketDetails.employee}
             onChange={(e) =>
-              setTicketsDetails({
-                ...ticketsDetails,
+              setTicketDetails({
+                ...ticketDetails,
                 employee: e.target.value,
               })
             }
@@ -132,11 +138,13 @@ export default function CreateTicket() {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="number"
-            value={ticketsDetails.cost}
+            value={ticketDetails.cost}
             onChange={(e) =>
-              setTicketsDetails({
-                ...ticketsDetails,
+              setTicketDetails({
+                ...ticketDetails,
                 cost: +e.target.value,
+                total: 0,
+                taxable: 0,
                 sales: 0,
                 profit: 0,
               })
@@ -147,16 +155,51 @@ export default function CreateTicket() {
 
           <FormInput
             label={ticketsTableHeaderTitles[4]}
+            name="total"
+            labeClassNames={lableClassNamesStyles.default}
+            className={`${inputClassNamesStyles.default} bg-slate-200`}
+            type="number"
+            value={ticketDetails.total}
+            disabled
+            min={0}
+            step={0.01}
+          />
+
+          <FormInput
+            label={ticketsTableHeaderTitles[5]}
+            name="taxable"
+            labeClassNames={lableClassNamesStyles.default}
+            className={`${inputClassNamesStyles.default} bg-slate-200`}
+            type="number"
+            value={ticketDetails.taxable}
+            disabled
+            min={0}
+            step={0.01}
+          />
+
+          <FormInput
+            label={ticketsTableHeaderTitles[6]}
             name="sales"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="number"
-            value={ticketsDetails.sales}
+            value={ticketDetails.sales}
             onChange={(e) =>
-              setTicketsDetails({
-                ...ticketsDetails,
+              setTicketDetails({
+                ...ticketDetails,
                 sales: +e.target.value,
-                profit: +e.target.value - ticketsDetails.cost,
+                total: calculateTicketTotal({
+                  sales: +e.target.value,
+                  cost: ticketDetails.cost,
+                }),
+                taxable: calculateTicketTax({
+                  sales: +e.target.value,
+                  cost: ticketDetails.cost,
+                }),
+                profit: +calculateTicketProfit({
+                  sales: +e.target.value,
+                  cost: ticketDetails.cost,
+                }),
                 paidAmount: +e.target.value,
                 remainingAmount: 0,
               })
@@ -166,12 +209,12 @@ export default function CreateTicket() {
           />
 
           <FormInput
-            label={ticketsTableHeaderTitles[5]}
+            label={ticketsTableHeaderTitles[7]}
             name="profit"
             labeClassNames={lableClassNamesStyles.default}
             className={`${inputClassNamesStyles.default} bg-slate-200`}
             type="number"
-            value={ticketsDetails.profit}
+            value={ticketDetails.profit}
             disabled
             min={0}
             step={0.01}
@@ -183,12 +226,12 @@ export default function CreateTicket() {
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="number"
-            value={ticketsDetails.paidAmount}
+            value={ticketDetails.paidAmount}
             onChange={(e) =>
-              setTicketsDetails({
-                ...ticketsDetails,
+              setTicketDetails({
+                ...ticketDetails,
                 paidAmount: +e.target.value,
-                remainingAmount: ticketsDetails.sales - +e.target.value,
+                remainingAmount: ticketDetails.sales - +e.target.value,
               })
             }
             min={0}
@@ -201,7 +244,7 @@ export default function CreateTicket() {
             labeClassNames={lableClassNamesStyles.default}
             className={`${inputClassNamesStyles.default} bg-slate-200`}
             type="number"
-            value={ticketsDetails.remainingAmount}
+            value={ticketDetails.remainingAmount}
             disabled
             min={0}
             step={0.01}
@@ -211,10 +254,10 @@ export default function CreateTicket() {
             name="paymentMethod"
             id="paymentMethod"
             className={inputClassNamesStyles.default}
-            value={ticketsDetails.paymentMethod}
+            value={ticketDetails.paymentMethod}
             onChange={(e) =>
-              setTicketsDetails({
-                ...ticketsDetails,
+              setTicketDetails({
+                ...ticketDetails,
                 paymentMethod: e.target.value,
               })
             }
@@ -234,30 +277,30 @@ export default function CreateTicket() {
           </label>
 
           <FormInput
-            label={ticketsTableHeaderTitles[6]}
+            label={ticketsTableHeaderTitles[8]}
             name="supplier"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="text"
-            value={ticketsDetails.supplier}
+            value={ticketDetails.supplier}
             onChange={(e) =>
-              setTicketsDetails({
-                ...ticketsDetails,
+              setTicketDetails({
+                ...ticketDetails,
                 supplier: e.target.value,
               })
             }
           />
 
           <FormInput
-            label={ticketsTableHeaderTitles[7]}
+            label={ticketsTableHeaderTitles[9]}
             name="paymentDate"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
             type="date"
-            value={ticketsDetails.paymentDate}
+            value={ticketDetails.paymentDate}
             onChange={(e) =>
-              setTicketsDetails({
-                ...ticketsDetails,
+              setTicketDetails({
+                ...ticketDetails,
                 paymentDate: e.target.value,
               })
             }
@@ -274,3 +317,47 @@ export default function CreateTicket() {
     </section>
   );
 }
+
+export const calculateTicketTotal = ({
+  sales,
+  cost,
+}: {
+  sales: number;
+  cost: number;
+}): number => {
+  const subTotal = ((sales - cost) * 100) / 105;
+  const total = subTotal + cost;
+  return +total.toFixed(2);
+};
+
+export const calculateTicketTax = ({
+  sales,
+  cost,
+}: {
+  sales: number;
+  cost: number;
+}): number => {
+  const total = +calculateTicketTotal({
+    sales,
+    cost,
+  });
+
+  const tax = sales - total;
+  return +tax.toFixed(2);
+};
+
+export const calculateTicketProfit = ({
+  sales,
+  cost,
+}: {
+  sales: number;
+  cost: number;
+}): number => {
+  const total = +calculateTicketTotal({
+    sales,
+    cost,
+  });
+  const profit = total - cost;
+
+  return +profit.toFixed(2);
+};

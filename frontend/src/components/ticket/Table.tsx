@@ -7,12 +7,13 @@ import { TiDelete } from "react-icons/ti";
 import dayjs from "dayjs";
 import { paymentMethods } from "../payment/constants";
 import { PaymentMethods } from "../payment/types";
+import { calculateTicketTax } from "../forms/CreateTicket";
 
 //Define table data
 export const tableHeader = (
   <tr className="border-y border-y-black">
     {[...ticketsTableHeaderTitles]
-      .slice(6)
+      .slice(8)
       .reverse()
       .map((title) => (
         <th
@@ -35,7 +36,7 @@ export const tableHeader = (
     ))}
 
     {[...ticketsTableHeaderTitles]
-      .slice(0, 6)
+      .slice(0, 8)
       .reverse()
       .map((title) => (
         <th
@@ -68,6 +69,20 @@ export const tableRow = ({
     setId,
     setIsOpen,
   } = extraOptions;
+
+  const cutoffDate = dayjs("2025-05-01");
+
+  const isTicketBefore1May2025 = dayjs(ticket?.payment_date).isBefore(
+    cutoffDate
+  );
+
+  const tax = !isTicketBefore1May2025
+    ? // calculateTicketTax({
+      //     sales: ticket.sales,
+      //     cost: ticket.cost,
+      //   })
+      ticket?.taxable || 0
+    : 0;
 
   return (
     <tr
@@ -187,7 +202,23 @@ export const tableRow = ({
         {ticket?.sales}
       </th>
 
-      {/*Total Cost*/}
+      {/*Taxable*/}
+      <th
+        scope="row"
+        className="border-x  border-x-black  p-1 text-center text-gray-900"
+      >
+        {tax}
+      </th>
+
+      {/*Total*/}
+      <th
+        scope="row"
+        className="border-x  border-x-black  p-1 text-center text-gray-900"
+      >
+        {ticket?.total || 0}
+      </th>
+
+      {/*Cost*/}
       <th
         scope="row"
         className="border-x  border-x-black  p-1 text-center text-gray-900"
@@ -237,3 +268,9 @@ export const tableRow = ({
     </tr>
   );
 };
+
+// export const calculateTicketTax = (ticket: ITicketDocument): string => {
+//   const tax = ticket?.sales - (ticket?.total || 0);
+
+//   return tax.toFixed(2);
+// };

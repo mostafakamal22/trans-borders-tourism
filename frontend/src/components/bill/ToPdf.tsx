@@ -15,6 +15,7 @@ import {
   billPassportTableHeader,
   billPassportTableRows,
   billTableRow,
+  billTicketTableRows,
   calculateTableTotals,
 } from "./Table";
 import {
@@ -64,8 +65,13 @@ const styles = StyleSheet.create({
 
 export default function ConvertedBillToPDF({ bill }: ConvertedBillToPDFProps) {
   const { totalAmount, totalServices, TotalVAT } = calculateTableTotals(
-    bill.details
+    bill.details,
+    bill.date
   );
+
+  const cutoffDate = dayjs("2025-05-01");
+
+  const isTicketBefore1May2025 = dayjs(bill?.date).isBefore(cutoffDate);
 
   const TotalsRow = (
     <View style={styles.tableRow}>
@@ -148,6 +154,8 @@ export default function ConvertedBillToPDF({ bill }: ConvertedBillToPDFProps) {
                 <View key={index}>
                   {detail.type === "Passport"
                     ? billPassportTableRows(detail, index)
+                    : detail.type === "Ticket" && !isTicketBefore1May2025
+                    ? billTicketTableRows(detail, index)
                     : billTableRow(detail, index)}
                 </View>
               ))}

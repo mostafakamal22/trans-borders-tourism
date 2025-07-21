@@ -4,12 +4,15 @@ import { ticketsCalculations } from "./calculations";
 const totalsHeaders: string[] = ["القيمة", "الإجمالى"];
 
 export const Totals = ({ tickets }: { tickets: ITicketDocument[] }) => {
-  const { costs, profits, sales } = ticketsCalculations(tickets);
+  const { costs, profits, totals, taxables, sales } =
+    ticketsCalculations(tickets);
 
   const tableBody: string[][] = [
-    ["تكلفة التذاكر", costs.toFixed(2)],
-    ["سعر البيع", sales.toFixed(2)],
-    ["الربح", profits.toFixed(2)],
+    ["الرسوم الغير خاضعة للضريبة", costs.toFixed(2)],
+    ["الاجمالى قبل الضريبة", totals.toFixed(2)],
+    ["ضريبة القيمة المضافة", taxables.toFixed(2)],
+    ["سعر البيع شامل الضريبة", sales.toFixed(2)],
+    ["صافى الربح", profits.toFixed(2)],
   ];
 
   //Define table data
@@ -19,7 +22,7 @@ export const Totals = ({ tickets }: { tickets: ITicketDocument[] }) => {
         <th
           key={title}
           scope="col"
-          className="border-x border-x-teal-500 py-3 px-3 text-center"
+          className="border-x border-x-teal-500 px-3 py-3 text-center"
         >
           {title}
         </th>

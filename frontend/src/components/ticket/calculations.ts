@@ -4,6 +4,8 @@ import { ITicketDocument } from "../../../../backend/models/ticketModel";
 export const ticketsCalculations = (tickets: ITicketDocument[]) => {
   let totalValues = {
     costs: 0,
+    totals: 0,
+    taxables: 0,
     sales: 0,
     profits: 0,
   };
@@ -11,6 +13,8 @@ export const ticketsCalculations = (tickets: ITicketDocument[]) => {
   tickets.map((ticket) => {
     totalValues.sales += ticket?.sales || 0;
     totalValues.costs += ticket?.cost || 0;
+    totalValues.taxables += ticket?.taxable || 0;
+    totalValues.totals += ticket?.total || 0;
     totalValues.profits += ticket?.profit || 0;
   });
 

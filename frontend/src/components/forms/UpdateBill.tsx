@@ -42,6 +42,11 @@ import FormButton from "../shared/FormButton";
 import { RiSendPlaneFill } from "react-icons/ri";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
+import {
+  calculateTicketProfit,
+  calculateTicketTax,
+  calculateTicketTotal,
+} from "./CreateTicket";
 
 export const UpdateBill = ({
   id,
@@ -81,7 +86,7 @@ export const UpdateBill = ({
     profit: 0,
   };
 
-  const initialTicketsDetails = {
+  const initialTicketDetails = {
     name: "",
     type: "",
     employee: "",
@@ -89,6 +94,8 @@ export const UpdateBill = ({
     paymentDate: "",
     paymentMethod: "cash",
     cost: 0,
+    total: 0,
+    taxable: 0,
     sales: 0,
     profit: 0,
     paidAmount: 0,
@@ -116,7 +123,7 @@ export const UpdateBill = ({
   );
 
   // State for Tickets Details
-  const [ticketsDetails, setTicketsDetails] = useState(initialTicketsDetails);
+  const [ticketDetails, setTicketDetails] = useState(initialTicketDetails);
 
   //state for items
   const [itemsCount, setItemsCount] = useState(1);
@@ -140,6 +147,16 @@ export const UpdateBill = ({
         : itemsDetails.splice(0, itemsDetails.length - 1);
 
     setItemsDetails(newItems);
+
+    const newTotal = newItems.reduce(
+      (prev, curr) => prev + curr.price * curr.quantity,
+      0
+    );
+
+    setBillDetails({
+      ...billDetails,
+      total: +newTotal.toFixed(2),
+    });
   };
 
   const [updateBill, { isLoading: isUpdating }] = useUpdateBillMutation();
@@ -160,7 +177,7 @@ export const UpdateBill = ({
                   passportDetails.service as keyof PassportService
                 ]
             : item.type === "Ticket"
-            ? ticketsDetails.type
+            ? ticketDetails.type
             : item.desc,
         data:
           item.type === "Passport"
@@ -171,7 +188,7 @@ export const UpdateBill = ({
               }
             : item.type === "Ticket"
             ? {
-                ...ticketsDetails,
+                ...ticketDetails,
                 name: customerDetails.name,
                 paymentDate: billDetails.date,
               }
@@ -245,7 +262,7 @@ export const UpdateBill = ({
       });
 
       //Ticket Details
-      setTicketsDetails(() => {
+      setTicketDetails(() => {
         const ticketDetail = bill.details.find(
           (detail: IBillProduct) => detail.type === "Ticket"
         );
@@ -259,6 +276,8 @@ export const UpdateBill = ({
             ? ticketDetail?.data?.paymentMethod
             : "cash",
           cost: ticketDetail ? ticketDetail?.data?.cost : 0,
+          total: ticketDetail ? ticketDetail?.data?.total : 0,
+          taxable: ticketDetail ? ticketDetail?.data?.taxable : 0,
           sales: ticketDetail ? ticketDetail?.data?.sales : 0,
           profit: ticketDetail ? ticketDetail?.data?.profit : 0,
           paidAmount: ticketDetail ? ticketDetail?.data?.paidAmount : 0,
@@ -296,7 +315,7 @@ export const UpdateBill = ({
     <div className="fixed inset-0 z-50  h-screen w-full overflow-y-auto overflow-x-hidden bg-black/75 scrollbar-thin scrollbar-track-transparent  scrollbar-thumb-gray-400 scrollbar-track-rounded-full md:inset-0">
       <motion.button
         {...closeBtnAnimationsOptions}
-        className="fixed top-5 right-[5%] inline-flex items-center rounded border border-transparent bg-red-800 px-2  py-2 text-xs font-bold text-white shadow transition-all duration-300 ease-in-out hover:border-red-800
+        className="fixed right-[5%] top-5 inline-flex items-center rounded border border-transparent bg-red-800 px-2  py-2 text-xs font-bold text-white shadow transition-all duration-300 ease-in-out hover:border-red-800
          hover:bg-white hover:text-red-800 sm:px-3 sm:text-sm"
         onClick={() => setIsOpen(false)}
         type="button"
@@ -675,10 +694,10 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={inputClassNamesStyles.default}
                     type="text"
-                    value={ticketsDetails.type}
+                    value={ticketDetails.type}
                     onChange={(e) =>
-                      setTicketsDetails({
-                        ...ticketsDetails,
+                      setTicketDetails({
+                        ...ticketDetails,
                         type: e.target.value,
                       })
                     }
@@ -690,10 +709,10 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={inputClassNamesStyles.default}
                     type="text"
-                    value={ticketsDetails.employee}
+                    value={ticketDetails.employee}
                     onChange={(e) =>
-                      setTicketsDetails({
-                        ...ticketsDetails,
+                      setTicketDetails({
+                        ...ticketDetails,
                         employee: e.target.value,
                       })
                     }
@@ -705,11 +724,13 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={inputClassNamesStyles.default}
                     type="number"
-                    value={ticketsDetails.cost}
+                    value={ticketDetails.cost}
                     onChange={(e) =>
-                      setTicketsDetails({
-                        ...ticketsDetails,
+                      setTicketDetails({
+                        ...ticketDetails,
                         cost: +e.target.value,
+                        total: 0,
+                        taxable: 0,
                         sales: 0,
                         profit: 0,
                       })
@@ -720,16 +741,51 @@ export const UpdateBill = ({
 
                   <FormInput
                     label={ticketsTableHeaderTitles[4]}
+                    name="total"
+                    labeClassNames={lableClassNamesStyles.default}
+                    className={`${inputClassNamesStyles.default} bg-slate-200`}
+                    type="number"
+                    value={ticketDetails.total}
+                    disabled
+                    min={0}
+                    step={0.01}
+                  />
+
+                  <FormInput
+                    label={ticketsTableHeaderTitles[5]}
+                    name="taxable"
+                    labeClassNames={lableClassNamesStyles.default}
+                    className={`${inputClassNamesStyles.default} bg-slate-200`}
+                    type="number"
+                    value={ticketDetails.taxable}
+                    disabled
+                    min={0}
+                    step={0.01}
+                  />
+
+                  <FormInput
+                    label={ticketsTableHeaderTitles[6]}
                     name="sales"
                     labeClassNames={lableClassNamesStyles.default}
                     className={inputClassNamesStyles.default}
                     type="number"
-                    value={ticketsDetails.sales}
+                    value={ticketDetails.sales}
                     onChange={(e) => {
-                      setTicketsDetails({
-                        ...ticketsDetails,
+                      setTicketDetails({
+                        ...ticketDetails,
                         sales: +e.target.value,
-                        profit: +e.target.value - ticketsDetails.cost,
+                        total: calculateTicketTotal({
+                          sales: +e.target.value,
+                          cost: ticketDetails.cost,
+                        }),
+                        taxable: calculateTicketTax({
+                          sales: +e.target.value,
+                          cost: ticketDetails.cost,
+                        }),
+                        profit: +calculateTicketProfit({
+                          sales: +e.target.value,
+                          cost: ticketDetails.cost,
+                        }),
                         paidAmount: +e.target.value,
                         remainingAmount: 0,
                       });
@@ -753,12 +809,12 @@ export const UpdateBill = ({
                   />
 
                   <FormInput
-                    label={ticketsTableHeaderTitles[5]}
+                    label={ticketsTableHeaderTitles[7]}
                     name="profit"
                     labeClassNames={lableClassNamesStyles.default}
                     className={`${inputClassNamesStyles.default} bg-slate-200`}
                     type="number"
-                    value={ticketsDetails.profit}
+                    value={ticketDetails.profit}
                     disabled
                     min={0}
                     step={0.01}
@@ -770,12 +826,12 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={inputClassNamesStyles.default}
                     type="number"
-                    value={ticketsDetails.paidAmount}
+                    value={ticketDetails.paidAmount}
                     onChange={(e) =>
-                      setTicketsDetails({
-                        ...ticketsDetails,
+                      setTicketDetails({
+                        ...ticketDetails,
                         paidAmount: +e.target.value,
-                        remainingAmount: ticketsDetails.sales - +e.target.value,
+                        remainingAmount: ticketDetails.sales - +e.target.value,
                       })
                     }
                     min={0}
@@ -788,48 +844,50 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={`${inputClassNamesStyles.default} bg-slate-200`}
                     type="number"
-                    value={ticketsDetails.remainingAmount}
+                    value={ticketDetails.remainingAmount}
                     disabled
                     min={0}
                     step={0.01}
                   />
 
                   {/* <select
-                    name="paymentMethod"
-                    id="paymentMethod"
-                    className={inputClassNamesStyles.default}
-                    value={ticketsDetails.paymentMethod}
-                    onChange={(e) =>
-                      setTicketsDetails({
-                        ...ticketsDetails,
-                        paymentMethod: e.target.value,
-                      })
-                    }
-                  >
-                    {Object.keys(paymentMethods).map((method: string) => (
-                      <option key={method} value={method}>
-                        {paymentMethods[method as keyof PaymentMethods]}
-                      </option>
-                    ))}
-                  </select>
-
-                  <label
-                    htmlFor="paymentMethod"
-                    className={lableClassNamesStyles.default}
-                  >
-                    {"Payment Method"}
-                  </label> */}
+                                  name="paymentMethod"
+                                  id="paymentMethod"
+                                  className={inputClassNamesStyles.default}
+                                  value={ticketDetails.paymentMethod}
+                                  onChange={(e) =>
+                                    setTicketDetails({
+                                      ...ticketDetails,
+                                      paymentMethod: e.target.value,
+                                    })
+                                  }
+                                >
+                                  {Object.keys(paymentMethods)
+                                    .filter((pm) => pm !== "later")
+                                    .map((method: string) => (
+                                      <option key={method} value={method}>
+                                        {paymentMethods[method as keyof PaymentMethods]}
+                                      </option>
+                                    ))}
+                                </select>
+                
+                                <label
+                                  htmlFor="paymentMethod"
+                                  className={lableClassNamesStyles.default}
+                                >
+                                  {"Payment Method"}
+                                </label> */}
 
                   <FormInput
-                    label={ticketsTableHeaderTitles[6]}
+                    label={ticketsTableHeaderTitles[8]}
                     name="supplier"
                     labeClassNames={lableClassNamesStyles.default}
                     className={inputClassNamesStyles.default}
                     type="text"
-                    value={ticketsDetails.supplier}
+                    value={ticketDetails.supplier}
                     onChange={(e) =>
-                      setTicketsDetails({
-                        ...ticketsDetails,
+                      setTicketDetails({
+                        ...ticketDetails,
                         supplier: e.target.value,
                       })
                     }
@@ -902,8 +960,8 @@ export const UpdateBill = ({
                   ...billDetails,
                   paymentMethod: e.target.value,
                 });
-                setTicketsDetails({
-                  ...ticketsDetails,
+                setTicketDetails({
+                  ...ticketDetails,
                   paymentMethod: e.target.value,
                 });
               }}
