@@ -466,7 +466,7 @@ export const billTicketTableRows = (detail: IBillProduct, index: number) => {
         scope="row"
         className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
-        {`${detail?.desc ? detail?.desc : " "} - Service Charge`}
+        {`${detail?.desc ? detail?.desc : " "} - رسوم شاملة الضريبة`}
       </th>
 
       {/*Service Price*/}
