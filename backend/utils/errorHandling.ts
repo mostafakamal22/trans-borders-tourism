@@ -67,7 +67,7 @@ const MainErrorsHandler: ErrorRequestHandler = (err, _req, res, _next) => {
 
   //Cast Errors
   //1-CastError: Cast to ObjectId failed for value "value" (type string) at path "_id" for model "X".
-  if (err.name === "CastError" && err.path === "_id") {
+  if (err.name === "CastError" && (err.path === "_id" || err.path === "ID")) {
     return res.status(404).send("That Document does not exist!");
   }
 
@@ -113,6 +113,11 @@ const MainErrorsHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   //Not allowed by CORS Errors.
   if (err.message === "Not allowed by CORS") {
     return res.status(403).send(err.message);
+  }
+
+  //Document Not Found Errors
+  if (err.name === "NotFoundError") {
+    return res.status(404).send(err.message);
   }
 
   //Unknown Errors

@@ -2,12 +2,12 @@ import { ITicketDocument } from "../../../../backend/models/ticketModel";
 import { TableRowProps } from "../shared/PaginationTable";
 import { creditStates, ticketsTableHeaderTitles } from "./constants";
 import { AiFillEdit } from "react-icons/ai";
-import FormButton from "../shared/FormButton";
 import { TiDelete } from "react-icons/ti";
-import dayjs from "dayjs";
 import { paymentMethods } from "../payment/constants";
 import { PaymentMethods } from "../payment/types";
-import { calculateTicketTax } from "../forms/CreateTicket";
+import { Link } from "react-router-dom";
+import FormButton from "../shared/FormButton";
+import dayjs from "dayjs";
 
 //Define table data
 export const tableHeader = (
@@ -255,7 +255,11 @@ export const tableRow = ({
         scope="row"
         className="border-x  border-x-black bg-green-200 p-1 text-center text-gray-900"
       >
-        {ticket?.bill_id || "-"}
+        {ticket?.bill_id ? (
+          <Link to={`/bills/${ticket.bill_id}`}>{ticket?.bill_id}</Link>
+        ) : (
+          "-"
+        )}
       </th>
 
       {/*ticket NO*/}

@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useParams } from "react-router-dom";
 import logo from "../../assets/imgs/trans-logo.png";
 import stamp from "../../assets/imgs/trans-border-stamp.png";
 import ReactToPrint from "react-to-print";
@@ -20,17 +20,37 @@ import { useScroll } from "../../hooks/useScroll";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { comapanyInfos } from "./constants";
 import { Fragment } from "react";
+import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
+import DataFetchingSpinner from "../shared/DataFetchingSpinner";
+import { useGetOneBillQuery } from "../../state/features/bill/billApiSlice";
 
 export default function ShowBill() {
-  const location = useLocation();
-  const bill: IBillDocument = location?.state?.bill;
+  // const location = useLocation();
+  // const bill: IBillDocument = location?.state?.bill;
+
+  const { id } = useParams<{ id: string }>();
+
+  // Data fetching
+  const { data: bill, isLoading, error } = useGetOneBillQuery({ id: id || "" });
 
   const componentRef = useRef<HTMLDivElement>(null);
 
   useScroll("showBill");
   useDocumentTitle("عرض فاتورة");
 
-  if (!bill) return <Navigate to={"/not-found"} replace />;
+  //Show Error Message if could not fetch data
+  if (error) {
+    // Check if error is a FetchBaseQueryError and has a status property
+    if ("originalStatus" in error && error.originalStatus === 404) {
+      return <Navigate to={"/not-found"} replace />;
+    }
+    return <DataFetchingErrorMessage />;
+  }
+
+  //Show spinner when Loading State is true
+  if (!bill || isLoading) return <DataFetchingSpinner />;
+
+  // if (!bill?.id) return <Navigate to={"/not-found"} replace />;
 
   const { totalAmount, totalServices, TotalVAT } = calculateTableTotals(
     bill.details,

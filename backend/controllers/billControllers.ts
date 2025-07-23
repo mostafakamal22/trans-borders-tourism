@@ -1,10 +1,11 @@
 import Bill from "../models/billModel";
 import Passport from "../models/passportModel";
 import Ticket from "../models/ticketModel";
+import cache from "../lib/node-cache";
 import { ErrnoException } from "./adminControllers";
 import { billsChartsCalculations } from "../calculations/bills";
 import { Request, Response } from "express";
-import cache from "../lib/node-cache";
+import { isValidObjectId } from "mongoose";
 
 //@Desc   >>>> Get All Bills That Match Query Object.
 //@Route  >>>> POST /api/bills/query
@@ -63,18 +64,30 @@ const getBills = async (req: Request, res: Response) => {
 //@Route  >>>> GET /api/bills/:id
 //@Access >>>> Private(Admins Only)
 const getOneBill = async (req: Request, res: Response) => {
-  const bill = await Bill.findById(req.params?.id);
+  const id = req.params?.id;
 
-  //Check if Bill is not exist.
-  if (!bill) {
-    const error: ErrnoException = new Error();
-    error.name = "CastError";
-    error.path = "_id";
-    throw error;
-  } else {
-    //Send Bill.
-    res.status(200).json(bill);
+  let bill;
+
+  // Validate if the id is a valid ObjectId before calling findById
+  if (isValidObjectId(id)) {
+    bill = await Bill.findById(id);
   }
+
+  // If not found by _id or id is not a valid ObjectId, try finding by ID property
+  if (!bill) {
+    bill = await Bill.findOne({ ID: id });
+  }
+
+  // Check if bill is still not found
+  if (!bill) {
+    const error: ErrnoException = new Error("Bill not found");
+    error.name = "NotFoundError";
+    error.path = "id";
+    throw error;
+  }
+
+  // Send bill
+  res.status(200).json(bill);
 };
 
 //@Desc   >>>> Create Bill
