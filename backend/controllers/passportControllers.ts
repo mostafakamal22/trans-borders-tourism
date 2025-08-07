@@ -99,6 +99,7 @@ const createPassport = async (req: Request, res: Response) => {
     sales: req.body?.sales,
     profit: req.body?.profit,
     payment_date: req.body?.paymentDate,
+    payment_method: req.body?.paymentMethod,
   });
   res.status(201).json(passport);
 };
@@ -130,6 +131,7 @@ const updatePassport = async (req: Request, res: Response) => {
     passport.total = req.body?.total;
     passport.sales = req.body?.sales;
     passport.profit = req.body?.profit;
+    passport.payment_method = req.body?.paymentMethod;
 
     //Get Updated Passport info & Send it Back.
     const updatedPassport = await passport.save();

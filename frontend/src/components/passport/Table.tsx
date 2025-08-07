@@ -7,6 +7,8 @@ import { TiDelete } from "react-icons/ti";
 import { IPassportDocument } from "../../../../backend/models/passportModel";
 import { TableRowProps } from "../shared/PaginationTable";
 import { Link } from "react-router-dom";
+import { paymentMethods } from "../payment/constants";
+import { PaymentMethods } from "../payment/types";
 
 //Define table data
 export const tableHeader = (
@@ -158,6 +160,16 @@ export const tableRow = ({
         >
           <AiFillEdit size={20} />
         </button>
+      </th>
+
+      {/*Payment Method*/}
+      <th
+        scope="row"
+        className="border-x  border-x-black p-1 text-center text-gray-900"
+      >
+        {passport?.payment_method
+          ? paymentMethods[passport?.payment_method as keyof PaymentMethods]
+          : "-"}
       </th>
 
       {/*Payment Date*/}

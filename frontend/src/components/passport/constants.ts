@@ -14,6 +14,7 @@ export const passportTableHeaderTitles: string[] = [
   "سعر البيع شامل الضريبة",
   "صافى الربح",
   "تاريخ الدفع",
+  "Payment Method",
   "تعديل الجواز",
   "إضافة فاتورة",
   "مسح الجواز",

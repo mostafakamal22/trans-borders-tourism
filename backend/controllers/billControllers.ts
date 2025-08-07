@@ -132,6 +132,7 @@ const createBill = async (req: Request, res: Response) => {
         sales: details[index]?.data?.sales,
         profit: details[index]?.data?.profit,
         payment_date: details[index]?.data?.paymentDate,
+        payment_method: req.body?.paymentMethod,
         bill_id: bill.ID,
       });
 
@@ -238,6 +239,7 @@ const updateBill = async (req: Request, res: Response) => {
           passport.total = details[index]?.data.total;
           passport.sales = details[index]?.data.sales;
           passport.profit = details[index]?.data.profit;
+          passport.payment_method = req.body?.payment_method;
 
           await passport.save();
         }
