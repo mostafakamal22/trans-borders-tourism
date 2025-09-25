@@ -221,6 +221,7 @@ export default function CreatePassport() {
                 profit: +calculatePassportProfit({
                   sales: +e.target.value,
                   servicePrice: passportDetails.servicePrice,
+                  taxable: passportDetails.taxable,
                 }),
               })
             }
@@ -324,15 +325,17 @@ export const calculatePassportTotal = ({
 export const calculatePassportProfit = ({
   sales,
   servicePrice,
+  taxable,
 }: {
   sales: number;
   servicePrice: number;
+  taxable: number;
 }): number => {
   const total = +calculatePassportTotal({
     sales,
     servicePrice,
   });
-  const profit = total - servicePrice - 53;
+  const profit = total - servicePrice - taxable;
 
   return +profit.toFixed(2);
 };

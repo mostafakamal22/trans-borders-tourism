@@ -477,12 +477,41 @@ export default function CreateBill() {
                   label={passportTableHeaderTitles[7]}
                   name="taxable"
                   labeClassNames={lableClassNamesStyles.default}
-                  className={`${inputClassNamesStyles.default} bg-slate-200`}
+                  className={`${inputClassNamesStyles.default}`}
                   type="number"
                   value={passportDetails.taxable}
-                  disabled
                   min={0}
                   step={0.01}
+                  onChange={(e) => {
+                    setPassportDetails({
+                      ...passportDetails,
+                      taxable: +e.target.value,
+                      taxRate: +(+e.target.value * 0.05).toFixed(2),
+                      total: calculatePassportTotal({
+                        sales: passportDetails.sales,
+                        servicePrice: passportDetails.servicePrice,
+                      }),
+                      profit: +calculatePassportProfit({
+                        sales: passportDetails.sales,
+                        servicePrice: passportDetails.servicePrice,
+                        taxable: +e.target.value,
+                      }),
+                    });
+
+                    const newArr = [...itemsDetails];
+
+                    setItemsDetails(newArr);
+
+                    const newTotal = itemsDetails.reduce(
+                      (prev, curr) => prev + curr.price * curr.quantity,
+                      0
+                    );
+
+                    setBillDetails({
+                      ...billDetails,
+                      total: +newTotal.toFixed(2),
+                    });
+                  }}
                 />
 
                 <FormInput
@@ -527,6 +556,7 @@ export default function CreateBill() {
                       profit: +calculatePassportProfit({
                         sales: +e.target.value,
                         servicePrice: passportDetails.servicePrice,
+                        taxable: passportDetails.taxable,
                       }),
                     });
 
