@@ -72,7 +72,7 @@ const App = () => {
                 {/* Passports Routes */}
                 <Route path="/passports">
                   <Route index element={<Passports />} />
-                  <Route path="create" element={<CreatePassport />} />
+                  {/* <Route path="create" element={<CreatePassport />} /> */}
                 </Route>
                 {/* Invoices Routes */}
                 <Route path="/invoices">
@@ -89,7 +89,7 @@ const App = () => {
                 {/* Tickets Routes */}
                 <Route path="/tickets">
                   <Route index element={<Tickets />} />
-                  <Route path="create" element={<CreateTicket />} />
+                  {/* <Route path="create" element={<CreateTicket />} /> */}
                 </Route>
                 {/* Purchases Routes */}
                 <Route path="/purchases">

@@ -59,22 +59,22 @@ const menus: MenuType<MenuItem> = [
     icon: <AiFillProject size={20} />,
     margin: true,
   },
-  {
-    name: "إضافة جواز",
-    link: "/passports/create",
-    icon: <BsPlus size={20} />,
-  },
+  // {
+  //   name: "إضافة جواز",
+  //   link: "/passports/create",
+  //   icon: <BsPlus size={20} />,
+  // },
   {
     name: "التذاكر",
     link: "/tickets",
     icon: <AiFillSchedule size={20} />,
     margin: true,
   },
-  {
-    name: "إضافة التذاكر",
-    link: "/tickets/create",
-    icon: <BsPlus size={20} />,
-  },
+  // {
+  //   name: "إضافة التذاكر",
+  //   link: "/tickets/create",
+  //   icon: <BsPlus size={20} />,
+  // },
 
   {
     name: "المشتريات",
