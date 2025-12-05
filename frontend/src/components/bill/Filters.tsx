@@ -24,7 +24,7 @@ export const Filters = ({
   }
 
   let monthRange: number[] = [];
-  for (let i = 1; i <= 30; i++) {
+  for (let i = 1; i <= 12; i++) {
     monthRange.push(i);
   }
 
@@ -46,7 +46,7 @@ export const Filters = ({
       } duration-350 absolute left-0 top-0 flex h-screen w-60 flex-wrap items-start justify-center gap-4  overflow-x-hidden overflow-y-scroll bg-slate-50 px-4 py-8 text-xs shadow-md transition-all ease-in-out scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-400 scrollbar-corner-slate-700 scrollbar-track-rounded-full scrollbar-w-0`}
     >
       <button
-        className="absolute top-2 right-2 inline-flex items-center text-xs font-bold text-white sm:text-sm"
+        className="absolute right-2 top-2 inline-flex items-center text-xs font-bold text-white sm:text-sm"
         onClick={() => setIsFilterOpen(!isFilterOpen)}
         type="button"
       >
@@ -251,7 +251,7 @@ export const FiltersSummary = ({
     >
       <button
         id="openFilters"
-        className="absolute top-2 right-2 flex items-center justify-center rounded bg-slate-50 p-2 text-xs font-semibold text-gray-600 shadow sm:text-sm"
+        className="absolute right-2 top-2 flex items-center justify-center rounded bg-slate-50 p-2 text-xs font-semibold text-gray-600 shadow sm:text-sm"
         onClick={() => setIsFilterOpen(!isFilterOpen)}
         type="button"
       >
