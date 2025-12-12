@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
-import { ReactComponent as InvoiceAlt } from "../../assets/icons/invoice-alt.svg";
 import { RiSendPlaneFill } from "react-icons/ri";
-import FormButton from "../shared/FormButton";
 import { FormInput } from "../shared/FormInput";
 import {
   InvoiceData,
@@ -13,8 +11,10 @@ import {
   lableClassNamesStyles,
 } from "../invoice/constants";
 import { useScroll } from "../../hooks/useScroll";
-import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { ICustomer, IProduct } from "../../../../backend/models/invoiceModel";
+import FormButton from "../shared/FormButton";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
+import InvoiceAlt from "../../assets/icons/invoice-alt.svg?react";
 
 export default function CreateInvoice() {
   //state for Customer Details

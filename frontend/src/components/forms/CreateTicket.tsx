@@ -1,11 +1,8 @@
 import { useState, useEffect } from "react";
-import { ReactComponent as TicketAlt } from "../../assets/icons/ticket-alt.svg";
 import { RiSendPlaneFill } from "react-icons/ri";
-import FormButton from "../shared/FormButton";
 import { FormInput } from "../shared/FormInput";
 import { useCreateTicketMutation } from "../../state/features/ticket/ticketsApiSlice";
 import { useScroll } from "../../hooks/useScroll";
-import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { ticketsTableHeaderTitles } from "../ticket/constants";
 import {
   inputClassNamesStyles,
@@ -13,6 +10,9 @@ import {
 } from "../invoice/constants";
 import { paymentMethods } from "../payment/constants";
 import { PaymentMethods } from "../payment/types";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
+import TicketAlt from "../../assets/icons/ticket-alt.svg?react";
+import FormButton from "../shared/FormButton";
 
 export default function CreateTicket() {
   //state for Ticket Details

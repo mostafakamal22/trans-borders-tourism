@@ -4,11 +4,11 @@ import {
   inputClassNamesStyles,
   lableClassNamesStyles,
 } from "../invoice/constants";
-import { ReactComponent as PaymentVoucherAlt } from "../../assets/icons/paymentVoucher-alt.svg";
 import { FormInput } from "../shared/FormInput";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { useCreatePaymentVoucherMutation } from "../../state/features/paymentVoucher/paymentVouchersApiSlice";
 import { useScroll } from "../../hooks/useScroll";
+import PaymentVoucherAlt from "../../assets/icons/paymentVoucher-alt.svg?react";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 export default function CreatePaymentVoucher() {

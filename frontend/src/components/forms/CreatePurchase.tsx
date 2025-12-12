@@ -7,11 +7,11 @@ import {
 } from "../invoice/constants";
 import { FormInput } from "../shared/FormInput";
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
-import FormButton from "../shared/FormButton";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { useScroll } from "../../hooks/useScroll";
-import { ReactComponent as PurchaseAlt } from "../../assets/icons/purchase-alt.svg";
 import { IPurchaseType } from "../../../../backend/models/purchaseModel";
+import FormButton from "../shared/FormButton";
+import PurchaseAlt from "../../assets/icons/purchase-alt.svg?react";
 
 export default function CreatePurchase() {
   //state for Purchase Details

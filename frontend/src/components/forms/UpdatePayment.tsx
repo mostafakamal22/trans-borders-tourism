@@ -5,7 +5,6 @@ import {
   AiFillPlusCircle,
 } from "react-icons/ai";
 import { RiSendPlaneFill } from "react-icons/ri";
-import FormButton from "../shared/FormButton";
 import { FormInput } from "../shared/FormInput";
 import dayjs from "dayjs";
 import {
@@ -23,10 +22,11 @@ import {
 import { motion } from "framer-motion";
 import { paymentMethods, paymentTypes } from "../payment/constants";
 import { PaymentMethods, PaymentTypes } from "../payment/types";
-import { ReactComponent as PaymentAlt } from "../../assets/icons/payment-alt.svg";
 import { IPaymentType } from "../../../../backend/models/paymentModel";
+import FormButton from "../shared/FormButton";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
+import PaymentAlt from "../../assets/icons/payment-alt.svg?react";
 
 export const UpdatePayment = ({
   id,
@@ -161,7 +161,7 @@ export const UpdatePayment = ({
     <div className="fixed inset-0 z-50  h-screen w-full overflow-y-auto overflow-x-hidden bg-black/75 scrollbar-thin scrollbar-track-transparent  scrollbar-thumb-gray-400 scrollbar-track-rounded-full md:inset-0">
       <motion.button
         {...closeBtnAnimationsOptions}
-        className="fixed top-5 right-[5%] inline-flex items-center rounded border border-transparent bg-red-800 px-2  py-2 text-xs font-bold text-white shadow transition-all duration-300 ease-in-out hover:border-red-800
+        className="fixed right-[5%] top-5 inline-flex items-center rounded border border-transparent bg-red-800 px-2  py-2 text-xs font-bold text-white shadow transition-all duration-300 ease-in-out hover:border-red-800
    hover:bg-white hover:text-red-800 sm:px-3 sm:text-sm"
         onClick={() => setIsOpen(false)}
         type="button"

@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import { RiSendPlaneFill } from "react-icons/ri";
-import FormButton from "../shared/FormButton";
 import { FormInput } from "../shared/FormInput";
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
-import { ReactComponent as PaymentAlt } from "../../assets/icons/payment-alt.svg";
 import { useCreatePaymentMutation } from "../../state/features/payment/paymentApiSlice";
 import { useScroll } from "../../hooks/useScroll";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
@@ -14,6 +12,8 @@ import {
 import { paymentMethods, paymentTypes } from "../payment/constants";
 import { PaymentMethods, PaymentTypes } from "../payment/types";
 import { IPaymentType } from "../../../../backend/models/paymentModel";
+import FormButton from "../shared/FormButton";
+import PaymentAlt from "../../assets/icons/payment-alt.svg?react";
 
 export default function CreatePayment() {
   //state for payment Details

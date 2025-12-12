@@ -8,12 +8,10 @@ import {
   useGetPaymentsQuery,
 } from "../../state/features/payment/paymentApiSlice";
 import { scrollToTable, useScroll } from "../../hooks/useScroll";
-import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { NoSavedRecords } from "../shared/NoSavedRecords";
 import { NoSearchResult } from "../shared/NoSearchResult";
 import { AnimatePresence } from "framer-motion";
 import { FetchingMessage } from "../shared/FetchingMessage";
-import { ReactComponent as PaymentMain } from "../../assets/icons/payment-main.svg";
 import { tableHeader, tableRow } from "./Table";
 import { Filters, FiltersSummary } from "./Filters";
 import { Totals } from "./Totals";
@@ -21,6 +19,8 @@ import { UpdatePayment } from "../forms/UpdatePayment";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 import { useDownloadExcel } from "react-export-table-to-excel";
 import { RiFileExcel2Fill } from "react-icons/ri";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
+import PaymentMain from "../../assets/icons/payment-main.svg?react";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 

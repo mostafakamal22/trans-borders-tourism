@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { AiFillSlackCircle } from "react-icons/ai";
 import { FcInfo } from "react-icons/fc";
-import { ReactComponent as AccountAlt } from "../../assets/icons/account-alt.svg";
 import { useAppSelector } from "../../state/features/hooks/StateHooks";
-import FormButton from "../shared/FormButton";
 import { selectCurrentToken } from "../../state/features/admin/auth/authSlice";
 import { JWTPaylaod } from "../profile/AdminProfile";
 import {
@@ -14,6 +12,8 @@ import jwt_decode from "jwt-decode";
 import { MainSpinner } from "../shared/MainSpinner";
 import { useScroll } from "../../hooks/useScroll";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
+import AccountAlt from "../../assets/icons/account-alt.svg?react";
+import FormButton from "../shared/FormButton";
 
 export default function UpdateAdmin() {
   const token = useAppSelector(selectCurrentToken) as string;

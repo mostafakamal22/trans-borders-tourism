@@ -23,15 +23,15 @@ import {
 } from "../../state/features/invoice/invoiceApiSlice";
 import { passportService } from "./constants";
 import { scrollToTable, useScroll } from "../../hooks/useScroll";
-import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { AnimatePresence } from "framer-motion";
 import { NoSearchResult } from "../shared/NoSearchResult";
 import { NoSavedRecords } from "../shared/NoSavedRecords";
 import { FetchingMessage } from "../shared/FetchingMessage";
-import { ReactComponent as PassportMain } from "../../assets/icons/passport-main.svg";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 import { useDownloadExcel } from "react-export-table-to-excel";
 import { RiFileExcel2Fill } from "react-icons/ri";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
+import PassportMain from "../../assets/icons/passport-main.svg?react";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 

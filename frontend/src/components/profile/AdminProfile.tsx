@@ -1,14 +1,13 @@
-import { ReactComponent as AccountMain } from "../../assets/icons/account-main.svg";
 import { RiArrowLeftLine } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../state/features/hooks/StateHooks";
-import logo from "../../assets/imgs/trans-logo.png";
 import { useGetAdminQuery } from "../../state/features/admin/auth/authApiSlice";
-import jwt_decode, { JwtPayload } from "jwt-decode";
 import { selectCurrentToken } from "../../state/features/admin/auth/authSlice";
 import { MainSpinner } from "../shared/MainSpinner";
+import jwt_decode, { JwtPayload } from "jwt-decode";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
-
+import AccountMain from "../../assets/icons/account-main.svg?react";
+import logo from "../../assets/imgs/trans-logo.png";
 export interface JWTPaylaod extends JwtPayload {
   AdminInfo: { id: string; role: string };
 }
@@ -46,10 +45,10 @@ export default function AdminProfile() {
         alt="logo"
       />
 
-      <ul className="mt-3 ml-auto w-full max-w-[550px] rounded py-2 px-3">
+      <ul className="ml-auto mt-3 w-full max-w-[550px] rounded px-3 py-2">
         <li className="mb-2 flex items-center rounded  border-r-4 border-red-800 bg-red-200 p-3 shadow">
           <span className="mr-auto">
-            <span className="rounded bg-pink-500 py-1 px-2 text-sm text-white">
+            <span className="rounded bg-pink-500 px-2 py-1 text-sm text-white">
               {data?.name}
             </span>
           </span>
@@ -58,7 +57,7 @@ export default function AdminProfile() {
 
         <li className="mb-2 flex items-center rounded  border-r-4 border-red-800 bg-red-200 p-3 shadow">
           <span className="mr-auto">
-            <span className="rounded bg-green-500 py-1 px-2 text-sm text-white">
+            <span className="rounded bg-green-500 px-2 py-1 text-sm text-white">
               {role}
             </span>
           </span>

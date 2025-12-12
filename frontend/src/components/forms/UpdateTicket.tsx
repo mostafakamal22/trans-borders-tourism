@@ -1,8 +1,6 @@
 import dayjs from "dayjs";
 import { useState, useEffect } from "react";
-import { ReactComponent as TicketAlt } from "../../assets/icons/ticket-alt.svg";
 import { FormInput } from "../shared/FormInput";
-import FormButton from "../shared/FormButton";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { AiFillCloseCircle } from "react-icons/ai";
 import {
@@ -28,6 +26,8 @@ import {
   calculateTicketTax,
   calculateTicketTotal,
 } from "./CreateTicket";
+import TicketAlt from "../../assets/icons/ticket-alt.svg?react";
+import FormButton from "../shared/FormButton";
 
 export const UpdateTicket = ({
   id,

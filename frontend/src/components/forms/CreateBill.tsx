@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { AiFillMinusCircle, AiFillPlusCircle } from "react-icons/ai";
-import { ReactComponent as BillAlt } from "../../assets/icons/invoice-alt.svg";
 import { RiSendPlaneFill } from "react-icons/ri";
-import FormButton from "../shared/FormButton";
 import { FormInput } from "../shared/FormInput";
 import {
   BillData,
@@ -13,7 +11,6 @@ import {
   lableClassNamesStyles,
 } from "../invoice/constants";
 import { useScroll } from "../../hooks/useScroll";
-import useDocumentTitle from "../../hooks/useDocumentTitle";
 import {
   IBillCustomer,
   IBillDocument,
@@ -37,6 +34,9 @@ import {
   calculateTicketTax,
   calculateTicketTotal,
 } from "./CreateTicket";
+import BillAlt from "../../assets/icons/invoice-alt.svg?react";
+import FormButton from "../shared/FormButton";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 export default function CreateBill() {
   //state for Customer Details

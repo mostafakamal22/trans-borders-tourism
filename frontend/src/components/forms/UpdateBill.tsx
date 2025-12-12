@@ -36,9 +36,7 @@ import {
   closeBtnAnimationsOptions,
   modalAnimationOptions,
 } from "../helpers/animationOptions";
-import { ReactComponent as BillAlt } from "../../assets/icons/invoice-alt.svg";
 import { motion } from "framer-motion";
-import FormButton from "../shared/FormButton";
 import { RiSendPlaneFill } from "react-icons/ri";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
@@ -47,6 +45,8 @@ import {
   calculateTicketTax,
   calculateTicketTotal,
 } from "./CreateTicket";
+import FormButton from "../shared/FormButton";
+import BillAlt from "../../assets/icons/invoice-alt.svg?react";
 
 export const UpdateBill = ({
   id,

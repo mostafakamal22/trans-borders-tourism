@@ -14,7 +14,6 @@ import {
   useGetPurchasesQuery,
 } from "../../state/features/purchase/purchaseApiSlice";
 import { scrollToTable, useScroll } from "../../hooks/useScroll";
-import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { AnimatePresence } from "framer-motion";
 import { NoSearchResult } from "../shared/NoSearchResult";
 import { NoSavedRecords } from "../shared/NoSavedRecords";
@@ -22,13 +21,14 @@ import { tableHeader, tableRow } from "./Table";
 import { FetchingMessage } from "../shared/FetchingMessage";
 import { Totals } from "./Totals";
 import { Filters, FiltersSummary } from "./Filters";
-import { ReactComponent as PurchaseMain } from "../../assets/icons/purchase-main.svg";
 import { UpdatePurchase } from "../forms/UpdatePurchase";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 import { useDownloadExcel } from "react-export-table-to-excel";
 import { RiFileExcel2Fill } from "react-icons/ri";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
+import PurchaseMain from "../../assets/icons/purchase-main.svg?react";
 
 export default function Purchases() {
   //Search Params

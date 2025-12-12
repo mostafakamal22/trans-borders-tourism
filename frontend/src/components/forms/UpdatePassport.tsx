@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { ReactComponent as PassportAlt } from "../../assets/icons/passport-alt.svg";
 import { RiSendPlaneFill } from "react-icons/ri";
 import {
   passportService,
@@ -7,7 +6,6 @@ import {
   passportTableHeaderTitles,
 } from "../passport/constants";
 import { PassportService, PassportState } from "../passport/types";
-import FormButton from "../shared/FormButton";
 import { FormInput } from "../shared/FormInput";
 import {
   inputClassNamesStyles,
@@ -30,6 +28,8 @@ import {
 } from "./CreatePassport";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
+import PassportAlt from "../../assets/icons/passport-alt.svg?react";
+import FormButton from "../shared/FormButton";
 
 export const UpdatePassport = ({
   id,

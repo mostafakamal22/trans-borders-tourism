@@ -14,7 +14,6 @@ import {
   useGetReceiptVouchersQuery,
 } from "../../state/features/receiptVoucher/receiptVouchersApiSlice";
 import { scrollToTable, useScroll } from "../../hooks/useScroll";
-import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { AnimatePresence } from "framer-motion";
 import { NoSearchResult } from "../shared/NoSearchResult";
 import { NoSavedRecords } from "../shared/NoSavedRecords";
@@ -22,11 +21,12 @@ import { tableHeader, tableRow } from "./Table";
 import { FetchingMessage } from "../shared/FetchingMessage";
 import { Totals } from "./Totals";
 import { Filters, FiltersSummary } from "./Filters";
-import { ReactComponent as ReceiptVoucherMain } from "../../assets/icons/receiptVoucher-main.svg";
 import { UpdateReceiptVoucher } from "../forms/UpdateReceiptVoucher";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 import { useDownloadExcel } from "react-export-table-to-excel";
 import { RiFileExcel2Fill } from "react-icons/ri";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
+import ReceiptVoucherMain from "../../assets/icons/receiptVoucher-main.svg?react";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 

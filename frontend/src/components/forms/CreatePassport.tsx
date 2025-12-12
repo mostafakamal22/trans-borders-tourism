@@ -4,7 +4,6 @@ import {
   inputClassNamesStyles,
   lableClassNamesStyles,
 } from "../invoice/constants";
-import { ReactComponent as PassportAlt } from "../../assets/icons/passport-alt.svg";
 import { FormInput } from "../shared/FormInput";
 import { RiSendPlaneFill } from "react-icons/ri";
 import {
@@ -15,6 +14,7 @@ import {
 import { PassportService, PassportState } from "../passport/types";
 import { useCreatePassportMutation } from "../../state/features/passport/passportsApiSlice";
 import { useScroll } from "../../hooks/useScroll";
+import PassportAlt from "../../assets/icons/passport-alt.svg?react";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 export default function CreatePassport() {

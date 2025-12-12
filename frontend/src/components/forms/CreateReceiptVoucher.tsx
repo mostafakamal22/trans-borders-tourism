@@ -4,11 +4,11 @@ import {
   inputClassNamesStyles,
   lableClassNamesStyles,
 } from "../invoice/constants";
-import { ReactComponent as ReceiptVoucherAlt } from "../../assets/icons/receiptVoucher-alt.svg";
 import { FormInput } from "../shared/FormInput";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { useCreateReceiptVoucherMutation } from "../../state/features/receiptVoucher/receiptVouchersApiSlice";
 import { useScroll } from "../../hooks/useScroll";
+import ReceiptVoucherAlt from "../../assets/icons/receiptVoucher-alt.svg?react";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 export default function CreateReceiptVoucher() {

@@ -5,7 +5,6 @@ import {
   useRef,
   useCallback,
 } from "react";
-import { ReactComponent as TicketMain } from "../../assets/icons/ticket-main.svg";
 import { PaginationTable } from "../shared/PaginationTable";
 import { UpdateTicket } from "../forms/UpdateTicket";
 import { TicketSearchQueries } from "./types";
@@ -21,7 +20,6 @@ import {
 } from "../../state/features/invoice/invoiceApiSlice";
 import { ITicketDocument } from "../../../../backend/models/ticketModel";
 import { scrollToTable, useScroll } from "../../hooks/useScroll";
-import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { Filters, FiltersSummary } from "./Filters";
 import { Totals } from "./Totals";
 import { tableHeader, tableRow } from "./Table";
@@ -34,6 +32,8 @@ import { NoSearchResult } from "../shared/NoSearchResult";
 import { useDetectClickOutside } from "../../hooks/useDetectClickOutside";
 import { useDownloadExcel } from "react-export-table-to-excel";
 import { RiFileExcel2Fill } from "react-icons/ri";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
+import TicketMain from "../../assets/icons/ticket-main.svg?react";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 

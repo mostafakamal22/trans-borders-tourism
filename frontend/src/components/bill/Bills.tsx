@@ -5,7 +5,6 @@ import {
   useRef,
   useCallback,
 } from "react";
-import { ReactComponent as BillMain } from "../../assets/icons/invoice-main.svg";
 import { PaginationTable } from "../shared/PaginationTable";
 import { useSearchParams } from "react-router-dom";
 import { BillSearchQueries } from "./types";
@@ -16,7 +15,6 @@ import {
 import { Filters, FiltersSummary } from "./Filters";
 import { tableHeader, tableRow } from "./Table";
 import { scrollToTable, useScroll } from "../../hooks/useScroll";
-import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { FetchingMessage } from "../shared/FetchingMessage";
 import { NoSavedRecords } from "../shared/NoSavedRecords";
 import { NoSearchResult } from "../shared/NoSearchResult";
@@ -27,6 +25,8 @@ import { useDownloadExcel } from "react-export-table-to-excel";
 import { RiFileExcel2Fill } from "react-icons/ri";
 import { saveAs } from "file-saver";
 import { AiFillPrinter } from "react-icons/ai";
+import BillMain from "../../assets/icons/invoice-main.svg?react";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 import JSZip from "jszip";
