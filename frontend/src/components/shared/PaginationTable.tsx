@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import Pagination from "./Pagination";
-import { FC, ReactNode, forwardRef, Ref } from "react";
+import React, { ReactNode, forwardRef } from "react";
 import { ListResponse } from "../../state/features/passport/passportsApiSlice";
 import { Document } from "mongoose";
 
@@ -19,7 +19,7 @@ export type TableRowProps<T> = {
     isCreatingInvoice?: boolean;
   };
 };
-export interface PaginationTable {
+export interface PaginationTableProps {
   tableHeader: ReactNode;
   tableRow: (props: TableRowProps<any>) => JSX.Element;
   tableBodyData: Document[];
@@ -30,10 +30,12 @@ export interface PaginationTable {
   setId?: React.Dispatch<React.SetStateAction<string>>;
   isDeleting?: boolean;
   isCreatingInvoice?: boolean;
-  ref?: Ref<HTMLTableElement>;
 }
 
-export const PaginationTable: FC<PaginationTable> = forwardRef(
+export const PaginationTable = forwardRef<
+  HTMLTableElement,
+  PaginationTableProps
+>(
   (
     {
       tableHeader,
@@ -47,7 +49,7 @@ export const PaginationTable: FC<PaginationTable> = forwardRef(
       isDeleting,
       isCreatingInvoice,
     },
-    ref: Ref<HTMLTableElement>
+    ref
   ) => {
     const [_, setSearchParams] = useSearchParams({ page: "1" });
     // const page = +searchParams.get("page")!;

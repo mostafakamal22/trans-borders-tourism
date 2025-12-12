@@ -1,4 +1,4 @@
-import { defineConfig, splitVendorChunkPlugin } from "vite";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 
@@ -7,7 +7,53 @@ export default defineConfig({
   define: {
     "process.env": process.env,
   },
-  plugins: [svgr(), react(), splitVendorChunkPlugin()],
+  plugins: [svgr(), react()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Core React
+          react: ["react", "react-dom", "react-router-dom"],
+
+          // Redux state
+          redux: ["@reduxjs/toolkit", "react-redux"],
+
+          // Animations
+          motion: ["framer-motion"],
+
+          // PDF & Export tools
+          pdf: [
+            "@react-pdf/renderer",
+            "jspdf",
+            "html2canvas",
+            "jszip",
+            "file-saver",
+          ],
+
+          // Charts
+          charts: ["chart.js", "react-chartjs-2"],
+
+          // Utilities
+          utils: ["dayjs", "jwt-decode"],
+
+          // UI extras
+          ui: ["react-toastify", "react-icons", "react-spinners"],
+        },
+      },
+    },
+  },
+  // build: {
+  //   rollupOptions: {
+  //     output: {
+  //       manualChunks(id) {
+  //         // Example: Split node_modules into a 'vendor' chunk
+  //         if (id.includes("node_modules")) {
+  //           return "vendor";
+  //         }
+  //       },
+  //     },
+  //   },
+  // },
   // build: {
   //   rollupOptions: {
   //     output: {
