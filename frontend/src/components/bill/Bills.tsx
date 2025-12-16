@@ -50,14 +50,17 @@ export default function Bills() {
   const [isConvering, setIsConverting] = useState(false);
 
   //Table to Excel
-  const tableRef = useRef(null);
+  const tableRef = useRef<HTMLTableElement | null>(null);
+
+  const [excelReady, setExcelReady] = useState(false);
 
   const { onDownload } = useDownloadExcel({
-    currentTableRef: tableRef.current,
+    currentTableRef: excelReady ? tableRef.current : null,
     filename: "Invoices table",
     sheet: "Invoices",
   });
 
+  // Filters Query Values
   const { year, month, day, name, type } = searchQuery;
 
   const deferredName = useDeferredValue(name);
@@ -119,6 +122,18 @@ export default function Bills() {
     }
   }, [pageNumber, isSuccess, isFetching, isLoading, scrollToTable]);
 
+  useEffect(() => {
+    if (tableRef.current) {
+      setExcelReady(true);
+    }
+  }, [bills.length]);
+
+  useEffect(() => {
+    if (tableRef.current) {
+      setExcelReady(true);
+    }
+  }, [bills.length]);
+
   // // Function to render each ShowBill component as a PDF
   const handleDownloadBillsAsPDF = async () => {
     setIsConverting(true);
@@ -170,51 +185,6 @@ export default function Bills() {
     setIsConverting(false);
   };
 
-  // const generatePdf = async (bills: IBillDocument[]) => {
-  //   try {
-  //     setIsConverting(true);
-  //     const pdfBlobs = await Promise.all(
-  //       bills.map((bill) => generatePdfUrl(bill))
-  //     );
-  //     await createAndDownloadZip(pdfBlobs);
-  //     setIsConverting(false);
-  //   } catch (error) {
-  //     console.error("Error generating PDFs:", error);
-  //     setIsConverting(false);
-  //   }
-  // };
-
-  // const generatePdfUrl = (bill: IBillDocument): Promise<Blob> => {
-  //   return new Promise((resolve, reject) => {
-  //     const pdfElement = (
-  //       <BlobProvider document={<ConvertedBillToPDF bill={bill} />}>
-  //         {({ blob, loading, error }) => {
-  //           if (!loading && !error && blob) {
-  //             resolve(blob);
-  //           } else if (error) {
-  //             reject(error);
-  //           }
-  //           return null;
-  //         }}
-  //       </BlobProvider>
-  //     );
-  //     ReactDOM.render(pdfElement, document.createElement("div"));
-  //   });
-  // };
-
-  // async function createAndDownloadZip(pdfBlobs: Blob[]) {
-  //   const zip = new JSZip();
-  //   const agent_name = "Bill"; // This can be dynamic for different PDFs.
-
-  //   for (let i = 0; i < pdfBlobs.length; i++) {
-  //     const blob = pdfBlobs[i];
-  //     zip.file(`${agent_name}-${i}.pdf`, blob);
-  //   }
-
-  //   const zipBlob = await zip.generateAsync({ type: "blob" });
-  //   saveAs(zipBlob, "Bills.zip");
-  // }
-
   useScroll("filterHeader");
   useDocumentTitle("(جديدة) الفواتير");
   useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
@@ -236,7 +206,7 @@ export default function Bills() {
         (جديدة) الفواتير
       </h2>
 
-      {/*search Bills with name*/}
+      {/* Search Bills by client name */}
       <FiltersSummary
         searchQuery={searchQuery}
         setIsFilterOpen={setIsFilterOpen}
@@ -259,7 +229,7 @@ export default function Bills() {
       {/* isConverting Message */}
       {isConvering && <ConvertingMessage />}
 
-      {/*Display Table All Data Needed*/}
+      {/* Display Table Data */}
       {bills?.length > 0 && (
         <>
           <div className="my-10 flex flex-wrap items-center justify-center gap-4">

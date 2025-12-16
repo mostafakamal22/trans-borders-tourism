@@ -69,10 +69,12 @@ export default function Passports() {
   const notInitialRender = useRef(false);
 
   //Table to Excel
-  const tableRef = useRef(null);
+  const tableRef = useRef<HTMLTableElement | null>(null);
+
+  const [excelReady, setExcelReady] = useState(false);
 
   const { onDownload } = useDownloadExcel({
-    currentTableRef: tableRef.current,
+    currentTableRef: excelReady ? tableRef.current : null,
     filename: "Passports table",
     sheet: "Passports",
   });
@@ -183,6 +185,12 @@ export default function Passports() {
     }
   }, [pageNumber, isSuccess, isFetching, isLoading, scrollToTable]);
 
+  useEffect(() => {
+    if (tableRef.current) {
+      setExcelReady(true);
+    }
+  }, [passports.length]);
+
   useScroll("filterHeader");
   useDocumentTitle("الجـــوازات");
   useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
@@ -230,7 +238,7 @@ export default function Passports() {
       {/* isFetching Message */}
       {isFetching && <FetchingMessage isFetching={isFetching} />}
 
-      {/*Display Table All Data Needed*/}
+      {/* Display Table Data */}
       {passports?.length > 0 && (
         <>
           <button

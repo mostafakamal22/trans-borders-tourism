@@ -63,10 +63,12 @@ export default function Payments() {
   };
 
   //Table to Excel
-  const tableRef = useRef(null);
+  const tableRef = useRef<HTMLTableElement | null>(null);
+
+  const [excelReady, setExcelReady] = useState(false);
 
   const { onDownload } = useDownloadExcel({
-    currentTableRef: tableRef.current,
+    currentTableRef: excelReady ? tableRef.current : null,
     filename: "Payments table",
     sheet: "Payments",
   });
@@ -104,6 +106,12 @@ export default function Payments() {
       notInitialRender.current = true;
     }
   }, [pageNumber, isSuccess, isFetching, isLoading, scrollToTable]);
+
+  useEffect(() => {
+    if (tableRef.current) {
+      setExcelReady(true);
+    }
+  }, [payments.length]);
 
   useScroll("filterHeader");
   useDocumentTitle("المصــروفات");
@@ -149,7 +157,7 @@ export default function Payments() {
       {/* isFetching Message */}
       {isFetching && <FetchingMessage isFetching={isFetching} />}
 
-      {/*Display Table All Data Needed*/}
+      {/* Display Table Data */}
       {payments?.length > 0 && (
         <>
           <button

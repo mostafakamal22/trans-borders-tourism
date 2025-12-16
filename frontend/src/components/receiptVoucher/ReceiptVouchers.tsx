@@ -46,10 +46,12 @@ export default function ReceiptVouchers() {
   const notInitialRender = useRef(false);
 
   //Table to Excel
-  const tableRef = useRef(null);
+  const tableRef = useRef<HTMLTableElement | null>(null);
+
+  const [excelReady, setExcelReady] = useState(false);
 
   const { onDownload } = useDownloadExcel({
-    currentTableRef: tableRef.current,
+    currentTableRef: excelReady ? tableRef.current : null,
     filename: "ReceiptVouchers table",
     sheet: "ReceiptVouchers",
   });
@@ -112,6 +114,12 @@ export default function ReceiptVouchers() {
     }
   }, [pageNumber, isSuccess, isFetching, isLoading, scrollToTable]);
 
+  useEffect(() => {
+    if (tableRef.current) {
+      setExcelReady(true);
+    }
+  }, [receiptVouchers.length]);
+
   useScroll("filterHeader");
   useDocumentTitle("سنـــدات القبــض");
   useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
@@ -158,7 +166,7 @@ export default function ReceiptVouchers() {
       {/* isFetching Message */}
       {isFetching && <FetchingMessage isFetching={isFetching} />}
 
-      {/*Display Table All Data Needed*/}
+      {/* Display Table Data */}
       {receiptVouchers?.length > 0 && (
         <>
           <button

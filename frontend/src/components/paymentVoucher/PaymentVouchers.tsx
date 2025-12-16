@@ -46,10 +46,12 @@ export default function PaymentVouchers() {
   const notInitialRender = useRef(false);
 
   //Table to Excel
-  const tableRef = useRef(null);
+  const tableRef = useRef<HTMLTableElement | null>(null);
+
+  const [excelReady, setExcelReady] = useState(false);
 
   const { onDownload } = useDownloadExcel({
-    currentTableRef: tableRef.current,
+    currentTableRef: excelReady ? tableRef.current : null,
     filename: "PaymentVouchers table",
     sheet: "PaymentVouchers",
   });
@@ -112,6 +114,12 @@ export default function PaymentVouchers() {
     }
   }, [pageNumber, isSuccess, isFetching, isLoading, scrollToTable]);
 
+  useEffect(() => {
+    if (tableRef.current) {
+      setExcelReady(true);
+    }
+  }, [paymentVouchers.length]);
+
   useScroll("filterHeader");
   useDocumentTitle("سنـــدات الصرف");
   useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
@@ -158,7 +166,7 @@ export default function PaymentVouchers() {
       {/* isFetching Message */}
       {isFetching && <FetchingMessage isFetching={isFetching} />}
 
-      {/*Display Table All Data Needed*/}
+      {/* Display Table Data */}
       {paymentVouchers?.length > 0 && (
         <>
           <button

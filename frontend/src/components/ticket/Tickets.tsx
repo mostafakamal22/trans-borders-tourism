@@ -74,10 +74,12 @@ export default function Tickets() {
   const notInitialRender = useRef(false);
 
   //Table to Excel
-  const tableRef = useRef(null);
+  const tableRef = useRef<HTMLTableElement | null>(null);
+
+  const [excelReady, setExcelReady] = useState(false);
 
   const { onDownload } = useDownloadExcel({
-    currentTableRef: tableRef.current,
+    currentTableRef: excelReady ? tableRef.current : null,
     filename: "Tickets table",
     sheet: "Tickets",
   });
@@ -181,6 +183,12 @@ export default function Tickets() {
     }
   }, [pageNumber, isSuccess, isFetching, isLoading, scrollToTable]);
 
+  useEffect(() => {
+    if (tableRef.current) {
+      setExcelReady(true);
+    }
+  }, [tickets.length]);
+
   useScroll("filterHeader");
   useDocumentTitle("التذاكــر");
   useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
@@ -227,7 +235,7 @@ export default function Tickets() {
       {/* isFetching Message */}
       {isFetching && <FetchingMessage isFetching={isFetching} />}
 
-      {/*Display Table All Data Needed*/}
+      {/* Display Table Data */}
       {tickets?.length > 0 && (
         <>
           <button

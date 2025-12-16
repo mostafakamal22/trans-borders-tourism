@@ -34,10 +34,12 @@ export default function Invoices() {
   const notInitialRender = useRef<boolean>(false);
 
   //Table to Excel
-  const tableRef = useRef(null);
+  const tableRef = useRef<HTMLTableElement | null>(null);
+
+  const [excelReady, setExcelReady] = useState(false);
 
   const { onDownload } = useDownloadExcel({
-    currentTableRef: tableRef.current,
+    currentTableRef: excelReady ? tableRef.current : null,
     filename: "Old Invoices table",
     sheet: "Old Invoices",
   });
@@ -86,6 +88,12 @@ export default function Invoices() {
     }
   }, [pageNumber, isSuccess, isFetching, isLoading, scrollToTable]);
 
+  useEffect(() => {
+    if (tableRef.current) {
+      setExcelReady(true);
+    }
+  }, [invoices.length]);
+
   useScroll("filterHeader");
   useDocumentTitle("الفواتير");
   useDetectClickOutside({ setIsFilterOpen, isFilterOpen });
@@ -107,7 +115,7 @@ export default function Invoices() {
         الفواتير
       </h2>
 
-      {/*search Invoices with name*/}
+      {/* Search Invoices by client name */}
       <FiltersSummary
         searchQuery={searchQuery}
         setIsFilterOpen={setIsFilterOpen}
@@ -127,7 +135,7 @@ export default function Invoices() {
       {/* isFetching Message */}
       {isFetching && <FetchingMessage isFetching={isFetching} />}
 
-      {/*Display Table All Data Needed*/}
+      {/* Display Table Data */}
       {invoices?.length > 0 && (
         <>
           <button
