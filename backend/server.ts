@@ -11,6 +11,9 @@ import { adminApiLimiter } from "./middlewares/adminMiddlewares/adminApiLimiter"
 import { connectToMongoose } from "./config/dbConfig";
 import { corsDevOptions, corsProOptions } from "./config/corsConfig";
 
+import dns from "node:dns/promises";
+dns.setServers(["1.1.1.1"]);
+
 const app = express();
 
 //Enable Express to trust the headers set by the reverse proxy (e.g., Nginx, Apache).
@@ -79,7 +82,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(join(__dirname, "../frontend/dist")));
 
   app.get("*", (_req, res) =>
-    res.sendFile(resolve(__dirname, "../", "frontend", "dist", "index.html"))
+    res.sendFile(resolve(__dirname, "../", "frontend", "dist", "index.html")),
   );
 }
 
