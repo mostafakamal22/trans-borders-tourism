@@ -11,8 +11,9 @@ import { adminApiLimiter } from "./middlewares/adminMiddlewares/adminApiLimiter"
 import { connectToMongoose } from "./config/dbConfig";
 import { corsDevOptions, corsProOptions } from "./config/corsConfig";
 
-import dns from "node:dns/promises";
-dns.setServers(["1.1.1.1"]);
+// Solve Mongodb connection error
+import dns from "node:dns";
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
 const app = express();
 
