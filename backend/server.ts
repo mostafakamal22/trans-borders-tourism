@@ -18,6 +18,10 @@ const log = (msg: any) => {
   fs.appendFileSync("error.log", JSON.stringify(msg) + "\n");
 };
 
+fs.writeFileSync("boot.log", "App started\n");
+
+console.log("HELLO FROM SERVER");
+
 process.on("uncaughtException", (err) => {
   log(err);
 });
