@@ -7,6 +7,11 @@ PassengerAppType node
 PassengerStartupFile build/server.js
 PassengerAppLogFile "/home/tbtouris/api/logs/passenger.log"
 
+# Optional: increase log verbosity
+
+PassengerLogLevel 3
+PassengerFriendlyErrorPages off
+
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
 
 # ----------------------------------------------------------------------
