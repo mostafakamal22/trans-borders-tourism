@@ -1,3 +1,8 @@
+# Optional: increase log verbosity
+
+PassengerLogLevel 3
+PassengerFriendlyErrorPages off
+
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
 
 PassengerAppRoot "/home/tbtouris/api"
@@ -6,11 +11,6 @@ PassengerNodejs "/opt/alt/alt-nodejs20/root/usr/bin/node"
 PassengerAppType node
 PassengerStartupFile build/server.js
 PassengerAppLogFile "/home/tbtouris/api/logs/passenger.log"
-
-# Optional: increase log verbosity
-
-PassengerLogLevel 3
-PassengerFriendlyErrorPages off
 
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
 
