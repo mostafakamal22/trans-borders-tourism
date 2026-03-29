@@ -1,7 +1,8 @@
 # Optional: increase log verbosity
 
-PassengerLogLevel 3
-PassengerFriendlyErrorPages off
+# PassengerLogLevel 3
+
+# PassengerFriendlyErrorPages off
 
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
 

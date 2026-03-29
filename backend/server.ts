@@ -11,25 +11,6 @@ import { adminApiLimiter } from "./middlewares/adminMiddlewares/adminApiLimiter"
 import { connectToMongoose } from "./config/dbConfig";
 import { corsDevOptions, corsProOptions } from "./config/corsConfig";
 
-//Erorrs Logs
-import fs from "fs";
-
-const log = (msg: any) => {
-  fs.appendFileSync("error.log", JSON.stringify(msg) + "\n");
-};
-
-fs.writeFileSync("boot.log", "App started\n");
-
-console.log("HELLO FROM SERVER");
-
-process.on("uncaughtException", (err) => {
-  log(err);
-});
-
-process.on("unhandledRejection", (err) => {
-  log(err);
-});
-
 // Solve Mongodb connection error
 import dns from "node:dns";
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
