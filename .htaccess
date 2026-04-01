@@ -1,4 +1,4 @@
-# Optional: increase log verbosity
+<!-- # Optional: increase log verbosity
 
 # PassengerLogLevel 3
 
@@ -154,4 +154,4 @@ FileETag None
 
 </IfModule>
 
-Header set Content-Security-Policy-Report-Only "default-src 'self'; script-src 'report-sample' 'self'; style-src 'report-sample' 'self' https://fonts.googleapis.com; object-src 'none'; base-uri 'self'; connect-src 'self'; font-src 'self' https://fonts.gstatic.com; frame-src 'self' https://www.google.com; img-src 'self'; manifest-src 'self'; media-src 'self'; report-uri https://642db2a3f1e3671a2913583b.endpoint.csper.io/?v=1; worker-src 'none';"
+Header set Content-Security-Policy-Report-Only "default-src 'self'; script-src 'report-sample' 'self'; style-src 'report-sample' 'self' https://fonts.googleapis.com; object-src 'none'; base-uri 'self'; connect-src 'self'; font-src 'self' https://fonts.gstatic.com; frame-src 'self' https://www.google.com; img-src 'self'; manifest-src 'self'; media-src 'self'; report-uri https://642db2a3f1e3671a2913583b.endpoint.csper.io/?v=1; worker-src 'none';" -->
