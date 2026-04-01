@@ -12,8 +12,8 @@ import { connectToMongoose } from "./config/dbConfig";
 import { corsDevOptions, corsProOptions } from "./config/corsConfig";
 
 // Solve Mongodb connection error
-import dns from "node:dns";
-dns.setServers(["1.1.1.1", "8.8.8.8"]);
+// import dns from "node:dns";
+// dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
 const app = express();
 
