@@ -33,9 +33,8 @@ jobs:
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -T -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd api
-            rm -rf node_modules package-lock.json
             /opt/alt/alt-nodejs20/root/usr/bin/npm install
-            touch ~/tmp/restart.txt
+            touch ./tmp/restart.txt
           EOF
         env:
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}

@@ -61,7 +61,7 @@ const adminLogin = async (req: Request, res: Response) => {
     const { id, role } = admin;
     const { accessToken, refreshToken: newRefreshToken } = generateAdminsToken(
       id,
-      role
+      role,
     );
 
     let newRefreshTokenArray = !cookies?.jwt
@@ -88,7 +88,7 @@ const adminLogin = async (req: Request, res: Response) => {
         "jwt",
         process.env.NODE_ENV === "production"
           ? cookiesProClearOptions
-          : cookiesDevClearOptions
+          : cookiesDevClearOptions,
       );
     }
 
@@ -102,7 +102,7 @@ const adminLogin = async (req: Request, res: Response) => {
       newRefreshToken,
       process.env.NODE_ENV === "production"
         ? cookiesProOptions
-        : cookiesDevOptions
+        : cookiesDevOptions,
     );
 
     //Send Admin's Access Token.
@@ -136,7 +136,7 @@ const adminRefreshToken = async (req: Request, res: Response) => {
   if (!admin) {
     const decoded = jwt.verify(
       refreshToken,
-      process.env.REFRESH_TOKEN_SECRET!
+      process.env.REFRESH_TOKEN_SECRET!,
     ) as RefreshJwtPayload;
 
     const hackedAdmin = await Admin.findById(decoded?.id);
@@ -154,7 +154,7 @@ const adminRefreshToken = async (req: Request, res: Response) => {
     // evaluate jwt
     const decoded = jwt.verify(
       refreshToken,
-      process.env.REFRESH_TOKEN_SECRET!
+      process.env.REFRESH_TOKEN_SECRET!,
     ) as RefreshJwtPayload;
 
     if (!decoded) {
@@ -196,16 +196,16 @@ const createAdmin = async (_req: Request, res: Response) => {
   }
   // //First Hash The password from the request body.
   // const hashedPassword = await bcrypt.hash(req.body?.password, 10);
-
-  // //Then Create Admin Doc With Request Data
+  //
+  //Then Create Admin Doc With Request Data
   // const admin = await Admin.create({
   //   admin_name: req.body.name,
   //   email: req.body.email,
   //   password: hashedPassword,
   //   role: req.body.role,
   // });
-
-  // //send Back Created Admin Data
+  //
+  //send Back Created Admin Data
   // res.status(201).json({
   //   id: admin.id,
   //   admin_name: admin.admin_name,
@@ -263,14 +263,14 @@ const AdminLogout = async (req: Request, res: Response) => {
       "jwt",
       process.env.NODE_ENV === "production"
         ? cookiesProClearOptions
-        : cookiesDevClearOptions
+        : cookiesDevClearOptions,
     );
     return res.sendStatus(204);
   }
 
   // Delete refreshToken in db
   admin.refreshToken = admin.refreshToken.filter(
-    (rt: string) => rt !== refreshToken
+    (rt: string) => rt !== refreshToken,
   );
   await admin.save();
 
@@ -278,7 +278,7 @@ const AdminLogout = async (req: Request, res: Response) => {
     "jwt",
     process.env.NODE_ENV === "production"
       ? cookiesProClearOptions
-      : cookiesDevClearOptions
+      : cookiesDevClearOptions,
   );
   res.sendStatus(204);
 };

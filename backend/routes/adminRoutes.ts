@@ -30,7 +30,7 @@ router
     comparePassword,
     validatePassword,
     checkPassword,
-    updateAdmin
+    updateAdmin,
   );
 
 export default router;

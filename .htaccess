@@ -12,10 +12,14 @@ PassengerNodejs "/opt/alt/alt-nodejs20/root/usr/bin/node"
 PassengerAppType node
 PassengerStartupFile build/server.js
 PassengerAppLogFile "/home/tbtouris/api/logs/passenger.log"
-PassengerMaxPoolSize 1
-PassengerMinInstances 1
-PassengerMaxRequests 1000
-PassengerPoolIdleTime 300
+
+# PassengerMaxPoolSize 1
+
+# PassengerMinInstances 1
+
+# PassengerMaxRequests 1000
+
+# PassengerPoolIdleTime 300
 
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
 
