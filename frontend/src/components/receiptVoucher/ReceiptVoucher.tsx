@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 import DataFetchingSpinner from "../shared/DataFetchingSpinner";
 import DataFetchingErrorMessage from "../shared/DataFetchingErrorMessage";
+import stamp from "../../assets/imgs/trans-border-stamp.png";
 
 export default function ReceiptVoucher() {
   // Initial state
@@ -26,7 +27,7 @@ export default function ReceiptVoucher() {
 
   //state for receiptVoucher Details
   const [receiptVoucherDetails, setReceiptVoucherDetails] = useState(
-    initialReceiptVoucherDetails
+    initialReceiptVoucherDetails,
   );
 
   const receiptVoucherID = useParams()?.id || "";
@@ -74,12 +75,12 @@ export default function ReceiptVoucher() {
     receiptVoucherDetails;
 
   return (
-    <>
+    <div className="relative overflow-hidden" ref={componentRef}>
       <ReactToPrint
         trigger={() => (
           <button
-            className="fixed top-[15vh] left-4 z-10 my-5 inline-flex items-center rounded border bg-red-200 px-2 py-2 text-xs font-bold text-red-800 shadow transition-all duration-300 ease-in-out hover:border-red-800 hover:bg-white
-          hover:text-red-800 print:hidden sm:px-3 sm:text-sm"
+            className="fixed left-4 top-[15vh] z-10 my-5 inline-flex items-center rounded border bg-red-200 px-2 py-2 text-xs font-bold text-red-800 shadow transition-all duration-300 ease-in-out hover:border-red-800 hover:bg-white
+          hover:text-red-800 sm:px-3 sm:text-sm print:hidden"
           >
             <AiFillPrinter className="mr-1" size={20} />
             طباعة السند
@@ -89,8 +90,7 @@ export default function ReceiptVoucher() {
       />
       <div
         id="showReceiptVoucher"
-        ref={componentRef}
-        className="mx-auto my-20 min-h-[75vh] w-full max-w-6xl overflow-x-auto rounded  border border-black p-10  print:my-0 print:flex print:min-h-screen print:flex-col print:justify-between print:shadow-none"
+        className="relative mx-auto my-20 min-h-[75vh] w-full max-w-6xl overflow-x-auto rounded  border border-black p-10  print:my-0 print:flex print:min-h-screen print:flex-col print:justify-between print:shadow-none"
       >
         <div className="flex items-center">
           <div className="max-w-[300px] text-left">
@@ -242,6 +242,14 @@ export default function ReceiptVoucher() {
           </p>
         </div>
       </div>
-    </>
+
+      <div className="absolute -bottom-20 left-40 my-10 flex min-h-[200px] w-full items-center justify-center">
+        <img
+          className="absolute left-10 top-5 z-10 mx-auto max-h-[100%] w-[200px]  print:w-[130px]"
+          src={stamp}
+          alt="stamp"
+        />
+      </div>
+    </div>
   );
 }
