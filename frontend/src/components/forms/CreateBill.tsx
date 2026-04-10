@@ -57,76 +57,148 @@ export default function CreateBill() {
   });
 
   //state for items Details
-  const [itemsDetails, setItemsDetails] = useState<IBillProduct[]>([
+  const [itemsDetails, setItemsDetails] = useState<
+    (IBillProduct & {
+      data?: {
+        name?: string;
+        nationality?: string;
+        state?: string;
+        service?: string;
+        passportId?: string;
+        paymentDate?: string;
+        servicePrice?: number;
+        taxable?: number;
+        taxRate?: number;
+        total?: number;
+        sales?: number;
+        profit?: number;
+        type?: string;
+        employee?: string;
+        supplier?: string;
+        paymentMethod?: string;
+        cost?: number;
+        paidAmount?: number;
+        remainingAmount?: number;
+      };
+    })[]
+  >([
     {
       type: "Passport",
       desc: "",
       price: 0,
       quantity: 1,
+      data: {
+        name: "",
+        nationality: "",
+        state: "accepted",
+        service: "30days",
+        passportId: "",
+        paymentDate: "",
+        servicePrice: 0,
+        taxable: 53,
+        taxRate: 2.65,
+        total: 0,
+        sales: 0,
+        profit: 0,
+      },
     },
   ]);
-
-  //state for Passport type
-  const [passportDetails, setPassportDetails] = useState({
-    name: "",
-    nationality: "",
-    state: "accepted",
-    service: "30days",
-    passportId: "",
-    paymentDate: "",
-    servicePrice: 0,
-    taxable: 53,
-    taxRate: 2.65,
-    total: 0,
-    sales: 0,
-    profit: 0,
-  });
-
-  //state for Ticket Details
-  const [ticketDetails, setTicketDetails] = useState({
-    name: "",
-    type: "",
-    employee: "",
-    supplier: "",
-    paymentDate: "",
-    paymentMethod: "cash",
-    cost: 0,
-    total: 0,
-    taxable: 0,
-    sales: 0,
-    profit: 0,
-    paidAmount: 0,
-    remainingAmount: 0,
-  });
 
   //state for items
   const [itemsCount, setItemsCount] = useState(1);
 
   const [createBill, { isLoading, isSuccess }] = useCreateBillMutation();
 
+  // Helper function to update item by index
+  // const updateItemByIndex = (index: number, updates: any) => {
+  //   const newItems = [...itemsDetails];
+  //   newItems[index] = { ...newItems[index], ...updates };
+  //   setItemsDetails(newItems);
+  // };
+
+  // Helper function to update item's data property by index
+  const updateItemDataByIndex = (index: number, dataUpdates: any) => {
+    const newItems = [...itemsDetails];
+    newItems[index] = {
+      ...newItems[index],
+      data: { ...newItems[index].data, ...dataUpdates },
+    };
+    setItemsDetails(newItems);
+  };
+
   const handleItemCount = async (num: number) => {
     if (num < 0 && itemsCount === 1) return;
 
     setItemsCount(itemsCount + num);
 
+    let newItem: any;
+
+    // Determine what type to add based on the last item
+    const lastItem = itemsDetails[itemsDetails.length - 1];
+    const typeToAdd = lastItem?.type || "Other";
+
+    if (typeToAdd === "Passport") {
+      newItem = {
+        type: "Passport",
+        desc: "",
+        price: 0,
+        quantity: 1,
+        data: {
+          name: "",
+          nationality: "",
+          state: "accepted",
+          service: "30days",
+          passportId: "",
+          paymentDate: "",
+          servicePrice: 0,
+          taxable: 53,
+          taxRate: 2.65,
+          total: 0,
+          sales: 0,
+          profit: 0,
+        },
+      };
+    } else if (typeToAdd === "Ticket") {
+      newItem = {
+        type: "Ticket",
+        desc: "",
+        price: 0,
+        quantity: 1,
+        data: {
+          name: "",
+          type: "",
+          employee: "",
+          supplier: "",
+          paymentDate: "",
+          paymentMethod: "cash",
+          cost: 0,
+          total: 0,
+          taxable: 0,
+          sales: 0,
+          profit: 0,
+          paidAmount: 0,
+          remainingAmount: 0,
+        },
+      };
+    } else {
+      newItem = {
+        type: "Other",
+        desc: "",
+        price: 0,
+        quantity: 1,
+      };
+    }
+
     const newItems =
       num > 0
-        ? [
-            ...itemsDetails,
-            {
-              type: "Other",
-              desc: "",
-              price: 0,
-              quantity: 1,
-            } as IBillProduct,
-          ]
-        : itemsDetails.splice(0, itemsDetails.length - 1);
+        ? [...itemsDetails, newItem]
+        : itemsDetails.slice(0, itemsDetails.length - 1);
 
     setItemsDetails(newItems);
 
     const newTotal = newItems.reduce(
       (prev, curr) => prev + curr.price * curr.quantity,
-      0
+      0,
     );
 
     setBillDetails({
@@ -143,28 +215,27 @@ export default function CreateBill() {
         ...item,
         desc:
           item.type === "Passport"
-            ? passportDetails.service === "90days" ||
-              passportDetails.service === "60days" ||
-              passportDetails.service === "30days"
-              ? " فيزا " + passportService[passportDetails.service]
-              : passportService[
-                  passportDetails.service as keyof PassportService
-                ]
+            ? item.data?.service === "90days" ||
+              item.data?.service === "60days" ||
+              item.data?.service === "30days"
+              ? " فيزا " +
+                passportService[item.data.service as keyof PassportService]
+              : passportService[item.data?.service as keyof PassportService]
             : item.type === "Ticket"
-            ? ticketDetails.type
+            ? item.data?.type
             : item.desc,
         data:
           item.type === "Passport"
             ? {
-                ...passportDetails,
-                name: customerDetails.name,
+                ...item.data,
                 paymentDate: billDetails.date,
+                paymentMethod: billDetails.paymentMethod,
               }
             : item.type === "Ticket"
             ? {
-                ...ticketDetails,
-                name: customerDetails.name,
+                ...item.data,
                 paymentDate: billDetails.date,
+                paymentMethod: billDetails.paymentMethod,
               }
             : null,
       })),
@@ -206,39 +277,23 @@ export default function CreateBill() {
           desc: "",
           price: 0,
           quantity: 1,
+          data: {
+            name: "",
+            nationality: "",
+            state: "accepted",
+            service: "30days",
+            passportId: "",
+            paymentDate: "",
+            servicePrice: 0,
+            taxable: 53,
+            taxRate: 2.65,
+            total: 0,
+            sales: 0,
+            profit: 0,
+          },
         },
       ]);
-      setPassportDetails({
-        name: "",
-        nationality: "",
-        state: "accepted",
-        service: "30days",
-        passportId: "",
-        paymentDate: "",
-        servicePrice: 0,
-        taxable: 53,
-        taxRate: 2.65,
-        total: 0,
-        sales: 0,
-        profit: 0,
-      });
-
-      //Set Ticket Inputs To Default
-      setTicketDetails({
-        name: "",
-        type: "",
-        employee: "",
-        supplier: "",
-        paymentDate: "",
-        paymentMethod: "cash",
-        cost: 0,
-        total: 0,
-        taxable: 0,
-        sales: 0,
-        profit: 0,
-        paidAmount: 0,
-        remainingAmount: 0,
-      });
+      setItemsCount(1);
     }
   }, [isSuccess]);
 
@@ -266,7 +321,7 @@ export default function CreateBill() {
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4 px-5 py-5 font-semibold">
           <FormInput
-            label="إسم العميل"
+            label="الفاتورة للسيد/السيدة"
             name="customerName"
             labeClassNames={lableClassNamesStyles.default}
             className={inputClassNamesStyles.default}
@@ -293,11 +348,49 @@ export default function CreateBill() {
               className={inputClassNamesStyles.default}
               value={item.type}
               onChange={(e) => {
-                const newArr = [...itemsDetails];
-                newArr[index].type = e.target.value as
+                const newType = e.target.value as
                   | "Passport"
                   | "Ticket"
                   | "Other";
+                const newArr = [...itemsDetails];
+                newArr[index].type = newType;
+
+                // Reset data based on new type
+                if (newType === "Passport") {
+                  newArr[index].data = {
+                    name: "",
+                    nationality: "",
+                    state: "accepted",
+                    service: "30days",
+                    passportId: "",
+                    paymentDate: "",
+                    servicePrice: 0,
+                    taxable: 53,
+                    taxRate: 2.65,
+                    total: 0,
+                    sales: 0,
+                    profit: 0,
+                  };
+                } else if (newType === "Ticket") {
+                  newArr[index].data = {
+                    name: "",
+                    type: "",
+                    employee: "",
+                    supplier: "",
+                    paymentDate: "",
+                    paymentMethod: "cash",
+                    cost: 0,
+                    total: 0,
+                    taxable: 0,
+                    sales: 0,
+                    profit: 0,
+                    paidAmount: 0,
+                    remainingAmount: 0,
+                  };
+                } else {
+                  newArr[index].data = undefined;
+                }
+                newArr[index].price = 0;
                 setItemsDetails(newArr);
               }}
             >
@@ -345,7 +438,7 @@ export default function CreateBill() {
 
                     const newSubTotal = itemsDetails.reduce(
                       (prev, curr) => prev + curr.price * curr.quantity,
-                      0
+                      0,
                     );
                     setBillDetails({
                       ...billDetails,
@@ -375,7 +468,7 @@ export default function CreateBill() {
 
                     const newTotal = itemsDetails.reduce(
                       (prev, curr) => prev + curr.price * curr.quantity,
-                      0
+                      0,
                     );
                     setBillDetails({
                       ...billDetails,
@@ -393,15 +486,29 @@ export default function CreateBill() {
             {item.type === "Passport" && (
               <>
                 <FormInput
+                  label={passportTableHeaderTitles[0]}
+                  name="customerName"
+                  labeClassNames={lableClassNamesStyles.default}
+                  className={inputClassNamesStyles.default}
+                  type="text"
+                  value={item.data?.name || ""}
+                  onChange={(e) =>
+                    updateItemDataByIndex(index, {
+                      name: e.target.value,
+                    })
+                  }
+                  required
+                />
+
+                <FormInput
                   label={passportTableHeaderTitles[1]}
                   name="customerNationality"
                   labeClassNames={lableClassNamesStyles.default}
                   className={inputClassNamesStyles.default}
                   type="text"
-                  value={passportDetails.nationality}
+                  value={item.data?.nationality || ""}
                   onChange={(e) =>
-                    setPassportDetails({
-                      ...passportDetails,
+                    updateItemDataByIndex(index, {
                       nationality: e.target.value,
                     })
                   }
@@ -413,12 +520,9 @@ export default function CreateBill() {
                   labeClassNames={lableClassNamesStyles.default}
                   className={inputClassNamesStyles.default}
                   type="text"
-                  value={passportDetails.passportId}
+                  value={item.data?.passportId || ""}
                   onChange={(e) =>
-                    setPassportDetails({
-                      ...passportDetails,
-                      passportId: e.target.value,
-                    })
+                    updateItemDataByIndex(index, { passportId: e.target.value })
                   }
                   required
                 />
@@ -429,39 +533,34 @@ export default function CreateBill() {
                   labeClassNames={lableClassNamesStyles.default}
                   className={inputClassNamesStyles.default}
                   type="number"
-                  value={passportDetails.servicePrice}
+                  value={item.data?.servicePrice || 0}
                   onChange={(e) => {
-                    setPassportDetails({
-                      ...passportDetails,
-                      servicePrice: +e.target.value,
-                      sales:
-                        passportDetails.service === "change_situation"
-                          ? +e.target.value +
-                            passportDetails.taxRate +
-                            passportDetails.taxable
-                          : 0,
-                      total:
-                        passportDetails.service === "change_situation"
-                          ? +e.target.value +
-                            passportDetails.taxRate +
-                            passportDetails.taxable
-                          : 0,
-                      profit: 0,
-                    });
+                    const newServicePrice = +e.target.value;
+                    const isChangeSituation =
+                      item.data?.service === "change_situation";
+                    const newSales = isChangeSituation
+                      ? newServicePrice +
+                        (item.data?.taxRate || 0) +
+                        (item.data?.taxable || 0)
+                      : 0;
 
                     const newArr = [...itemsDetails];
-                    newArr[index].price =
-                      passportDetails.service === "change_situation"
-                        ? +e.target.value +
-                          passportDetails.taxRate +
-                          passportDetails.taxable
-                        : newArr[index].price;
-
+                    newArr[index] = {
+                      ...newArr[index],
+                      price: isChangeSituation ? newSales : newArr[index].price,
+                      data: {
+                        ...newArr[index].data,
+                        servicePrice: newServicePrice,
+                        sales: newSales,
+                        total: newSales,
+                        profit: 0,
+                      },
+                    };
                     setItemsDetails(newArr);
 
-                    const newTotal = itemsDetails.reduce(
+                    const newTotal = newArr.reduce(
                       (prev, curr) => prev + curr.price * curr.quantity,
-                      0
+                      0,
                     );
 
                     setBillDetails({
@@ -479,37 +578,43 @@ export default function CreateBill() {
                   labeClassNames={lableClassNamesStyles.default}
                   className={`${inputClassNamesStyles.default}`}
                   type="number"
-                  value={passportDetails.taxable}
+                  value={item.data?.taxable || 0}
                   min={0}
                   step={0.01}
                   onChange={(e) => {
-                    setPassportDetails({
-                      ...passportDetails,
-                      taxable: +e.target.value,
-                      taxRate: +(+e.target.value * 0.05).toFixed(2),
-                      total: calculatePassportTotal({
-                        sales: passportDetails.sales,
-                        servicePrice: passportDetails.servicePrice,
-                      }),
-                      profit: +calculatePassportProfit({
-                        sales: passportDetails.sales,
-                        servicePrice: passportDetails.servicePrice,
-                        taxable: +e.target.value,
-                      }),
+                    const newTaxable = +e.target.value;
+                    const newTaxRate = +(newTaxable * 0.05).toFixed(2);
+                    const newTotal = calculatePassportTotal({
+                      sales: item.data?.sales || 0,
+                      servicePrice: item.data?.servicePrice || 0,
+                    });
+                    const newProfit = +calculatePassportProfit({
+                      sales: item.data?.sales || 0,
+                      servicePrice: item.data?.servicePrice || 0,
+                      taxable: newTaxable,
                     });
 
                     const newArr = [...itemsDetails];
-
+                    newArr[index] = {
+                      ...newArr[index],
+                      data: {
+                        ...newArr[index].data,
+                        taxable: newTaxable,
+                        taxRate: newTaxRate,
+                        total: newTotal,
+                        profit: newProfit,
+                      },
+                    };
                     setItemsDetails(newArr);
 
-                    const newTotal = itemsDetails.reduce(
+                    const newTotal2 = newArr.reduce(
                       (prev, curr) => prev + curr.price * curr.quantity,
-                      0
+                      0,
                     );
 
                     setBillDetails({
                       ...billDetails,
-                      total: +newTotal.toFixed(2),
+                      total: +newTotal2.toFixed(2),
                     });
                   }}
                 />
@@ -520,7 +625,7 @@ export default function CreateBill() {
                   labeClassNames={lableClassNamesStyles.default}
                   className={`${inputClassNamesStyles.default} bg-slate-200`}
                   type="number"
-                  value={passportDetails.taxRate}
+                  value={item.data?.taxRate || 0}
                   disabled
                   min={0}
                   step={0.01}
@@ -532,7 +637,7 @@ export default function CreateBill() {
                   labeClassNames={lableClassNamesStyles.default}
                   className={`${inputClassNamesStyles.default} bg-slate-200`}
                   type="number"
-                  value={passportDetails.total}
+                  value={item.data?.total || 0}
                   disabled
                   min={0}
                   step={0.01}
@@ -544,34 +649,40 @@ export default function CreateBill() {
                   labeClassNames={lableClassNamesStyles.default}
                   className={inputClassNamesStyles.default}
                   type="number"
-                  value={passportDetails.sales}
+                  value={item.data?.sales || 0}
                   onChange={(e) => {
-                    setPassportDetails({
-                      ...passportDetails,
-                      total: calculatePassportTotal({
-                        sales: +e.target.value,
-                        servicePrice: passportDetails.servicePrice,
-                      }),
-                      sales: +e.target.value,
-                      profit: +calculatePassportProfit({
-                        sales: +e.target.value,
-                        servicePrice: passportDetails.servicePrice,
-                        taxable: passportDetails.taxable,
-                      }),
+                    const newSales = +e.target.value;
+                    const newTotal = calculatePassportTotal({
+                      sales: newSales,
+                      servicePrice: item.data?.servicePrice || 0,
+                    });
+                    const newProfit = +calculatePassportProfit({
+                      sales: newSales,
+                      servicePrice: item.data?.servicePrice || 0,
+                      taxable: item.data?.taxable || 0,
                     });
 
                     const newArr = [...itemsDetails];
-                    (newArr[index].price = +e.target.value),
-                      setItemsDetails(newArr);
+                    newArr[index] = {
+                      ...newArr[index],
+                      price: newSales,
+                      data: {
+                        ...newArr[index].data,
+                        sales: newSales,
+                        total: newTotal,
+                        profit: newProfit,
+                      },
+                    };
+                    setItemsDetails(newArr);
 
-                    const newTotal = itemsDetails.reduce(
+                    const newTotal2 = newArr.reduce(
                       (prev, curr) => prev + curr.price * curr.quantity,
-                      0
+                      0,
                     );
 
                     setBillDetails({
                       ...billDetails,
-                      total: +newTotal.toFixed(2),
+                      total: +newTotal2.toFixed(2),
                     });
                   }}
                   min={0}
@@ -584,7 +695,7 @@ export default function CreateBill() {
                   labeClassNames={lableClassNamesStyles.default}
                   className={`${inputClassNamesStyles.default} bg-slate-200`}
                   type="number"
-                  value={passportDetails.profit}
+                  value={item.data?.profit || 0}
                   disabled
                   min={0}
                   step={0.01}
@@ -594,12 +705,9 @@ export default function CreateBill() {
                   name="state"
                   id="state"
                   className={inputClassNamesStyles.default}
-                  value={passportDetails.state}
+                  value={item.data?.state || "accepted"}
                   onChange={(e) =>
-                    setPassportDetails({
-                      ...passportDetails,
-                      state: e.target.value,
-                    })
+                    updateItemDataByIndex(index, { state: e.target.value })
                   }
                 >
                   {Object.keys(passportState).map((name: string) => (
@@ -620,12 +728,9 @@ export default function CreateBill() {
                   name="service"
                   id="service"
                   className={inputClassNamesStyles.default}
-                  value={passportDetails.service}
+                  value={item.data?.service || "30days"}
                   onChange={(e) =>
-                    setPassportDetails({
-                      ...passportDetails,
-                      service: e.target.value,
-                    })
+                    updateItemDataByIndex(index, { service: e.target.value })
                   }
                 >
                   {Object.keys(passportService).map((name: string) => (
@@ -646,17 +751,27 @@ export default function CreateBill() {
             {item.type === "Ticket" && (
               <>
                 <FormInput
+                  label={ticketsTableHeaderTitles[0]}
+                  name="customerName"
+                  labeClassNames={lableClassNamesStyles.default}
+                  className={inputClassNamesStyles.default}
+                  type="text"
+                  value={item.data?.name || ""}
+                  onChange={(e) =>
+                    updateItemDataByIndex(index, { name: e.target.value })
+                  }
+                  required
+                />
+
+                <FormInput
                   label={ticketsTableHeaderTitles[1]}
                   name="type"
                   labeClassNames={lableClassNamesStyles.default}
                   className={inputClassNamesStyles.default}
                   type="text"
-                  value={ticketDetails.type}
+                  value={item.data?.type || ""}
                   onChange={(e) =>
-                    setTicketDetails({
-                      ...ticketDetails,
-                      type: e.target.value,
-                    })
+                    updateItemDataByIndex(index, { type: e.target.value })
                   }
                 />
 
@@ -666,12 +781,9 @@ export default function CreateBill() {
                   labeClassNames={lableClassNamesStyles.default}
                   className={inputClassNamesStyles.default}
                   type="text"
-                  value={ticketDetails.employee}
+                  value={item.data?.employee || ""}
                   onChange={(e) =>
-                    setTicketDetails({
-                      ...ticketDetails,
-                      employee: e.target.value,
-                    })
+                    updateItemDataByIndex(index, { employee: e.target.value })
                   }
                 />
 
@@ -681,10 +793,9 @@ export default function CreateBill() {
                   labeClassNames={lableClassNamesStyles.default}
                   className={inputClassNamesStyles.default}
                   type="number"
-                  value={ticketDetails.cost}
+                  value={item.data?.cost || 0}
                   onChange={(e) =>
-                    setTicketDetails({
-                      ...ticketDetails,
+                    updateItemDataByIndex(index, {
                       cost: +e.target.value,
                       total: 0,
                       taxable: 0,
@@ -702,7 +813,7 @@ export default function CreateBill() {
                   labeClassNames={lableClassNamesStyles.default}
                   className={`${inputClassNamesStyles.default} bg-slate-200`}
                   type="number"
-                  value={ticketDetails.total}
+                  value={item.data?.total || 0}
                   disabled
                   min={0}
                   step={0.01}
@@ -714,7 +825,7 @@ export default function CreateBill() {
                   labeClassNames={lableClassNamesStyles.default}
                   className={`${inputClassNamesStyles.default} bg-slate-200`}
                   type="number"
-                  value={ticketDetails.taxable}
+                  value={item.data?.taxable || 0}
                   disabled
                   min={0}
                   step={0.01}
@@ -726,39 +837,46 @@ export default function CreateBill() {
                   labeClassNames={lableClassNamesStyles.default}
                   className={inputClassNamesStyles.default}
                   type="number"
-                  value={ticketDetails.sales}
+                  value={item.data?.sales || 0}
                   onChange={(e) => {
-                    setTicketDetails({
-                      ...ticketDetails,
-                      sales: +e.target.value,
-                      total: calculateTicketTotal({
-                        sales: +e.target.value,
-                        cost: ticketDetails.cost,
-                      }),
-                      taxable: calculateTicketTax({
-                        sales: +e.target.value,
-                        cost: ticketDetails.cost,
-                      }),
-                      profit: +calculateTicketProfit({
-                        sales: +e.target.value,
-                        cost: ticketDetails.cost,
-                      }),
-                      paidAmount: +e.target.value,
-                      remainingAmount: 0,
+                    const newSales = +e.target.value;
+                    const newTotal = calculateTicketTotal({
+                      sales: newSales,
+                      cost: item.data?.cost || 0,
+                    });
+                    const newTaxable = calculateTicketTax({
+                      sales: newSales,
+                      cost: item.data?.cost || 0,
+                    });
+                    const newProfit = +calculateTicketProfit({
+                      sales: newSales,
+                      cost: item.data?.cost || 0,
                     });
 
                     const newArr = [...itemsDetails];
-                    (newArr[index].price = +e.target.value),
-                      setItemsDetails(newArr);
+                    newArr[index] = {
+                      ...newArr[index],
+                      price: newSales,
+                      data: {
+                        ...newArr[index].data,
+                        sales: newSales,
+                        total: newTotal,
+                        taxable: newTaxable,
+                        profit: newProfit,
+                        paidAmount: newSales,
+                        remainingAmount: 0,
+                      },
+                    };
+                    setItemsDetails(newArr);
 
-                    const newTotal = itemsDetails.reduce(
+                    const newTotal2 = newArr.reduce(
                       (prev, curr) => prev + curr.price * curr.quantity,
-                      0
+                      0,
                     );
 
                     setBillDetails({
                       ...billDetails,
-                      total: +newTotal.toFixed(2),
+                      total: +newTotal2.toFixed(2),
                     });
                   }}
                   min={0}
@@ -771,7 +889,7 @@ export default function CreateBill() {
                   labeClassNames={lableClassNamesStyles.default}
                   className={`${inputClassNamesStyles.default} bg-slate-200`}
                   type="number"
-                  value={ticketDetails.profit}
+                  value={item.data?.profit || 0}
                   disabled
                   min={0}
                   step={0.01}
@@ -783,12 +901,12 @@ export default function CreateBill() {
                   labeClassNames={lableClassNamesStyles.default}
                   className={inputClassNamesStyles.default}
                   type="number"
-                  value={ticketDetails.paidAmount}
+                  value={item.data?.paidAmount || 0}
                   onChange={(e) =>
-                    setTicketDetails({
-                      ...ticketDetails,
+                    updateItemDataByIndex(index, {
                       paidAmount: +e.target.value,
-                      remainingAmount: ticketDetails.sales - +e.target.value,
+                      remainingAmount:
+                        (item.data?.sales || 0) - +e.target.value,
                     })
                   }
                   min={0}
@@ -801,7 +919,7 @@ export default function CreateBill() {
                   labeClassNames={lableClassNamesStyles.default}
                   className={`${inputClassNamesStyles.default} bg-slate-200`}
                   type="number"
-                  value={ticketDetails.remainingAmount}
+                  value={item.data?.remainingAmount || 0}
                   disabled
                   min={0}
                   step={0.01}
@@ -841,12 +959,9 @@ export default function CreateBill() {
                   labeClassNames={lableClassNamesStyles.default}
                   className={inputClassNamesStyles.default}
                   type="text"
-                  value={ticketDetails.supplier}
+                  value={item.data?.supplier || ""}
                   onChange={(e) =>
-                    setTicketDetails({
-                      ...ticketDetails,
-                      supplier: e.target.value,
-                    })
+                    updateItemDataByIndex(index, { supplier: e.target.value })
                   }
                 />
               </>
@@ -1009,10 +1124,10 @@ export default function CreateBill() {
                 ...billDetails,
                 paymentMethod: e.target.value,
               });
-              setTicketDetails({
-                ...ticketDetails,
-                paymentMethod: e.target.value,
-              });
+              // setTicketDetails({
+              //   ...ticketDetails,
+              //   paymentMethod: e.target.value,
+              // });
             }}
           >
             {paymentMethodsOptions}

@@ -15,6 +15,7 @@ export const tableHeader = (
     {[...ticketsTableHeaderTitles]
       .slice(8)
       .reverse()
+      .filter((title) => title !== "تعديل التذكرة")
       .map((title) => (
         <th
           key={title}
@@ -66,14 +67,14 @@ export const tableRow = ({
     // handleAddInvoice,
     // isCreatingInvoice,
     isDeleting,
-    setId,
-    setIsOpen,
+    // setId,
+    // setIsOpen,
   } = extraOptions;
 
   const cutoffDate = dayjs("2025-05-01");
 
   const isTicketBefore1May2025 = dayjs(ticket?.payment_date).isBefore(
-    cutoffDate
+    cutoffDate,
   );
 
   const tax = !isTicketBefore1May2025
@@ -126,7 +127,7 @@ export const tableRow = ({
       </th> */}
 
       {/* Update ticket */}
-      <th
+      {/* <th
         scope="row"
         className="border-x border-x-black p-1 text-center text-gray-900"
       >
@@ -140,7 +141,7 @@ export const tableRow = ({
         >
           <AiFillEdit size={20} />
         </button>
-      </th>
+      </th> */}
 
       {/*Payment Date*/}
       <th

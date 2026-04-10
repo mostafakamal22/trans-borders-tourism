@@ -1,7 +1,7 @@
 import { CreditStates } from "./types";
 
 export const ticketsTableHeaderTitles: string[] = [
-  "Customer Name",
+  "إسم العميل",
   "Type",
   "اسم الموظف",
   "الرسوم الغير خاضعه للضريبه",

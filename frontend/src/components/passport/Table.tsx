@@ -28,7 +28,7 @@ export const tableHeader = (
 
     {[...passportTableHeaderTitles]
       .reverse()
-      .slice(2, 9)
+      .slice(3, 9)
       .map((title) => (
         <th
           key={title}
@@ -83,8 +83,8 @@ export const tableRow = ({
     // handleAddInvoice,
     // isCreatingInvoice,
     isDeleting,
-    setId,
-    setIsOpen,
+    // setId,
+    // setIsOpen,
   } = extraOptions;
 
   const tax = calculateTax(passport);
@@ -92,7 +92,7 @@ export const tableRow = ({
   const cutoffDate = dayjs("2023-05-01");
 
   const isPassportBefore1May2023 = dayjs(passport?.payment_date).isBefore(
-    cutoffDate
+    cutoffDate,
   );
 
   return (
@@ -146,7 +146,7 @@ export const tableRow = ({
       </th> */}
 
       {/* Update Passport */}
-      <th
+      {/* <th
         scope="row"
         className="border-x border-x-black p-1 text-center text-gray-900"
       >
@@ -160,7 +160,7 @@ export const tableRow = ({
         >
           <AiFillEdit size={20} />
         </button>
-      </th>
+      </th> */}
 
       {/*Payment Method*/}
       <th
@@ -290,7 +290,7 @@ export const tableRow = ({
         className="text-gray-90  border-x border-x-black p-1 text-center"
       >
         {tableBodyData.findIndex(
-          (p: IPassportDocument) => p.id === passport?.id
+          (p: IPassportDocument) => p.id === passport?.id,
         ) + 1}
       </th>
     </tr>

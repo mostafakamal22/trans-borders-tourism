@@ -107,7 +107,7 @@ export const UpdateBill = ({
 
   // State for Customer Details
   const [customerDetails, setCustomerDetails] = useState<IBillCustomer>(
-    initialCustomerDetails
+    initialCustomerDetails,
   );
 
   // State for Bill Details
@@ -117,40 +117,92 @@ export const UpdateBill = ({
   const [itemsDetails, setItemsDetails] =
     useState<IBillProduct[]>(initialItemsDetails);
 
-  // State for Passport Details
-  const [passportDetails, setPassportDetails] = useState(
-    initialPassportDetails
-  );
-
-  // State for Tickets Details
-  const [ticketDetails, setTicketDetails] = useState(initialTicketDetails);
-
   //state for items
   const [itemsCount, setItemsCount] = useState(1);
+
+  // Helper function to update item data by index
+  const updateItemDataByIndex = (index: number, dataUpdates: any) => {
+    const newArr = [...itemsDetails];
+    if (!newArr[index].data) {
+      newArr[index].data = {};
+    }
+    newArr[index].data = { ...newArr[index].data, ...dataUpdates };
+    setItemsDetails(newArr);
+  };
 
   const handleItemCount = async (num: number) => {
     if (num < 0 && itemsCount === 1) return;
 
     setItemsCount(itemsCount + num);
 
+    let newItem: any;
+
+    // Determine what type to add based on the last item
+    const lastItem = itemsDetails[itemsDetails.length - 1];
+    const typeToAdd = lastItem?.type || "Other";
+
+    if (typeToAdd === "Passport") {
+      newItem = {
+        type: "Passport",
+        desc: "",
+        price: 0,
+        quantity: 1,
+        data: {
+          name: "",
+          nationality: "",
+          state: "accepted",
+          service: "30days",
+          passportId: "",
+          paymentDate: "",
+          servicePrice: 0,
+          taxable: 53,
+          taxRate: 2.65,
+          total: 0,
+          sales: 0,
+          profit: 0,
+        },
+      };
+    } else if (typeToAdd === "Ticket") {
+      newItem = {
+        type: "Ticket",
+        desc: "",
+        price: 0,
+        quantity: 1,
+        data: {
+          name: "",
+          type: "",
+          employee: "",
+          supplier: "",
+          paymentDate: "",
+          paymentMethod: "cash",
+          cost: 0,
+          total: 0,
+          taxable: 0,
+          sales: 0,
+          profit: 0,
+          paidAmount: 0,
+          remainingAmount: 0,
+        },
+      };
+    } else {
+      newItem = {
+        type: "Other",
+        desc: "",
+        price: 0,
+        quantity: 1,
+      };
+    }
+
     const newItems =
       num > 0
-        ? [
-            ...itemsDetails,
-            {
-              type: "Other",
-              desc: "",
-              price: 0,
-              quantity: 1,
-            } as IBillProduct,
-          ]
-        : itemsDetails.splice(0, itemsDetails.length - 1);
+        ? [...itemsDetails, newItem]
+        : itemsDetails.slice(0, itemsDetails.length - 1);
 
     setItemsDetails(newItems);
 
     const newTotal = newItems.reduce(
       (prev, curr) => prev + curr.price * curr.quantity,
-      0
+      0,
     );
 
     setBillDetails({
@@ -165,35 +217,31 @@ export const UpdateBill = ({
     e.preventDefault();
 
     const details: (IBillProduct & { data?: any })[] = [
-      ...itemsDetails.map((item) => ({
-        ...item,
-        desc:
-          item.type === "Passport"
-            ? passportDetails.service === "90days" ||
-              passportDetails.service === "60days" ||
-              passportDetails.service === "30days"
-              ? " فيزا " + passportService[passportDetails.service]
-              : passportService[
-                  passportDetails.service as keyof PassportService
-                ]
-            : item.type === "Ticket"
-            ? ticketDetails.type
-            : item.desc,
-        data:
-          item.type === "Passport"
-            ? {
-                ...passportDetails,
-                name: customerDetails.name,
-                paymentDate: billDetails.date,
-              }
-            : item.type === "Ticket"
-            ? {
-                ...ticketDetails,
-                name: customerDetails.name,
-                paymentDate: billDetails.date,
-              }
-            : null,
-      })),
+      ...itemsDetails.map((item) => {
+        const itemData = item.data || {};
+        return {
+          ...item,
+          desc:
+            item.type === "Passport"
+              ? itemData.service === "90days" ||
+                itemData.service === "60days" ||
+                itemData.service === "30days"
+                ? " فيزا " +
+                  passportService[itemData.service as keyof PassportService]
+                : passportService[itemData.service as keyof PassportService]
+              : item.type === "Ticket"
+              ? itemData.type
+              : item.desc,
+          data:
+            item.type === "Passport" || item.type === "Ticket"
+              ? {
+                  ...itemData,
+                  paymentDate: billDetails.date,
+                  paymentMethod: billDetails.paymentMethod,
+                }
+              : null,
+        };
+      }),
     ];
 
     const billData: Partial<IBillDocument> = {
@@ -210,7 +258,7 @@ export const UpdateBill = ({
     await updateBill(billData);
   };
 
-  // Initialize state after data is fetched
+  //Initialize state after data is fetched
   useEffect(() => {
     if (foundBill) {
       //Make a deep copy of the bill object
@@ -234,58 +282,13 @@ export const UpdateBill = ({
         other: bill?.other,
       });
 
-      //items Details
-      setItemsDetails(bill.details);
-
-      //Passport type
-      setPassportDetails(() => {
-        const passportDetail = bill.details.find(
-          (detail: IBillProduct) => detail.type === "Passport"
-        );
-
-        return {
-          name: passportDetail ? passportDetail?.data?.name : "",
-          nationality: passportDetail ? passportDetail?.data?.nationality : "",
-          state: passportDetail ? passportDetail?.data?.state : "accepted",
-          service: passportDetail
-            ? (passportDetail?.data?.service as string)
-            : "30days",
-          passportId: passportDetail ? passportDetail?.data?.passportId : "",
-          paymentDate: passportDetail ? passportDetail?.data?.paymentDate : "",
-          servicePrice: passportDetail ? passportDetail?.data?.servicePrice : 0,
-          taxable: passportDetail ? passportDetail?.data?.taxable : 53,
-          taxRate: passportDetail ? passportDetail?.data?.taxRate : 2.65,
-          total: passportDetail ? passportDetail?.data?.total : 0,
-          sales: passportDetail ? passportDetail?.data?.sales : 0,
-          profit: passportDetail ? passportDetail?.data?.profit : 0,
-        };
-      });
-
-      //Ticket Details
-      setTicketDetails(() => {
-        const ticketDetail = bill.details.find(
-          (detail: IBillProduct) => detail.type === "Ticket"
-        );
-        return {
-          name: ticketDetail ? ticketDetail?.data?.name : "",
-          type: ticketDetail ? ticketDetail?.data?.type : "",
-          employee: ticketDetail ? ticketDetail?.data?.employee : "",
-          supplier: ticketDetail ? ticketDetail?.data?.supplier : "",
-          paymentDate: ticketDetail ? ticketDetail?.data?.paymentDate : "",
-          paymentMethod: ticketDetail
-            ? ticketDetail?.data?.paymentMethod
-            : "cash",
-          cost: ticketDetail ? ticketDetail?.data?.cost : 0,
-          total: ticketDetail ? ticketDetail?.data?.total : 0,
-          taxable: ticketDetail ? ticketDetail?.data?.taxable : 0,
-          sales: ticketDetail ? ticketDetail?.data?.sales : 0,
-          profit: ticketDetail ? ticketDetail?.data?.profit : 0,
-          paidAmount: ticketDetail ? ticketDetail?.data?.paidAmount : 0,
-          remainingAmount: ticketDetail
-            ? ticketDetail?.data?.remainingAmount
-            : 0,
-        };
-      });
+      //items Details - with proper data initialization
+      const itemsWithData = bill.details.map((item: any) => ({
+        ...item,
+        data: item.data || {},
+      }));
+      setItemsDetails(itemsWithData);
+      setItemsCount(itemsWithData.length);
     }
   }, [foundBill]);
 
@@ -366,13 +369,52 @@ export const UpdateBill = ({
                 className={inputClassNamesStyles.default}
                 value={item.type}
                 onChange={(e) => {
-                  const newArr = [...itemsDetails];
-                  newArr[index].type = e.target.value as
+                  const newType = e.target.value as
                     | "Passport"
                     | "Ticket"
                     | "Other";
+                  const newArr = [...itemsDetails];
+                  newArr[index].type = newType;
+
+                  // Reset data based on new type
+                  if (newType === "Passport") {
+                    newArr[index].data = {
+                      name: "",
+                      nationality: "",
+                      state: "accepted",
+                      service: "30days",
+                      passportId: "",
+                      paymentDate: "",
+                      servicePrice: 0,
+                      taxable: 53,
+                      taxRate: 2.65,
+                      total: 0,
+                      sales: 0,
+                      profit: 0,
+                    };
+                  } else if (newType === "Ticket") {
+                    newArr[index].data = {
+                      name: "",
+                      type: "",
+                      employee: "",
+                      supplier: "",
+                      paymentDate: "",
+                      paymentMethod: "cash",
+                      cost: 0,
+                      total: 0,
+                      taxable: 0,
+                      sales: 0,
+                      profit: 0,
+                      paidAmount: 0,
+                      remainingAmount: 0,
+                    };
+                  } else {
+                    newArr[index].data = undefined;
+                  }
+                  newArr[index].price = 0;
                   setItemsDetails(newArr);
                 }}
+                disabled
               >
                 {["Passport", "Ticket", "Other"].map((name: string) => (
                   <option key={name} value={name}>
@@ -418,7 +460,7 @@ export const UpdateBill = ({
 
                       const newSubTotal = itemsDetails.reduce(
                         (prev, curr) => prev + curr.price * curr.quantity,
-                        0
+                        0,
                       );
                       setBillDetails({
                         ...billDetails,
@@ -448,7 +490,7 @@ export const UpdateBill = ({
 
                       const newTotal = itemsDetails.reduce(
                         (prev, curr) => prev + curr.price * curr.quantity,
-                        0
+                        0,
                       );
                       setBillDetails({
                         ...billDetails,
@@ -466,15 +508,28 @@ export const UpdateBill = ({
               {item.type === "Passport" && (
                 <>
                   <FormInput
+                    label={passportTableHeaderTitles[0]}
+                    name="customerName"
+                    labeClassNames={lableClassNamesStyles.default}
+                    className={inputClassNamesStyles.default}
+                    type="text"
+                    value={item.data?.name || ""}
+                    onChange={(e) =>
+                      updateItemDataByIndex(index, {
+                        name: e.target.value,
+                      })
+                    }
+                    required
+                  />
+                  <FormInput
                     label={passportTableHeaderTitles[1]}
                     name="customerNationality"
                     labeClassNames={lableClassNamesStyles.default}
                     className={inputClassNamesStyles.default}
                     type="text"
-                    value={passportDetails.nationality}
+                    value={item.data?.nationality || ""}
                     onChange={(e) =>
-                      setPassportDetails({
-                        ...passportDetails,
+                      updateItemDataByIndex(index, {
                         nationality: e.target.value,
                       })
                     }
@@ -486,10 +541,9 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={inputClassNamesStyles.default}
                     type="text"
-                    value={passportDetails.passportId}
+                    value={item.data?.passportId || ""}
                     onChange={(e) =>
-                      setPassportDetails({
-                        ...passportDetails,
+                      updateItemDataByIndex(index, {
                         passportId: e.target.value,
                       })
                     }
@@ -502,39 +556,34 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={inputClassNamesStyles.default}
                     type="number"
-                    value={passportDetails.servicePrice}
+                    value={item.data?.servicePrice || 0}
                     onChange={(e) => {
-                      setPassportDetails({
-                        ...passportDetails,
-                        servicePrice: +e.target.value,
-                        sales:
-                          passportDetails.service === "change_situation"
-                            ? +e.target.value +
-                              passportDetails.taxRate +
-                              passportDetails.taxable
-                            : 0,
-                        total:
-                          passportDetails.service === "change_situation"
-                            ? +e.target.value +
-                              passportDetails.taxRate +
-                              passportDetails.taxable
-                            : 0,
-                        profit: 0,
-                      });
+                      const priceValue = +e.target.value;
+                      const isChangeSituation =
+                        item.data?.service === "change_situation";
+                      const newPrice = isChangeSituation
+                        ? priceValue +
+                          (item.data?.taxRate || 0) +
+                          (item.data?.taxable || 0)
+                        : 0;
 
                       const newArr = [...itemsDetails];
-                      newArr[index].price =
-                        passportDetails.service === "change_situation"
-                          ? +e.target.value +
-                            passportDetails.taxRate +
-                            passportDetails.taxable
-                          : newArr[index].price;
-
+                      newArr[index] = {
+                        ...newArr[index],
+                        price: newPrice,
+                        data: {
+                          ...newArr[index].data,
+                          servicePrice: priceValue,
+                          sales: newPrice,
+                          total: newPrice,
+                          profit: 0,
+                        },
+                      };
                       setItemsDetails(newArr);
 
-                      const newTotal = itemsDetails.reduce(
+                      const newTotal = newArr.reduce(
                         (prev, curr) => prev + curr.price * curr.quantity,
-                        0
+                        0,
                       );
 
                       setBillDetails({
@@ -552,37 +601,43 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={`${inputClassNamesStyles.default}`}
                     type="number"
-                    value={passportDetails.taxable}
+                    value={item.data?.taxable || 0}
                     min={0}
                     step={0.01}
                     onChange={(e) => {
-                      setPassportDetails({
-                        ...passportDetails,
-                        taxable: +e.target.value,
-                        taxRate: +(+e.target.value * 0.05).toFixed(2),
-                        total: calculatePassportTotal({
-                          sales: passportDetails.sales,
-                          servicePrice: passportDetails.servicePrice,
-                        }),
-                        profit: +calculatePassportProfit({
-                          sales: passportDetails.sales,
-                          servicePrice: passportDetails.servicePrice,
-                          taxable: +e.target.value,
-                        }),
+                      const taxableValue = +e.target.value;
+                      const newTaxRate = +(taxableValue * 0.05).toFixed(2);
+                      const newTotal = calculatePassportTotal({
+                        sales: item.data?.sales || 0,
+                        servicePrice: item.data?.servicePrice || 0,
+                      });
+                      const newProfit = +calculatePassportProfit({
+                        sales: item.data?.sales || 0,
+                        servicePrice: item.data?.servicePrice || 0,
+                        taxable: taxableValue,
                       });
 
                       const newArr = [...itemsDetails];
-
+                      newArr[index] = {
+                        ...newArr[index],
+                        data: {
+                          ...newArr[index].data,
+                          taxable: taxableValue,
+                          taxRate: newTaxRate,
+                          total: newTotal,
+                          profit: newProfit,
+                        },
+                      };
                       setItemsDetails(newArr);
 
-                      const newTotal = itemsDetails.reduce(
+                      const billTotal = newArr.reduce(
                         (prev, curr) => prev + curr.price * curr.quantity,
-                        0
+                        0,
                       );
 
                       setBillDetails({
                         ...billDetails,
-                        total: +newTotal.toFixed(2),
+                        total: +billTotal.toFixed(2),
                       });
                     }}
                   />
@@ -593,7 +648,7 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={`${inputClassNamesStyles.default} bg-slate-200`}
                     type="number"
-                    value={passportDetails.taxRate}
+                    value={item.data?.taxRate || 0}
                     disabled
                     min={0}
                     step={0.01}
@@ -605,7 +660,7 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={`${inputClassNamesStyles.default} bg-slate-200`}
                     type="number"
-                    value={passportDetails.total}
+                    value={item.data?.total || 0}
                     disabled
                     min={0}
                     step={0.01}
@@ -617,34 +672,40 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={inputClassNamesStyles.default}
                     type="number"
-                    value={passportDetails.sales}
+                    value={item.data?.sales || 0}
                     onChange={(e) => {
-                      setPassportDetails({
-                        ...passportDetails,
-                        total: calculatePassportTotal({
-                          sales: +e.target.value,
-                          servicePrice: passportDetails.servicePrice,
-                        }),
-                        sales: +e.target.value,
-                        profit: +calculatePassportProfit({
-                          sales: +e.target.value,
-                          servicePrice: passportDetails.servicePrice,
-                          taxable: passportDetails.taxable,
-                        }),
+                      const salesValue = +e.target.value;
+                      const newTotal = calculatePassportTotal({
+                        sales: salesValue,
+                        servicePrice: item.data?.servicePrice || 0,
+                      });
+                      const newProfit = +calculatePassportProfit({
+                        sales: salesValue,
+                        servicePrice: item.data?.servicePrice || 0,
+                        taxable: item.data?.taxable || 0,
                       });
 
                       const newArr = [...itemsDetails];
-                      (newArr[index].price = +e.target.value),
-                        setItemsDetails(newArr);
+                      newArr[index] = {
+                        ...newArr[index],
+                        price: salesValue,
+                        data: {
+                          ...newArr[index].data,
+                          sales: salesValue,
+                          total: newTotal,
+                          profit: newProfit,
+                        },
+                      };
+                      setItemsDetails(newArr);
 
-                      const newTotal = itemsDetails.reduce(
+                      const billTotal = newArr.reduce(
                         (prev, curr) => prev + curr.price * curr.quantity,
-                        0
+                        0,
                       );
 
                       setBillDetails({
                         ...billDetails,
-                        total: +newTotal.toFixed(2),
+                        total: +billTotal.toFixed(2),
                       });
                     }}
                     min={0}
@@ -657,7 +718,7 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={`${inputClassNamesStyles.default} bg-slate-200`}
                     type="number"
-                    value={passportDetails.profit}
+                    value={item.data?.profit || 0}
                     disabled
                     min={0}
                     step={0.01}
@@ -667,10 +728,9 @@ export const UpdateBill = ({
                     name="state"
                     id="state"
                     className={inputClassNamesStyles.default}
-                    value={passportDetails.state}
+                    value={item.data?.state || "accepted"}
                     onChange={(e) =>
-                      setPassportDetails({
-                        ...passportDetails,
+                      updateItemDataByIndex(index, {
                         state: e.target.value,
                       })
                     }
@@ -693,10 +753,9 @@ export const UpdateBill = ({
                     name="service"
                     id="service"
                     className={inputClassNamesStyles.default}
-                    value={passportDetails.service}
+                    value={item.data?.service || "30days"}
                     onChange={(e) =>
-                      setPassportDetails({
-                        ...passportDetails,
+                      updateItemDataByIndex(index, {
                         service: e.target.value,
                       })
                     }
@@ -719,15 +778,27 @@ export const UpdateBill = ({
               {item.type === "Ticket" && (
                 <>
                   <FormInput
+                    label={ticketsTableHeaderTitles[0]}
+                    name="customerName"
+                    labeClassNames={lableClassNamesStyles.default}
+                    className={inputClassNamesStyles.default}
+                    type="text"
+                    value={item.data?.name || ""}
+                    onChange={(e) =>
+                      updateItemDataByIndex(index, { name: e.target.value })
+                    }
+                    required
+                  />
+
+                  <FormInput
                     label={ticketsTableHeaderTitles[1]}
                     name="type"
                     labeClassNames={lableClassNamesStyles.default}
                     className={inputClassNamesStyles.default}
                     type="text"
-                    value={ticketDetails.type}
+                    value={item.data?.type || ""}
                     onChange={(e) =>
-                      setTicketDetails({
-                        ...ticketDetails,
+                      updateItemDataByIndex(index, {
                         type: e.target.value,
                       })
                     }
@@ -739,10 +810,9 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={inputClassNamesStyles.default}
                     type="text"
-                    value={ticketDetails.employee}
+                    value={item.data?.employee || ""}
                     onChange={(e) =>
-                      setTicketDetails({
-                        ...ticketDetails,
+                      updateItemDataByIndex(index, {
                         employee: e.target.value,
                       })
                     }
@@ -754,10 +824,9 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={inputClassNamesStyles.default}
                     type="number"
-                    value={ticketDetails.cost}
+                    value={item.data?.cost || 0}
                     onChange={(e) =>
-                      setTicketDetails({
-                        ...ticketDetails,
+                      updateItemDataByIndex(index, {
                         cost: +e.target.value,
                         total: 0,
                         taxable: 0,
@@ -775,7 +844,7 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={`${inputClassNamesStyles.default} bg-slate-200`}
                     type="number"
-                    value={ticketDetails.total}
+                    value={item.data?.total || 0}
                     disabled
                     min={0}
                     step={0.01}
@@ -787,7 +856,7 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={`${inputClassNamesStyles.default} bg-slate-200`}
                     type="number"
-                    value={ticketDetails.taxable}
+                    value={item.data?.taxable || 0}
                     disabled
                     min={0}
                     step={0.01}
@@ -799,39 +868,46 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={inputClassNamesStyles.default}
                     type="number"
-                    value={ticketDetails.sales}
+                    value={item.data?.sales || 0}
                     onChange={(e) => {
-                      setTicketDetails({
-                        ...ticketDetails,
-                        sales: +e.target.value,
-                        total: calculateTicketTotal({
-                          sales: +e.target.value,
-                          cost: ticketDetails.cost,
-                        }),
-                        taxable: calculateTicketTax({
-                          sales: +e.target.value,
-                          cost: ticketDetails.cost,
-                        }),
-                        profit: +calculateTicketProfit({
-                          sales: +e.target.value,
-                          cost: ticketDetails.cost,
-                        }),
-                        paidAmount: +e.target.value,
-                        remainingAmount: 0,
+                      const salesValue = +e.target.value;
+                      const newTotal = calculateTicketTotal({
+                        sales: salesValue,
+                        cost: item.data?.cost || 0,
+                      });
+                      const newTaxable = calculateTicketTax({
+                        sales: salesValue,
+                        cost: item.data?.cost || 0,
+                      });
+                      const newProfit = +calculateTicketProfit({
+                        sales: salesValue,
+                        cost: item.data?.cost || 0,
                       });
 
                       const newArr = [...itemsDetails];
-                      (newArr[index].price = +e.target.value),
-                        setItemsDetails(newArr);
+                      newArr[index] = {
+                        ...newArr[index],
+                        price: salesValue,
+                        data: {
+                          ...newArr[index].data,
+                          sales: salesValue,
+                          total: newTotal,
+                          taxable: newTaxable,
+                          profit: newProfit,
+                          paidAmount: salesValue,
+                          remainingAmount: 0,
+                        },
+                      };
+                      setItemsDetails(newArr);
 
-                      const newTotal = itemsDetails.reduce(
+                      const billTotal = newArr.reduce(
                         (prev, curr) => prev + curr.price * curr.quantity,
-                        0
+                        0,
                       );
 
                       setBillDetails({
                         ...billDetails,
-                        total: +newTotal.toFixed(2),
+                        total: +billTotal.toFixed(2),
                       });
                     }}
                     min={0}
@@ -844,7 +920,7 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={`${inputClassNamesStyles.default} bg-slate-200`}
                     type="number"
-                    value={ticketDetails.profit}
+                    value={item.data?.profit || 0}
                     disabled
                     min={0}
                     step={0.01}
@@ -856,12 +932,12 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={inputClassNamesStyles.default}
                     type="number"
-                    value={ticketDetails.paidAmount}
+                    value={item.data?.paidAmount || 0}
                     onChange={(e) =>
-                      setTicketDetails({
-                        ...ticketDetails,
+                      updateItemDataByIndex(index, {
                         paidAmount: +e.target.value,
-                        remainingAmount: ticketDetails.sales - +e.target.value,
+                        remainingAmount:
+                          (item.data?.sales || 0) - +e.target.value,
                       })
                     }
                     min={0}
@@ -874,7 +950,7 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={`${inputClassNamesStyles.default} bg-slate-200`}
                     type="number"
-                    value={ticketDetails.remainingAmount}
+                    value={item.data?.remainingAmount || 0}
                     disabled
                     min={0}
                     step={0.01}
@@ -914,10 +990,9 @@ export const UpdateBill = ({
                     labeClassNames={lableClassNamesStyles.default}
                     className={inputClassNamesStyles.default}
                     type="text"
-                    value={ticketDetails.supplier}
+                    value={item.data?.supplier || ""}
                     onChange={(e) =>
-                      setTicketDetails({
-                        ...ticketDetails,
+                      updateItemDataByIndex(index, {
                         supplier: e.target.value,
                       })
                     }
@@ -927,7 +1002,7 @@ export const UpdateBill = ({
             </div>
           ))}
 
-          <div className="flex justify-around">
+          {/* <div className="flex justify-around">
             <button
               className="my-5 flex items-center rounded border bg-blue-800 px-2 py-2 text-xs font-bold text-white shadow transition-all duration-300 ease-in-out hover:border-blue-800
          hover:bg-white hover:text-blue-800 sm:px-3 sm:text-sm"
@@ -947,7 +1022,7 @@ export const UpdateBill = ({
               <AiFillMinusCircle className="mr-1" size={20} />
               حذف نوع
             </button>
-          </div>
+          </div> */}
 
           <p className="my-4 rounded bg-red-800 p-2 text-lg font-bold text-white">
             [ بيانات الفاتورة الحالية ]
@@ -988,10 +1063,6 @@ export const UpdateBill = ({
               onChange={(e) => {
                 setBillDetails({
                   ...billDetails,
-                  paymentMethod: e.target.value,
-                });
-                setTicketDetails({
-                  ...ticketDetails,
                   paymentMethod: e.target.value,
                 });
               }}

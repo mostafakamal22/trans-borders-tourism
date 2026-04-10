@@ -9,6 +9,7 @@ import { billHeaderTitles } from "../bill/constants";
 import { IBillProduct } from "../../../../backend/models/billModel";
 import { Fragment } from "react";
 import { AiFillEdit } from "react-icons/ai";
+import { getPassportServiceInEnglish } from "../passport/constants";
 
 //Define Bill Main Table Data
 export const tableHeader = (
@@ -268,7 +269,10 @@ export const billPassportTableRows = (detail: IBillProduct, index: number) => {
         scope="row"
         className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
-        {detail?.desc ? detail?.desc : "-"}
+        {detail?.desc ? getPassportServiceInEnglish(detail?.desc) : "-"}
+        <br />
+        <span>for Mr./Mrs.</span>
+        <span className="font-bold uppercase">{" " + detail?.data?.name}</span>
       </th>
 
       {/*Service Price*/}
@@ -329,7 +333,11 @@ export const billPassportTableRows = (detail: IBillProduct, index: number) => {
         scope="row"
         className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
-        {`${detail?.desc ? detail?.desc : " "} - Service Charge`}
+        {/* {`${detail?.desc ? detail?.desc : " "} - Service Charge`} */}
+
+        {`${
+          detail?.desc ? getPassportServiceInEnglish(detail?.desc) : " "
+        } -  Service Charge (Incl. VAT)`}
       </th>
 
       {/*Service Price*/}
@@ -406,6 +414,9 @@ export const billTicketTableRows = (detail: IBillProduct, index: number) => {
         className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
         {detail?.desc ? detail?.desc : "-"}
+        <br />
+        <span>for Mr./Mrs.</span>
+        <span className="font-bold uppercase">{" " + detail?.data?.name}</span>
       </th>
 
       {/*Service Price*/}
@@ -466,7 +477,8 @@ export const billTicketTableRows = (detail: IBillProduct, index: number) => {
         scope="row"
         className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
-        {`${detail?.desc ? detail?.desc : " "} - رسوم شاملة الضريبة`}
+        {/* {`${detail?.desc ? detail?.desc : " "} - رسوم شاملة الضريبة`} */}
+        {`${detail?.desc ? detail?.desc : " "} -  Service Charge (Incl. VAT)`}
       </th>
 
       {/*Service Price*/}
@@ -521,7 +533,7 @@ export const billTicketTableRows = (detail: IBillProduct, index: number) => {
 
 export const calculateTableTotals = (
   details: IBillProduct[],
-  date: string | Date
+  date: string | Date,
 ): { totalServices: number; totalAmount: number; TotalVAT: number } => {
   let totals = { totalServices: 0, totalAmount: 0, TotalVAT: 0 };
 

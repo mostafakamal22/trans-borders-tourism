@@ -39,3 +39,28 @@ export const passportService: PassportService = {
   temp_shutdown_with_escape: "إغلاق مؤقت مع بلاغ هروب",
   change_situation: "تعديل وضع",
 };
+
+const passportServiceTranslation: Record<string, string> = {
+  "٣٠يوم": "One month visa",
+  "٦٠يوم": "Two month visa",
+  "٩٠يوم": "Three month visa",
+  "تمديد إذن دخول": "Extend Entry Permit",
+  "إلغاء إذن دخول": "Cancel Entry Permit",
+  "طلب كشف كفيل ومكفولين": "Sponsor And Dependents Report",
+  "تجديد إقامة": "Renew Residency",
+  "إلغاء إقامة": "Cancel Residency",
+  "إغلاق مؤقت مع بلاغ هروب": "Temporary Shutdown With Absconding Report",
+  "تعديل وضع": "Status Adjustment",
+};
+
+export function getPassportServiceInEnglish(desc: string): string {
+  // Desc could include part of the service description, so we need to find the key that is included in desc
+  const serviceKey = Object.keys(passportServiceTranslation).find((key) =>
+    desc.includes(key),
+  );
+  if (serviceKey) {
+    return passportServiceTranslation[serviceKey];
+  } else {
+    return desc; // Return the original description if no match is found
+  }
+}
