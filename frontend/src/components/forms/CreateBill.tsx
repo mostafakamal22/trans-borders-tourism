@@ -230,14 +230,12 @@ export default function CreateBill() {
                 ...item.data,
                 paymentDate: billDetails.date,
                 paymentMethod: billDetails.paymentMethod,
-                name: customerDetails.name,
               }
             : item.type === "Ticket"
             ? {
                 ...item.data,
                 paymentDate: billDetails.date,
                 paymentMethod: billDetails.paymentMethod,
-                name: customerDetails.name,
               }
             : null,
       })),

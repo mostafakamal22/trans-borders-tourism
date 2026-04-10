@@ -238,7 +238,6 @@ export const UpdateBill = ({
                   ...itemData,
                   paymentDate: billDetails.date,
                   paymentMethod: billDetails.paymentMethod,
-                  name: customerDetails.name,
                 }
               : null,
         };

@@ -1,4 +1,5 @@
 import Passport from "../models/passportModel";
+import Bill from "../models/billModel";
 import cache from "../lib/node-cache";
 import { ErrnoException } from "./adminControllers";
 import { passportsChartsCalculations } from "../calculations/passports";
@@ -56,6 +57,31 @@ const getPassports = async (req: Request, res: Response) => {
 
   //Get All Passports Data That Match Query.
   const passports = await Passport.paginate(queries, options);
+
+  // Populate bill customer names
+  if (passports.docs && passports.docs.length > 0) {
+    // Extract unique bill IDs from passports
+    const billIds = [
+      ...passports.docs.map((p: any) => p.bill_id).filter(Boolean),
+    ];
+
+    // Fetch bills with those IDs
+    const bills = await Bill.find({ ID: { $in: billIds } });
+
+    // Create a map of bill ID to customer name
+    const billCustomerMap = bills.reduce((map: any, bill: any) => {
+      map[bill.ID] = bill.customer?.name || null;
+      return map;
+    }, {});
+
+    // Attach bill_customer_name to each passport
+    passports.docs = passports.docs.map((passport: any) => ({
+      ...passport,
+      bill_customer_name: passport.bill_id
+        ? billCustomerMap[passport.bill_id]
+        : null,
+    }));
+  }
 
   // Send the response
   res.status(200).json({

@@ -3,6 +3,7 @@ import cache from "../lib/node-cache";
 import { ticketsChartsCalculations } from "../calculations/tickets";
 import { Request, Response } from "express";
 import { ErrnoException } from "./adminControllers";
+import Bill from "../models/billModel";
 
 //@Desc   >>>> Get All Tickets That Match Query Object.
 //@Route  >>>> POST /api/tickets/query
@@ -69,6 +70,31 @@ const getTickets = async (req: Request, res: Response) => {
 
   //Get All Tickets Data That Match Query.
   const tickets = await Ticket.paginate(queries, options);
+
+  // Populate bill customer names
+  if (tickets.docs && tickets.docs.length > 0) {
+    // Extract unique bill IDs from tickets
+    const billIds = [
+      ...tickets.docs.map((p: any) => p.bill_id).filter(Boolean),
+    ];
+
+    // Fetch bills with those IDs
+    const bills = await Bill.find({ ID: { $in: billIds } });
+
+    // Create a map of bill ID to customer name
+    const billCustomerMap = bills.reduce((map: any, bill: any) => {
+      map[bill.ID] = bill.customer?.name || null;
+      return map;
+    }, {});
+
+    // Attach bill_customer_name to each ticket
+    tickets.docs = tickets.docs.map((ticket: any) => ({
+      ...ticket,
+      bill_customer_name: ticket.bill_id
+        ? billCustomerMap[ticket.bill_id]
+        : null,
+    }));
+  }
 
   // Send the response
   res.status(200).json({

@@ -76,7 +76,12 @@ export const tableHeader = (
 export const tableRow = ({
   basicOptions,
   extraOptions,
-}: TableRowProps<IPassportDocument & { bill_id: number | null }>) => {
+}: TableRowProps<
+  IPassportDocument & {
+    bill_id: number | null;
+    bill_customer_name: string | null;
+  }
+>) => {
   const { item: passport, index, tableBodyData } = basicOptions;
   const {
     handleRemoving,
@@ -269,7 +274,7 @@ export const tableRow = ({
         scope="row"
         className="border-x  border-x-black bg-red-200 p-1 text-center text-gray-900"
       >
-        {passport?.customer_name}
+        {passport?.bill_customer_name || passport.customer_name || "-"}
       </th>
 
       {/*Bill ID*/}
