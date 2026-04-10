@@ -49,8 +49,8 @@ const passportServiceTranslation: Record<string, string> = {
   "طلب كشف كفيل ومكفولين": "Sponsor And Dependents Report",
   "تجديد إقامة": "Renew Residency",
   "إلغاء إقامة": "Cancel Residency",
-  "إغلاق مؤقت مع بلاغ هروب": "Temporary Shutdown With Absconding Report",
-  "تعديل وضع": "Status Adjustment",
+  "إغلاق مؤقت مع بلاغ هروب": "Temporary Closure With Absconding Report",
+  "تعديل وضع": "Change Status",
 };
 
 export function getPassportServiceInEnglish(desc: string): string {
