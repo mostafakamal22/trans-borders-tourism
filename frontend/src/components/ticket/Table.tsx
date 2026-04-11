@@ -90,12 +90,30 @@ export const tableRow = ({
       ticket?.taxable || 0
     : 0;
 
+  // Generate background color based on bill ID
+  const getBillIdBgColor = (billId: number | null): string => {
+    if (!billId) return index % 2 === 0 ? "bg-white" : "bg-gray-100";
+
+    const colors = [
+      "bg-blue-200",
+      "bg-green-300",
+      "bg-yellow-300",
+      "bg-purple-200",
+      "bg-pink-300",
+      "bg-red-200",
+      "bg-orange-300",
+      "bg-teal-300",
+      "bg-cyan-200",
+      "bg-rose-300",
+    ];
+
+    return colors[billId % colors.length];
+  };
+
   return (
     <tr
       key={ticket?.id}
-      className={`${
-        index % 2 === 0 ? "bg-white" : "bg-gray-100"
-      } border-b border-b-black`}
+      className={`${getBillIdBgColor(ticket?.bill_id)} border-b border-b-black`}
     >
       {/* Delete ticket */}
       <th
@@ -251,7 +269,7 @@ export const tableRow = ({
       {/*Customer Name*/}
       <th
         scope="row"
-        className="border-x  border-x-black bg-red-200 p-1 text-center text-gray-900"
+        className="border-x  border-x-black p-1 text-center text-gray-900"
       >
         {ticket?.bill_customer_name || ticket.customer_name || "-"}
       </th>
@@ -259,7 +277,7 @@ export const tableRow = ({
       {/*Bill ID*/}
       <th
         scope="row"
-        className="border-x  border-x-black bg-green-200 p-1 text-center text-gray-900"
+        className="border-x  border-x-black p-1 text-center text-gray-900"
       >
         {ticket?.bill_id ? (
           <Link to={`/bills/${ticket.bill_id}`}>{ticket?.bill_id}</Link>

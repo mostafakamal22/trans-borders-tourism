@@ -100,12 +100,32 @@ export const tableRow = ({
     cutoffDate,
   );
 
+  // Generate background color based on bill ID
+  const getBillIdBgColor = (billId: number | null): string => {
+    if (!billId) return index % 2 === 0 ? "bg-white" : "bg-gray-100";
+
+    const colors = [
+      "bg-blue-200",
+      "bg-green-300",
+      "bg-yellow-300",
+      "bg-purple-200",
+      "bg-pink-300",
+      "bg-red-200",
+      "bg-orange-300",
+      "bg-teal-300",
+      "bg-cyan-200",
+      "bg-rose-300",
+    ];
+
+    return colors[billId % colors.length];
+  };
+
   return (
     <tr
       key={passport?.id}
-      className={`${
-        index % 2 === 0 ? "bg-white" : "bg-gray-100"
-      } border-b border-b-black`}
+      className={`${getBillIdBgColor(
+        passport?.bill_id,
+      )} border-b border-b-black`}
     >
       {/* Delete passport */}
       <th
@@ -272,7 +292,7 @@ export const tableRow = ({
       {/*Customer Name*/}
       <th
         scope="row"
-        className="border-x  border-x-black bg-red-200 p-1 text-center text-gray-900"
+        className="border-x  border-x-black p-1 text-center text-gray-900"
       >
         {passport?.bill_customer_name || passport.customer_name || "-"}
       </th>
@@ -280,7 +300,7 @@ export const tableRow = ({
       {/*Bill ID*/}
       <th
         scope="row"
-        className="border-x  border-x-black bg-green-200 p-1 text-center text-gray-900"
+        className="border-x  border-x-black p-1 text-center text-gray-900"
       >
         {passport?.bill_id ? (
           <Link to={`/bills/${passport.bill_id}`}>{passport?.bill_id}</Link>

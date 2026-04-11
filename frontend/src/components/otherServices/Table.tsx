@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 //Define OtherService Main Table Data
 export const tableHeader = (
   <tr className="border-y border-y-black">
-    {tableHeaderTitles.reverse().map((title) => (
+    {[...tableHeaderTitles.reverse()].map((title) => (
       <th
         key={title}
         scope="col"
@@ -23,13 +23,32 @@ export const tableRow = ({ basicOptions }: TableRowProps<IOtherService>) => {
   const { item: otherService, index, tableBodyData } = basicOptions;
 
   const total = otherService.price * otherService.quantity;
+  // Generate background color based on bill ID
+  const getBillIdBgColor = (billId: number | null): string => {
+    if (!billId) return index % 2 === 0 ? "bg-white" : "bg-gray-100";
+
+    const colors = [
+      "bg-blue-200",
+      "bg-green-300",
+      "bg-yellow-300",
+      "bg-purple-200",
+      "bg-pink-300",
+      "bg-red-200",
+      "bg-orange-300",
+      "bg-teal-300",
+      "bg-cyan-200",
+      "bg-rose-300",
+    ];
+
+    return colors[billId % colors.length];
+  };
 
   return (
     <tr
       key={otherService?.id}
-      className={`${
-        index % 2 === 0 ? "bg-white" : "bg-gray-100"
-      } border-b border-b-black`}
+      className={`${getBillIdBgColor(
+        otherService?.bill_id,
+      )} border-b border-b-black`}
     >
       {/*OtherService Date*/}
       <th
@@ -76,7 +95,7 @@ export const tableRow = ({ basicOptions }: TableRowProps<IOtherService>) => {
       {/*Customer Name*/}
       <th
         scope="row"
-        className="border-x  border-x-black bg-red-200 p-1 text-center text-gray-900"
+        className="border-x  border-x-black p-1 text-center text-gray-900"
       >
         {otherService?.bill_customer_name || "-"}
       </th>
@@ -84,7 +103,7 @@ export const tableRow = ({ basicOptions }: TableRowProps<IOtherService>) => {
       {/*Bill ID*/}
       <th
         scope="row"
-        className="border-x  border-x-black bg-green-200 p-1 text-center text-gray-900"
+        className="border-x  border-x-black p-1 text-center text-gray-900"
       >
         {otherService?.bill_id ? (
           <Link to={`/bills/${otherService.bill_id}`}>

@@ -16,7 +16,7 @@ export type IOtherService = {
   price: number;
   quantity: number;
   date: Date | string;
-  bill_id: string;
+  bill_id: number | null;
   bill_customer_name: string;
   data: null;
 };
