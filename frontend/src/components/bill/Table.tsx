@@ -188,9 +188,16 @@ export const billTableRow = (detail: IBillProduct, index: number) => {
         className="border-x p-2 text-center text-sm font-normal text-gray-900"
       >
         {detail?.desc ? detail?.desc : "-"}
-        <br />
-        <span>for Mr./Mrs.</span>
-        <span className="font-bold uppercase">{" " + detail?.data?.name}</span>
+
+        {(detail?.type === "Passport" || detail?.type === "Ticket") && (
+          <Fragment>
+            <br />
+            <span>for Mr./Mrs.</span>
+            <span className="font-bold uppercase">
+              {" " + detail?.data?.name}
+            </span>
+          </Fragment>
+        )}
       </th>
 
       {/*Service Price*/}

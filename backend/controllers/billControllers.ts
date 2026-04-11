@@ -176,108 +176,355 @@ const createBill = async (req: Request, res: Response) => {
   res.status(201).json(updatedBill);
 };
 
+//@Desc   >>>> Helper function to compare old and new details
+//@Access >>>> Private
+const compareDetails = (oldDetails: any[], newDetails: any[]) => {
+  const toDelete: any[] = [];
+  const toUpdate: any[] = [];
+  const toCreate: any[] = [];
+
+  // Group old details by type
+  const oldByType = new Map();
+  oldDetails.forEach((detail) => {
+    const type = detail.type;
+    if (!oldByType.has(type)) {
+      oldByType.set(type, []);
+    }
+    oldByType.get(type).push(detail);
+  });
+
+  // Group new details by type
+  const newByType = new Map();
+  newDetails.forEach((detail) => {
+    const type = detail.type;
+    if (!newByType.has(type)) {
+      newByType.set(type, []);
+    }
+    newByType.get(type).push(detail);
+  });
+
+  // Track which old items have been matched
+  const matchedOldIndices = new Set();
+
+  // Match items by reference (if provided) first
+  newDetails.forEach((newDetail, newIndex) => {
+    const ref = newDetail.passport_ref || newDetail.ticket_ref;
+    const type = newDetail.type;
+
+    if (ref) {
+      // If ref is provided, find matching old detail by ref
+      const oldDetailsOfType = oldByType.get(type) || [];
+      const matchingOldIndex = oldDetailsOfType.findIndex((d: any) => {
+        const oldRef = d.passport_ref || d.ticket_ref;
+        return oldRef === ref;
+      });
+
+      if (matchingOldIndex !== -1) {
+        // Match found - UPDATE
+        const oldIndex = oldDetailsOfType.findIndex((d: any) => {
+          const oldRef = d.passport_ref || d.ticket_ref;
+          return oldRef === ref;
+        });
+        const oldDetailKey = `${type}-${oldIndex}`;
+        toUpdate.push({
+          old: oldDetailsOfType[matchingOldIndex],
+          new: newDetail,
+        });
+        matchedOldIndices.add(oldDetailKey);
+      } else {
+        // No match found, treat as CREATE
+        toCreate.push(newDetail);
+      }
+    }
+  });
+
+  // Match remaining items by position (for items without refs)
+  newByType.forEach((newDetailsOfType, type) => {
+    const oldDetailsOfType = oldByType.get(type) || [];
+    let oldMatchIndex = 0;
+
+    newDetailsOfType.forEach((newDetail: any, newIndex: number) => {
+      const ref = newDetail.passport_ref || newDetail.ticket_ref;
+
+      // Skip if already matched by ref
+      if (ref) {
+        return;
+      }
+
+      // Skip old items that were already matched
+      while (
+        oldMatchIndex < oldDetailsOfType.length &&
+        matchedOldIndices.has(`${type}-${oldMatchIndex}`)
+      ) {
+        oldMatchIndex++;
+      }
+
+      if (oldMatchIndex < oldDetailsOfType.length) {
+        // Match by position - UPDATE
+        const oldDetail = oldDetailsOfType[oldMatchIndex];
+        toUpdate.push({ old: oldDetail, new: newDetail });
+        matchedOldIndices.add(`${type}-${oldMatchIndex}`);
+        oldMatchIndex++;
+      } else {
+        // No old item at this position - CREATE
+        toCreate.push(newDetail);
+      }
+    });
+  });
+
+  // Find unmatched old items - DELETE
+  oldByType.forEach((oldDetailsOfType, type) => {
+    oldDetailsOfType.forEach((oldDetail: any, index: number) => {
+      if (!matchedOldIndices.has(`${type}-${index}`)) {
+        toDelete.push(oldDetail);
+      }
+    });
+  });
+
+  return { toDelete, toUpdate, toCreate };
+};
+
 //@Desc   >>>> UPDATE Bill
 //@Route  >>>> PUT /api/bills/:id
 //@Access >>>> Private(Admins Only)
 const updateBill = async (req: Request, res: Response) => {
-  //Get Bill Wanted For Updating.
+  // Get bill to be updated
   const bill = await Bill.findById(req.params?.id);
 
-  //Check if Bill is not exist.
+  // Check if bill exists
   if (!bill) {
     const error: ErrnoException = new Error();
     error.name = "CastError";
     error.path = "_id";
     throw error;
-  } else {
-    //Update Bill With New Values.
-    (bill.customer = req.body?.customer),
-      (bill.details = req.body?.details),
-      (bill.date = req.body?.date),
-      (bill.subtotal = req.body?.subtotal),
-      (bill.total = req.body?.total),
-      (bill.tax_due = req.body?.taxDue),
-      (bill.tax_rate = req.body?.taxRate),
-      (bill.taxable = req.body?.taxable),
-      (bill.paid_amount = req.body?.paidAmount),
-      (bill.remaining_amount = req.body?.remainingAmount),
-      (bill.payment_method = req.body?.payment_method),
-      (bill.other = req.body?.other);
+  }
 
-    //Get Updated Bill info & Send it Back.
-    const updatedBill = await bill.save();
+  const oldDetails = bill.details;
+  const newDetails = req.body?.details;
 
-    const { details } = req.body;
-    if (!details) throw new Error("Bill Details is required");
+  if (!newDetails) throw new Error("Bill Details is required");
 
-    //Update Other Records
-    for (let index = 0; index < details.length; index++) {
-      //1-Check for passport type
-      if (details[index]?.type === "Passport") {
-        //update passport record
-        //Get Passport Wanted For Updating.
-        const passport = await Passport.findById(details[index]?.passport_ref);
+  // Compare old and new details to determine operations
+  const operations = compareDetails(oldDetails, newDetails);
 
-        //Check if Passport is not exist.
-        if (!passport) {
-          // const error: ErrnoException = new Error();
-          // error.name = "CastError";
-          // error.path = "_id";
-          // throw error;
-          console.log("Passport Not found");
-        } else {
-          //Update Passport With New Values.
-          passport.customer_name = details[index]?.data.name;
-          passport.customer_nationality = details[index]?.data.nationality;
-          passport.passport_id = details[index]?.data.passportId;
-          passport.state = details[index]?.data.state;
-          passport.service = details[index]?.data.service;
-          passport.payment_date = details[index]?.data.paymentDate;
-          passport.taxable = details[index]?.data.taxable;
-          passport.tax_rate = details[index]?.data.taxRate;
-          passport.service_price = details[index]?.data.servicePrice;
-          passport.total = details[index]?.data.total;
-          passport.sales = details[index]?.data.sales;
-          passport.profit = details[index]?.data.profit;
-          passport.payment_method = req.body?.payment_method;
+  // 1. Delete items that are in old but not in new
+  for (const detail of operations.toDelete) {
+    if (detail.type === "Passport") {
+      await Passport.findByIdAndDelete(detail.passport_ref);
+    } else if (detail.type === "Ticket") {
+      await Ticket.findByIdAndDelete(detail.ticket_ref);
+    }
+  }
 
-          await passport.save();
-        }
-      } else if (details[index]?.type === "Ticket") {
-        //Get Ticket Wanted For Updating.
-        const ticket = await Ticket.findById(details[index]?.ticket_ref);
+  // 2. Update items that exist in both old and new
+  for (const operation of operations.toUpdate) {
+    const { old: oldDetail, new: newDetail } = operation;
 
-        //Check if Ticket is not exist.
-        if (!ticket) {
-          // const error: ErrnoException = new Error();
-          // error.name = "CastError";
-          // error.path = "_id";
-          // throw error;
-          console.log("Ticket Not found");
-        } else {
-          //Update Ticket With New Values.
-          ticket.customer_name = details[index]?.data?.name;
-          ticket.supplier = details[index]?.data?.supplier;
-          ticket.employee = details[index]?.data?.employee;
-          ticket.type = details[index]?.data?.type;
-          ticket.cost = details[index]?.data?.cost;
-          ticket.total = details[index]?.data?.total;
-          ticket.taxable = details[index]?.data?.taxable;
-          ticket.sales = details[index]?.data?.sales;
-          ticket.profit = details[index]?.data?.profit;
-          ticket.payment_date = details[index]?.data?.paymentDate;
-          ticket.paid_amount = details[index]?.data?.paidAmount;
-          ticket.remaining_amount = details[index]?.data?.remainingAmount;
-          ticket.payment_method = req.body?.payment_method;
+    if (newDetail.type === "Passport") {
+      const passport = await Passport.findById(oldDetail.passport_ref);
+      if (passport) {
+        passport.customer_name = newDetail.data?.name;
+        passport.customer_nationality = newDetail.data?.nationality;
+        passport.passport_id = newDetail.data?.passportId;
+        passport.state = newDetail.data?.state;
+        passport.service = newDetail.data?.service;
+        passport.payment_date = newDetail.data?.paymentDate;
+        passport.taxable = newDetail.data?.taxable;
+        passport.tax_rate = newDetail.data?.taxRate;
+        passport.service_price = newDetail.data?.servicePrice;
+        passport.total = newDetail.data?.total;
+        passport.sales = newDetail.data?.sales;
+        passport.profit = newDetail.data?.profit;
+        passport.payment_method = newDetail.data?.paymentMethod;
 
-          await ticket.save();
-        }
+        await passport.save();
+      }
+    } else if (newDetail.type === "Ticket") {
+      const ticket = await Ticket.findById(oldDetail.ticket_ref);
+      if (ticket) {
+        ticket.customer_name = newDetail.data?.name;
+        ticket.supplier = newDetail.data?.supplier;
+        ticket.employee = newDetail.data?.employee;
+        ticket.type = newDetail.data?.type;
+        ticket.cost = newDetail.data?.cost;
+        ticket.total = newDetail.data?.total;
+        ticket.taxable = newDetail.data?.taxable;
+        ticket.sales = newDetail.data?.sales;
+        ticket.profit = newDetail.data?.profit;
+        ticket.payment_date = newDetail.data?.paymentDate;
+        ticket.paid_amount = newDetail.data?.paidAmount;
+        ticket.remaining_amount = newDetail.data?.remainingAmount;
+        ticket.payment_method = newDetail.data?.paymentMethod;
+
+        await ticket.save();
       }
     }
-
-    res.status(200).json(updatedBill);
   }
+
+  // 3. Create new items
+  for (const detail of operations.toCreate) {
+    if (detail.type === "Passport") {
+      const passport = await Passport.create({
+        customer_name: detail.data?.name,
+        customer_nationality: detail.data?.nationality,
+        passport_id: detail.data?.passportId,
+        state: detail.data?.state,
+        service: detail.data?.service,
+        service_price: detail.data?.servicePrice,
+        taxable: detail.data?.taxable,
+        tax_rate: detail.data?.taxRate,
+        total: detail.data?.total,
+        sales: detail.data?.sales,
+        profit: detail.data?.profit,
+        payment_date: detail.data?.paymentDate,
+        payment_method: detail.data?.paymentMethod,
+        bill_id: bill.ID,
+      });
+
+      detail.passport_ref = passport.id;
+    } else if (detail.type === "Ticket") {
+      const ticket = await Ticket.create({
+        customer_name: detail.data?.name,
+        employee: detail.data?.employee,
+        supplier: detail.data?.supplier,
+        type: detail.data?.type,
+        cost: detail.data?.cost,
+        total: detail.data?.total,
+        taxable: detail.data?.taxable,
+        sales: detail.data?.sales,
+        profit: detail.data?.profit,
+        payment_date: detail.data?.paymentDate,
+        paid_amount: detail.data?.paidAmount,
+        remaining_amount: detail.data?.remainingAmount,
+        payment_method: detail.data?.paymentMethod,
+        bill_id: bill.ID,
+      });
+
+      detail.ticket_ref = ticket.id;
+    }
+  }
+
+  // Update bill with new values
+  bill.customer = req.body?.customer;
+  bill.details = newDetails;
+  bill.date = req.body?.date;
+  bill.subtotal = req.body?.subtotal;
+  bill.total = req.body?.total;
+  bill.tax_due = req.body?.taxDue;
+  bill.tax_rate = req.body?.taxRate;
+  bill.taxable = req.body?.taxable;
+  bill.paid_amount = req.body?.paidAmount;
+  bill.remaining_amount = req.body?.remainingAmount;
+  bill.payment_method = req.body?.payment_method;
+  bill.other = req.body?.other;
+
+  const updatedBill = await bill.save();
+
+  res.status(200).json(updatedBill);
 };
+
+//@Desc   >>>> UPDATE Bill
+//@Route  >>>> PUT /api/bills/:id
+//@Access >>>> Private(Admins Only)
+// const updateBill = async (req: Request, res: Response) => {
+//   //Get Bill Wanted For Updating.
+//   const bill = await Bill.findById(req.params?.id);
+
+//   //Check if Bill is not exist.
+//   if (!bill) {
+//     const error: ErrnoException = new Error();
+//     error.name = "CastError";
+//     error.path = "_id";
+//     throw error;
+//   } else {
+//     //Update Bill With New Values.
+//     (bill.customer = req.body?.customer),
+//       (bill.details = req.body?.details),
+//       (bill.date = req.body?.date),
+//       (bill.subtotal = req.body?.subtotal),
+//       (bill.total = req.body?.total),
+//       (bill.tax_due = req.body?.taxDue),
+//       (bill.tax_rate = req.body?.taxRate),
+//       (bill.taxable = req.body?.taxable),
+//       (bill.paid_amount = req.body?.paidAmount),
+//       (bill.remaining_amount = req.body?.remainingAmount),
+//       (bill.payment_method = req.body?.payment_method),
+//       (bill.other = req.body?.other);
+
+//     //Get Updated Bill info & Send it Back.
+//     const updatedBill = await bill.save();
+
+//     const { details } = req.body;
+//     if (!details) throw new Error("Bill Details is required");
+
+//     //Update Other Records
+//     for (let index = 0; index < details.length; index++) {
+//       //1-Check for passport type
+//       if (details[index]?.type === "Passport") {
+//         //update passport record
+//         //Get Passport Wanted For Updating.
+//         const passport = await Passport.findById(details[index]?.passport_ref);
+
+//         //Check if Passport is not exist.
+//         if (!passport) {
+//           // const error: ErrnoException = new Error();
+//           // error.name = "CastError";
+//           // error.path = "_id";
+//           // throw error;
+//           console.log("Passport Not found");
+//         } else {
+//           //Update Passport With New Values.
+//           passport.customer_name = details[index]?.data.name;
+//           passport.customer_nationality = details[index]?.data.nationality;
+//           passport.passport_id = details[index]?.data.passportId;
+//           passport.state = details[index]?.data.state;
+//           passport.service = details[index]?.data.service;
+//           passport.payment_date = details[index]?.data.paymentDate;
+//           passport.taxable = details[index]?.data.taxable;
+//           passport.tax_rate = details[index]?.data.taxRate;
+//           passport.service_price = details[index]?.data.servicePrice;
+//           passport.total = details[index]?.data.total;
+//           passport.sales = details[index]?.data.sales;
+//           passport.profit = details[index]?.data.profit;
+//           passport.payment_method = req.body?.payment_method;
+
+//           await passport.save();
+//         }
+//       } else if (details[index]?.type === "Ticket") {
+//         //Get Ticket Wanted For Updating.
+//         const ticket = await Ticket.findById(details[index]?.ticket_ref);
+
+//         //Check if Ticket is not exist.
+//         if (!ticket) {
+//           // const error: ErrnoException = new Error();
+//           // error.name = "CastError";
+//           // error.path = "_id";
+//           // throw error;
+//           console.log("Ticket Not found");
+//         } else {
+//           //Update Ticket With New Values.
+//           ticket.customer_name = details[index]?.data?.name;
+//           ticket.supplier = details[index]?.data?.supplier;
+//           ticket.employee = details[index]?.data?.employee;
+//           ticket.type = details[index]?.data?.type;
+//           ticket.cost = details[index]?.data?.cost;
+//           ticket.total = details[index]?.data?.total;
+//           ticket.taxable = details[index]?.data?.taxable;
+//           ticket.sales = details[index]?.data?.sales;
+//           ticket.profit = details[index]?.data?.profit;
+//           ticket.payment_date = details[index]?.data?.paymentDate;
+//           ticket.paid_amount = details[index]?.data?.paidAmount;
+//           ticket.remaining_amount = details[index]?.data?.remainingAmount;
+//           ticket.payment_method = req.body?.payment_method;
+
+//           await ticket.save();
+//         }
+//       }
+//     }
+
+//     res.status(200).json(updatedBill);
+//   }
+// };
 
 //@Desc   >>>> Delete one Bill
 //@Route  >>>> DELETE /api/bills/:id
@@ -303,7 +550,7 @@ const deleteBill = async (req: Request, res: Response) => {
         //Delete passport record
         //Get Passport Wanted For Deleting.
         const deletedPassport = await Passport.findByIdAndDelete(
-          details[index]?.passport_ref
+          details[index]?.passport_ref,
         );
 
         //Check If the Document is Already Deleted Or Not.
@@ -314,7 +561,7 @@ const deleteBill = async (req: Request, res: Response) => {
         //Delete Ticket record
         //Get Ticket Wanted For Deleting.
         const deletedTicket = await Ticket.findByIdAndDelete(
-          details[index]?.ticket_ref
+          details[index]?.ticket_ref,
         );
 
         //Check If the Document is Already Deleted Or Not.

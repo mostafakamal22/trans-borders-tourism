@@ -71,36 +71,36 @@ export const UpdateBill = ({
 
   const initialItemsDetails: IBillProduct[] = [];
 
-  const initialPassportDetails = {
-    name: "",
-    nationality: "",
-    state: "accepted",
-    service: "30days",
-    passportId: "",
-    paymentDate: "",
-    servicePrice: 0,
-    taxable: 53,
-    taxRate: 2.65,
-    total: 0,
-    sales: 0,
-    profit: 0,
-  };
+  // const initialPassportDetails = {
+  //   name: "",
+  //   nationality: "",
+  //   state: "accepted",
+  //   service: "30days",
+  //   passportId: "",
+  //   paymentDate: "",
+  //   servicePrice: 0,
+  //   taxable: 53,
+  //   taxRate: 2.65,
+  //   total: 0,
+  //   sales: 0,
+  //   profit: 0,
+  // };
 
-  const initialTicketDetails = {
-    name: "",
-    type: "",
-    employee: "",
-    supplier: "",
-    paymentDate: "",
-    paymentMethod: "cash",
-    cost: 0,
-    total: 0,
-    taxable: 0,
-    sales: 0,
-    profit: 0,
-    paidAmount: 0,
-    remainingAmount: 0,
-  };
+  // const initialTicketDetails = {
+  //   name: "",
+  //   type: "",
+  //   employee: "",
+  //   supplier: "",
+  //   paymentDate: "",
+  //   paymentMethod: "cash",
+  //   cost: 0,
+  //   total: 0,
+  //   taxable: 0,
+  //   sales: 0,
+  //   profit: 0,
+  //   paidAmount: 0,
+  //   remainingAmount: 0,
+  // };
 
   // Data fetching
   const { data: foundBill, isLoading, error } = useGetOneBillQuery({ id });
@@ -219,8 +219,24 @@ export const UpdateBill = ({
     const details: (IBillProduct & { data?: any })[] = [
       ...itemsDetails.map((item) => {
         const itemData = item.data || {};
+
+        // Remove unwanted refs based on type
+        let cleanedItem;
+
+        if (item.type === "Passport") {
+          const { ticket_ref, ...rest } = item as any;
+          cleanedItem = rest;
+        } else if (item.type === "Ticket") {
+          const { passport_ref, ...rest } = item as any;
+          cleanedItem = rest;
+        } else {
+          // Other service type, remove both refs if they exist
+          const { passport_ref, ticket_ref, ...rest } = item as any;
+          cleanedItem = rest;
+        }
+
         return {
-          ...item,
+          ...cleanedItem,
           desc:
             item.type === "Passport"
               ? itemData.service === "90days" ||
@@ -414,7 +430,6 @@ export const UpdateBill = ({
                   newArr[index].price = 0;
                   setItemsDetails(newArr);
                 }}
-                disabled
               >
                 {["Passport", "Ticket", "Other"].map((name: string) => (
                   <option key={name} value={name}>
@@ -1002,7 +1017,7 @@ export const UpdateBill = ({
             </div>
           ))}
 
-          {/* <div className="flex justify-around">
+          <div className="flex justify-around">
             <button
               className="my-5 flex items-center rounded border bg-blue-800 px-2 py-2 text-xs font-bold text-white shadow transition-all duration-300 ease-in-out hover:border-blue-800
          hover:bg-white hover:text-blue-800 sm:px-3 sm:text-sm"
@@ -1022,7 +1037,7 @@ export const UpdateBill = ({
               <AiFillMinusCircle className="mr-1" size={20} />
               حذف نوع
             </button>
-          </div> */}
+          </div>
 
           <p className="my-4 rounded bg-red-800 p-2 text-lg font-bold text-white">
             [ بيانات الفاتورة الحالية ]
