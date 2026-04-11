@@ -73,6 +73,7 @@ export const billsApiSlice = apiSlice.injectEndpoints({
         { type: "Bill", id: "PARTIAL-LIST" },
         "Passport",
         "Ticket",
+        "OtherService",
       ],
     }),
     updateBill: builder.mutation<IBillDocument, Partial<IBillDocument>>({
@@ -86,6 +87,7 @@ export const billsApiSlice = apiSlice.injectEndpoints({
         { type: "Bill", id: "PARTIAL-LIST" },
         "Passport",
         "Ticket",
+        "OtherService",
       ],
     }),
     deleteBill: builder.mutation<{ id: string }, string>({
@@ -100,6 +102,7 @@ export const billsApiSlice = apiSlice.injectEndpoints({
         { type: "Bill", id: "PARTIAL-LIST" },
         "Passport",
         "Ticket",
+        "OtherService",
       ],
     }),
     getBillsStatistics: builder.query<

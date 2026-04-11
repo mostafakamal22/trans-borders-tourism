@@ -11,7 +11,7 @@ export type TableRowProps<T> = {
     tableBodyData: T[];
   };
   extraOptions: {
-    handleRemoving: (...args: any) => void;
+    handleRemoving?: (...args: any) => void;
     handleAddInvoice?: (...args: any) => void;
     setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
     setId?: React.Dispatch<React.SetStateAction<string>>;
@@ -22,9 +22,9 @@ export type TableRowProps<T> = {
 export interface PaginationTableProps {
   tableHeader: ReactNode;
   tableRow: (props: TableRowProps<any>) => JSX.Element;
-  tableBodyData: Document[];
-  options: ListResponse<Document>;
-  handleRemoving: (...args: any) => void;
+  tableBodyData: Document[] | any[];
+  options: ListResponse<Document> | any;
+  handleRemoving?: (...args: any) => void;
   handleAddInvoice?: (...args: any) => void;
   setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   setId?: React.Dispatch<React.SetStateAction<string>>;
@@ -49,7 +49,7 @@ export const PaginationTable = forwardRef<
       isDeleting,
       isCreatingInvoice,
     },
-    ref
+    ref,
   ) => {
     const [_, setSearchParams] = useSearchParams({ page: "1" });
     // const page = +searchParams.get("page")!;
@@ -81,7 +81,7 @@ export const PaginationTable = forwardRef<
                   setId,
                   isCreatingInvoice,
                 },
-              })
+              }),
             )}
           </tbody>
         </table>
@@ -93,5 +93,5 @@ export const PaginationTable = forwardRef<
         />
       </div>
     );
-  }
+  },
 );

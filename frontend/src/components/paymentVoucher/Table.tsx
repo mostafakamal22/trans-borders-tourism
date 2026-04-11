@@ -50,7 +50,7 @@ export const tableRow = ({
       >
         <form
           className="m-auto max-w-[150px]"
-          onSubmit={(event) => handleRemoving(event, paymentVoucher?.id)}
+          onSubmit={(event) => handleRemoving?.(event, paymentVoucher?.id)}
         >
           <FormButton
             bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}

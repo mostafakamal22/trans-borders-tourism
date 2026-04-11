@@ -45,7 +45,7 @@ const baseQueryWithReauth: BaseQueryFn<
     const refreshResult = await baseQuery(
       "/api/admins/refresh",
       api,
-      extraOptions
+      extraOptions,
     );
 
     if (refreshResult?.data) {
@@ -69,6 +69,7 @@ export const apiSlice = createApi({
     "Invoice",
     "Bill",
     "Ticket",
+    "OtherService",
     "Purchase",
     "Payment",
     "ReceiptVoucher",

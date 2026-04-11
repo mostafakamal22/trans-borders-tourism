@@ -21,6 +21,9 @@ const Passports = lazy(() => import("./components/passport/Passports"));
 const CreatePassport = lazy(() => import("./components/forms/CreatePassport"));
 const CreateTicket = lazy(() => import("./components/forms/CreateTicket"));
 const Tickets = lazy(() => import("./components/ticket/Tickets"));
+const OtherServices = lazy(
+  () => import("./components/otherServices/OtherServices"),
+);
 const Purchases = lazy(() => import("./components/purchase/Purchases"));
 const CreatePurchase = lazy(() => import("./components/forms/CreatePurchase"));
 const Payments = lazy(() => import("./components/payment/Payments"));
@@ -29,22 +32,22 @@ const Bills = lazy(() => import("./components/bill/Bills"));
 const CreateBill = lazy(() => import("./components/forms/CreateBill"));
 const ShowBill = lazy(() => import("./components/bill/ShowBill"));
 const ReceiptVoucher = lazy(
-  () => import("./components/receiptVoucher/ReceiptVoucher")
+  () => import("./components/receiptVoucher/ReceiptVoucher"),
 );
 const CreateReceiptVoucher = lazy(
-  () => import("./components/forms/CreateReceiptVoucher")
+  () => import("./components/forms/CreateReceiptVoucher"),
 );
 const ReceiptVouchers = lazy(
-  () => import("./components/receiptVoucher/ReceiptVouchers")
+  () => import("./components/receiptVoucher/ReceiptVouchers"),
 );
 const PaymentVouchers = lazy(
-  () => import("./components/paymentVoucher/PaymentVouchers")
+  () => import("./components/paymentVoucher/PaymentVouchers"),
 );
 const CreatePaymentVoucher = lazy(
-  () => import("./components/forms/CreatePaymentVoucher")
+  () => import("./components/forms/CreatePaymentVoucher"),
 );
 const PaymentVoucher = lazy(
-  () => import("./components/paymentVoucher/PaymentVoucher")
+  () => import("./components/paymentVoucher/PaymentVoucher"),
 );
 
 const App = () => {
@@ -90,6 +93,10 @@ const App = () => {
                 <Route path="/tickets">
                   <Route index element={<Tickets />} />
                   {/* <Route path="create" element={<CreateTicket />} /> */}
+                </Route>
+                {/* Other Services Routes */}
+                <Route path="/otherServices">
+                  <Route index element={<OtherServices />} />
                 </Route>
                 {/* Purchases Routes */}
                 <Route path="/purchases">

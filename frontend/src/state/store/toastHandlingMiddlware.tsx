@@ -23,6 +23,7 @@ const toastBlackList: string[] = [
   "getTickets",
   "getOneTicket",
   "getTicketsStatistics",
+  "getOtherServices",
   "getPurchases",
   "getOnePurchase",
   "getPayments",

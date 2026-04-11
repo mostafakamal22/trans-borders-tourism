@@ -114,7 +114,7 @@ export const tableRow = ({
       >
         <form
           className="m-auto max-w-[50px]"
-          onSubmit={(event) => handleRemoving(event, passport?.id)}
+          onSubmit={(event) => handleRemoving?.(event, passport?.id)}
         >
           <FormButton
             bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}

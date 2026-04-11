@@ -58,6 +58,10 @@ app.use("/api/payments", paymentsRoute);
 import ticketsRoute from "./routes/ticketRoutes";
 app.use("/api/tickets", ticketsRoute);
 
+//OtherServices Router
+import otherServicesRoute from "./routes/otherServicesRoutes";
+app.use("/api/otherServices", otherServicesRoute);
+
 //Purchase Router
 import purchasesRoute from "./routes/purchaseRoutes";
 app.use("/api/purchases", purchasesRoute);

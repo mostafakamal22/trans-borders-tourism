@@ -16,7 +16,7 @@ export const tableHeader = (
       <th
         key={title}
         scope="col"
-        className="border-x border-x-black py-3 px-3 text-center"
+        className="border-x border-x-black px-3 py-3 text-center"
       >
         {title}
       </th>
@@ -38,10 +38,10 @@ export const tableRow = ({
     ? invoice?.no
     : invoice?.date
     ? dayjs(invoice?.date).format(
-        `YYYYMMDD-${dayjs(invoice?.createdAt as string).hour()}`
+        `YYYYMMDD-${dayjs(invoice?.createdAt as string).hour()}`,
       )
     : dayjs(invoice?.createdAt as string).format(
-        `YYYYMMDD-${dayjs(invoice?.createdAt as string).hour()}`
+        `YYYYMMDD-${dayjs(invoice?.createdAt as string).hour()}`,
       );
   return (
     <tr
@@ -57,7 +57,7 @@ export const tableRow = ({
       >
         <form
           className="m-auto max-w-[150px]"
-          onSubmit={(event) => handleRemoving(event, invoice?.id)}
+          onSubmit={(event) => handleRemoving?.(event, invoice?.id)}
         >
           <FormButton
             bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}
@@ -119,7 +119,7 @@ export const tableRow = ({
         className="text-gray-90  border-x border-x-black p-2 text-center"
       >
         {tableBodyData?.findIndex(
-          (p: IInvoiceDocument) => p.id === invoice?.id
+          (p: IInvoiceDocument) => p.id === invoice?.id,
         ) + 1}
       </th>
     </tr>
@@ -133,7 +133,7 @@ export const invoiceTableHeader = (
       <th
         key={title}
         scope="col"
-        className="border-x border-x-black py-3 px-3 text-center"
+        className="border-x border-x-black px-3 py-3 text-center"
       >
         {title}
       </th>
@@ -207,7 +207,7 @@ export const invoicePassportTableHeader = (
 export const invoicePassportTableRows = (
   detail: IProduct,
   passportSpecialKey: string,
-  index: number
+  index: number,
 ) => {
   const sales = detail?.price;
   const servicePrice = Number(passportSpecialKey.split(" ")[1]);

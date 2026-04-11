@@ -282,7 +282,7 @@
 //         >
 //           <form
 //             className="max-w-[150px] m-auto"
-//             onSubmit={(event) => handleRemoving(event, visa._id)}
+//             onSubmit={(event) => handleRemoving?.(event, visa._id)}
 //           >
 //             <FormButton
 //               bgColor={["bg-red-600", "bg-red-700", "bg-red-800"]}

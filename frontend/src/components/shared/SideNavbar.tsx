@@ -15,6 +15,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useSendLogoutMutation } from "../../state/features/admin/auth/authApiSlice";
 import SmallSpinner from "./SmallSpinner";
 import { BsGearFill, BsPlus } from "react-icons/bs";
+import { IoIosPricetags } from "react-icons/io";
 import logo from "../../assets/imgs/trans-logo.png";
 
 type MenuItem = {
@@ -68,7 +69,12 @@ const menus: MenuType<MenuItem> = [
     name: "التذاكر",
     link: "/tickets",
     icon: <AiFillSchedule size={20} />,
-    margin: true,
+  },
+
+  {
+    name: "الخدمات الاخرى",
+    link: "/otherServices",
+    icon: <IoIosPricetags size={20} />,
   },
   // {
   //   name: "إضافة التذاكر",
