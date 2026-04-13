@@ -271,7 +271,10 @@ export const tableRow = ({
         scope="row"
         className="border-x  border-x-black p-1 text-center text-gray-900"
       >
-        {ticket?.bill_customer_name || ticket.customer_name || "-"}
+        {/* {ticket?.bill_customer_name || ticket.customer_name || "-"}
+         */}
+
+        {ticket?.customer_name || "-"}
       </th>
 
       {/*Bill ID*/}

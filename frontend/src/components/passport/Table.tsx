@@ -294,7 +294,9 @@ export const tableRow = ({
         scope="row"
         className="border-x  border-x-black p-1 text-center text-gray-900"
       >
-        {passport?.bill_customer_name || passport.customer_name || "-"}
+        {/* {passport?.bill_customer_name || passport.customer_name || "-"} */}
+
+        {passport.customer_name || "-"}
       </th>
 
       {/*Bill ID*/}
