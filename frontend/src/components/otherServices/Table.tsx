@@ -45,7 +45,7 @@ export const tableRow = ({ basicOptions }: TableRowProps<IOtherService>) => {
 
   return (
     <tr
-      key={otherService?.id}
+      key={`${otherService?.id}-${index}`}
       className={`${getBillIdBgColor(
         otherService?.bill_id,
       )} border-b border-b-black`}
