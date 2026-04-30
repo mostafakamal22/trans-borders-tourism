@@ -68,20 +68,20 @@ export const tableRow = ({ basicOptions }: TableRowProps<IOtherService>) => {
         {total.toFixed(2)}
       </th>
 
-      {/*OtherService quantity*/}
-      <th
-        scope="row"
-        className="whitespace-nowrap border-x  border-x-black p-2 text-center  text-gray-900"
-      >
-        {otherService?.quantity || "-"}
-      </th>
-
       {/*OtherService price*/}
       <th
         scope="row"
         className="whitespace-nowrap border-x  border-x-black p-2 text-center  text-gray-900"
       >
         {otherService?.price || "-"}
+      </th>
+
+      {/*OtherService quantity*/}
+      <th
+        scope="row"
+        className="whitespace-nowrap border-x  border-x-black p-2 text-center  text-gray-900"
+      >
+        {otherService?.quantity || "-"}
       </th>
 
       {/*OtherService description*/}
