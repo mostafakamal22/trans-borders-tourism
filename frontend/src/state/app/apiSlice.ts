@@ -9,7 +9,7 @@ import { setCredentials } from "../../state/features/admin/auth/authSlice";
 
 export const API_URL =
   process.env.NODE_ENV === "production"
-    ? import.meta.env.VITE_CORS_DOMAINS
+    ? "" // Use relative paths in production (backend on same domain)
     : "http://localhost:5000";
 
 const baseQuery = fetchBaseQuery({
