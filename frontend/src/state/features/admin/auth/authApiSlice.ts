@@ -23,8 +23,36 @@ export type UpdateAdminData = {
   oldPassword: string;
 };
 
+export type BackupResponse = {
+  filename: string;
+  blob: Blob;
+};
+
+export type BackupUrlResponse = {
+  url: string;
+  filename: string;
+};
+
+export type RestoreResponse = {
+  message: string;
+  totalDocuments: number;
+  collections: { [key: string]: { count: number; error?: string } };
+};
+
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    getBackupUrl: builder.query<BackupUrlResponse, void>({
+      query: () => ({
+        url: "/api/admins/backup/url",
+      }),
+    }),
+    restoreDatabase: builder.mutation<RestoreResponse, Record<string, any>>({
+      query: (backupData) => ({
+        url: "/api/admins/restore/database",
+        method: "POST",
+        body: backupData,
+      }),
+    }),
     getAdmin: builder.query<AdminData, string>({
       query: (id) => ({
         url: `/api/admins/${id}`,
@@ -84,8 +112,10 @@ export const authApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetAdminQuery,
+  useGetBackupUrlQuery,
   useLoginMutation,
   useUpdateAdminMutation,
   useRefreshMutation,
   useSendLogoutMutation,
+  useRestoreDatabaseMutation,
 } = authApiSlice;

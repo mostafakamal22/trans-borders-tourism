@@ -6,6 +6,9 @@ import {
   getOneAdmin,
   adminRefreshToken,
   AdminLogout,
+  backupDatabase,
+  getBackupUrl,
+  restoreDatabase,
 } from "../controllers/adminControllers";
 import { validatePassword } from "../middlewares/adminMiddlewares/validatePassword";
 import { authAdminProtect } from "../middlewares/adminMiddlewares/authAdminProtect";
@@ -21,6 +24,12 @@ router.route("/login").post(adminLogin);
 router.route("/refresh").get(adminRefreshToken);
 
 router.route("/logout").get(authAdminProtect, AdminLogout);
+
+router.route("/backup/url").get(authAdminProtect, getBackupUrl);
+
+router.route("/backup/database").get(authAdminProtect, backupDatabase);
+
+// router.route("/restore/database").post(authAdminProtect, restoreDatabase);
 
 router
   .route("/:id")

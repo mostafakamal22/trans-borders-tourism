@@ -7,7 +7,7 @@ import type {
 } from "@reduxjs/toolkit/query";
 import { setCredentials } from "../../state/features/admin/auth/authSlice";
 
-const API_URL =
+export const API_URL =
   process.env.NODE_ENV === "production"
     ? import.meta.env.VITE_CORS_DOMAINS
     : "http://localhost:5000";

@@ -11,6 +11,8 @@ import { toast } from "react-toastify";
 //Not Showing a Toast For These Requests' Endpoints.
 const toastBlackList: string[] = [
   "getAdmin",
+  "getBackupUrl",
+  "restoreDatabase",
   "refresh",
   "getPassports",
   "getOnePassport",

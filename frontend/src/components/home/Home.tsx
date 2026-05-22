@@ -5,6 +5,8 @@ import TicketsSection from "../ticket/HomeSection";
 import PassportsSection from "../passport/HomeSection";
 import InvoicesSection from "../invoice/HomeSection";
 import BillsSection from "../bill/HomeSection";
+import BackupButton from "./BackupButton";
+import RestoreButton from "./RestoreButton";
 
 const mainHeadings: string[] = [
   "(قديمة) الفواتير",
@@ -22,6 +24,14 @@ export default function Home() {
       <header className="my-4 flex items-center justify-center rounded bg-gradient-to-r from-cyan-400 to-blue-500 bg-fixed p-3 shadow md:max-h-[12rem]">
         <img className="max-h-full w-[70%] max-w-full" src={logo} alt="logo" />
       </header>
+
+      <div className="mx-auto flex w-full max-w-5xl flex-col items-center justify-center gap-6 md:flex-row">
+        {/* Restore Database Button */}
+        {/* <RestoreButton /> */}
+
+        {/* Backup Database Button */}
+        <BackupButton />
+      </div>
 
       {/* Invoices Section */}
       <InvoicesSection heading={mainHeadings[0]} />

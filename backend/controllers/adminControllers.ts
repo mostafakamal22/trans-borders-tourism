@@ -10,6 +10,8 @@ import {
 } from "../config/cookiesOptions";
 import jwt from "jsonwebtoken";
 import { RefreshJwtPayload } from "../middlewares/adminMiddlewares/authAdminProtect";
+import mongoose from "mongoose";
+import dayjs from "dayjs";
 
 export interface ErrnoException extends Error {
   path?: string;
@@ -283,6 +285,230 @@ const AdminLogout = async (req: Request, res: Response) => {
   res.sendStatus(204);
 };
 
+//@Desc   >>>> Get Backup Download URL
+//@Route  >>>> GET /api/admins/backup/url
+//@Access >>>> Private(Admins)
+const getBackupUrl = async (_req: Request, res: Response) => {
+  // Create filename with current date and time
+  const timestamp = dayjs().format("YYYY-MM-DD_HH-mm-ss");
+  const filename = `backup_${timestamp}.json`;
+
+  // Return the download URL and filename
+  res.status(200).json({
+    url: "/api/admins/backup/database",
+    filename: filename,
+  });
+};
+
+//@Desc   >>>> Backup Database
+//@Route  >>>> GET /api/admins/backup/database
+//@Access >>>> Private(Admins)
+const backupDatabase = async (_req: Request, res: Response) => {
+  try {
+    const backup: { [key: string]: any[] } = {};
+
+    // Get the database connection
+    const db = mongoose.connection.db;
+    if (!db) {
+      throw new Error("Database connection not available");
+    }
+
+    // Get list of all collections in the database
+    const collections = await db.listCollections().toArray();
+
+    // Export data from each collection
+    for (const collectionInfo of collections) {
+      const collectionName = collectionInfo.name;
+
+      // Skip admin collection (case-insensitive)
+      if (
+        collectionName.toLowerCase() === "admin" ||
+        collectionName.toLowerCase() === "admins" ||
+        collectionName.startsWith("system.")
+      ) {
+        continue;
+      }
+
+      const collection = db.collection(collectionName);
+      const documents = await collection.find({}).toArray();
+      backup[collectionName] = documents;
+    }
+
+    // Create filename with current date and time
+    const timestamp = dayjs().format("YYYY-MM-DD_HH-mm-ss");
+    const filename = `backup_${timestamp}.json`;
+
+    // Set headers for file download
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+
+    // Send the backup as JSON
+    res.send(JSON.stringify(backup, null, 2));
+  } catch (error) {
+    throw error;
+  }
+};
+
+//@Desc   >>>> Restore Database
+//@Route  >>>> POST /api/admins/restore/database
+//@Access >>>> Private(Admins)
+const restoreDatabase = async (req: Request, res: Response) => {
+  if (!req.body || typeof req.body !== "object") {
+    throw new Error("Invalid backup file");
+  }
+
+  const backup = req.body;
+  let restoredCount = 0;
+  const results: { [key: string]: { count: number; error?: string } } = {};
+
+  // Helper function to convert strings to proper MongoDB types
+  const convertToProperTypes = (obj: any): any => {
+    if (obj === null || obj === undefined) return obj;
+
+    if (Array.isArray(obj)) {
+      return obj.map((item) => convertToProperTypes(item));
+    }
+
+    if (typeof obj === "object") {
+      const converted: any = {};
+
+      for (const key in obj) {
+        const value = obj[key];
+
+        // Handle MongoDB Extended JSON format
+        if (typeof value === "object" && value !== null) {
+          // Handle ObjectId: { $oid: "..." }
+          if (value.$oid && typeof value.$oid === "string") {
+            converted[key] = new mongoose.Types.ObjectId(value.$oid);
+          }
+          // Handle Date: { $date: "..." }
+          else if (value.$date) {
+            const dateValue =
+              typeof value.$date === "string"
+                ? new Date(value.$date)
+                : new Date(value.$date);
+            if (!isNaN(dateValue.getTime())) {
+              converted[key] = dateValue;
+            } else {
+              converted[key] = value;
+            }
+          }
+          // Handle Decimal128: { $numberDecimal: "..." }
+          else if (
+            value.$numberDecimal &&
+            typeof value.$numberDecimal === "string"
+          ) {
+            // Convert to MongoDB Decimal128
+            converted[key] = mongoose.Types.Decimal128.fromString(
+              value.$numberDecimal,
+            );
+          }
+          // Handle Long: { $numberLong: "..." }
+          else if (value.$numberLong && typeof value.$numberLong === "string") {
+            converted[key] = parseInt(value.$numberLong, 10);
+          }
+          // Handle Binary: { $binary: "...", $type: "..." }
+          else if (value.$binary && value.$type) {
+            converted[key] = Buffer.from(value.$binary, "base64");
+          }
+          // Handle RegExp: { $regex: "...", $options: "..." }
+          else if (value.$regex && typeof value.$regex === "string") {
+            converted[key] = new RegExp(
+              value.$regex,
+              value.$options || undefined,
+            );
+          }
+          // Recursively handle nested objects
+          else {
+            converted[key] = convertToProperTypes(value);
+          }
+        }
+        // Convert string IDs to ObjectId (24 hex characters)
+        else if (
+          key === "_id" &&
+          typeof value === "string" &&
+          /^[a-f0-9]{24}$/.test(value)
+        ) {
+          converted[key] = new mongoose.Types.ObjectId(value);
+        }
+        // Convert ISO date strings to Date objects
+        else if (
+          typeof value === "string" &&
+          /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value)
+        ) {
+          const date = new Date(value);
+          if (!isNaN(date.getTime())) {
+            converted[key] = date;
+          } else {
+            converted[key] = value;
+          }
+        } else {
+          converted[key] = value;
+        }
+      }
+
+      return converted;
+    }
+
+    return obj;
+  };
+
+  // Get all collections from the backup
+  for (const collectionName in backup) {
+    try {
+      const documents = backup[collectionName];
+
+      // Validate it's an array
+      if (!Array.isArray(documents)) {
+        results[collectionName] = {
+          count: 0,
+          error: "Invalid data format - expected array",
+        };
+        continue;
+      }
+
+      // Convert documents to proper MongoDB types
+      const convertedDocuments = documents.map((doc) =>
+        convertToProperTypes(doc),
+      );
+
+      // Get the collection from the database
+      let collection = mongoose.connection.collections[collectionName];
+
+      // If collection doesn't exist, create it
+      if (!collection) {
+        await mongoose.connection.createCollection(collectionName).catch(() => {
+          // Collection might already exist or be created
+        });
+        collection = mongoose.connection.collections[collectionName];
+      }
+
+      if (collection) {
+        // Clear existing data and insert new data
+        await collection.deleteMany({});
+        if (convertedDocuments.length > 0) {
+          // Insert with proper type conversion
+          await collection.insertMany(convertedDocuments);
+        }
+      }
+
+      results[collectionName] = { count: convertedDocuments.length };
+      restoredCount += convertedDocuments.length;
+    } catch (error) {
+      results[collectionName] = {
+        count: 0,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  res.status(200).json({
+    message: "Database restored successfully",
+    totalDocuments: restoredCount,
+    collections: results,
+  });
+};
+
 export {
   updateAdmin,
   createAdmin,
@@ -290,4 +516,7 @@ export {
   adminLogin,
   adminRefreshToken,
   AdminLogout,
+  backupDatabase,
+  getBackupUrl,
+  restoreDatabase,
 };
